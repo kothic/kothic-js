@@ -615,7 +615,11 @@ var Kothic = (function () {
 	}
 
 	function fontString(name, size) {
-		var family = name,
+		if (!name) {
+			return size + 'px Arial, Helvetica, sans-serif';
+		}
+		
+		var family = name;
 			
 		size = size || 9;
 		name = name.toLowerCase();
