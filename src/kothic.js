@@ -222,6 +222,7 @@ var Kothic = (function () {
 			opacity = 1,
 			mindistance = 0,
 			textwidth = 0;
+		if (!img) {return;}
 			
 		setStyles({
 			fillStyle: style["text-color"],
@@ -696,6 +697,12 @@ var Kothic = (function () {
 						onIconsLoad();
 					}
 				};
+				img.onerror = function() {
+					loaded++;
+					if (loaded == len) {
+						onIconsLoad();
+					}
+                                }
 				img.src = Kothic.iconsPath + url;
 			})(urls[i]);
 		}
