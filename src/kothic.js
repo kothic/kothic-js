@@ -477,133 +477,121 @@ var Kothic = (function () {
 		//points = ST_Simplify(points, 1);
 		var linelength = ST_Length(points);
 		
-		if (linelength > textWidth) {
-			var widthused = 0;
-			var i = 0;
-			var prevangle = "aaa";
-			var positions = [];
-			var solution = 0;
+		if (linelength < textWidth) return;
+		
+		var widthUsed,
+			prevAngle,
+			positions,
+			solution = 0,
+			flipCount,
+			flipped = false;
 			
-			var flipcount = 0;
-			var flipped = false;
-			while (solution < 2) {
-				if (solution == 0)
-					widthused = linelength - textWidth / 2;
-				if (solution == 1)
-					widthused = 0;
-				flipcount = 0;
-				i = 0;
-				prevangle = "aaa";
-				positions = new Array();
-				while (i < text.length) {
-					var letter = text.charAt(i);
-					var letterwidth = letterWidths[letter] / aspect;
-					var axy = ST_AngleAndCoordsAtLength(points, widthused);
-					if (widthused >= linelength || !axy) {
-						//alert("cannot fit text: "+text+" widthused:"+ widthused +" width:"+textWidth+" space:"+linelength+" letter:"+letter+" aspect:"+aspect);
-						solution++;
-						positions = [];
-						if (flipped) {
-							points.reverse();
-							flipped = false;
-						}
-						break;
-					} // cannot fit
-					if (prevangle == "aaa")
-						prevangle = axy[0];
-					if (collides.checkPointWH([ axy[1], axy[2] ],
-							2.5 * letterwidth, 2.5 * letterwidth)
-							|| Math.abs(prevangle - axy[0]) > 0.2) {
-						i = 0;
-						positions = [];
-						letter = text.charAt(i);
-						widthused += letterwidth;
-						continue;
-					}
-					/*while (letterwidth > axy[3] && i<text.length){
-					  i++;
-					  letter += text.substr(i,1);
-					  letterwidth = ctx.measureText(letter).width;
-					  if (
-					    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[3])*letterwidth,
-					                         axy[2]+0.5*Math.sin(axy[3])*letterwidth],
-					                         2.5*letterwidth,
-					                         2.5*letterwidth)
-					    || Math.abs(prevangle-axy[0])>0.2){
-					    i = 0;
-					    positions = new Array();
-					    letter = text.substr(i,1);
-					    break;
-					  }
-
-					}*/
-					if (axy[0] > Math.PI / 2 || axy[0] < -Math.PI / 2) {
-						flipcount += letter.length;
-					}
-					
-					prevangle = axy[0];
-					axy.push(letter);
-					positions.push(axy);
-					widthused += letterwidth;
-					i++;
-				}
-				if (flipped && flipcount > text.length / 2) {
-					points.reverse();
-					flipped = false;
-					positions = new Array();
+		while (solution < 2) {
+			widthUsed = solution ? 0 : linelength - textWidth / 2;
+			flipCount = 0;
+			prevAngle = null;
+			positions = [];
+			
+			for (i = 0; i < textLen; i++) {
+				letter = text.charAt(i);
+				
+				var letterWidth = letterWidths[letter] / aspect,
+					axy = ST_AngleAndCoordsAtLength(points, widthUsed);
+				
+				if (widthUsed >= linelength || !axy) {
+					//alert("cannot fit text: "+text+" widthused:"+ widthused +" width:"+textWidth+" space:"+linelength+" letter:"+letter+" aspect:"+aspect);
 					solution++;
-					flipcount = 0;
-				}
-				if (!flipped && flipcount > text.length / 2) {
-					points.reverse();
-					flipped = true;
-					positions = new Array();
-				}
-				if (solution >= 2) {
-					return
-				}
-				if (positions.length > 0) {
+					positions = [];
+					if (flipped) {
+						points.reverse();
+						flipped = false;
+					}
 					break;
+				} // cannot fit
+				if (!prevAngle) {
+					prevAngle = axy[0];
+				}
+				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
+						|| Math.abs(prevAngle - axy[0]) > 0.2) {
+					widthUsed += letterWidth;
+					i = -1;
+					continue;
+				}
+				/*while (letterwidth > axy[3] && i<text.length){
+				  i++;
+				  letter += text.substr(i,1);
+				  letterwidth = ctx.measureText(letter).width;
+				  if (
+				    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[3])*letterwidth,
+				                         axy[2]+0.5*Math.sin(axy[3])*letterwidth],
+				                         2.5*letterwidth,
+				                         2.5*letterwidth)
+				    || Math.abs(prevangle-axy[0])>0.2){
+				    i = 0;
+				    positions = new Array();
+				    letter = text.substr(i,1);
+				    break;
+				  }
+
+				}*/
+				if (axy[0] > Math.PI / 2 || axy[0] < -Math.PI / 2) {
+					flipCount += letter.length;
+				}
+				
+				prevAngle = axy[0];
+				axy.push(letter);
+				positions.push(axy);
+				widthUsed += letterWidth;
+			}
+			if (flipCount > textLen / 2) {
+				points.reverse();
+				positions = [];
+				
+				if (flipped) {
+					solution++;
 				}
 			}
 			if (solution >= 2) {
-				return
+				return;
 			}
-			
-			var posLen = positions.length;
-			
-			for (i = 0; halo && (i < posLen); i++) {
-				var axy = positions[i],
-					letter = axy[4];
-				
-				ctx.save();
-				
-				ctx.translate(axy[1], axy[2]);
-				ctx.rotate(axy[0]);
-				
-				ctx.strokeText(letter, 0, 0);
-				ctx.restore();
+			if (positions.length > 0) {
+				break;
 			}
+		}
+		
+		var posLen = positions.length;
+		
+		for (i = 0; halo && (i < posLen); i++) {
+			var axy = positions[i],
+				letter = axy[4];
 			
-			for (i = 0; i < posLen; i++) {
-				var axy = positions[i],
-					letter = axy[4],
-					letterwidth = letterWidths[letter];
-				
-				ctx.save();
-				
-				ctx.translate(axy[1], axy[2]);
-				ctx.rotate(axy[0]);
-				
-				collides.addPointWH([
-					axy[1] + 0.5 * Math.cos(axy[3]) * letterwidth,
-					axy[2] + 0.5 * Math.sin(axy[3]) * letterwidth ],
-						2.5 * letterwidth, 2.5 * letterwidth);
-				//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
-				
-				ctx.fillText(letter, 0, 0);
-				ctx.restore();
-			}
+			ctx.save();
+			
+			ctx.translate(axy[1], axy[2]);
+			ctx.rotate(axy[0]);
+			
+			ctx.strokeText(letter, 0, 0);
+			ctx.restore();
+		}
+		
+		for (i = 0; i < posLen; i++) {
+			var axy = positions[i],
+				letter = axy[4],
+				letterwidth = letterWidths[letter];
+			
+			ctx.save();
+			
+			ctx.translate(axy[1], axy[2]);
+			ctx.rotate(axy[0]);
+			
+			collides.addPointWH([
+				axy[1] + 0.5 * Math.cos(axy[3]) * letterwidth,
+				axy[2] + 0.5 * Math.sin(axy[3]) * letterwidth ],
+					2.5 * letterwidth, 2.5 * letterwidth);
+			//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
+			
+			ctx.fillText(letter, 0, 0);
+			ctx.restore();
 		}
 	}
 	
