@@ -1,6 +1,7 @@
 var Kothic = (function () {
 
-	var canvas, ctx, 
+	var canvas, buffer, 
+		ctx, realCtx, 
 		width, height,
 		granularity,
 		ws, hs,
@@ -23,15 +24,21 @@ var Kothic = (function () {
 			layersStyled,
 			mapRendered,
 			iconsLoaded,
+			bufferRendered,
 			finish;
 		
 		// init all variables
 		
 		canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId);
-		ctx = canvas.getContext('2d');
+		buffer = document.createElement('canvas');
+		realCtx = canvas.getContext('2d');
+		ctx = buffer.getContext('2d');
 		
 		width = canvas.width;
 		height = canvas.height;
+		
+		buffer.width = width;
+		buffer.height = height;
 		
 		granularity = data.granularity;
 		ws = width / granularity;
@@ -59,13 +66,19 @@ var Kothic = (function () {
 		function onImagesLoad() {
 			iconsLoaded = +new Date();
 			renderIconsAndText();
+			bufferRendered = +new Date();
+			
+			realCtx.drawImage(buffer, 0, 0);
+			
 			finish = +new Date();
 			
 			alert(
 					(layersStyled - start) + ': layers styled\n' +
-					(mapRendered - start) + ': map rendered\n' + 
-					(iconsLoaded - start) + ': icons loaded\n' + 
-					(finish - start) + ': icons and text rendered'
+					(mapRendered - layersStyled) + ': map rendered\n' + 
+					(iconsLoaded - mapRendered) + ': icons loaded\n' + 
+					(bufferRendered - iconsLoaded) + ': icons and text rendered\n' + 
+					(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
+					(finish - start) + ': total time.'
 			);
 		}
 		
