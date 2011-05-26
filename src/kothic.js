@@ -8,7 +8,8 @@ var Kothic = (function () {
 		layers = {}, 
 		layerIds = [],
 		collides,
-		dashPattern;
+		dashPattern,
+		pathOpened;
 		
 	
 	var defaultStyles = {
@@ -19,7 +20,7 @@ var Kothic = (function () {
 		lineJoin: "round"
 	};
 	
-	function render(canvasId, data, zoom, imageQ) {
+	function render(canvasId, data, zoom) {
 		var start = +new Date(),
 			layersStyled,
 			mapRendered,
@@ -101,15 +102,15 @@ var Kothic = (function () {
 			if (!featuresLen) continue;
 			
 			for (j = 0; j < featuresLen; j++) {
-				renderPolygonFill(features[j]);
+				renderPolygonFill(features[j], features[j+1]);
 			}
 			ctx.lineCap = "butt";
 			for (j = 0; j < featuresLen; j++) {
-				renderCasing(features[j]);
+				renderCasing(features[j], features[j+1]);
 			}
 			ctx.lineCap = "round";
 			for (j = 0; j < featuresLen; j++) {
-				renderPolyline(features[j]);
+				renderPolyline(features[j], features[j+1]);
 			}
 		}
 	}
@@ -134,69 +135,81 @@ var Kothic = (function () {
 		}
 	}
 	
-	function renderPolygonFill(feature) {
+	function renderPolygonFill(feature, nextFeature) {
 		var style = feature.style;
 		if (!('fill-color' in style)) return;
 		
-		ctx.save();
-		
-		setStyles({
-			fillStyle: style["fill-color"],
-			globalAlpha: style["fill-opacity"] || style["opacity"]
-		});
 		pathGeoJSON(feature, "aaa", true);
-		ctx.fill();
 		
-		ctx.restore();
+		if (!nextFeature || (nextFeature.style !== style)) {
+			ctx.save();
+			
+			setStyles({
+				fillStyle: style["fill-color"],
+				globalAlpha: style["fill-opacity"] || style["opacity"]
+			});
+			
+			pathOpened = false;
+
+			ctx.fill();
+			
+			ctx.restore();
+		}
 	}
 	
-	function renderCasing(feature) {
+	function renderCasing(feature, nextFeature) {
 		var style = feature.style;
 		if (!("casing-width" in style)) return;
-		
-		ctx.save();
-		
-		var width = 2 * style["casing-width"] + ("width" in style ? style["width"] : 0);
 		
 		var dashes = "aaa";
 		if ("dashes" in style) { dashes = style["dashes"].split(","); }
 		if ("casing-dashes" in style) { dashes = style["casing-dashes"].split(","); }
 		
-		setStyles({
-			lineWidth: width,
-			strokeStyle: style["casing-color"] || style["color"],
-			lineCap: style["casing-linecap"] || style["linecap"],
-			lineJoin: style["casing-linejoin"] || style["linejoin"],
-			globalAlpha: style["casing-opacity"] || style["opacity"]
-		});
-		
 		pathGeoJSON(feature, dashes);
-		ctx.stroke();
+
+		if (!nextFeature || (nextFeature.style !== style)) {
+			ctx.save();
+			
+			setStyles({
+				lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
+				strokeStyle: style["casing-color"] || style["color"],
+				lineCap: style["casing-linecap"] || style["linecap"],
+				lineJoin: style["casing-linejoin"] || style["linejoin"],
+				globalAlpha: style["casing-opacity"] || style["opacity"]
+			});
+			
+			pathOpened = false;
+			ctx.stroke();
 		
-		ctx.restore();
+			ctx.restore();
+		}
 	}
 	
-	function renderPolyline(feature) {
+	function renderPolyline(feature, nextFeature) {
 		var style = feature.style;
 		if (!("width" in style)) return;
 		
-		ctx.save();
-		
 		var dashes = "aaa";
-		if ("dashes" in style){dashes = style["dashes"].split(",");}
-		
-		setStyles({
-			lineWidth: style.width,
-			strokeStyle: style.color,
-			lineCap: style.linecap,
-			lineJoin: style.linejoin,
-			globalAlpha: style.opacity
-		});
+		if ("dashes" in style){ dashes = style["dashes"].split(","); }
 		
 		pathGeoJSON(feature, dashes);
-		ctx.stroke();
 		
-		ctx.restore();
+		if (!nextFeature || (nextFeature.style !== style)) {
+			ctx.save();
+			
+			setStyles({
+				lineWidth: style.width,
+				strokeStyle: style.color,
+				lineCap: style.linecap,
+				lineJoin: style.linejoin,
+				globalAlpha: style.opacity
+			});
+			
+			pathOpened = false;
+			ctx.stroke();
+		
+			ctx.restore();
+		}
 	}
 	
 	function renderBackground(zoom) {
@@ -319,6 +332,8 @@ var Kothic = (function () {
 		ctx.restore();		
 	}
 	
+	var styleCache = {};
+	
 	function styleFeatures(features, zoom) {
 		var styledFeatures = [],
 			i, j, len, feature, style, restyledFeature;
@@ -326,20 +341,24 @@ var Kothic = (function () {
 		for (i = 0, len = features.length; i < len; i++) {
 			feature = features[i];
 	
-			style = restyle(feature.properties, zoom, feature.type);
+			var styleKey = JSON.stringify(feature.properties) + ':' + zoom + ':' + feature.type;
+			if (styleKey in styleCache) {
+				style = styleCache[styleKey];
+			} else {
+				style = styleCache[styleKey] = restyle(feature.properties, zoom, feature.type);
+			}
 			
 			for (j in style) {
 				if (style.hasOwnProperty(j)) {
 					restyledFeature = extend({}, feature);
 					restyledFeature.style = style[j];
-					restyledFeature.style["z-index"] = restyledFeature.style["z-index"] || 0;
 					styledFeatures.push(restyledFeature);
 				}
 			}
 		}
 		
 		styledFeatures.sort(function (a, b) {
-			return a.style["z-index"] - b.style["z-index"];
+			return (a.style["z-index"] || 0) - (b.style["z-index"] || 0);
 		});
 		
 		return styledFeatures;
@@ -377,9 +396,12 @@ var Kothic = (function () {
 		}
 	}
 	
-	function pathGeoJSON(val, dashes, fill) {
-		ctx.beginPath();
-
+	function pathGeoJSON(val, dashes, fill, close) {
+		if (!pathOpened) {
+			pathOpened = true;
+			ctx.beginPath();
+		}
+		
 		if (val.type == "Polygon") {
 			var firstpoint = val.coordinates[0][0];
 			for (coordseq in val.coordinates) {
@@ -412,7 +434,9 @@ var Kothic = (function () {
 			}
 			for (var i = 0, len = val.coordinates.length; i < len; i++) {
 				coord = val.coordinates[i];
-				if (dashes == "aaa") {
+				if (i == 0) {
+					moveTo(coord);
+				} else if (dashes == "aaa") {
 					lineTo(coord);
 				} else {
 					dashTo(coord);
@@ -702,7 +726,7 @@ var Kothic = (function () {
 					if (loaded == len) {
 						onIconsLoad();
 					}
-                                }
+				};
 				img.src = Kothic.iconsPath + url;
 			})(urls[i]);
 		}
