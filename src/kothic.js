@@ -451,18 +451,18 @@ var Kothic = (function () {
 		}
 	}
 	
-	function textOnGeoJSON(val, halo, text) {
-		if (val.type != "LineString") return;
+	function textOnGeoJSON(feature, halo, text) {
+		if (feature.type != "LineString") return;
 			
 		var i, j, letter, 
 			letterWidths = {},
 			points = [],
-			len = val.coordinates.length,
+			len = feature.coordinates.length,
 			textWidth = 0,
 			textLen = text.length;
 		
 		for (i = 0; i < len; i++) {
-			points.push(transformPoint(val.coordinates[i]));
+			points.push(transformPoint(feature.coordinates[i]));
 		}
 		
 		for (i = 0; i < textLen; i++) {
@@ -508,15 +508,16 @@ var Kothic = (function () {
 					}
 					break;
 				} // cannot fit
-				if (!prevAngle) {
-					prevAngle = axy[0];
-				}
+				
+				if (!prevAngle) prevAngle = axy[0];
+				
 				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
 						|| Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
 					i = -1;
 					continue;
 				}
+				
 				/*while (letterwidth > axy[3] && i<text.length){
 				  i++;
 				  letter += text.substr(i,1);
@@ -534,8 +535,8 @@ var Kothic = (function () {
 				  }
 
 				}*/
-				if (axy[0] > Math.PI / 2 || axy[0] < -Math.PI / 2) {
-					flipCount += letter.length;
+				if ((axy[0] > Math.PI / 2) || (axy[0] < -Math.PI / 2)) {
+					flipCount += 1; //letter.length;
 				}
 				
 				prevAngle = axy[0];
@@ -547,16 +548,10 @@ var Kothic = (function () {
 				points.reverse();
 				positions = [];
 				
-				if (flipped) {
-					solution++;
-				}
+				if (flipped) solution++;
 			}
-			if (solution >= 2) {
-				return;
-			}
-			if (positions.length > 0) {
-				break;
-			}
+			if (solution >= 2) return;
+			if (positions.length > 0) break;
 		}
 		
 		var posLen = positions.length;
