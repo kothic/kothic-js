@@ -9,7 +9,8 @@ var Kothic = (function () {
 		layerIds = [],
 		collides,
 		dashPattern,
-		pathOpened;
+		pathOpened,
+		beforeDataLoad = +new Date();
 		
 	
 	var defaultStyles = {
@@ -74,12 +75,13 @@ var Kothic = (function () {
 			finish = +new Date();
 			
 			alert(
+					(start - beforeDataLoad) + ': data loaded\n' +  
 					(layersStyled - start) + ': layers styled\n' +
 					(mapRendered - layersStyled) + ': map rendered\n' + 
 					(iconsLoaded - mapRendered) + ': icons loaded\n' + 
 					(bufferRendered - iconsLoaded) + ': icons and text rendered\n' + 
 					(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
-					(finish - start) + ': total time.'
+					(finish - start) + ': total rendering time.'
 			);
 		}
 		
@@ -161,9 +163,8 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!("casing-width" in style)) return;
 		
-		var dashes = "aaa";
-		if ("dashes" in style) { dashes = style["dashes"].split(","); }
-		if ("casing-dashes" in style) { dashes = style["casing-dashes"].split(","); }
+		var dashesStr = style["casing-dashes"] || style.dashes,
+			dashes = dashesStr ? dashesStr.split(',') : false;
 		
 		pathGeoJSON(feature, dashes);
 
@@ -189,8 +190,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!("width" in style)) return;
 		
-		var dashes = "aaa";
-		if ("dashes" in style){ dashes = style["dashes"].split(","); }
+		var dashes = style.dashes ? style.dashes.split(',') : false;
 		
 		pathGeoJSON(feature, dashes);
 		
@@ -396,50 +396,50 @@ var Kothic = (function () {
 		}
 	}
 	
-	function pathGeoJSON(val, dashes, fill, close) {
+	function pathGeoJSON(feature, dashes, fill) {
 		if (!pathOpened) {
 			pathOpened = true;
 			ctx.beginPath();
 		}
 		
-		if (val.type == "Polygon") {
-			var firstpoint = val.coordinates[0][0];
-			for (coordseq in val.coordinates) {
-				coordseq = val.coordinates[coordseq];
-				moveTo(coordseq[0]);
-				var prevcoord = coordseq[0];
+		var i, j, len, pointsLen, points, firstPoint, point;
+		
+		if (feature.type == "Polygon") {
+			for (i = 0, len = feature.coordinates.length; i < len; i++) {
+				points = feature.coordinates[i];
+				pointsLen = points.length;
+				firstPoint = points[0];
+				
+				moveTo(firstPoint);
 				if (fill) {
-					for (coord in coordseq) {
-						coord = coordseq[coord];
-						lineTo(coord);
+					for (j = 1; j < pointsLen; j++) {
+						lineTo(points[j]);
 					}
 				} else {
-					for (coord in coordseq) {
-						coord = coordseq[coord];
-						if ((prevcoord[0] == coord[0] && (coord[0] == 0 || coord[0] == granularity))
-								|| (prevcoord[1] == coord[1] && (coord[1] == 0 || coord[1] == granularity))) //hide boundaries
-						{
-							moveTo(coord);
+					for (j = 1; j < pointsLen; j++) {
+						point = points[j];
+						if ((firstPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
+								|| (firstPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
+							moveTo(point);
 						} else {
-							lineTo(coord);
+							lineTo(point);
 						}
 					}
 				}
-				moveTo(firstpoint);
 			}
 		}
-		if (val.type == "LineString") {
-			if (dashes != "aaa") {
-				setDashPattern(val.coordinates[0], dashes);
+		if (feature.type == "LineString") {
+			if (dashes) {
+				setDashPattern(feature.coordinates[0], dashes);
 			}
-			for (var i = 0, len = val.coordinates.length; i < len; i++) {
-				coord = val.coordinates[i];
+			for (i = 0, len = feature.coordinates.length; i < len; i++) {
+				point = feature.coordinates[i];
 				if (i == 0) {
-					moveTo(coord);
-				} else if (dashes == "aaa") {
-					lineTo(coord);
+					moveTo(point);
+				} else if (dashes) {
+					dashTo(point);
 				} else {
-					dashTo(coord);
+					lineTo(point);
 				}
 			}
 		}
