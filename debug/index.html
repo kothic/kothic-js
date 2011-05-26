@@ -24,15 +24,15 @@
 	<script>
 		var canvas = document.getElementById('canvas');	
 
-		canvas.width = canvas.height = 256 * 16;
+		canvas.width = canvas.height = 256 * 4;
 		
 		Kothic.iconsPath = 'http://osmosnimki.ru/leaf/icons/';
 		Kothic.preloadIcons(imagesToLoad);
 		
-		function onDataResponse(data) {
-			Kothic.render('canvas', data, 13);
+		function onKothicDataResponse(data, zoom, x, y) {
+			Kothic.render('canvas', data, zoom + 2);
 		}
 	</script>
-	<script src="z13.js" charset="utf-8"></script>
+	<script src="http://osmosnimki.ru/vtile/9/309/159.js" charset="utf-8"></script>
 </body>
 </html>
