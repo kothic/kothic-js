@@ -32,15 +32,16 @@ var Kothic = (function () {
 		// init all variables
 		
 		canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId);
-		buffer = document.createElement('canvas');
-		realCtx = canvas.getContext('2d');
-		ctx = buffer.getContext('2d');
+		//buffer = document.createElement('canvas');
+		//realCtx = canvas.getContext('2d');
+		//ctx = buffer.getContext('2d');
+		ctx = canvas.getContext('2d');
 		
 		width = canvas.width;
 		height = canvas.height;
 		
-		buffer.width = width;
-		buffer.height = height;
+		//buffer.width = width;
+		//buffer.height = height;
 		
 		granularity = data.granularity;
 		ws = width / granularity;
@@ -62,6 +63,7 @@ var Kothic = (function () {
 		
 		renderBackground(zoom);
 		renderMap();
+		document.body.offsetWidth;
 		
 		mapRendered = +new Date();
 		
@@ -70,7 +72,7 @@ var Kothic = (function () {
 			renderIconsAndText();
 			bufferRendered = +new Date();
 			
-			realCtx.drawImage(buffer, 0, 0);
+			//realCtx.drawImage(buffer, 0, 0);
 			
 			finish = +new Date();
 			
@@ -106,10 +108,12 @@ var Kothic = (function () {
 			for (j = 0; j < featuresLen; j++) {
 				renderPolygonFill(features[j], features[j+1]);
 			}
+
 			ctx.lineCap = "butt";
 			for (j = 0; j < featuresLen; j++) {
 				renderCasing(features[j], features[j+1]);
 			}
+			
 			ctx.lineCap = "round";
 			for (j = 0; j < featuresLen; j++) {
 				renderPolyline(features[j], features[j+1]);
@@ -408,9 +412,9 @@ var Kothic = (function () {
 			for (i = 0, len = feature.coordinates.length; i < len; i++) {
 				points = feature.coordinates[i];
 				pointsLen = points.length;
-				firstPoint = points[0];
+				prevPoint = points[0];
 				
-				moveTo(firstPoint);
+				moveTo(prevPoint);
 				if (fill) {
 					for (j = 1; j < pointsLen; j++) {
 						lineTo(points[j]);
@@ -418,12 +422,13 @@ var Kothic = (function () {
 				} else {
 					for (j = 1; j < pointsLen; j++) {
 						point = points[j];
-						if ((firstPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
-								|| (firstPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
+						if ((prevPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
+								|| (prevPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
 							moveTo(point);
 						} else {
 							lineTo(point);
 						}
+						prevPoint = point;
 					}
 				}
 			}
