@@ -76,14 +76,15 @@ var Kothic = (function () {
 			
 			finish = +new Date();
 			
-			alert(
-					(start - beforeDataLoad) + ': data loaded\n' +  
+			Kothic.onRenderComplete(
+					(start - beforeDataLoad) + ': data loaded\n\n' +  
 					(layersStyled - start) + ': layers styled\n' +
 					(mapRendered - layersStyled) + ': map rendered\n' + 
-					(iconsLoaded - mapRendered) + ': icons loaded\n' + 
-					(bufferRendered - iconsLoaded) + ': icons and text rendered\n' + 
-					(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
-					(finish - start) + ': total rendering time.'
+					//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
+					(bufferRendered - iconsLoaded) + ': icons/text rendered\n' + 
+					//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
+					'\n' + (finish - start) + ': total rendering time\n' + 
+					(finish - beforeDataLoad) + ': total'
 			);
 		}
 		
@@ -763,11 +764,15 @@ var Kothic = (function () {
 		return dest;
 	}
 	
+	function emptyFn() {}
+	
 	return {
 		render: render,
-		
 		preloadIcons: preloadIcons,
-		onIconsLoad: function() {},
+		
+		onIconsLoad: emptyFn,
+		onRenderComplete: emptyFn,
+		
 		iconsLoaded: false,
 		iconsPath: ''
 	};

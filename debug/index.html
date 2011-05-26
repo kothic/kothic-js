@@ -17,10 +17,20 @@
 			padding: 0;
 			margin: 0;
 			}
+		#debug {
+			position: absolute;
+			top: 0;
+			right: 0;
+			background: rgba(255,255,255,0.7);
+			border: 1px solid #ddd;
+			padding: 10px;
+			font: 10px Verdana, sans-serif;
+			}
 	</style>
 </head>
 <body>
 	<canvas id="canvas"></canvas>
+	<div id="debug">Rendering...</div>
 	<script>
 		var canvas = document.getElementById('canvas');	
 
@@ -28,6 +38,11 @@
 		
 		Kothic.iconsPath = 'http://osmosnimki.ru/leaf/icons/';
 		Kothic.preloadIcons(imagesToLoad);
+		
+		Kothic.onRenderComplete = function(log) {
+			console.log(arguments);
+			document.getElementById('debug').innerText = log;
+		}
 		
 		function onKothicDataResponse(data, zoom, x, y) {
 			Kothic.render('canvas', data, zoom + 2);
