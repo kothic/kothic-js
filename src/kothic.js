@@ -171,8 +171,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!("casing-width" in style)) return;
 		
-		var dashesStr = style["casing-dashes"] || style.dashes,
-			dashes = dashesStr ? dashesStr.split(',') : false;
+		var dashes = style["casing-dashes"] || style.dashes || false;
 		
 		pathGeoJSON(feature, dashes);
 
