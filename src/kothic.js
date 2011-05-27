@@ -701,7 +701,7 @@ var Kothic = (function () {
 			return size + 'px Arial, Helvetica, sans-serif';
 		}
 		
-		var family = name;
+		var family = name || '';
 			
 		size = size || 9;
 		name = name.toLowerCase();
@@ -711,10 +711,8 @@ var Kothic = (function () {
 		
 		if (name.indexOf('serif') != -1) {
 			family += ', Georgia, serif';
-		} else if (name.indexOf('mono') != -1) {
-			family += ', "Courier New", monospace';
 		} else {
-			family += ', Arial, Helvetica, sans-serif';
+			family += (family ? ', ' : '') + 'Arial, Helvetica, sans-serif';
 		}
 		
 		return weight + " " + style + " " + size +"px " + family;
