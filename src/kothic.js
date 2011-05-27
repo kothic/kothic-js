@@ -512,7 +512,7 @@ var Kothic = (function () {
 				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
 						|| Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
-					i = 0;
+					i = -1;
           positions = new Array();
 					continue;
 				}
