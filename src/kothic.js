@@ -32,15 +32,16 @@ var Kothic = (function () {
 		// init all variables
 		
 		canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId);
-		buffer = document.createElement('canvas');
-		realCtx = canvas.getContext('2d');
-		ctx = buffer.getContext('2d');
+		//buffer = document.createElement('canvas');
+		//realCtx = canvas.getContext('2d');
+		//ctx = buffer.getContext('2d');
+		ctx = canvas.getContext('2d');
 		
 		width = canvas.width;
 		height = canvas.height;
 		
-		buffer.width = width;
-		buffer.height = height;
+		//buffer.width = width;
+		//buffer.height = height;
 		
 		granularity = data.granularity;
 		ws = width / granularity;
@@ -62,6 +63,7 @@ var Kothic = (function () {
 		
 		renderBackground(zoom);
 		renderMap();
+		document.body.offsetWidth;
 		
 		mapRendered = +new Date();
 		
@@ -70,18 +72,19 @@ var Kothic = (function () {
 			renderIconsAndText();
 			bufferRendered = +new Date();
 			
-			realCtx.drawImage(buffer, 0, 0);
+			//realCtx.drawImage(buffer, 0, 0);
 			
 			finish = +new Date();
 			
-			alert(
-					(start - beforeDataLoad) + ': data loaded\n' +  
+			Kothic.onRenderComplete(
+					(start - beforeDataLoad) + ': data loaded\n\n' +  
 					(layersStyled - start) + ': layers styled\n' +
 					(mapRendered - layersStyled) + ': map rendered\n' + 
-					(iconsLoaded - mapRendered) + ': icons loaded\n' + 
-					(bufferRendered - iconsLoaded) + ': icons and text rendered\n' + 
-					(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
-					(finish - start) + ': total rendering time.'
+					//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
+					(bufferRendered - iconsLoaded) + ': icons/text rendered\n' + 
+					//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
+					'\n' + (finish - start) + ': total rendering time\n' + 
+					(finish - beforeDataLoad) + ': total'
 			);
 		}
 		
@@ -106,10 +109,12 @@ var Kothic = (function () {
 			for (j = 0; j < featuresLen; j++) {
 				renderPolygonFill(features[j], features[j+1]);
 			}
+
 			ctx.lineCap = "butt";
 			for (j = 0; j < featuresLen; j++) {
 				renderCasing(features[j], features[j+1]);
 			}
+			
 			ctx.lineCap = "round";
 			for (j = 0; j < featuresLen; j++) {
 				renderPolyline(features[j], features[j+1]);
@@ -408,9 +413,9 @@ var Kothic = (function () {
 			for (i = 0, len = feature.coordinates.length; i < len; i++) {
 				points = feature.coordinates[i];
 				pointsLen = points.length;
-				firstPoint = points[0];
+				prevPoint = points[0];
 				
-				moveTo(firstPoint);
+				moveTo(prevPoint);
 				if (fill) {
 					for (j = 1; j < pointsLen; j++) {
 						lineTo(points[j]);
@@ -418,12 +423,13 @@ var Kothic = (function () {
 				} else {
 					for (j = 1; j < pointsLen; j++) {
 						point = points[j];
-						if ((firstPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
-								|| (firstPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
+						if ((prevPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
+								|| (prevPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
 							moveTo(point);
 						} else {
 							lineTo(point);
 						}
+						prevPoint = point;
 					}
 				}
 			}
@@ -445,18 +451,18 @@ var Kothic = (function () {
 		}
 	}
 	
-	function textOnGeoJSON(val, halo, text) {
-		if (val.type != "LineString") return;
+	function textOnGeoJSON(feature, halo, text) {
+		if (feature.type != "LineString") return;
 			
 		var i, j, letter, 
 			letterWidths = {},
 			points = [],
-			len = val.coordinates.length,
+			len = feature.coordinates.length,
 			textWidth = 0,
 			textLen = text.length;
 		
 		for (i = 0; i < len; i++) {
-			points.push(transformPoint(val.coordinates[i]));
+			points.push(transformPoint(feature.coordinates[i]));
 		}
 		
 		for (i = 0; i < textLen; i++) {
@@ -471,133 +477,116 @@ var Kothic = (function () {
 		//points = ST_Simplify(points, 1);
 		var linelength = ST_Length(points);
 		
-		if (linelength > textWidth) {
-			var widthused = 0;
-			var i = 0;
-			var prevangle = "aaa";
-			var positions = [];
-			var solution = 0;
+		if (linelength < textWidth) return;
+		
+		var widthUsed,
+			prevAngle,
+			positions,
+			solution = 0,
+			flipCount,
+			flipped = false;
 			
-			var flipcount = 0;
-			var flipped = false;
-			while (solution < 2) {
-				if (solution == 0)
-					widthused = linelength - textWidth / 2;
-				if (solution == 1)
-					widthused = 0;
-				flipcount = 0;
-				i = 0;
-				prevangle = "aaa";
-				positions = new Array();
-				while (i < text.length) {
-					var letter = text.charAt(i);
-					var letterwidth = letterWidths[letter] / aspect;
-					var axy = ST_AngleAndCoordsAtLength(points, widthused);
-					if (widthused >= linelength || !axy) {
-						//alert("cannot fit text: "+text+" widthused:"+ widthused +" width:"+textWidth+" space:"+linelength+" letter:"+letter+" aspect:"+aspect);
-						solution++;
-						positions = [];
-						if (flipped) {
-							points.reverse();
-							flipped = false;
-						}
-						break;
-					} // cannot fit
-					if (prevangle == "aaa")
-						prevangle = axy[0];
-					if (collides.checkPointWH([ axy[1], axy[2] ],
-							2.5 * letterwidth, 2.5 * letterwidth)
-							|| Math.abs(prevangle - axy[0]) > 0.2) {
-						i = 0;
-						positions = [];
-						letter = text.charAt(i);
-						widthused += letterwidth;
-						continue;
-					}
-					/*while (letterwidth > axy[3] && i<text.length){
-					  i++;
-					  letter += text.substr(i,1);
-					  letterwidth = ctx.measureText(letter).width;
-					  if (
-					    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[3])*letterwidth,
-					                         axy[2]+0.5*Math.sin(axy[3])*letterwidth],
-					                         2.5*letterwidth,
-					                         2.5*letterwidth)
-					    || Math.abs(prevangle-axy[0])>0.2){
-					    i = 0;
-					    positions = new Array();
-					    letter = text.substr(i,1);
-					    break;
-					  }
-
-					}*/
-					if (axy[0] > Math.PI / 2 || axy[0] < -Math.PI / 2) {
-						flipcount += letter.length;
-					}
-					
-					prevangle = axy[0];
-					axy.push(letter);
-					positions.push(axy);
-					widthused += letterwidth;
-					i++;
-				}
-				if (flipped && flipcount > text.length / 2) {
-					points.reverse();
-					flipped = false;
-					positions = new Array();
+		while (solution < 2) {
+			widthUsed = solution ? 0 : linelength - textWidth / 2;
+			flipCount = 0;
+			prevAngle = null;
+			positions = [];
+			
+			for (i = 0; i < textLen; i++) {
+				letter = text.charAt(i);
+				
+				var letterWidth = letterWidths[letter] / aspect,
+					axy = ST_AngleAndCoordsAtLength(points, widthUsed);
+				
+				if (widthUsed >= linelength || !axy) {
+					//alert("cannot fit text: "+text+" widthused:"+ widthused +" width:"+textWidth+" space:"+linelength+" letter:"+letter+" aspect:"+aspect);
 					solution++;
-					flipcount = 0;
-				}
-				if (!flipped && flipcount > text.length / 2) {
-					points.reverse();
-					flipped = true;
-					positions = new Array();
-				}
-				if (solution >= 2) {
-					return
-				}
-				if (positions.length > 0) {
+					positions = [];
+					if (flipped) {
+						points.reverse();
+						flipped = false;
+					}
 					break;
+				} // cannot fit
+				
+				if (!prevAngle) prevAngle = axy[0];
+				
+				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
+						|| Math.abs(prevAngle - axy[0]) > 0.2) {
+					widthUsed += letterWidth;
+					i = -1;
+					continue;
 				}
+				
+				/*while (letterwidth > axy[3] && i<text.length){
+				  i++;
+				  letter += text.substr(i,1);
+				  letterwidth = ctx.measureText(letter).width;
+				  if (
+				    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[3])*letterwidth,
+				                         axy[2]+0.5*Math.sin(axy[3])*letterwidth],
+				                         2.5*letterwidth,
+				                         2.5*letterwidth)
+				    || Math.abs(prevangle-axy[0])>0.2){
+				    i = 0;
+				    positions = new Array();
+				    letter = text.substr(i,1);
+				    break;
+				  }
+
+				}*/
+				if ((axy[0] > Math.PI / 2) || (axy[0] < -Math.PI / 2)) {
+					flipCount += 1; //letter.length;
+				}
+				
+				prevAngle = axy[0];
+				axy.push(letter);
+				positions.push(axy);
+				widthUsed += letterWidth;
 			}
-			if (solution >= 2) {
-				return
+			if (flipCount > textLen / 2) {
+				points.reverse();
+				positions = [];
+				
+				if (flipped) solution++;
 			}
+			if (solution >= 2) return;
+			if (positions.length > 0) break;
+		}
+		
+		var posLen = positions.length;
+		
+		for (i = 0; halo && (i < posLen); i++) {
+			var axy = positions[i],
+				letter = axy[4];
 			
-			var posLen = positions.length;
+			ctx.save();
 			
-			for (i = 0; halo && (i < posLen); i++) {
-				var axy = positions[i],
-					letter = axy[4];
-				
-				ctx.save();
-				
-				ctx.translate(axy[1], axy[2]);
-				ctx.rotate(axy[0]);
-				
-				ctx.strokeText(letter, 0, 0);
-				ctx.restore();
-			}
+			ctx.translate(axy[1], axy[2]);
+			ctx.rotate(axy[0]);
 			
-			for (i = 0; i < posLen; i++) {
-				var axy = positions[i],
-					letter = axy[4],
-					letterwidth = letterWidths[letter];
-				
-				ctx.save();
-				
-				ctx.translate(axy[1], axy[2]);
-				ctx.rotate(axy[0]);
-				
-				collides.addPointWH([
-					axy[1] + 0.5 * Math.cos(axy[3]) * letterwidth,
-					axy[2] + 0.5 * Math.sin(axy[3]) * letterwidth ],
-						2.5 * letterwidth, 2.5 * letterwidth);
-				//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
-				
-				ctx.fillText(letter, 0, 0);
-				ctx.restore();
-			}
+			ctx.strokeText(letter, 0, 0);
+			ctx.restore();
+		}
+		
+		for (i = 0; i < posLen; i++) {
+			var axy = positions[i],
+				letter = axy[4],
+				letterwidth = letterWidths[letter];
+			
+			ctx.save();
+			
+			ctx.translate(axy[1], axy[2]);
+			ctx.rotate(axy[0]);
+			
+			collides.addPointWH([
+				axy[1] + 0.5 * Math.cos(axy[3]) * letterwidth,
+				axy[2] + 0.5 * Math.sin(axy[3]) * letterwidth ],
+					2.5 * letterwidth, 2.5 * letterwidth);
+			//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
+			
+			ctx.fillText(letter, 0, 0);
+			ctx.restore();
 		}
 	}
 	
@@ -758,11 +747,15 @@ var Kothic = (function () {
 		return dest;
 	}
 	
+	function emptyFn() {}
+	
 	return {
 		render: render,
-		
 		preloadIcons: preloadIcons,
-		onIconsLoad: function() {},
+		
+		onIconsLoad: emptyFn,
+		onRenderComplete: emptyFn,
+		
 		iconsLoaded: false,
 		iconsPath: ''
 	};
