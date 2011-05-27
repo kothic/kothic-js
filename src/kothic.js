@@ -459,6 +459,7 @@ var Kothic = (function () {
 						point = points[j];
 						if (isTileBoundary(point)) { //hide boundaries
 							moveTo(point);
+							setDashPattern(point, dashes);
 						} else if (dashes) {
 							dashTo(point);
 						} else {
@@ -651,48 +652,49 @@ var Kothic = (function () {
 		var p2 = transformPoint(point);
 		
 		dashPattern = {
-			Patn: dashes,
-			Seg: 0,
-			Phs: 0,
-			X1: p2[0],
-			Y1: p2[1]
+			pattern: dashes,
+			seg: 0,
+			phs: 0,
+			x: p2[0],
+			y: p2[1]
 		};
 	}
 	
-	function dashTo(point) { // segment of dasked line set
-		var p2 = transformPoint(point),
-			X2 = p2[0],
-			Y2 = p2[1];
+	function dashTo(point) {
+		var p = transformPoint(point);
 		
-		// X2 Y2 : X & Y to go TO ; internal X1 Y1 to go FROM
-		// Ptrn as [6,4, 1,4] // mark-space pairs indexed by Seg
-		
-		var XDis, YDis, Dist, X, More, T, Ob = dashPattern;
-		XDis = X2 - Ob.X1; // DeltaX
-		YDis = Y2 - Ob.Y1; // DeltaY
-		Dist = Math.sqrt(XDis * XDis + YDis * YDis); // length
-		//if (Dist<0.00000001){return}
+		var pt = dashPattern,
+			dx = p[0] - pt.x, 
+			dy = p[1] - pt.y, 
+			dist = Math.sqrt(dx * dx + dy * dy), 
+			x, more, t;
+
 		ctx.save();
-		ctx.translate(Ob.X1, Ob.Y1);
-		ctx.rotate(Math.atan2(YDis, XDis));
+		ctx.translate(pt.x, pt.y);
+		ctx.rotate(Math.atan2(dy, dx));
 		ctx.moveTo(0, 0);
-		X = 0; // Now dash pattern from 0,0 to Dist,0
+		
+		x = 0;
 		do {
-			T = Ob.Patn[Ob.Seg]; // Full segment
-			X += T - Ob.Phs; // Move by unused seg
-			More = X < Dist; // Not too far?
-			if (!More) {
-				Ob.Phs = T - (X - Dist);
-				X = Dist;
-			} // adjust
-			Ob.Seg % 2 ? ctx.moveTo(X, 0) : ctx.lineTo(X, 0);
-			if (More) {
-				Ob.Phs = 0;
-				Ob.Seg = ++Ob.Seg % Ob.Patn.length;
+			t = pt.pattern[pt.seg];
+			x += t - pt.phs;
+			more = x < dist;
+			
+			if (!more) {
+				pt.phs = t - (x - dist);
+				x = dist;
 			}
-		} while (More);
-		Ob.X1 = X2;
-		Ob.Y1 = Y2;
+			
+			pt.seg % 2 ? ctx.moveTo(x, 0) : ctx.lineTo(x, 0);
+			
+			if (more) {
+				pt.phs = 0;
+				pt.seg = ++pt.seg % pt.pattern.length;
+			}
+		} while (more);
+		
+		pt.x = p[0];
+		pt.y = p[1];
 		ctx.restore();
 	}
 
