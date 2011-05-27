@@ -64,7 +64,6 @@ var Kothic = (function () {
 		
 		renderBackground(zoom);
 		renderMap();
-		document.body.offsetWidth;
 		
 		mapRendered = +new Date();
 		
@@ -156,7 +155,7 @@ var Kothic = (function () {
 			
 			setStyles({
 				fillStyle: style["fill-color"],
-				globalAlpha: style["fill-opacity"] || style["opacity"]
+				globalAlpha: style["fill-opacity"] || style.opacity
 			});
 			
 			pathOpened = false;
@@ -316,11 +315,10 @@ var Kothic = (function () {
 			case 'Point': coords = feature.coordinates; break;
 			case 'Polygon': coords = feature.reprpoint; break;
 			case 'LineString': coords = feature.coordinates[0]; break;
-            case 'GeometryCollection': //TODO: Disassemble geometry collection
-            case 'MultiPoint': //TODO: Disassemble multi point
-            case 'MultiPolygon': //TODO: Disassemble multi polygon
-            case 'MultiLineString': 
-            	ctx.restore(); return; //TODO: Disassemble multi line string
+			case 'GeometryCollection': //TODO: Disassemble geometry collection
+			case 'MultiPoint': //TODO: Disassemble multi point
+			case 'MultiPolygon': //TODO: Disassemble multi polygon
+			case 'MultiLineString': ctx.restore(); return; //TODO: Disassemble multi line string
 		}
 		var x = ws * coords[0],
 			y = hs * (granularity - coords[1]) + offset,
@@ -410,7 +408,7 @@ var Kothic = (function () {
 				layerIds.push(layerId);
 			}
 			layers[layerId].push(feature);
-		};
+		}
 		
 		layerIds.sort();
 	}
@@ -549,8 +547,8 @@ var Kothic = (function () {
 				
 				if (!prevAngle) prevAngle = axy[0];
 				
-				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
-						|| Math.abs(prevAngle - axy[0]) > 0.2) {
+				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth) || 
+						Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
 					i = -1;
 					positions = [];
@@ -601,8 +599,8 @@ var Kothic = (function () {
 		var posLen = positions.length;
 		
 		for (i = 0; halo && (i < posLen); i++) {
-			var axy = positions[i],
-				letter = axy[4];
+			axy = positions[i];
+			letter = axy[4];
 			
 			ctx.save();
 			
@@ -614,9 +612,9 @@ var Kothic = (function () {
 		}
 		
 		for (i = 0; i < posLen; i++) {
-			var axy = positions[i],
-				letter = axy[4],
-				letterwidth = letterWidths[letter];
+			axy = positions[i];
+			letter = axy[4];
+			letterWidth = letterWidths[letter];
 			
 			ctx.save();
 			
@@ -624,9 +622,9 @@ var Kothic = (function () {
 			ctx.rotate(axy[0]);
 			
 			collides.addPointWH([
-				axy[1] + 0.5 * Math.cos(axy[3]) * letterwidth,
-				axy[2] + 0.5 * Math.sin(axy[3]) * letterwidth ],
-					2.5 * letterwidth, 2.5 * letterwidth);
+				axy[1] + 0.5 * Math.cos(axy[3]) * letterWidth,
+				axy[2] + 0.5 * Math.sin(axy[3]) * letterWidth ],
+					2.5 * letterWidth, 2.5 * letterWidth);
 			//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
 			
 			ctx.fillText(letter, 0, 0);
