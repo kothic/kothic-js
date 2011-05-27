@@ -555,7 +555,12 @@ var Kothic = (function () {
 				points.reverse();
 				positions = [];
 				
-				if (flipped) solution++;
+				if (flipped) {
+					solution++;
+					flipped = false;
+				} else {
+					flipped = true;
+				}
 			}
 			if (solution >= 2) return;
 			if (positions.length > 0) break;
