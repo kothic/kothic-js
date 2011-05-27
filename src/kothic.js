@@ -221,7 +221,7 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = restyle({}, zoom, "canvas")['default'];
+		var style = MapCSS.restyle({}, zoom, "canvas")['default'];
 		
 		ctx.save();
 		
@@ -372,7 +372,7 @@ var Kothic = (function () {
                     type = 'node'
                     selector = 'node'
                 }
-				style = styleCache[styleKey] = restyle(feature.properties, zoom, type, selector);
+				style = styleCache[styleKey] = MapCSS.restyle(feature.properties, zoom, type, selector);
 			}
 			
 			for (j in style) {

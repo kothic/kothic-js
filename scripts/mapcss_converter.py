@@ -59,26 +59,18 @@ def mapcss_as_aj(self):
     rules = "\n".join(map(lambda x: x.as_js(), self.rules))
     return "%s%s" % (imports, rules)
     
-def mapcss_canvas_as_aj(self):
-    actions = []
-    for rule in self.rules:
-        for selector in filter(lambda selector: selector.subject == 'canvas', rule.selectors):
-            for action in rule.actions:
-                for stmt in action.statements:
-                    actions.append("style['%s'] = %s;" % (stmt.key, escape_value(stmt.key, stmt.value, 'default') ))
-    return """
-    if (c.selector == "canvas") {
-        %s
-    }
-    """ % "\n    ".join(actions)
-    
 def rule_as_js(self):
-    rules = []
+    selectors_js = []
+    actions_js = []
     for selector in self.selectors:
-        for action in map(lambda action: "    if (%s%s) %s" % (selector.as_js(), selector.get_zoom(), action.as_js(selector.subpart)), self.actions):
-            rules.append(action)
+        selectors_js.append("(%s%s)" % (selector.as_js(), selector.get_zoom()))
+    
+    for action in self.actions:
+        actions_js.append(action.as_js(selector.subpart))
 
-    return "\n".join(rules)
+    return """
+        if (%s) %s
+""" % ("\n            || ".join(selectors_js), "".join(actions_js))
     
 def selector_as_js(self):
     criteria = " && ".join(map(lambda x: x.as_js(), self.criteria))
@@ -102,10 +94,10 @@ def condition_check_as_js(self):
         return "tags['%s'] %s '%s'" % (self.key, CHECK_OPERATORS[self.sign], self.value)
 
 def condition_tag_as_js(self):
-    return "(typeof tags['%s'] !== 'undefined' && tags['%s'] !== null)" % (self.key, self.key)
+    return "('%s' in tags)" % (self.key)
 
 def condition_nottag_as_js(self):
-    return "(typeof tags['%s'] === 'undefined' || tags['%s'] === null)" % (self.key, self.key)
+    return "(!('%s' in tags))" % (self.key)
     
 def action_as_js(self, subpart):
     if len(filter(lambda x: x, map(lambda x: isinstance(x, ast.StyleStatement), self.statements))) > 0:
@@ -118,22 +110,22 @@ def action_as_js(self, subpart):
 """ % (subpart, subpart)
         return """{
 %s%s
-    }\n""" % (prep, "\n".join(map(lambda x: x.as_js(subpart), self.statements)))
+        }\n""" % (prep, "\n".join(map(lambda x: x.as_js(subpart), self.statements)))
     else:
         return "{\n    %s\n    }" % "\n".join(map(lambda x: x.as_js(), self.statements))
     
 def style_statement_as_js(self, subpart):
     val = escape_value(self.key, self.value, subpart)
     if self.key == 'text':
-        return "        style['%s']['text'] = tags[%s];" % (subpart, val)
+        return "            style['%s']['text'] = tags[%s];" % (subpart, val)
     else:
         if self.key == 'icon-image':
             icon_images.add(val)
-        return "        style['%s']['%s'] = %s;" % (subpart, self.key, val)
+        return "            style['%s']['%s'] = %s;" % (subpart, self.key, val)
     
 
 def tag_statement_as_js(self, subpart):
-    return "        tags['%s'] = %s" % (self.key, escape_value(self.key, self.value, subpart))
+    return "            tags['%s'] = %s" % (self.key, escape_value(self.key, self.value, subpart))
     
 def eval_as_js(self, subpart):
     return self.expression.as_js(subpart)
@@ -186,7 +178,6 @@ def selector_get_zoom(self):
     return ''
 
 ast.MapCSS.as_js = mapcss_as_aj
-ast.MapCSS.canvas_as_js = mapcss_canvas_as_aj
 ast.Rule.as_js = rule_as_js
 ast.Selector.as_js = selector_as_js
 ast.Selector.get_zoom = selector_get_zoom
@@ -205,110 +196,110 @@ ast.EvalFunction.as_js = eval_function_as_js
 
 
 print """
-MapCSS = function() {
-    return this;
-}
-
-MapCSS.min = function(/*...*/) {
-    return Math.min.apply(null, arguments);
-}
-
-MapCSS.max = function(/*...*/) {
-    return Math.max.apply(null, arguments);
-}
-
-MapCSS.any = function(/*...*/) {
-    for(var i = 0; i < arguments.length; i++) {
-        if (typeof(arguments[i]) != 'undefined' && arguments[i] != '') {
-            return arguments[i];
-        }
-    }
+var MapCSS = (function() {
+    var MapCSS = {};
     
-    return "";
-}
+    MapCSS.min = function(/*...*/) {
+        return Math.min.apply(null, arguments);
+    };
 
-MapCSS.num = function(arg) {
-    if (!isNaN(parseFloat(arg))) {
-        return parseFloat(arg);
-    } else {
-        return ""
-    }
-}
+    MapCSS.max = function(/*...*/) {
+        return Math.max.apply(null, arguments);
+    };
 
-MapCSS.str = function(arg) {
-    return arg;
-}
-
-MapCSS.int = function(arg) {
-    return parseInt(arg);
-}
-
-MapCSS.tag = function(a, tag) {
-    if (typeof(a[tag]) != 'undefined') {
-        return a[tag];
-    } else {
+    MapCSS.any = function(/*...*/) {
+        for(var i = 0; i < arguments.length; i++) {
+            if (typeof(arguments[i]) != 'undefined' && arguments[i] != '') {
+                return arguments[i];
+            }
+        }
+    
         return "";
+    };
+
+    MapCSS.num = function(arg) {
+        if (!isNaN(parseFloat(arg))) {
+            return parseFloat(arg);
+        } else {
+            return "";
+        }
+    };
+
+    MapCSS.str = function(arg) {
+        return arg;
+    };
+
+    MapCSS.int = function(arg) {
+        return parseInt(arg, 10);
+    };
+
+    MapCSS.tag = function(a, tag) {
+        if (typeof(a[tag]) != 'undefined') {
+            return a[tag];
+        } else {
+            return "";
+        }
+    };
+
+    MapCSS.prop = function(obj, tag) {
+        if (typeof(obj[tag]) != 'undefined') {
+            return obj[tag];
+        } else {
+            return "";
+        }
+    };
+
+    MapCSS.sqrt = function(arg) {
+        return Math.sqrt(arg);
+    };
+
+    MapCSS.boolean = function(arg) {
+        if (arg == '0' || arg == 'false' || arg == '') {
+            return 'false';
+        } else {
+            return 'true';
+        }
+    };
+
+    MapCSS.boolean = function(exp, if_exp, else_exp) {
+        if (MapCSS.boolean(exp) == 'true') {
+            return if_exp;
+        } else {
+            return else_exp;
+        }
+    };
+
+    MapCSS.metric = function(arg) {
+        if (/\d\s*mm$/.test(arg)) {
+            return 1000 * parseInt(arg, 10);
+        } else if (/\d\s*cm$/.test(arg)) {
+            return 100 * parseInt(arg, 10);
+        } else if (/\d\s*dm$/.test(arg)) {
+            return 10 * parseInt(arg, 10);
+        } else if (/\d\s*km$/.test(arg)) {
+            return 0.001 * parseInt(arg, 10);
+        } else if (/\d\s*in$/.test(arg)) {
+            return 0.0254 * parseInt(arg, 10);
+        } else if (/\d\s*ft$/.test(arg)) {
+            return 0.3048 * parseInt(arg, 10);
+        } else {
+            return parseInt(arg, 10);
+        }
+    };
+
+    MapCSS.zmetric = function(arg) {
+        return MapCSS.metric(arg);
+    };
+
+    MapCSS.restyle = function(tags, zoom, type, selector) {
+        var style = {};
+        style["default"] = {};
+%s
+        return style;
     }
-}
 
-MapCSS.prop = function(obj, tag) {
-    if (typeof(obj[tag]) != 'undefined') {
-        return obj[tag];
-    } else {
-        return "";
-    }
-}
-
-MapCSS.sqrt = function(arg) {
-    return math.sqrt(arg);
-}
-
-MapCSS.boolean = function(arg) {
-    if (arg == '0' || arg == 'false' || arg == '') {
-        return 'false';
-    } else {
-        return 'true';
-    }
-}
-
-MapCSS.boolean = function(exp, if_exp, else_exp) {
-    if (MapCSS.boolean(exp) == 'true') {
-        return if_exp;
-    } else {
-        return else_exp;
-    }
-}
-
-MapCSS.metric = function(arg) {
-    if (/\d\s*mm$/.test(arg)) {
-        return 1000 * parseInt(arg);
-    } else if (/\d\s*cm$/.test(arg)) {
-        return 100 * parseInt(arg);
-    } else if (/\d\s*dm$/.test(arg)) {
-        return 10 * parseInt(arg);
-    } else if (/\d\s*km$/.test(arg)) {
-        return 0.001 * parseInt(arg);
-    } else if (/\d\s*in$/.test(arg)) {
-        return 0.0254 * parseInt(arg);
-    } else if (/\d\s*ft$/.test(arg)) {
-        return 0,3048 * parseInt(arg);
-    } else {
-        return parseInt(arg);
-    }
-}
-
-MapCSS.zmetric = function(arg) {
-    return MapCSS.metric(arg)
-}
-
-function restyle(tags, zoom, type, selector) {
-    var style=new Object;
-    style["default"]=new Object;
-"""
-print mapcss.as_js()
-print """
-    return style;
-}
-
-imagesToLoad = [%s];
-""" % ", ".join(icon_images)
+    MapCSS.imagesToLoad = [%s];
+    
+    return MapCSS;
+})();
+""" % (mapcss.as_js(), ", ".join(icon_images))
