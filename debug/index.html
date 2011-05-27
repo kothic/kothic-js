@@ -3,19 +3,26 @@
 <head>
 	<title>A canvas Map of Minsk</title>
 	
-	<!--[if lt IE 9]><script src="../src/excanvas.js"></script><![endif]-->
+	<link rel="stylesheet" href="leaflet/leaflet.css" />
+	<!--[if lte IE 8]><link rel="stylesheet" href="leaflet/leaflet.ie.css" /><![endif]-->
+	
+	<script src="leaflet/leaflet.js"></script>
 	
 	<script src="mapcss.js"></script>
 	
 	<script src="../src/rgbcolor.js"></script>
 	<script src="../src/geomops.js"></script>
-	
 	<script src="../src/kothic.js"></script>
 
+	<script src="kothic-leaflet.js"></script>
+	
 	<style>
 		body {
 			padding: 0;
 			margin: 0;
+			}
+		html, body, #map {
+			height: 100%;
 			}
 		#debug {
 			position: absolute;
@@ -25,28 +32,30 @@
 			border: 1px solid #ddd;
 			padding: 10px;
 			font: 10px Verdana, sans-serif;
+			z-index: 10000;
 			}
 	</style>
 </head>
 <body>
-	<canvas id="canvas"></canvas>
+	<div id="map"></div>
 	<div id="debug">Rendering...</div>
 	<script>
-		var canvas = document.getElementById('canvas');	
+		var kothic = new L.TileLayer.Kothic();
 
-		canvas.width = canvas.height = 256 * 4;
+		Kothic.onRenderComplete = function(log) {
+			document.getElementById('debug').innerHTML = log;
+		};
+
+		Kothic.onIconsLoad = function() {
+			var map = new L.Map('map', {
+				center: new L.LatLng(50.5, 30.51), 
+				zoom: 9, 
+				layers: [kothic]
+			});
+		}
 		
 		Kothic.iconsPath = 'http://osmosnimki.ru/leaf/icons/';
 		Kothic.preloadIcons(imagesToLoad);
-		
-		Kothic.onRenderComplete = function(log) {
-			document.getElementById('debug').innerText = log;
-		}
-		
-		function onKothicDataResponse(data, zoom, x, y) {
-			Kothic.render('canvas', data, zoom + 2);
-		}
 	</script>
-	<script src="http://osmosnimki.ru/vtile/9/309/159.js" charset="utf-8"></script>
 </body>
 </html>
