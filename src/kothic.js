@@ -198,7 +198,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!("width" in style)) return;
 		
-		var dashes = style.dashes ? style.dashes.split(',') : false;
+		var dashes = style.dashes;
 		
 		pathGeoJSON(feature, dashes);
 		
@@ -221,7 +221,7 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = restyle({}, zoom, "canvas")['default'];
+		var style = restyle({}, zoom, "canvas", "canvas")['default'];
 		
 		ctx.save();
 		
@@ -317,6 +317,11 @@ var Kothic = (function () {
 			case 'Point': coords = feature.coordinates; break;
 			case 'Polygon': coords = feature.reprpoint; break;
 			case 'LineString': coords = feature.coordinates[0]; break;
+            case 'GeometryCollection': //TODO: Disassemble geometry collection
+            case 'MultiPoint': //TODO: Disassemble multi point
+            case 'MultiPolygon': //TODO: Disassemble multi polygon
+            case 'MultiLineString': 
+            	ctx.restore(); return; //TODO: Disassemble multi line string
 		}
 		var x = ws * coords[0],
 			y = hs * (granularity - coords[1]) + offset,
@@ -356,7 +361,19 @@ var Kothic = (function () {
 			if (styleKey in styleCache) {
 				style = styleCache[styleKey];
 			} else {
-				style = styleCache[styleKey] = restyle(feature.properties, zoom, feature.type);
+                //TODO: propagate type and selector
+                var type, selector;
+                if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
+                    type = 'way';
+                    selector = 'area';
+                } else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
+                    type = 'way';
+                    selector = 'line';
+                } else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
+                    type = 'node';
+                    selector = 'node';
+                }
+				style = styleCache[styleKey] = restyle(feature.properties, zoom, type, selector);
 			}
 			
 			for (j in style) {
