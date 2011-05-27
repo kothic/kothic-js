@@ -9,9 +9,15 @@ var Kothic = (function () {
 		layerIds = [],
 		collides,
 		dashPattern,
-		pathOpened,
-		beforeDataLoad = +new Date();
+		pathOpened;
 		
+	var beforeDataLoad = +new Date(),
+		start,
+		layersStyled,
+		mapRendered,
+		iconsLoaded,
+		bufferRendered,
+		finish;
 	
 	var defaultStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
@@ -22,12 +28,7 @@ var Kothic = (function () {
 	};
 	
 	function render(canvasId, data, zoom) {
-		var start = +new Date(),
-			layersStyled,
-			mapRendered,
-			iconsLoaded,
-			bufferRendered,
-			finish;
+		start = +new Date();
 		
 		// init all variables
 		
@@ -76,16 +77,7 @@ var Kothic = (function () {
 			
 			finish = +new Date();
 			
-			Kothic.onRenderComplete(
-					(start - beforeDataLoad) + ': data loaded\n\n' +  
-					(layersStyled - start) + ': layers styled\n' +
-					(mapRendered - layersStyled) + ': map rendered\n' + 
-					//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
-					(bufferRendered - iconsLoaded) + ': icons/text rendered\n' + 
-					//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
-					'\n' + (finish - start) + ': total rendering time\n' + 
-					(finish - beforeDataLoad) + ': total'
-			);
+			Kothic.onRenderComplete(getDebugInfo());
 		}
 		
 		if (Kothic.iconsLoaded) {
@@ -93,6 +85,17 @@ var Kothic = (function () {
 		} else {
 			Kothic.onIconsLoad = onImagesLoad;
 		}
+	}
+	
+	function getDebugInfo() {
+		return (start - beforeDataLoad) + ': data loaded\n\n' +  
+		(layersStyled - start) + ': layers styled\n' +
+		(mapRendered - layersStyled) + ': map rendered\n' + 
+		//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
+		(bufferRendered - iconsLoaded) + ': icons/text rendered\n' + 
+		//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
+		'\n' + (finish - start) + ': total rendering time\n' + 
+		(finish - beforeDataLoad) + ': total';
 	}
 	
 	function renderMap() {
@@ -218,13 +221,18 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = restyle({}, zoom, "canvas")['default']
+		var style = restyle({}, zoom, "canvas")['default'];
+		
+		ctx.save();
 		
 		setStyles({
 			fillStyle: style["fill-color"],
 			globalAlpha: style["fill-opacity"] || style.opacity
 		});
+		
 		ctx.fillRect(-1, -1, width+1, height+1);
+		
+		ctx.restore();
 	}
 	
 	function renderIcon(feature) {
@@ -513,7 +521,7 @@ var Kothic = (function () {
 						|| Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
 					i = -1;
-          positions = new Array();
+					positions = [];
 					continue;
 				}
 				
