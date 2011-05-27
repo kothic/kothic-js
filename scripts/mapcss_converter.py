@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import sys
-sys.path.insert(0,"../../mapcss/mapcss-parser")
 
 from mapcss_parser import MapCSSParser
 
