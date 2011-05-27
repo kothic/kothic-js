@@ -149,7 +149,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!('fill-color' in style)) return;
 		
-		pathGeoJSON(feature, "aaa", true);
+		pathGeoJSON(feature, false, true);
 		
 		if (!nextFeature || (nextFeature.style !== style)) {
 			ctx.save();
@@ -430,7 +430,12 @@ var Kothic = (function () {
 			ctx.beginPath();
 		}
 		
-		var i, j, len, pointsLen, points, firstPoint, point;
+		var i, j, len, pointsLen, points, prevPoint, point;
+		
+		function isTileBoundary(p) {
+			return (prevPoint[0] == p[0] && (p[0] == 0 || p[0] == granularity))
+					|| (prevPoint[1] == p[1] && (p[1] == 0 || p[1] == granularity));
+		}
 		
 		if (feature.type == "Polygon") {
 			for (i = 0, len = feature.coordinates.length; i < len; i++) {
@@ -438,6 +443,10 @@ var Kothic = (function () {
 				pointsLen = points.length;
 				prevPoint = points[0];
 				
+				if (dashes) {
+					setDashPattern(prevPoint, dashes);
+				}
+
 				moveTo(prevPoint);
 				if (fill) {
 					for (j = 1; j < pointsLen; j++) {
@@ -446,9 +455,10 @@ var Kothic = (function () {
 				} else {
 					for (j = 1; j < pointsLen; j++) {
 						point = points[j];
-						if ((prevPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
-								|| (prevPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
+						if (isTileBoundary(point)) { //hide boundaries
 							moveTo(point);
+						} else if (dashes) {
+							dashTo(point);
 						} else {
 							lineTo(point);
 						}
@@ -458,14 +468,16 @@ var Kothic = (function () {
 			}
 		}
 		if (feature.type == "LineString") {
+			point = feature.coordinates[0];
+			
 			if (dashes) {
-				setDashPattern(feature.coordinates[0], dashes);
+				setDashPattern(point, dashes);
 			}
-			for (i = 0, len = feature.coordinates.length; i < len; i++) {
+			moveTo(point);
+			
+			for (i = 1, len = feature.coordinates.length; i < len; i++) {
 				point = feature.coordinates[i];
-				if (i == 0) {
-					moveTo(point);
-				} else if (dashes) {
+				if (dashes) {
 					dashTo(point);
 				} else {
 					lineTo(point);
