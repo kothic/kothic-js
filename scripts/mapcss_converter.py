@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import os
 
 from mapcss_parser import MapCSSParser
 
@@ -15,7 +16,7 @@ parser = MapCSSParser(debug=False)
 mapcss = parser.parse(content)
 
 CHECK_OPERATORS = {
-    '=': '===',
+    '=': '==',
     '<': '<',
     '<=': '<=',
     '>': '>',
@@ -32,33 +33,10 @@ NUMERIC_PROPERTIES = (
     'fill-opacity', 
     'casing-width', 
     'casing-opacity', 
-#    'font-size', 
     'text-offset', 
     'max-width', 
     'text-halo-radius'
 )
-
-SCALES = [
-    500000000,
-    250000000,
-    150000000,
-    70000000,
-    35000000,
-    15000000,
-    10000000,
-    4000000,
-    2000000,
-    1000000,
-    500000,
-    250000,
-    150000,
-    70000,
-    35000,
-    15000,
-    8000,
-    4000,
-    0,
-]
 
 icon_images = set()
 
