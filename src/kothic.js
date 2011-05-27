@@ -9,9 +9,15 @@ var Kothic = (function () {
 		layerIds = [],
 		collides,
 		dashPattern,
-		pathOpened,
-		beforeDataLoad = +new Date();
+		pathOpened;
 		
+	var beforeDataLoad = +new Date(),
+		start,
+		layersStyled,
+		mapRendered,
+		iconsLoaded,
+		bufferRendered,
+		finish;
 	
 	var defaultStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
@@ -22,12 +28,7 @@ var Kothic = (function () {
 	};
 	
 	function render(canvasId, data, zoom) {
-		var start = +new Date(),
-			layersStyled,
-			mapRendered,
-			iconsLoaded,
-			bufferRendered,
-			finish;
+		start = +new Date();
 		
 		// init all variables
 		
@@ -76,16 +77,7 @@ var Kothic = (function () {
 			
 			finish = +new Date();
 			
-			Kothic.onRenderComplete(
-					(start - beforeDataLoad) + ': data loaded\n\n' +  
-					(layersStyled - start) + ': layers styled\n' +
-					(mapRendered - layersStyled) + ': map rendered\n' + 
-					//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
-					(bufferRendered - iconsLoaded) + ': icons/text rendered\n' + 
-					//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
-					'\n' + (finish - start) + ': total rendering time\n' + 
-					(finish - beforeDataLoad) + ': total'
-			);
+			Kothic.onRenderComplete(getDebugInfo());
 		}
 		
 		if (Kothic.iconsLoaded) {
@@ -93,6 +85,17 @@ var Kothic = (function () {
 		} else {
 			Kothic.onIconsLoad = onImagesLoad;
 		}
+	}
+	
+	function getDebugInfo() {
+		return (start - beforeDataLoad) + ': data loaded\n\n' +  
+		(layersStyled - start) + ': layers styled\n' +
+		(mapRendered - layersStyled) + ': map rendered\n' + 
+		//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
+		(bufferRendered - iconsLoaded) + ': icons/text rendered\n' + 
+		//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
+		'\n' + (finish - start) + ': total rendering time\n' + 
+		(finish - beforeDataLoad) + ': total';
 	}
 	
 	function renderMap() {
@@ -146,7 +149,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!('fill-color' in style)) return;
 		
-		pathGeoJSON(feature, "aaa", true);
+		pathGeoJSON(feature, false, true);
 		
 		if (!nextFeature || (nextFeature.style !== style)) {
 			ctx.save();
@@ -218,15 +221,18 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = restyle({}, zoom, "canvas", "canvas")['default'],
-			style2 = restyle({natural: "coastline"}, zoom, "area", "way")['default'];
+		var style = restyle({}, zoom, "canvas")['default'];
+		
+		ctx.save();
 		
 		setStyles({
-			fillStyle: style2["fill-color"] || style["fill-color"],
-			globalAlpha: style2["fill-opacity"] || style2.opacity || style["fill-opacity"] || style.opacity
+			fillStyle: style["fill-color"],
+			globalAlpha: style["fill-opacity"] || style.opacity
 		});
 		
-		ctx.fillRect(-1, -1, this._width + 1, this._height + 1);
+		ctx.fillRect(-1, -1, width+1, height+1);
+		
+		ctx.restore();
 	}
 	
 	function renderIcon(feature) {
@@ -423,7 +429,15 @@ var Kothic = (function () {
 			ctx.beginPath();
 		}
 		
-		var i, j, len, pointsLen, points, firstPoint, point;
+		var i, j, len, pointsLen, points, prevPoint, point;
+		
+		function isTileBoundary(p) {
+			var v = prevPoint,
+				g = granularity;
+			
+			return ((v[0] == 0 || v[0] == g || v[1] == 0 || v[1] == g) &&
+					(p[0] == 0 || p[0] == g || p[1] == 0 || p[1] == g));
+		}
 		
 		if (feature.type == "Polygon") {
 			for (i = 0, len = feature.coordinates.length; i < len; i++) {
@@ -431,6 +445,10 @@ var Kothic = (function () {
 				pointsLen = points.length;
 				prevPoint = points[0];
 				
+				if (dashes) {
+					setDashPattern(prevPoint, dashes);
+				}
+
 				moveTo(prevPoint);
 				if (fill) {
 					for (j = 1; j < pointsLen; j++) {
@@ -439,9 +457,10 @@ var Kothic = (function () {
 				} else {
 					for (j = 1; j < pointsLen; j++) {
 						point = points[j];
-						if ((prevPoint[0] == point[0] && (point[0] == 0 || point[0] == granularity))
-								|| (prevPoint[1] == point[1] && (point[1] == 0 || point[1] == granularity))) { //hide boundaries
+						if (isTileBoundary(point)) { //hide boundaries
 							moveTo(point);
+						} else if (dashes) {
+							dashTo(point);
 						} else {
 							lineTo(point);
 						}
@@ -451,14 +470,16 @@ var Kothic = (function () {
 			}
 		}
 		if (feature.type == "LineString") {
+			point = feature.coordinates[0];
+			
 			if (dashes) {
-				setDashPattern(feature.coordinates[0], dashes);
+				setDashPattern(point, dashes);
 			}
-			for (i = 0, len = feature.coordinates.length; i < len; i++) {
+			moveTo(point);
+			
+			for (i = 1, len = feature.coordinates.length; i < len; i++) {
 				point = feature.coordinates[i];
-				if (i == 0) {
-					moveTo(point);
-				} else if (dashes) {
+				if (dashes) {
 					dashTo(point);
 				} else {
 					lineTo(point);
@@ -503,7 +524,7 @@ var Kothic = (function () {
 			flipped = false;
 			
 		while (solution < 2) {
-			widthUsed = solution ? 0 : linelength - textWidth / 2;
+			widthUsed = solution ? 2*letterWidths[text.charAt(0)] : linelength - textWidth / 2;
 			flipCount = 0;
 			prevAngle = null;
 			positions = [];
@@ -531,6 +552,7 @@ var Kothic = (function () {
 						|| Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
 					i = -1;
+					positions = [];
 					continue;
 				}
 				
@@ -564,7 +586,12 @@ var Kothic = (function () {
 				points.reverse();
 				positions = [];
 				
-				if (flipped) solution++;
+				if (flipped) {
+					solution++;
+					flipped = false;
+				} else {
+					flipped = true;
+				}
 			}
 			if (solution >= 2) return;
 			if (positions.length > 0) break;
