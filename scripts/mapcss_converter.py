@@ -89,8 +89,7 @@ def mapcss_canvas_as_aj(self):
                 for stmt in action.statements:
                     actions.append("style['%s'] = %s;" % (stmt.key, escape_value(stmt.key, stmt.value, 'default') ))
     return """
-    if (c.selector == 'canvas') {
-        style['default'] = new Object;
+    if (c.selector == "canvas") {
         %s
     }
     """ % "\n    ".join(actions)
@@ -112,15 +111,15 @@ def selector_as_js(self):
         subject_property = 'selector'
         
     if self.criteria:
-        return "(%s === '%s' && %s)" % (subject_property, self.subject, criteria)
+        return "(%s == '%s' && %s)" % (subject_property, self.subject, criteria)
     else:
-        return "%s === '%s'" % (subject_property, self.subject)
+        return "%s == '%s'" % (subject_property, self.subject)
     
 def condition_check_as_js(self):
     if self.value == 'yes' and self.sign == '=':
-        return "(tags['%s'] === '1' || tags['%s'] === 'true' || tags['%s'] === 'yes')" % (self.key, self.key, self.key)
+        return "(tags['%s'] == '1' || tags['%s'] == 'true' || tags['%s'] == 'yes')" % (self.key, self.key, self.key)
     elif self.value == 'yes' and (self.sign == '!=' or self.sign == '<>'):
-        return "(tags['%s'] === '-1' || tags['%s'] === 'false' || tags['%s'] === 'no')" % (self.key, self.key, self.key)
+        return "(tags['%s'] == '-1' || tags['%s'] == 'false' || tags['%s'] == 'no')" % (self.key, self.key, self.key)
     else:
         return "tags['%s'] %s '%s'" % (self.key, CHECK_OPERATORS[self.sign], self.value)
 
@@ -325,7 +324,7 @@ MapCSS.zmetric = function(arg) {
 }
 
 function restyle(tags, zoom, type, selector) {
-    style=new Object;
+    var style=new Object;
     style["default"]=new Object;
 """
 print mapcss.as_js()
