@@ -195,7 +195,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!("width" in style)) return;
 		
-		var dashes = style.dashes ? style.dashes.split(',') : false;
+		var dashes = style.dashes;
 		
 		pathGeoJSON(feature, dashes);
 		
@@ -218,8 +218,8 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = restyle({}, zoom, "canvas")['default'],
-			style2 = restyle({natural: "coastline"}, zoom, "Polygon")['default'];
+		var style = restyle({}, zoom, "canvas", "canvas")['default'],
+			style2 = restyle({natural: "coastline"}, zoom, "area", "way")['default'];
 		
 		setStyles({
 			fillStyle: style2["fill-color"] || style["fill-color"],
@@ -311,6 +311,10 @@ var Kothic = (function () {
 			case 'Point': coords = feature.coordinates; break;
 			case 'Polygon': coords = feature.reprpoint; break;
 			case 'LineString': coords = feature.coordinates[0]; break;
+            case 'GeometryCollection': return; //TODO: Disassemble geometry collection
+            case 'MultiPoint': return; //TODO: Disassemble geometry collection
+            case 'MultiPolygon': return; //TODO: Disassemble geometry collection
+            case 'MultiLineString': return; //TODO: Disassemble geometry collection
 		}
 		var x = ws * coords[0],
 			y = hs * (granularity - coords[1]) + offset,
@@ -350,7 +354,19 @@ var Kothic = (function () {
 			if (styleKey in styleCache) {
 				style = styleCache[styleKey];
 			} else {
-				style = styleCache[styleKey] = restyle(feature.properties, zoom, feature.type);
+                //TODO: propagate type and selector
+                var type, selector;
+                if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
+                    type = 'way'
+                    selector = 'area'
+                } else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
+                    type = 'way'
+                    selector = 'line'
+                } else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
+                    type = 'node'
+                    selector = 'node'
+                }
+				style = styleCache[styleKey] = restyle(feature.properties, zoom, type, selector);
 			}
 			
 			for (j in style) {
