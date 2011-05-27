@@ -485,7 +485,7 @@ var Kothic = (function () {
 			flipped = false;
 			
 		while (solution < 2) {
-			widthUsed = solution ? 0 : linelength - textWidth / 2;
+			widthUsed = solution ? 2*letterWidths[text.charAt(0)] : linelength - textWidth / 2;
 			flipCount = 0;
 			prevAngle = null;
 			positions = [];
@@ -512,7 +512,8 @@ var Kothic = (function () {
 				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
 						|| Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
-					i = -1;
+					i = 0;
+          positions = new Array();
 					continue;
 				}
 				
