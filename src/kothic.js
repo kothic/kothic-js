@@ -432,8 +432,11 @@ var Kothic = (function () {
 		var i, j, len, pointsLen, points, prevPoint, point;
 		
 		function isTileBoundary(p) {
-			return (prevPoint[0] == p[0] && (p[0] == 0 || p[0] == granularity))
-					|| (prevPoint[1] == p[1] && (p[1] == 0 || p[1] == granularity));
+			var v = prevPoint,
+				g = granularity;
+			
+			return ((v[0] == 0 || v[0] == g || v[1] == 0 || v[1] == g) &&
+					(p[0] == 0 || p[0] == g || p[1] == 0 || p[1] == g));
 		}
 		
 		if (feature.type == "Polygon") {
