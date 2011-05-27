@@ -218,15 +218,13 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = restyle({}, zoom, "canvas")['default'],
-			style2 = restyle({natural: "coastline"}, zoom, "Polygon")['default'];
+		var style = restyle({}, zoom, "canvas")['default']
 		
 		setStyles({
-			fillStyle: style2["fill-color"] || style["fill-color"],
-			globalAlpha: style2["fill-opacity"] || style2.opacity || style["fill-opacity"] || style.opacity
+			fillStyle: style["fill-color"],
+			globalAlpha: style["fill-opacity"] || style.opacity
 		});
-		
-		ctx.fillRect(-1, -1, this._width + 1, this._height + 1);
+		ctx.fillRect(-1, -1, width+1, height+1);
 	}
 	
 	function renderIcon(feature) {
