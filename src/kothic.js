@@ -64,7 +64,6 @@ var Kothic = (function () {
 		
 		renderBackground(zoom);
 		renderMap();
-		document.body.offsetWidth;
 		
 		mapRendered = +new Date();
 		
@@ -148,7 +147,7 @@ var Kothic = (function () {
 			
 			setStyles({
 				fillStyle: style["fill-color"],
-				globalAlpha: style["fill-opacity"] || style["opacity"]
+				globalAlpha: style["fill-opacity"] || style.opacity
 			});
 			
 			pathOpened = false;
@@ -163,8 +162,7 @@ var Kothic = (function () {
 		var style = feature.style;
 		if (!("casing-width" in style)) return;
 		
-		var dashesStr = style["casing-dashes"] || style.dashes,
-			dashes = dashesStr ? dashesStr.split(',') : false;
+		var dashes = style["casing-dashes"] || style.dashes || false;
 		
 		pathGeoJSON(feature, dashes);
 
@@ -213,7 +211,7 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = MapCSS.restyle()({}, zoom, "canvas")['default'];
+		var style = MapCSS.restyle()({}, zoom, "canvas", "canvas")['default'];
 		
 		ctx.save();
 		
@@ -311,10 +309,10 @@ var Kothic = (function () {
 			case 'Point': coords = feature.coordinates; break;
 			case 'Polygon': coords = feature.reprpoint; break;
 			case 'LineString': coords = feature.coordinates[0]; break;
-            case 'GeometryCollection': return; //TODO: Disassemble geometry collection
-            case 'MultiPoint': return; //TODO: Disassemble geometry collection
-            case 'MultiPolygon': return; //TODO: Disassemble geometry collection
-            case 'MultiLineString': return; //TODO: Disassemble geometry collection
+			case 'GeometryCollection': //TODO: Disassemble geometry collection
+			case 'MultiPoint': //TODO: Disassemble multi point
+			case 'MultiPolygon': //TODO: Disassemble multi polygon
+			case 'MultiLineString': ctx.restore(); return; //TODO: Disassemble multi line string
 		}
 		var x = ws * coords[0],
 			y = hs * (granularity - coords[1]) + offset,
@@ -358,14 +356,14 @@ var Kothic = (function () {
                 //TODO: propagate type and selector
                 var type, selector;
                 if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
-                    type = 'way'
-                    selector = 'area'
+                    type = 'way';
+                    selector = 'area';
                 } else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
-                    type = 'way'
-                    selector = 'line'
+                    type = 'way';
+                    selector = 'line';
                 } else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
-                    type = 'node'
-                    selector = 'node'
+                    type = 'node';
+                    selector = 'node';
                 }
 				style = styleCache[styleKey] = restyle(feature.properties, zoom, type, selector);
 			}
@@ -405,7 +403,7 @@ var Kothic = (function () {
 				layerIds.push(layerId);
 			}
 			layers[layerId].push(feature);
-		};
+		}
 		
 		layerIds.sort();
 	}
@@ -454,6 +452,7 @@ var Kothic = (function () {
 						point = points[j];
 						if (isTileBoundary(point)) { //hide boundaries
 							moveTo(point);
+							setDashPattern(point, dashes);
 						} else if (dashes) {
 							dashTo(point);
 						} else {
@@ -543,8 +542,8 @@ var Kothic = (function () {
 				
 				if (!prevAngle) prevAngle = axy[0];
 				
-				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth)
-						|| Math.abs(prevAngle - axy[0]) > 0.2) {
+				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth) || 
+						Math.abs(prevAngle - axy[0]) > 0.2) {
 					widthUsed += letterWidth;
 					i = -1;
 					positions = [];
@@ -595,8 +594,8 @@ var Kothic = (function () {
 		var posLen = positions.length;
 		
 		for (i = 0; halo && (i < posLen); i++) {
-			var axy = positions[i],
-				letter = axy[4];
+			axy = positions[i];
+			letter = axy[4];
 			
 			ctx.save();
 			
@@ -608,9 +607,9 @@ var Kothic = (function () {
 		}
 		
 		for (i = 0; i < posLen; i++) {
-			var axy = positions[i],
-				letter = axy[4],
-				letterwidth = letterWidths[letter];
+			axy = positions[i];
+			letter = axy[4];
+			letterWidth = letterWidths[letter];
 			
 			ctx.save();
 			
@@ -618,9 +617,9 @@ var Kothic = (function () {
 			ctx.rotate(axy[0]);
 			
 			collides.addPointWH([
-				axy[1] + 0.5 * Math.cos(axy[3]) * letterwidth,
-				axy[2] + 0.5 * Math.sin(axy[3]) * letterwidth ],
-					2.5 * letterwidth, 2.5 * letterwidth);
+				axy[1] + 0.5 * Math.cos(axy[3]) * letterWidth,
+				axy[2] + 0.5 * Math.sin(axy[3]) * letterWidth ],
+					2.5 * letterWidth, 2.5 * letterWidth);
 			//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
 			
 			ctx.fillText(letter, 0, 0);
@@ -646,48 +645,49 @@ var Kothic = (function () {
 		var p2 = transformPoint(point);
 		
 		dashPattern = {
-			Patn: dashes,
-			Seg: 0,
-			Phs: 0,
-			X1: p2[0],
-			Y1: p2[1]
+			pattern: dashes,
+			seg: 0,
+			phs: 0,
+			x: p2[0],
+			y: p2[1]
 		};
 	}
 	
-	function dashTo(point) { // segment of dasked line set
-		var p2 = transformPoint(point),
-			X2 = p2[0],
-			Y2 = p2[1];
+	function dashTo(point) {
+		var p = transformPoint(point);
 		
-		// X2 Y2 : X & Y to go TO ; internal X1 Y1 to go FROM
-		// Ptrn as [6,4, 1,4] // mark-space pairs indexed by Seg
-		
-		var XDis, YDis, Dist, X, More, T, Ob = dashPattern;
-		XDis = X2 - Ob.X1; // DeltaX
-		YDis = Y2 - Ob.Y1; // DeltaY
-		Dist = Math.sqrt(XDis * XDis + YDis * YDis); // length
-		//if (Dist<0.00000001){return}
+		var pt = dashPattern,
+			dx = p[0] - pt.x, 
+			dy = p[1] - pt.y, 
+			dist = Math.sqrt(dx * dx + dy * dy), 
+			x, more, t;
+
 		ctx.save();
-		ctx.translate(Ob.X1, Ob.Y1);
-		ctx.rotate(Math.atan2(YDis, XDis));
+		ctx.translate(pt.x, pt.y);
+		ctx.rotate(Math.atan2(dy, dx));
 		ctx.moveTo(0, 0);
-		X = 0; // Now dash pattern from 0,0 to Dist,0
+		
+		x = 0;
 		do {
-			T = Ob.Patn[Ob.Seg]; // Full segment
-			X += T - Ob.Phs; // Move by unused seg
-			More = X < Dist; // Not too far?
-			if (!More) {
-				Ob.Phs = T - (X - Dist);
-				X = Dist;
-			} // adjust
-			Ob.Seg % 2 ? ctx.moveTo(X, 0) : ctx.lineTo(X, 0);
-			if (More) {
-				Ob.Phs = 0;
-				Ob.Seg = ++Ob.Seg % Ob.Patn.length;
+			t = pt.pattern[pt.seg];
+			x += t - pt.phs;
+			more = x < dist;
+			
+			if (!more) {
+				pt.phs = t - (x - dist);
+				x = dist;
 			}
-		} while (More);
-		Ob.X1 = X2;
-		Ob.Y1 = Y2;
+			
+			pt.seg % 2 ? ctx.moveTo(x, 0) : ctx.lineTo(x, 0);
+			
+			if (more) {
+				pt.phs = 0;
+				pt.seg = ++pt.seg % pt.pattern.length;
+			}
+		} while (more);
+		
+		pt.x = p[0];
+		pt.y = p[1];
 		ctx.restore();
 	}
 
@@ -696,7 +696,7 @@ var Kothic = (function () {
 			return size + 'px Arial, Helvetica, sans-serif';
 		}
 		
-		var family = name;
+		var family = name || '';
 			
 		size = size || 9;
 		name = name.toLowerCase();
@@ -706,10 +706,8 @@ var Kothic = (function () {
 		
 		if (name.indexOf('serif') != -1) {
 			family += ', Georgia, serif';
-		} else if (name.indexOf('mono') != -1) {
-			family += ', "Courier New", monospace';
 		} else {
-			family += ', Arial, Helvetica, sans-serif';
+			family += (family ? ', ' : '') + 'Arial, Helvetica, sans-serif';
 		}
 		
 		return weight + " " + style + " " + size +"px " + family;

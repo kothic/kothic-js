@@ -1,1 +1,1 @@
-JavaScript OSM map renderer, fork of a JavaScript port of [Kothic](http://code.google.com/p/kothic/)
+Kothic JS is a JavaScript port of [Kothic](http://code.google.com/p/kothic/) map rendering engine using HTML5 Canvas.
