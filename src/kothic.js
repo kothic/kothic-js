@@ -18,7 +18,7 @@ var Kothic = (function () {
 		iconsLoaded,
 		bufferRendered,
 		finish;
-	
+        
 	var defaultStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
 		fillStyle: "rgba(0,0,0,0.5)",
@@ -68,23 +68,15 @@ var Kothic = (function () {
 		
 		mapRendered = +new Date();
 		
-		function onImagesLoad() {
-			iconsLoaded = +new Date();
-			renderIconsAndText();
-			bufferRendered = +new Date();
+        iconsLoaded = +new Date();
+        renderIconsAndText();
+        bufferRendered = +new Date();
 			
-			//realCtx.drawImage(buffer, 0, 0);
+        //realCtx.drawImage(buffer, 0, 0);
 			
-			finish = +new Date();
+        finish = +new Date();
 			
-			Kothic.onRenderComplete(getDebugInfo());
-		}
-		
-		if (Kothic.iconsLoaded) {
-			onImagesLoad();
-		} else {
-			Kothic.onIconsLoad = onImagesLoad;
-		}
+        Kothic.onRenderComplete(getDebugInfo());
 	}
 	
 	function getDebugInfo() {
@@ -221,7 +213,7 @@ var Kothic = (function () {
 	}
 	
 	function renderBackground(zoom) {
-		var style = MapCSS.restyle({}, zoom, "canvas")['default'];
+		var style = MapCSS.restyle()({}, zoom, "canvas")['default'];
 		
 		ctx.save();
 		
@@ -241,7 +233,7 @@ var Kothic = (function () {
 		
 		ctx.save();
 		
-		var img = Kothic.icons[style["icon-image"]],
+		var img = MapCSS.getImage(style["icon-image"]),
 			offset = 0,
 			opacity = 1,
 			mindistance = 0,
@@ -285,7 +277,9 @@ var Kothic = (function () {
 			ctx.fillText(style["text"], point[0],point[1]+offset);
 		}
 		
-		ctx.drawImage(img, point[0]-img.width/2,point[1]-img.height/2);
+		ctx.drawImage(img.sprite, 
+            0, img.offset, img.width, img.height, 
+            point[0] - img.width / 2, point[1] - img.height / 2, img.width, img.height);
 		
 		collides.addPointWH(point, img.width, img.height, mindistance); //TOFIX: img won't have width and height until load 
 		collides.addPointWH([point[0], point[1] + offset], textwidth, 10, mindistance);
@@ -351,6 +345,7 @@ var Kothic = (function () {
 	
 	function styleFeatures(features, zoom) {
 		var styledFeatures = [],
+            restyle = MapCSS.restyle(),
 			i, j, len, feature, style, restyledFeature;
 		
 		for (i = 0, len = features.length; i < len; i++) {
@@ -372,7 +367,7 @@ var Kothic = (function () {
                     type = 'node'
                     selector = 'node'
                 }
-				style = styleCache[styleKey] = MapCSS.restyle(feature.properties, zoom, type, selector);
+				style = styleCache[styleKey] = restyle(feature.properties, zoom, type, selector);
 			}
 			
 			for (j in style) {
@@ -748,39 +743,6 @@ var Kothic = (function () {
 		}
 	};
 	
-	function preloadIcons(urls) {
-		var img, url, i, 
-			len = urls.length,
-			loaded = 0;
-		
-		Kothic.icons = {};
-		
-		for (i = 0; i < len; i++) {
-			(function(url) {
-				img = new Image();
-				img.onload = function() {
-					loaded++;
-					Kothic.icons[url] = this;
-					if (loaded == len) {
-						onIconsLoad();
-					}
-				};
-				img.onerror = function() {
-					loaded++;
-					if (loaded == len) {
-						onIconsLoad();
-					}
-				};
-				img.src = Kothic.iconsPath + url;
-			})(urls[i]);
-		}
-	}
-	
-	function onIconsLoad() {
-		Kothic.onIconsLoad();
-		Kothic.iconsLoaded = true;
-	}
-	
 	function extend(dest, source) {
 		for (var i in source) {
 			if (source.hasOwnProperty(i)) {
@@ -794,12 +756,6 @@ var Kothic = (function () {
 	
 	return {
 		render: render,
-		preloadIcons: preloadIcons,
-		
-		onIconsLoad: emptyFn,
 		onRenderComplete: emptyFn,
-		
-		iconsLoaded: false,
-		iconsPath: ''
 	};
 })();

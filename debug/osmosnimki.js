@@ -1,100 +1,6 @@
 
-var MapCSS = (function() {
-    var MapCSS = {};
-    
-    MapCSS.min = function(/*...*/) {
-        return Math.min.apply(null, arguments);
-    };
-
-    MapCSS.max = function(/*...*/) {
-        return Math.max.apply(null, arguments);
-    };
-
-    MapCSS.any = function(/*...*/) {
-        for(var i = 0; i < arguments.length; i++) {
-            if (typeof(arguments[i]) != 'undefined' && arguments[i] != '') {
-                return arguments[i];
-            }
-        }
-    
-        return "";
-    };
-
-    MapCSS.num = function(arg) {
-        if (!isNaN(parseFloat(arg))) {
-            return parseFloat(arg);
-        } else {
-            return "";
-        }
-    };
-
-    MapCSS.str = function(arg) {
-        return arg;
-    };
-
-    MapCSS.int = function(arg) {
-        return parseInt(arg, 10);
-    };
-
-    MapCSS.tag = function(a, tag) {
-        if (typeof(a[tag]) != 'undefined') {
-            return a[tag];
-        } else {
-            return "";
-        }
-    };
-
-    MapCSS.prop = function(obj, tag) {
-        if (typeof(obj[tag]) != 'undefined') {
-            return obj[tag];
-        } else {
-            return "";
-        }
-    };
-
-    MapCSS.sqrt = function(arg) {
-        return Math.sqrt(arg);
-    };
-
-    MapCSS.boolean = function(arg) {
-        if (arg == '0' || arg == 'false' || arg == '') {
-            return 'false';
-        } else {
-            return 'true';
-        }
-    };
-
-    MapCSS.boolean = function(exp, if_exp, else_exp) {
-        if (MapCSS.boolean(exp) == 'true') {
-            return if_exp;
-        } else {
-            return else_exp;
-        }
-    };
-
-    MapCSS.metric = function(arg) {
-        if (/\d\s*mm$/.test(arg)) {
-            return 1000 * parseInt(arg, 10);
-        } else if (/\d\s*cm$/.test(arg)) {
-            return 100 * parseInt(arg, 10);
-        } else if (/\d\s*dm$/.test(arg)) {
-            return 10 * parseInt(arg, 10);
-        } else if (/\d\s*km$/.test(arg)) {
-            return 0.001 * parseInt(arg, 10);
-        } else if (/\d\s*in$/.test(arg)) {
-            return 0.0254 * parseInt(arg, 10);
-        } else if (/\d\s*ft$/.test(arg)) {
-            return 0.3048 * parseInt(arg, 10);
-        } else {
-            return parseInt(arg, 10);
-        }
-    };
-
-    MapCSS.zmetric = function(arg) {
-        return MapCSS.metric(arg);
-    };
-
-    MapCSS.restyle = function(tags, zoom, type, selector) {
+(function(MapCSS) {
+    function restyle(tags, zoom, type, selector) {
         var style = {};
         style["default"] = {};
 
@@ -2385,9 +2291,40 @@ var MapCSS = (function() {
 
         return style;
     }
-
-    MapCSS.imagesToLoad = ['cinema_14x14.png', 'tankstelle1_10x11.png', 'superm_12x12.png', 'rw_stat_stanzii_2_blue.png', 'post_14x11.png', 'pravosl_kupol_11x15.png', 'adm_4.png', 'kindergarten_14x14.png', 'mountain_peak6.png', 'town_6.png', 'tramway_14x13.png', 'rest_14x14.png', 'adm1_6_test2.png', 'sud_14x13.png', 'hotell_14x14.png', 'adm_6.png', 'airport_world.png', 'univer_15x11.png', 'town_4.png', 'autobus_stop_14x10.png', 'adm1_5.png', 'wc-3_13x13.png', 'school_13x13.png', 'zoo4_14x14.png', 'metro_others6.png', 'teater_14x14.png', 'med1_11x14.png', 'aut2_16x16_park.png', 'adm1_4_6.png', 'mus_13x12.png', 'adm_5.png', 'lib_13x14.png'];
     
-    return MapCSS;
-})();
-
+    var images = {
+        'adm1_4_6.png': {width: 4, height: 4, offset: 0},
+        'adm1_5.png': {width: 5, height: 5, offset: 4},
+        'adm1_6_test2.png': {width: 6, height: 6, offset: 9},
+        'adm_4.png': {width: 4, height: 4, offset: 15},
+        'adm_5.png': {width: 5, height: 5, offset: 19},
+        'adm_6.png': {width: 6, height: 6, offset: 24},
+        'airport_world.png': {width: 11, height: 14, offset: 30},
+        'aut2_16x16_park.png': {width: 16, height: 16, offset: 44},
+        'autobus_stop_14x10.png': {width: 14, height: 10, offset: 60},
+        'cinema_14x14.png': {width: 14, height: 14, offset: 70},
+        'hotell_14x14.png': {width: 14, height: 14, offset: 84},
+        'kindergarten_14x14.png': {width: 14, height: 14, offset: 98},
+        'lib_13x14.png': {width: 13, height: 12, offset: 112},
+        'med1_11x14.png': {width: 11, height: 14, offset: 124},
+        'metro_others6.png': {width: 16, height: 16, offset: 138},
+        'mountain_peak6.png': {width: 3, height: 3, offset: 154},
+        'mus_13x12.png': {width: 13, height: 12, offset: 157},
+        'post_14x11.png': {width: 14, height: 11, offset: 169},
+        'pravosl_kupol_11x15.png': {width: 11, height: 15, offset: 180},
+        'rest_14x14.png': {width: 14, height: 14, offset: 195},
+        'rw_stat_stanzii_2_blue.png': {width: 9, height: 5, offset: 209},
+        'school_13x13.png': {width: 13, height: 13, offset: 214},
+        'sud_14x13.png': {width: 14, height: 13, offset: 227},
+        'superm_12x12.png': {width: 12, height: 12, offset: 240},
+        'tankstelle1_10x11.png': {width: 10, height: 11, offset: 252},
+        'teater_14x14.png': {width: 14, height: 14, offset: 263},
+        'town_4.png': {width: 4, height: 4, offset: 277},
+        'town_6.png': {width: 6, height: 6, offset: 281},
+        'tramway_14x13.png': {width: 14, height: 13, offset: 287},
+        'univer_15x11.png': {width: 15, height: 11, offset: 300},
+        'wc-3_13x13.png': {width: 13, height: 13, offset: 311},
+        'zoo4_14x14.png': {width: 14, height: 14, offset: 324}};
+    MapCSS.loadStyle('osmosnimki-maps', restyle, images);
+})(MapCSS);
+    

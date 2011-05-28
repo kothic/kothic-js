@@ -2,18 +2,12 @@
 
 import sys
 import os
+import re
+import Image
 
 from mapcss_parser import MapCSSParser
-
 from mapcss_parser import ast
 
-if len(sys.argv) != 2:
-    print "usage : mapcss.py inputfile"
-    raise SystemExit
-
-content = open(sys.argv[1]).read()
-parser = MapCSSParser(debug=False)
-mapcss = parser.parse(content)
 
 CHECK_OPERATORS = {
     '=': '==',
@@ -38,7 +32,7 @@ NUMERIC_PROPERTIES = (
     'text-halo-radius'
 )
 
-icon_images = set()
+images = set()
 
 def propagate_import(url):
     content = open(url).read()
@@ -120,7 +114,7 @@ def style_statement_as_js(self, subpart):
         return "            style['%s']['text'] = tags[%s];" % (subpart, val)
     else:
         if self.key == 'icon-image':
-            icon_images.add(val)
+            images.add(val.strip("'\""))
         return "            style['%s']['%s'] = %s;" % (subpart, self.key, val)
     
 
@@ -177,6 +171,44 @@ def selector_get_zoom(self):
         
     return ''
 
+def create_css_sprite(images, icons_path, sprite_filename):
+    image_data = []
+    image_width = []
+    image_height = []
+    for fname in sorted(images):
+        image = Image.open(os.path.join(icons_path, fname))
+        image_data.append({
+            'name': fname, 
+            'size': image.size, 
+            'image': image,
+        })
+        image_width.append(image.size[0])
+        image_height.append(image.size[1])
+    
+    sprite_size = (max(image_width), sum(image_height))
+    sprite = Image.new(
+        mode='RGBA',
+        size=sprite_size,
+        color=(0,0,0,0))
+    
+    offset = 0
+    for data in image_data:
+        data['offset'] = offset
+        sprite.paste(data['image'], (0, offset))
+        offset += data['size'][1]
+    sprite.save(sprite_filename)
+    
+    return image_data
+    
+def image_as_js(image):
+    return """
+        '%s': {width: %d, height: %d, offset: %d}""" % (
+        image['name'], 
+        image['size'][0], 
+        image['size'][1], 
+        image['offset']
+    )
+
 ast.MapCSS.as_js = mapcss_as_aj
 ast.Rule.as_js = rule_as_js
 ast.Selector.as_js = selector_as_js
@@ -194,112 +226,67 @@ ast.EvalExpressionOperation.as_js = eval_op_as_js
 ast.EvalExpressionGroup.as_js = eval_group_as_js
 ast.EvalFunction.as_js = eval_function_as_js
 
+if __name__ == "__main__":
+    from optparse import OptionParser
+    parser = OptionParser(usage="%prog [options]")
+        
+    parser.add_option("-i", "--mapcss",
+        dest="input", 
+        help="MapCSS input file, required")    
 
-print """
-var MapCSS = (function() {
-    var MapCSS = {};
+    parser.add_option("-o", "--output",
+        dest="output", 
+        help="JS output file. If not specified [stylename].js will be used")    
     
-    MapCSS.min = function(/*...*/) {
-        return Math.min.apply(null, arguments);
-    };
+    parser.add_option("-p", "--icons-path",
+        dest="icons", default=".",
+        help="Directory with the icon set used in MapCSS file")    
 
-    MapCSS.max = function(/*...*/) {
-        return Math.max.apply(null, arguments);
-    };
+    parser.add_option("-s", "--output-sprite",
+        dest="sprite", 
+        help="Filename of generated CSS sprite. If not specified, [stylename].png will be uesed")    
 
-    MapCSS.any = function(/*...*/) {
-        for(var i = 0; i < arguments.length; i++) {
-            if (typeof(arguments[i]) != 'undefined' && arguments[i] != '') {
-                return arguments[i];
-            }
-        }
+    (options, args) = parser.parse_args()    
     
-        return "";
-    };
+    if not options.input:
+        print "--mapcss parameter is required"
+        raise SystemExit
 
-    MapCSS.num = function(arg) {
-        if (!isNaN(parseFloat(arg))) {
-            return parseFloat(arg);
-        } else {
-            return "";
-        }
-    };
+    style_name = re.sub("\..*", "", options.input)
 
-    MapCSS.str = function(arg) {
-        return arg;
-    };
+    content = open(options.input).read()
+    parser = MapCSSParser(debug=False)
+    mapcss = parser.parse(content) 
+    
 
-    MapCSS.int = function(arg) {
-        return parseInt(arg, 10);
-    };
-
-    MapCSS.tag = function(a, tag) {
-        if (typeof(a[tag]) != 'undefined') {
-            return a[tag];
-        } else {
-            return "";
-        }
-    };
-
-    MapCSS.prop = function(obj, tag) {
-        if (typeof(obj[tag]) != 'undefined') {
-            return obj[tag];
-        } else {
-            return "";
-        }
-    };
-
-    MapCSS.sqrt = function(arg) {
-        return Math.sqrt(arg);
-    };
-
-    MapCSS.boolean = function(arg) {
-        if (arg == '0' || arg == 'false' || arg == '') {
-            return 'false';
-        } else {
-            return 'true';
-        }
-    };
-
-    MapCSS.boolean = function(exp, if_exp, else_exp) {
-        if (MapCSS.boolean(exp) == 'true') {
-            return if_exp;
-        } else {
-            return else_exp;
-        }
-    };
-
-    MapCSS.metric = function(arg) {
-        if (/\d\s*mm$/.test(arg)) {
-            return 1000 * parseInt(arg, 10);
-        } else if (/\d\s*cm$/.test(arg)) {
-            return 100 * parseInt(arg, 10);
-        } else if (/\d\s*dm$/.test(arg)) {
-            return 10 * parseInt(arg, 10);
-        } else if (/\d\s*km$/.test(arg)) {
-            return 0.001 * parseInt(arg, 10);
-        } else if (/\d\s*in$/.test(arg)) {
-            return 0.0254 * parseInt(arg, 10);
-        } else if (/\d\s*ft$/.test(arg)) {
-            return 0.3048 * parseInt(arg, 10);
-        } else {
-            return parseInt(arg, 10);
-        }
-    };
-
-    MapCSS.zmetric = function(arg) {
-        return MapCSS.metric(arg);
-    };
-
-    MapCSS.restyle = function(tags, zoom, type, selector) {
+    js = """
+(function(MapCSS) {
+    function restyle(tags, zoom, type, selector) {
         var style = {};
         style["default"] = {};
 %s
         return style;
     }
-
-    MapCSS.imagesToLoad = [%s];
+    """ % mapcss.as_js()
     
-    return MapCSS;
-})();
-""" % (mapcss.as_js(), ", ".join(icon_images))
+    if options.sprite:
+        sprite = options.sprite
+    else:
+        sprite = "%s.png" % style_name
+
+    if options.output:
+        output = options.output
+    else:
+        output = "%s.js" % style_name
+
+    images = create_css_sprite(images, options.icons, sprite)
+    
+    js += """
+    var images = {%s};
+    MapCSS.loadStyle('%s', restyle, images);
+})(MapCSS);
+    """ % (",".join(map(image_as_js, images)), style_name)
+    
+    with open(output, "w") as fh:
+        fh.write(js)
+    

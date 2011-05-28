@@ -5,12 +5,13 @@
 	
 	<!--[if lt IE 9]><script src="../src/excanvas.js"></script><![endif]-->
 	
-	<script src="mapcss.js"></script>
+	<script src="../src/mapcss.js"></script>
 	
 	<script src="../src/rgbcolor.js"></script>
 	<script src="../src/geomops.js"></script>
 	
 	<script src="../src/kothic.js"></script>
+	<script src="osmosnimki.js"></script>
 
 	<style>
 		body {
@@ -36,9 +37,8 @@
 
 		canvas.width = canvas.height = 256 * 4;
 		
-		Kothic.iconsPath = 'http://osmosnimki.ru/leaf/icons/';
-		Kothic.preloadIcons(MapCSS.imagesToLoad);
-		
+        MapCSS.loadImages("osmosnimki-maps", "osmosnimki.png")
+
 		Kothic.onRenderComplete = function(log) {
 			document.getElementById('debug').innerText = log;
 		}
