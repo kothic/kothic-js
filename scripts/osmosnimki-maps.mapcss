@@ -907,7 +907,7 @@ area|z13-[building] {width: .3; color: #cca352; z-index:17;}
 area|z15-[building=yes] { fill-color: #E7CCB4;  z-index:17;}
 area|z15-[building=public] { fill-color: #edc2ba;  z-index:17;}
 area|z15-[building][building != yes][building!=public] {fill-color: #D8D1D1; z-index:17;}
-area|z15-16[building] {text: eval(tag("addr:housenumber")); text-halo-radius:1; text-position: center; font-size:7; -x-mapnik-min-distance:10; opacity:0.8}
-area|z17-[building] {text: eval(tag("addr:housenumber")); text-halo-radius:1; text-position: center; font-size:8; -x-mapnik-min-distance:10; opacity:0.8}
+area|z15-16[building] {text: addr:housenumber; text-halo-radius:1; text-position: center; font-size:7; -x-mapnik-min-distance:10; opacity:0.8}
+area|z17-[building] {text: addr:housenumber; text-halo-radius:1; text-position: center; font-size:8; -x-mapnik-min-distance:10; opacity:0.8}
 
 node|z13-[highway=milestone][pk]{text:pk; font-size:7; text-halo-radius:5;-x-mapnik-min-distance:0}

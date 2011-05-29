@@ -2230,6 +2230,12 @@
 
 
 
+        if (((type == 'way' && (tags['bridge'] == '1' || tags['bridge'] == 'true' || tags['bridge'] == 'yes')))) {
+            style['default']['casing-width'] = MapCSS.e_min(3, MapCSS.e_num(MapCSS.e_prop(style['default'], "width")) / 2);
+        }
+
+
+
         if (((selector == 'area' && ('building' in tags)) && zoom >= 13)) {
             style['default']['width'] = .3;
             style['default']['color'] = '#cca352';
@@ -2260,7 +2266,7 @@
 
 
         if (((selector == 'area' && ('building' in tags)) && zoom >= 15 && zoom <= 16)) {
-            style['default']['text'] = tags[MapCSS.tag(tags, "addr:housenumber")];
+            style['default']['text'] = tags['addr:housenumber'];
             style['default']['text-halo-radius'] = 1;
             style['default']['text-position'] = 'center';
             style['default']['font-size'] = '7';
@@ -2271,7 +2277,7 @@
 
 
         if (((selector == 'area' && ('building' in tags)) && zoom >= 17)) {
-            style['default']['text'] = tags[MapCSS.tag(tags, "addr:housenumber")];
+            style['default']['text'] = tags['addr:housenumber'];
             style['default']['text-halo-radius'] = 1;
             style['default']['text-position'] = 'center';
             style['default']['font-size'] = '8';

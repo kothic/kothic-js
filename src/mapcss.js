@@ -2,19 +2,20 @@ var MapCSS = (function() {
     var MapCSS = {
         styles: {},
         currentStyle: '',
+        onError: function(e){}
     };
     
-    MapCSS.min = function(/*...*/) {
+    MapCSS.e_min = function(/*...*/) {
         return Math.min.apply(null, arguments);
     };
 
-    MapCSS.max = function(/*...*/) {
+    MapCSS.e_max = function(/*...*/) {
         return Math.max.apply(null, arguments);
     };
 
-    MapCSS.any = function(/*...*/) {
+    MapCSS.e_any = function(/*...*/) {
         for(var i = 0; i < arguments.length; i++) {
-            if (typeof(arguments[i]) != 'undefined' && arguments[i] != '') {
+            if (typeof(arguments[i]) != 'undefined' && arguments[i] !== '') {
                 return arguments[i];
             }
         }
@@ -22,7 +23,7 @@ var MapCSS = (function() {
         return "";
     };
 
-    MapCSS.num = function(arg) {
+    MapCSS.e_num = function(arg) {
         if (!isNaN(parseFloat(arg))) {
             return parseFloat(arg);
         } else {
@@ -30,51 +31,51 @@ var MapCSS = (function() {
         }
     };
 
-    MapCSS.str = function(arg) {
+    MapCSS.e_str = function(arg) {
         return arg;
     };
 
-    MapCSS.int = function(arg) {
+    MapCSS.e_int = function(arg) {
         return parseInt(arg, 10);
     };
 
-    MapCSS.tag = function(a, tag) {
-        if (a[tag] != null) {
+    MapCSS.e_tag = function(a, tag) {
+        if (tag in a && a[tag] !== null) {
             return a[tag];
         } else {
             return "";
         }
     };
 
-    MapCSS.prop = function(obj, tag) {
-        if (obj[tag] != null) {
+    MapCSS.e_prop = function(obj, tag) {
+        if (tag in obj && obj[tag] !== null) {
             return obj[tag];
         } else {
             return "";
         }
     };
 
-    MapCSS.sqrt = function(arg) {
+    MapCSS.e_sqrt = function(arg) {
         return Math.sqrt(arg);
     };
 
-    MapCSS.boolean = function(arg) {
-        if (arg == '0' || arg == 'false' || arg == '') {
+    MapCSS.e_boolean = function(arg) {
+        if (arg == '0' || arg == 'false' || arg === '') {
             return 'false';
         } else {
             return 'true';
         }
     };
 
-    MapCSS.boolean = function(exp, if_exp, else_exp) {
-        if (MapCSS.boolean(exp) == 'true') {
+    MapCSS.e_boolean = function(arg, if_exp, else_exp) {
+        if (MapCSS.e_boolean(arg) == 'true') {
             return if_exp;
         } else {
             return else_exp;
         }
     };
 
-    MapCSS.metric = function(arg) {
+    MapCSS.e_metric = function(arg) {
         if (/\d\s*mm$/.test(arg)) {
             return 1000 * parseInt(arg, 10);
         } else if (/\d\s*cm$/.test(arg)) {
@@ -92,44 +93,46 @@ var MapCSS = (function() {
         }
     };
 
-    MapCSS.zmetric = function(arg) {
+    MapCSS.e_zmetric = function(arg) {
         return MapCSS.metric(arg);
     };
     
     MapCSS.loadStyle = function(style, restyle, images) {
         MapCSS.styles[style] = {
             restyle: restyle,
-            images: images,
+            images: images
         };
         
         if (!MapCSS.currentStyle) {
             MapCSS.currentStyle = style;
         }
-    }
+    };
     
     MapCSS.loadImages = function(style, url) {
-        var img = new Image;
+        var img = new Image();
         img.onload = function() {
             var images = MapCSS.styles[style].images;
-            for(image in images) {
-                images[image].sprite = img;
+            for(var image in images) {
+                if (images.hasOwnProperty(image)) {
+                    images[image].sprite = img;
+                }
             }
         };
         
-        img.onerror = function() {
-            alert("Couldn't load CSS sprite")
+        img.onerror = function(e) {
+            MapCSS.onError(e);
         };        
 
         img.src = url;
-    }
+    };
     
     MapCSS.getImage = function(ref) {
         return MapCSS.styles[MapCSS.currentStyle].images[ref];
-    }
+    };
     
     MapCSS.restyle = function() {
         return MapCSS.styles[MapCSS.currentStyle].restyle;
-    }
+    };
     
     return MapCSS;
 })();    

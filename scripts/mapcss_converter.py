@@ -127,11 +127,11 @@ def eval_as_js(self, subpart):
 def eval_function_as_js(self, subpart):
     args = ", ".join(map(lambda arg: arg.as_js(subpart), self.arguments))
     if self.function == 'tag':
-        return "MapCSS.tag(tags, %s)" % (args)
+        return "MapCSS.e_tag(tags, %s)" % (args)
     elif self.function == 'prop':
-        return "MapCSS.prop(style['%s'], %s)" % (subpart, args)
+        return "MapCSS.e_prop(style['%s'], %s)" % (subpart, args)
     else:
-        return "MapCSS.%s(%s)" % (self.function, args)
+        return "MapCSS.e_%s(%s)" % (self.function, args)
 
 def eval_string_as_js(self, subpart):
     return str(self)
@@ -185,6 +185,8 @@ def create_css_sprite(images, icons_path, sprite_filename):
         image_width.append(image.size[0])
         image_height.append(image.size[1])
     
+    if not image_data:
+        return []
     sprite_size = (max(image_width), sum(image_height))
     sprite = Image.new(
         mode='RGBA',
