@@ -49,6 +49,10 @@ var Kothic = (function () {
 		hs = height / granularity;
 		
 		collides = new CollisionBuffer();
+		collides.addBox([0,0,width,0]);
+		collides.addBox([0,height,width,height]);
+		collides.addBox([width,0,width,height]);
+		collides.addBox([0,0,0,height]);
 		
 		
 		// style and populate layer structures
