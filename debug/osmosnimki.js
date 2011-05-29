@@ -2230,12 +2230,6 @@
 
 
 
-        if (((type == 'way' && (tags['bridge'] == '1' || tags['bridge'] == 'true' || tags['bridge'] == 'yes')))) {
-            style['default']['casing-width'] = MapCSS.e_min(3, MapCSS.e_num(MapCSS.e_prop(style['default'], "width")) / 2);
-        }
-
-
-
         if (((selector == 'area' && ('building' in tags)) && zoom >= 13)) {
             style['default']['width'] = .3;
             style['default']['color'] = '#cca352';
