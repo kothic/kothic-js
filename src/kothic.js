@@ -22,8 +22,7 @@ var Kothic = (function () {
 			dashPattern,
 			pathOpened;
 			
-		var beforeDataLoad = +new Date(),
-			start,
+		var start,
 			layersStyled,
 			mapRendered,
 			iconsLoaded,
@@ -35,16 +34,10 @@ var Kothic = (function () {
 		// init all variables
 		
 		canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId);
-		//buffer = document.createElement('canvas');
-		//realCtx = canvas.getContext('2d');
-		//ctx = buffer.getContext('2d');
 		ctx = canvas.getContext('2d');
 		
 		width = canvas.width;
 		height = canvas.height;
-		
-		//buffer.width = width;
-		//buffer.height = height;
 		
 		granularity = data.granularity;
 		ws = width / granularity;
@@ -76,21 +69,15 @@ var Kothic = (function () {
 		renderIconsAndText();
 		bufferRendered = +new Date();
 		
-		//realCtx.drawImage(buffer, 0, 0);
-		
 		finish = +new Date();
 		
 		Kothic.onRenderComplete(getDebugInfo());
 		
 		function getDebugInfo() {
-			return (start - beforeDataLoad) + ': data loaded<br /><br />' +  
-			(layersStyled - start) + ': layers styled<br />' +
-			(mapRendered - layersStyled) + ': map rendered<br />' + 
-			//(iconsLoaded - mapRendered) + ': icons loaded<br />' + 
-			(bufferRendered - mapRendered) + ': icons/text rendered<br />' + 
-			//(finish - bufferRendered) + ': buffer copied, finish.<br /><br />' + 
-			'<br />' + (finish - start) + ': total rendering time<br />' + 
-			(finish - beforeDataLoad) + ': total';
+			return (layersStyled - start) + ': layers styled<br />' +
+					(mapRendered - layersStyled) + ': map rendered<br />' + 
+					(bufferRendered - mapRendered) + ': icons/text rendered<br />' + 
+					'<br />' + (finish - start) + ': total<br />';
 		}
 		
 		function renderMap() {
@@ -139,6 +126,8 @@ var Kothic = (function () {
 				}
 			}
 		}
+		
+		var k = 20;
 		
 		function renderPolygonFill(feature, nextFeature) {
 			var style = feature.style;
@@ -215,7 +204,7 @@ var Kothic = (function () {
 		}
 		
 		function renderBackground(zoom) {
-			var style = restyle({}, zoom, "canvas", "canvas")['default'];
+			var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
 			
 			ctx.save();
 			
@@ -235,7 +224,7 @@ var Kothic = (function () {
 			
 			ctx.save();
 			
-			var img = Kothic.icons[style["icon-image"]],
+			var img = MapCSS.getImage(style["icon-image"]),
 				offset = 0,
 				opacity = 1,
 				mindistance = 0,
@@ -279,7 +268,9 @@ var Kothic = (function () {
 				ctx.fillText(style["text"], point[0],point[1]+offset);
 			}
 			
-			ctx.drawImage(img, point[0]-img.width/2,point[1]-img.height/2);
+			ctx.drawImage(img.sprite, 
+				0, img.offset, img.width, img.height, 
+				point[0] - img.width / 2, point[1] - img.height / 2, img.width, img.height);
 			
 			collides.addPointWH(point, img.width, img.height, mindistance); //TOFIX: img won't have width and height until load 
 			collides.addPointWH([point[0], point[1] + offset], textwidth, 10, mindistance);
@@ -364,7 +355,7 @@ var Kothic = (function () {
 	                    type = 'node';
 	                    selector = 'node';
 	                }
-					style = styleCache[styleKey] = restyle(feature.properties, zoom, type, selector);
+					style = styleCache[styleKey] = MapCSS.restyle(feature.properties, zoom, type, selector);
 				}
 				
 				for (j in style) {
@@ -742,6 +733,8 @@ var Kothic = (function () {
 		}
 	}
 
+	function emptyFn() {}
+
 	function CollisionBuffer() {
 		this.buffer = [];
 	}
@@ -769,9 +762,7 @@ var Kothic = (function () {
 		}
 	};
 	
-	function emptyFn() {}
-
-	function onIconsLoad() {
+	/*function onIconsLoad() {
 		Kothic.onIconsLoad();
 		Kothic.iconsLoaded = true;
 	}
@@ -802,16 +793,10 @@ var Kothic = (function () {
 				img.src = Kothic.iconsPath + url;
 			})(urls[i]);
 		}
-	}
+	}*/
 	
 	return {
 		render: render,
-		preloadIcons: preloadIcons,
-		
-		onIconsLoad: emptyFn,
-		onRenderComplete: emptyFn,
-		
-		iconsLoaded: false,
-		iconsPath: ''
+		onRenderComplete: emptyFn
 	};
 })();

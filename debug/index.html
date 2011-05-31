@@ -7,14 +7,14 @@
 	<!--[if lte IE 8]><link rel="stylesheet" href="leaflet/leaflet.ie.css" /><![endif]-->
 	
 	<script src="leaflet/leaflet.js"></script>
+	<script src="kothic-leaflet.js"></script>
 	
-	<script src="mapcss.js"></script>
-	
+	<script src="../src/mapcss.js"></script>
 	<script src="../src/rgbcolor.js"></script>
 	<script src="../src/geomops.js"></script>
 	<script src="../src/kothic.js"></script>
-
-	<script src="kothic-leaflet.js"></script>
+	
+	<script src="osmosnimki.js"></script>
 	
 	<style>
 		body {
@@ -51,12 +51,10 @@
 			document.getElementById('debug').innerHTML = log;
 		};
 
-		Kothic.onIconsLoad = function() {
+		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);
-		}
-		
-		Kothic.iconsPath = 'http://osmosnimki.ru/leaf/icons/';
-		Kothic.preloadIcons(imagesToLoad);
+		};
+		MapCSS.loadImages("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
 	</script>
 </body>
 </html>

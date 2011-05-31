@@ -2,18 +2,12 @@
 
 import sys
 import os
+import re
+import Image
 
 from mapcss_parser import MapCSSParser
-
 from mapcss_parser import ast
 
-if len(sys.argv) != 2:
-    print "usage : mapcss.py inputfile"
-    raise SystemExit
-
-content = open(sys.argv[1]).read()
-parser = MapCSSParser(debug=False)
-mapcss = parser.parse(content)
 
 CHECK_OPERATORS = {
     '=': '==',
@@ -38,7 +32,7 @@ NUMERIC_PROPERTIES = (
     'text-halo-radius'
 )
 
-icon_images = set()
+images = set()
 
 def propagate_import(url):
     content = open(url).read()
@@ -59,26 +53,18 @@ def mapcss_as_aj(self):
     rules = "\n".join(map(lambda x: x.as_js(), self.rules))
     return "%s%s" % (imports, rules)
     
-def mapcss_canvas_as_aj(self):
-    actions = []
-    for rule in self.rules:
-        for selector in filter(lambda selector: selector.subject == 'canvas', rule.selectors):
-            for action in rule.actions:
-                for stmt in action.statements:
-                    actions.append("style['%s'] = %s;" % (stmt.key, escape_value(stmt.key, stmt.value, 'default') ))
-    return """
-    if (c.selector == "canvas") {
-        %s
-    }
-    """ % "\n    ".join(actions)
-    
 def rule_as_js(self):
-    rules = []
+    selectors_js = []
+    actions_js = []
     for selector in self.selectors:
-        for action in map(lambda action: "    if (%s%s) %s" % (selector.as_js(), selector.get_zoom(), action.as_js(selector.subpart)), self.actions):
-            rules.append(action)
+        selectors_js.append("(%s%s)" % (selector.as_js(), selector.get_zoom()))
+    
+    for action in self.actions:
+        actions_js.append(action.as_js(selector.subpart))
 
-    return "\n".join(rules)
+    return """
+        if (%s) %s
+""" % ("\n            || ".join(selectors_js), "".join(actions_js))
     
 def selector_as_js(self):
     criteria = " && ".join(map(lambda x: x.as_js(), self.criteria))
@@ -102,10 +88,10 @@ def condition_check_as_js(self):
         return "tags['%s'] %s '%s'" % (self.key, CHECK_OPERATORS[self.sign], self.value)
 
 def condition_tag_as_js(self):
-    return "(typeof tags['%s'] !== 'undefined' && tags['%s'] !== null)" % (self.key, self.key)
+    return "('%s' in tags)" % (self.key)
 
 def condition_nottag_as_js(self):
-    return "(typeof tags['%s'] === 'undefined' || tags['%s'] === null)" % (self.key, self.key)
+    return "(!('%s' in tags))" % (self.key)
     
 def action_as_js(self, subpart):
     if len(filter(lambda x: x, map(lambda x: isinstance(x, ast.StyleStatement), self.statements))) > 0:
@@ -118,22 +104,22 @@ def action_as_js(self, subpart):
 """ % (subpart, subpart)
         return """{
 %s%s
-    }\n""" % (prep, "\n".join(map(lambda x: x.as_js(subpart), self.statements)))
+        }\n""" % (prep, "\n".join(map(lambda x: x.as_js(subpart), self.statements)))
     else:
         return "{\n    %s\n    }" % "\n".join(map(lambda x: x.as_js(), self.statements))
     
 def style_statement_as_js(self, subpart):
     val = escape_value(self.key, self.value, subpart)
     if self.key == 'text':
-        return "        style['%s']['text'] = tags[%s];" % (subpart, val)
+        return "            style['%s']['text'] = tags[%s];" % (subpart, val)
     else:
         if self.key == 'icon-image':
-            icon_images.add(val)
-        return "        style['%s']['%s'] = %s;" % (subpart, self.key, val)
+            images.add(val.strip("'\""))
+        return "            style['%s']['%s'] = %s;" % (subpart, self.key, val)
     
 
 def tag_statement_as_js(self, subpart):
-    return "        tags['%s'] = %s" % (self.key, escape_value(self.key, self.value, subpart))
+    return "            tags['%s'] = %s" % (self.key, escape_value(self.key, self.value, subpart))
     
 def eval_as_js(self, subpart):
     return self.expression.as_js(subpart)
@@ -141,11 +127,11 @@ def eval_as_js(self, subpart):
 def eval_function_as_js(self, subpart):
     args = ", ".join(map(lambda arg: arg.as_js(subpart), self.arguments))
     if self.function == 'tag':
-        return "MapCSS.tag(tags, %s)" % (args)
+        return "MapCSS.e_tag(tags, %s)" % (args)
     elif self.function == 'prop':
-        return "MapCSS.prop(style['%s'], %s)" % (subpart, args)
+        return "MapCSS.e_prop(style['%s'], %s)" % (subpart, args)
     else:
-        return "MapCSS.%s(%s)" % (self.function, args)
+        return "MapCSS.e_%s(%s)" % (self.function, args)
 
 def eval_string_as_js(self, subpart):
     return str(self)
@@ -185,8 +171,47 @@ def selector_get_zoom(self):
         
     return ''
 
+def create_css_sprite(images, icons_path, sprite_filename):
+    image_data = []
+    image_width = []
+    image_height = []
+    for fname in sorted(images):
+        image = Image.open(os.path.join(icons_path, fname))
+        image_data.append({
+            'name': fname, 
+            'size': image.size, 
+            'image': image,
+        })
+        image_width.append(image.size[0])
+        image_height.append(image.size[1])
+    
+    if not image_data:
+        return []
+    sprite_size = (max(image_width), sum(image_height))
+    sprite = Image.new(
+        mode='RGBA',
+        size=sprite_size,
+        color=(0,0,0,0))
+    
+    offset = 0
+    for data in image_data:
+        data['offset'] = offset
+        sprite.paste(data['image'], (0, offset))
+        offset += data['size'][1]
+    sprite.save(sprite_filename)
+    
+    return image_data
+    
+def image_as_js(image):
+    return """
+        '%s': {width: %d, height: %d, offset: %d}""" % (
+        image['name'], 
+        image['size'][0], 
+        image['size'][1], 
+        image['offset']
+    )
+
 ast.MapCSS.as_js = mapcss_as_aj
-ast.MapCSS.canvas_as_js = mapcss_canvas_as_aj
 ast.Rule.as_js = rule_as_js
 ast.Selector.as_js = selector_as_js
 ast.Selector.get_zoom = selector_get_zoom
@@ -203,112 +228,67 @@ ast.EvalExpressionOperation.as_js = eval_op_as_js
 ast.EvalExpressionGroup.as_js = eval_group_as_js
 ast.EvalFunction.as_js = eval_function_as_js
 
+if __name__ == "__main__":
+    from optparse import OptionParser
+    parser = OptionParser(usage="%prog [options]")
+        
+    parser.add_option("-i", "--mapcss",
+        dest="input", 
+        help="MapCSS input file, required")    
 
-print """
-MapCSS = function() {
-    return this;
-}
-
-MapCSS.min = function(/*...*/) {
-    return Math.min.apply(null, arguments);
-}
-
-MapCSS.max = function(/*...*/) {
-    return Math.max.apply(null, arguments);
-}
-
-MapCSS.any = function(/*...*/) {
-    for(var i = 0; i < arguments.length; i++) {
-        if (typeof(arguments[i]) != 'undefined' && arguments[i] != '') {
-            return arguments[i];
-        }
-    }
+    parser.add_option("-o", "--output",
+        dest="output", 
+        help="JS output file. If not specified [stylename].js will be used")    
     
-    return "";
-}
+    parser.add_option("-p", "--icons-path",
+        dest="icons", default=".",
+        help="Directory with the icon set used in MapCSS file")    
 
-MapCSS.num = function(arg) {
-    if (!isNaN(parseFloat(arg))) {
-        return parseFloat(arg);
-    } else {
-        return ""
+    parser.add_option("-s", "--output-sprite",
+        dest="sprite", 
+        help="Filename of generated CSS sprite. If not specified, [stylename].png will be uesed")    
+
+    (options, args) = parser.parse_args()    
+    
+    if not options.input:
+        print "--mapcss parameter is required"
+        raise SystemExit
+
+    style_name = re.sub("\..*", "", options.input)
+
+    content = open(options.input).read()
+    parser = MapCSSParser(debug=False)
+    mapcss = parser.parse(content) 
+    
+
+    js = """
+(function(MapCSS) {
+    function restyle(tags, zoom, type, selector) {
+        var style = {};
+        style["default"] = {};
+%s
+        return style;
     }
-}
+    """ % mapcss.as_js()
+    
+    if options.sprite:
+        sprite = options.sprite
+    else:
+        sprite = "%s.png" % style_name
 
-MapCSS.str = function(arg) {
-    return arg;
-}
+    if options.output:
+        output = options.output
+    else:
+        output = "%s.js" % style_name
 
-MapCSS.int = function(arg) {
-    return parseInt(arg);
-}
-
-MapCSS.tag = function(a, tag) {
-    if (typeof(a[tag]) != 'undefined') {
-        return a[tag];
-    } else {
-        return "";
-    }
-}
-
-MapCSS.prop = function(obj, tag) {
-    if (typeof(obj[tag]) != 'undefined') {
-        return obj[tag];
-    } else {
-        return "";
-    }
-}
-
-MapCSS.sqrt = function(arg) {
-    return math.sqrt(arg);
-}
-
-MapCSS.boolean = function(arg) {
-    if (arg == '0' || arg == 'false' || arg == '') {
-        return 'false';
-    } else {
-        return 'true';
-    }
-}
-
-MapCSS.boolean = function(exp, if_exp, else_exp) {
-    if (MapCSS.boolean(exp) == 'true') {
-        return if_exp;
-    } else {
-        return else_exp;
-    }
-}
-
-MapCSS.metric = function(arg) {
-    if (/\d\s*mm$/.test(arg)) {
-        return 1000 * parseInt(arg);
-    } else if (/\d\s*cm$/.test(arg)) {
-        return 100 * parseInt(arg);
-    } else if (/\d\s*dm$/.test(arg)) {
-        return 10 * parseInt(arg);
-    } else if (/\d\s*km$/.test(arg)) {
-        return 0.001 * parseInt(arg);
-    } else if (/\d\s*in$/.test(arg)) {
-        return 0.0254 * parseInt(arg);
-    } else if (/\d\s*ft$/.test(arg)) {
-        return 0,3048 * parseInt(arg);
-    } else {
-        return parseInt(arg);
-    }
-}
-
-MapCSS.zmetric = function(arg) {
-    return MapCSS.metric(arg)
-}
-
-function restyle(tags, zoom, type, selector) {
-    var style=new Object;
-    style["default"]=new Object;
-"""
-print mapcss.as_js()
-print """
-    return style;
-}
-
-imagesToLoad = [%s];
-""" % ", ".join(icon_images)
+    images = create_css_sprite(images, options.icons, sprite)
+    
+    js += """
+    var images = {%s};
+    MapCSS.loadStyle('%s', restyle, images);
+})(MapCSS);
+    """ % (",".join(map(image_as_js, images)), style_name)
+    
+    with open(output, "w") as fh:
+        fh.write(js)
+    
