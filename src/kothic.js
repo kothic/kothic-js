@@ -377,7 +377,7 @@ var Kothic = (function () {
 			}
 			
 			styledFeatures.sort(function (a, b) {
-				return (a.style["z-index"] || 0) - (b.style["z-index"] || 0);
+				return parseFloat(a.style["z-index"] || 0) - parseFloat(b.style["z-index"] || 0);
 			});
 			
 			return styledFeatures;
@@ -416,6 +416,8 @@ var Kothic = (function () {
 		}
 		
 		function pathGeoJSON(feature, dashes, fill) {
+			var type = feature.type;
+			var coords = feature.coordinates;
 			if (!pathOpened) {
 				pathOpened = true;
 				ctx.beginPath();
@@ -430,52 +432,65 @@ var Kothic = (function () {
 				return ((v[0] == 0 || v[0] == g || v[1] == 0 || v[1] == g) &&
 						(p[0] == 0 || p[0] == g || p[1] == 0 || p[1] == g));
 			}
-			
-			if (feature.type == "Polygon") {
-				for (i = 0, len = feature.coordinates.length; i < len; i++) {
-					points = feature.coordinates[i];
-					pointsLen = points.length;
-					prevPoint = points[0];
-					
-					if (dashes) {
-						setDashPattern(prevPoint, dashes);
-					}
+			if (type == "Polygon"){
+				coords = [coords];
+				type = "MultiPolygon";
+			}
 
-					moveTo(prevPoint);
-					if (fill) {
-						for (j = 1; j < pointsLen; j++) {
-							lineTo(points[j]);
+			
+			if (type == "MultiPolygon" ) {
+				for (i = 0, len = coords.length; i < len; i++) {
+					for (j = 0, leng = coords[i].length; j < leng; j++) {
+						points = coords[i][0];
+						pointsLen = points.length;
+						prevPoint = points[0];
+
+						if (dashes) {
+							setDashPattern(prevPoint, dashes);
 						}
-					} else {
-						for (j = 1; j < pointsLen; j++) {
-							point = points[j];
-							if (isTileBoundary(point)) { //hide boundaries
-								moveTo(point);
-								setDashPattern(point, dashes);
-							} else if (dashes) {
-								dashTo(point);
-							} else {
-								lineTo(point);
+
+						moveTo(prevPoint);
+						if (fill) {
+							for (j = 1; j < pointsLen; j++) {
+								lineTo(points[j]);
 							}
-							prevPoint = point;
+						} else {
+							for (j = 1; j < pointsLen; j++) {
+								point = points[j];
+								if (isTileBoundary(point)) { //hide boundaries
+									moveTo(point);
+									setDashPattern(point, dashes);
+								} else if (dashes) {
+									dashTo(point);
+								} else {
+									lineTo(point);
+								}
+								prevPoint = point;
+							}
 						}
 					}
 				}
 			}
-			if (feature.type == "LineString") {
-				point = feature.coordinates[0];
-				
-				if (dashes) {
-					setDashPattern(point, dashes);
-				}
-				moveTo(point);
-				
-				for (i = 1, len = feature.coordinates.length; i < len; i++) {
-					point = feature.coordinates[i];
+			if (type == "LineString"){
+				coords = [coords];
+				type = "MultiLineString";
+			}
+			if (type == "MultiLineString") {
+				for (j = 0, leng = coords.length; j < leng; j++) {
+					point = coords[j][0];
 					if (dashes) {
-						dashTo(point);
-					} else {
-						lineTo(point);
+						setDashPattern(point, dashes);
+					}
+					moveTo(point);
+
+					for (i = 1, len = coords[j].length; i < len; i++) {
+					
+						point = coords[j][i];
+						if (dashes) {
+							dashTo(point);
+						} else {
+							lineTo(point);
+						}
 					}
 				}
 			}
