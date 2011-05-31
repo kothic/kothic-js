@@ -83,13 +83,13 @@ var Kothic = (function () {
 		Kothic.onRenderComplete(getDebugInfo());
 		
 		function getDebugInfo() {
-			return (start - beforeDataLoad) + ': data loaded\n\n' +  
-			(layersStyled - start) + ': layers styled\n' +
-			(mapRendered - layersStyled) + ': map rendered\n' + 
-			//(iconsLoaded - mapRendered) + ': icons loaded\n' + 
-			(bufferRendered - mapRendered) + ': icons/text rendered\n' + 
-			//(finish - bufferRendered) + ': buffer copied, finish.\n\n' + 
-			'\n' + (finish - start) + ': total rendering time\n' + 
+			return (start - beforeDataLoad) + ': data loaded<br /><br />' +  
+			(layersStyled - start) + ': layers styled<br />' +
+			(mapRendered - layersStyled) + ': map rendered<br />' + 
+			//(iconsLoaded - mapRendered) + ': icons loaded<br />' + 
+			(bufferRendered - mapRendered) + ': icons/text rendered<br />' + 
+			//(finish - bufferRendered) + ': buffer copied, finish.<br /><br />' + 
+			'<br />' + (finish - start) + ': total rendering time<br />' + 
 			(finish - beforeDataLoad) + ': total';
 		}
 		
@@ -440,7 +440,6 @@ var Kothic = (function () {
 			
 			if (type == "MultiPolygon" ) {
 				for (i = 0, len = coords.length; i < len; i++) {
-					moveTo(basePoint);
 					for (k = 0, leng = coords[i].length; k < leng; k++) {
 						points = coords[i][k];
 						pointsLen = points.length;
@@ -531,7 +530,9 @@ var Kothic = (function () {
 				positions,
 				solution = 0,
 				flipCount,
-				flipped = false;
+				flipped = false,
+				axy,
+				letterWidth;
 				
 			while (solution < 2) {
 				widthUsed = solution ? 2*letterWidths[text.charAt(0)] : linelength - textWidth / 2;
@@ -542,8 +543,8 @@ var Kothic = (function () {
 				for (i = 0; i < textLen; i++) {
 					letter = text.charAt(i);
 					
-					var letterWidth = letterWidths[letter] / aspect,
-						axy = ST_AngleAndCoordsAtLength(points, widthUsed);
+					letterWidth = letterWidths[letter] / aspect;
+					axy = ST_AngleAndCoordsAtLength(points, widthUsed);
 					
 					if (widthUsed >= linelength || !axy) {
 						//alert("cannot fit text: "+text+" widthused:"+ widthused +" width:"+textWidth+" space:"+linelength+" letter:"+letter+" aspect:"+aspect);
@@ -741,6 +742,33 @@ var Kothic = (function () {
 		}
 	}
 
+	function CollisionBuffer() {
+		this.buffer = [];
+	}
+	
+	CollisionBuffer.prototype = {
+		addBox: function(box) {
+			this.buffer.push(box);
+		},
+		
+		addPointWH: function(point, w, h, d) {
+			if (!d)d=0;
+			this.buffer.push([point[0]-w/2-d, point[1]-h/2-d, point[0]+w/2-d, point[1]+w/2-d]);
+		},
+		
+		checkBox: function(b) {
+			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
+				c = this.buffer[i];
+				if ((c[0]<=b[2] && c[1]<=b[3] && c[2]>=b[0] && c[3]>=b[1])) return true;
+			}
+			return false;
+		},
+		
+		checkPointWH: function(point, w, h) {
+			return this.checkBox([point[0]-w/2, point[1]-h/2, point[0]+w/2, point[1]+w/2]);
+		}
+	};
+	
 	function emptyFn() {}
 
 	function onIconsLoad() {
@@ -775,33 +803,6 @@ var Kothic = (function () {
 			})(urls[i]);
 		}
 	}
-	
-	function CollisionBuffer() {
-		this.buffer = [];
-	}
-	
-	CollisionBuffer.prototype = {
-		addBox: function(box) {
-			this.buffer.push(box);
-		},
-		
-		addPointWH: function(point, w, h, d) {
-			if (!d)d=0;
-			this.buffer.push([point[0]-w/2-d, point[1]-h/2-d, point[0]+w/2-d, point[1]+w/2-d]);
-		},
-		
-		checkBox: function(b) {
-			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
-				c = this.buffer[i];
-				if ((c[0]<=b[2] && c[1]<=b[3] && c[2]>=b[0] && c[3]>=b[1])) return true;
-			}
-			return false;
-		},
-		
-		checkPointWH: function(point, w, h) {
-			return this.checkBox([point[0]-w/2, point[1]-h/2, point[0]+w/2, point[1]+w/2]);
-		}
-	};
 	
 	return {
 		render: render,

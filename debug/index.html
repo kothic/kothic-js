@@ -41,17 +41,18 @@
 	<div id="debug">Rendering...</div>
 	<script>
 		var kothic = new L.TileLayer.Kothic();
+		
+		var map = new L.Map('map', {
+			center: new L.LatLng(53.9, 27.5), 
+			zoom: 11
+		});
 
 		Kothic.onRenderComplete = function(log) {
 			document.getElementById('debug').innerHTML = log;
 		};
 
 		Kothic.onIconsLoad = function() {
-			var map = new L.Map('map', {
-				center: new L.LatLng(50.5, 30.51), 
-				zoom: 9, 
-				layers: [kothic]
-			});
+			map.addLayer(kothic);
 		}
 		
 		Kothic.iconsPath = 'http://osmosnimki.ru/leaf/icons/';

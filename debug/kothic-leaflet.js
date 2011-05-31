@@ -2,7 +2,9 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 	options: {
 		tileSize: 256 * 4,
 		minZoom: 2,
-		maxZoom: 22
+		maxZoom: 22,
+		updateWhenIdle: true,
+		unloadInvisibleTiles: true
 	},
 	
 	initialize: function(options) {
@@ -11,7 +13,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		var canvases = this._canvases = {};
 		
 		window.onKothicDataResponse = function(data, zoom, x, y) {
-			console.log(arguments);
 			var key = [zoom, x, y].join('/'),
 				canvas = canvases[key];
 			Kothic.render(canvas, data, zoom + 2);
