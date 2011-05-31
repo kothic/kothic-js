@@ -423,7 +423,7 @@ var Kothic = (function () {
 				ctx.beginPath();
 			}
 			
-			var i, j, len, pointsLen, points, prevPoint, point;
+			var i, j, k, len, pointsLen, points, prevPoint, firstPoint, point;
 			
 			function isTileBoundary(p) {
 				var v = prevPoint,
@@ -440,8 +440,9 @@ var Kothic = (function () {
 			
 			if (type == "MultiPolygon" ) {
 				for (i = 0, len = coords.length; i < len; i++) {
-					for (j = 0, leng = coords[i].length; j < leng; j++) {
-						points = coords[i][0];
+					moveTo(basePoint);
+					for (k = 0, leng = coords[i].length; k < leng; k++) {
+						points = coords[i][k];
 						pointsLen = points.length;
 						prevPoint = points[0];
 
@@ -468,6 +469,7 @@ var Kothic = (function () {
 								prevPoint = point;
 							}
 						}
+						lineTo(points[0]);
 					}
 				}
 			}
@@ -561,6 +563,7 @@ var Kothic = (function () {
 						widthUsed += letterWidth;
 						i = -1;
 						positions = [];
+						flipCount = 0;
 						continue;
 					}
 					
@@ -603,6 +606,7 @@ var Kothic = (function () {
 				}
 				if (solution >= 2) return;
 				if (positions.length > 0) break;
+				flipCount = 0;
 			}
 			
 			var posLen = positions.length;
