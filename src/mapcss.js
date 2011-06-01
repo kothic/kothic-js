@@ -103,7 +103,7 @@ MapCSS.loadStyle = function(style, restyle, sprite_images, external_images) {
         restyle: restyle,
         images: sprite_images,
         external_images: external_images,
-        textures: {},
+        textures: {}
     };
     
     if (!MapCSS.currentStyle) {
@@ -112,8 +112,8 @@ MapCSS.loadStyle = function(style, restyle, sprite_images, external_images) {
 };
 
 MapCSS.loadImages = function(style, url) {
-    var sprite_loaded = url == null, 
-		external_images_loaded = MapCSS.styles[style].external_images.length <= 0;
+    var sprite_loaded = !url, 
+		external_images_loaded = !MapCSS.styles[style].external_images.length;
 
 	//MapCSS doesn't have any images
 	if (external_images_loaded && sprite_loaded) {
@@ -154,7 +154,7 @@ MapCSS._preloadSpriteImage = function(style, url, /* callback function */ onLoad
         MapCSS.onError(e);
     };        
 	img.src = url;
-}
+};
 	
 
 MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) {
@@ -186,7 +186,7 @@ MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) 
 			img.src = url;
 		})(external_images[i]);
 	}	
-}
+};
 
 MapCSS.getImage = function(ref) {
     return MapCSS.styles[MapCSS.currentStyle].images[ref];
@@ -207,7 +207,7 @@ MapCSS.getImageAsTexture = function(ref) {
 	}
 		
 	return style.textures[ref];
-}
+};
 
 MapCSS.restyle = function() {
     return MapCSS.styles[MapCSS.currentStyle].restyle.apply(MapCSS, arguments);
