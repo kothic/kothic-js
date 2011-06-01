@@ -289,7 +289,9 @@ if __name__ == "__main__":
     
     js += """
     var sprite_images = {%s};
-    var external_images = [%s]
+    
+    var external_images = [%s];
+    
     MapCSS.loadStyle('%s', restyle, sprite_images, external_images);
 })(MapCSS);
     """ % (
