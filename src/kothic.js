@@ -1,17 +1,8 @@
 var Kothic = (function () {
 
-	var defaultStyles = {
-		strokeStyle: "rgba(0,0,0,0.5)",
-		fillStyle: "rgba(0,0,0,0.5)",
-		lineWidth: 1,
-		lineCap: "round",
-		lineJoin: "round"
-	};
-	
 	function render(canvasId, data, zoom) {
 		
-		var canvas, buffer, 
-			ctx, realCtx, 
+		var canvas, ctx,  
 			width, height,
 			granularity,
 			ws, hs,
@@ -25,11 +16,10 @@ var Kothic = (function () {
 		var start,
 			layersStyled,
 			mapRendered,
-			iconsLoaded,
-			bufferRendered,
 			finish;
 	
 		start = +new Date();
+		
 		
 		// init all variables
 		
@@ -53,63 +43,54 @@ var Kothic = (function () {
 		// style and populate layer structures
 
 		populateLayers(data, zoom);
-		
+
 		layersStyled = +new Date();
 		
 		
 		// render
 		
-		setStyles(defaultStyles);
+		setStyles({
+			strokeStyle: "rgba(0,0,0,0.5)",
+			fillStyle: "rgba(0,0,0,0.5)",
+			lineWidth: 1,
+			lineCap: "round",
+			lineJoin: "round"
+		});
 		
-		renderBackground(zoom);
-		renderMap();
-		
-		mapRendered = +new Date();
-		
-		renderIconsAndText();
-		bufferRendered = +new Date();
-		
-		finish = +new Date();
-		
-		Kothic.onRenderComplete(getDebugInfo());
-		
-		function getDebugInfo() {
-			return (layersStyled - start) + ': layers styled<br />' +
-					(mapRendered - layersStyled) + ': map rendered<br />' + 
-					(bufferRendered - mapRendered) + ': icons/text rendered<br />' + 
-					'<br />' + (finish - start) + ': total<br />';
-		}
+		var layersLen = layerIds.length, 
+			i, j, features, featuresLen;
+	
+		setTimeout(renderMap, 0);
 		
 		function renderMap() {
-			var layersLen = layerIds.length, 
-				i, j, features, featuresLen;
-		
+			renderBackground(zoom);
+			
 			for (i = 0; i < layersLen; i++) {
-				
 				features = layers[layerIds[i]];
 				featuresLen = features.length;
-				
-				if (!featuresLen) continue;
 				
 				for (j = 0; j < featuresLen; j++) {
 					renderPolygonFill(features[j], features[j+1]);
 				}
-
+	
 				ctx.lineCap = "butt";
+					
 				for (j = 0; j < featuresLen; j++) {
 					renderCasing(features[j], features[j+1]);
 				}
-				
 				ctx.lineCap = "round";
+	
 				for (j = 0; j < featuresLen; j++) {
 					renderPolyline(features[j], features[j+1]);
 				}
+	
+				mapRendered = +new Date();
 			}
+			
+			setTimeout(renderIconsAndText, 0);
 		}
-		
+
 		function renderIconsAndText() {
-			var layersLen = layerIds.length, 
-				i, j, features, featuresLen;
 			
 			for (i = layersLen - 1; i >= 0; i--) {
 				
@@ -125,9 +106,19 @@ var Kothic = (function () {
 					renderText(features[j]);
 				}
 			}
+			
+			finish = +new Date();
+			
+			Kothic.onRenderComplete(getDebugInfo());
 		}
 		
-		var k = 20;
+		
+		function getDebugInfo() {
+			return (layersStyled - start) + ': layers styled<br />' +
+					(mapRendered - layersStyled) + ': map rendered<br />' + 
+					(finish - mapRendered) + ': icons/text rendered<br />' + 
+					'<br />' + (finish - start) + ': total<br />';
+		}
 		
 		function renderPolygonFill(feature, nextFeature) {
 			var style = feature.style, fillStyle;
