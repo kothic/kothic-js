@@ -494,7 +494,8 @@ var Kothic = (function () {
 				points = [],
 				len = feature.coordinates.length,
 				textWidth = 0,
-				textLen = text.length;
+				textLen = text.length,
+				numIter = 0;
 			
 			for (i = 0; i < len; i++) {
 				points.push(transformPoint(feature.coordinates[i]));
@@ -524,6 +525,9 @@ var Kothic = (function () {
 				letterWidth;
 				
 			while (solution < 2) {
+				if (numIter > 5) return;
+				numIter++;
+				
 				widthUsed = solution ? 2*letterWidths[text.charAt(0)] : linelength - textWidth / 2;
 				flipCount = 0;
 				prevAngle = null;
