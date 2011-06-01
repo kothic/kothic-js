@@ -98,10 +98,11 @@ MapCSS.e_zmetric = function(arg) {
     return MapCSS.metric(arg);
 };
 
-MapCSS.loadStyle = function(style, restyle, images) {
+MapCSS.loadStyle = function(style, restyle, sprite_images, external_images) {
     MapCSS.styles[style] = {
         restyle: restyle,
-        images: images
+        images: sprite_images,
+        external_images: external_images
     };
     
     if (!MapCSS.currentStyle) {
@@ -110,23 +111,81 @@ MapCSS.loadStyle = function(style, restyle, images) {
 };
 
 MapCSS.loadImages = function(style, url) {
-    var img = new Image();
-    img.onload = function() {
-        var images = MapCSS.styles[style].images;
-        for(var image in images) {
-            if (images.hasOwnProperty(image)) {
-                images[image].sprite = img;
-            }
-        }
-        MapCSS.onImagesLoad();
-    };
-    
+    var sprite_loaded = url == null, 
+		external_images_loaded = MapCSS.styles[style].external_images.length <= 0;
+
+	//MapCSS doesn't have any images
+	if (external_images_loaded && sprite_loaded) {
+		MapCSS.onImagesLoad();
+	}
+
+	if (!external_images_loaded) {
+		MapCSS._preloadExternalImages(style, function() {
+			external_images_loaded = true;
+			if (external_images_loaded && sprite_loaded) {
+				MapCSS.onImagesLoad();
+			}
+		});
+	}
+
+	if (!sprite_loaded) {
+		MapCSS._preloadSpriteImage(style, url, function () {
+			sprite_loaded = true;
+			if (external_images_loaded && sprite_loaded) {
+				MapCSS.onImagesLoad();
+			}
+		});
+	}
+};
+
+MapCSS._preloadSpriteImage = function(style, url, /* callback function */ onLoad) {
+	var img = new Image();
+	img.onload = function() {
+		var images = MapCSS.styles[style].images;
+		for(var image in images) {
+			if (images.hasOwnProperty(image)) {
+				images[image].sprite = img;
+			}
+		}
+		onLoad();
+	};
     img.onerror = function(e) {
         MapCSS.onError(e);
     };        
+	img.src = url;
+}
+	
 
-    img.src = url;
-};
+MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) {
+	var external_images = MapCSS.styles[style].external_images;
+	delete MapCSS.styles[style].external_images;
+
+	var len = external_images.length, loaded = 0;
+	for (var i = 0; i < len; i++) {
+		(function(url) {
+			var img = new Image();
+			img.onload = function() {
+				loaded++;
+				MapCSS.styles[style].images[url] = {
+					sprite: img,
+					height: img.height,
+					width: img.width,
+					offset: 0
+				};
+				if (loaded == len) {
+					onLoad();
+				}
+			};
+			img.onerror = function() {
+				loaded++;
+				if (loaded == len) {
+					onLoad();
+				}
+			};
+			img.src = url;
+		})(external_images[i]);
+	}	
+}
 
 MapCSS.getImage = function(ref) {
     return MapCSS.styles[MapCSS.currentStyle].images[ref];
