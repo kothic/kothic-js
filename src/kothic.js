@@ -762,39 +762,6 @@ var Kothic = (function () {
 		}
 	};
 	
-	/*function onIconsLoad() {
-		Kothic.onIconsLoad();
-		Kothic.iconsLoaded = true;
-	}
-	
-	function preloadIcons(urls) {
-		var img, url, i, 
-			len = urls.length,
-			loaded = 0;
-		
-		Kothic.icons = {};
-		
-		for (i = 0; i < len; i++) {
-			(function(url) {
-				img = new Image();
-				img.onload = function() {
-					loaded++;
-					Kothic.icons[url] = this;
-					if (loaded == len) {
-						onIconsLoad();
-					}
-				};
-				img.onerror = function() {
-					loaded++;
-					if (loaded == len) {
-						onIconsLoad();
-					}
-				};
-				img.src = Kothic.iconsPath + url;
-			})(urls[i]);
-		}
-	}*/
-	
 	return {
 		render: render,
 		onRenderComplete: emptyFn

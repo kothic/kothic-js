@@ -50,7 +50,7 @@ def escape_value(key, value, subpart):
 
 def mapcss_as_aj(self):
     imports = "".join(map(lambda imp: propagate_import(imp.url).as_js, self.imports))
-    rules = "\n".join(map(lambda x: x.as_js(), self.rules))
+    rules = "".join(map(lambda x: x.as_js(), self.rules))
     return "%s%s" % (imports, rules)
     
 def rule_as_js(self):
@@ -62,9 +62,7 @@ def rule_as_js(self):
     for action in self.actions:
         actions_js.append(action.as_js(selector.subpart))
 
-    return """
-        if (%s) %s
-""" % ("\n            || ".join(selectors_js), "".join(actions_js))
+    return """\n        if (%s) %s""" % ("\n            || ".join(selectors_js), "".join(actions_js))
     
 def selector_as_js(self):
     criteria = " && ".join(map(lambda x: x.as_js(), self.criteria))
@@ -113,11 +111,10 @@ def style_statement_as_js(self, subpart):
     if self.key == 'text':
         return "            style['%s']['text'] = tags[%s];" % (subpart, val)
     else:
-        if self.key == 'icon-image':
+        if self.key in ('icon-image', 'fill-image'):
             images.add(val.strip("'\""))
         return "            style['%s']['%s'] = %s;" % (subpart, self.key, val)
     
-
 def tag_statement_as_js(self, subpart):
     return "            tags['%s'] = %s" % (self.key, escape_value(self.key, self.value, subpart))
     
@@ -171,13 +168,19 @@ def selector_get_zoom(self):
         
     return ''
 
-def create_css_sprite(images, icons_path, sprite_filename):
-    image_data = []
+def create_css_sprite(image_names, icons_path, sprite_filename):
+    sprite_images = []
+    external_images = []
     image_width = []
     image_height = []
-    for fname in sorted(images):
-        image = Image.open(os.path.join(icons_path, fname))
-        image_data.append({
+    for fname in sorted(image_names):
+        fpath = os.path.join(icons_path, fname)
+        if not os.path.isfile(fpath):
+            external_images.append(fname)
+            continue
+            
+        image = Image.open(fpath)
+        sprite_images.append({
             'name': fname, 
             'size': image.size, 
             'image': image,
@@ -185,8 +188,9 @@ def create_css_sprite(images, icons_path, sprite_filename):
         image_width.append(image.size[0])
         image_height.append(image.size[1])
     
-    if not image_data:
-        return []
+    if not sprite_images:
+        return (sprite_images, external_images)
+        
     sprite_size = (max(image_width), sum(image_height))
     sprite = Image.new(
         mode='RGBA',
@@ -194,13 +198,13 @@ def create_css_sprite(images, icons_path, sprite_filename):
         color=(0,0,0,0))
     
     offset = 0
-    for data in image_data:
+    for data in sprite_images:
         data['offset'] = offset
         sprite.paste(data['image'], (0, offset))
         offset += data['size'][1]
     sprite.save(sprite_filename)
     
-    return image_data
+    return (sprite_images, external_images)
     
 def image_as_js(image):
     return """
@@ -281,13 +285,17 @@ if __name__ == "__main__":
     else:
         output = "%s.js" % style_name
 
-    images = create_css_sprite(images, options.icons, sprite)
+    (sprite_images, external_images) = create_css_sprite(images, options.icons, sprite)
     
     js += """
-    var images = {%s};
-    MapCSS.loadStyle('%s', restyle, images);
+    var sprite_images = {%s};
+    var external_images = [%s]
+    MapCSS.loadStyle('%s', restyle, sprite_images, external_images);
 })(MapCSS);
-    """ % (",".join(map(image_as_js, images)), style_name)
+    """ % (
+            ",".join(map(image_as_js, sprite_images)), 
+            ", ".join(map(lambda i: "'%s'" % i, external_images)), 
+            style_name)
     
     with open(output, "w") as fh:
         fh.write(js)
