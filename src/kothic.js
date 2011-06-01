@@ -230,9 +230,9 @@ var Kothic = (function () {
 			if (!img) {return;}
 				
 			setStyles({
-				fillStyle: style["text-color"],
+				fillStyle: style["text-color"] || "#000000",
 				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"]
+				strokeStyle: style["text-halo-color"] || "#ffffff"
 			});
 			if ("text-offset" in style){offset = style["text-offset"];}
 			if ("opacity" in style){opacity = style.opacity;}
@@ -283,9 +283,9 @@ var Kothic = (function () {
 			ctx.save();
 
 			setStyles({
-				fillStyle: style["text-color"],
+				fillStyle: style["text-color"] || "#000000",
 				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"],
+				strokeStyle: style["text-halo-color"] || "#ffffff",
 				font: fontString(style["font-family"], style["font-size"])
 			});
 			
@@ -468,6 +468,10 @@ var Kothic = (function () {
 			if (type == "MultiLineString") {
 				for (j = 0, leng = coords.length; j < leng; j++) {
 					point = coords[j][0];
+					if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
+						var p2 = coords[j][1];
+						point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])]
+					}
 					if (dashes) {
 						setDashPattern(point, dashes);
 					}
@@ -482,6 +486,17 @@ var Kothic = (function () {
 							lineTo(point);
 						}
 					}
+					if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
+						var p2 = coords[j][coords[j].length-2];
+						point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])];
+						if (dashes) {
+							dashTo(point);
+						} else {
+							lineTo(point);
+						}
+
+					}
+					
 				}
 			}
 		}
