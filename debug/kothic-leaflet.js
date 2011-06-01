@@ -4,18 +4,21 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		minZoom: 2,
 		maxZoom: 22,
 		updateWhenIdle: true,
-		unloadInvisibleTiles: true
+		unloadInvisibleTiles: true,
+		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="github.com/mourner/kothic-js">Kothic JS</a>',
+		buffered: true
 	},
 	
 	initialize: function(options) {
 		L.Util.setOptions(this, options);
 		
-		var canvases = this._canvases = {};
+		var canvases = this._canvases = {},
+			buffered = this.options.buffered;
 		
 		window.onKothicDataResponse = function(data, zoom, x, y) {
 			var key = [zoom, x, y].join('/'),
 				canvas = canvases[key];
-			Kothic.render(canvas, data, zoom + 2);
+			Kothic.render(canvas, data, zoom + 2, buffered);
 		};
 	},
 	

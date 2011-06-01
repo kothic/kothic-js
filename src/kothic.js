@@ -1,8 +1,9 @@
 var Kothic = (function () {
 
-	function render(canvasId, data, zoom) {
+	function render(canvasId, data, zoom, buffered) {
 		
-		var canvas, ctx,  
+		var canvas, ctx,
+			buffer, realCtx,
 			width, height,
 			granularity,
 			ws, hs,
@@ -28,6 +29,14 @@ var Kothic = (function () {
 		
 		width = canvas.width;
 		height = canvas.height;
+		
+		if (buffered) {
+			realCtx = ctx;
+			buffer = document.createElement('canvas');
+			buffer.width = width;
+			buffer.height = height;
+			ctx = buffer.getContext('2d');
+		}
 		
 		granularity = data.granularity;
 		ws = width / granularity;
@@ -108,6 +117,10 @@ var Kothic = (function () {
 			}
 			
 			finish = +new Date();
+			
+			if (buffered) {
+				realCtx.drawImage(buffer, 0, 0);
+			}
 			
 			Kothic.onRenderComplete(getDebugInfo());
 		}
