@@ -139,8 +139,8 @@ var Kothic = (function () {
 				ctx.save();
 				
 				if ('fill-image' in style) {
-					var image = MapCSS.getImageAsTexture(style['fill-image'])
-					fillStyle = ctx.createPattern(image, 'repeat')
+					var image = MapCSS.getImageAsTexture(style['fill-image']);
+					fillStyle = ctx.createPattern(image, 'repeat');
 				} else {
 					fillStyle = style["fill-color"];
 				}
