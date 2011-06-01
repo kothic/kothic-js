@@ -153,7 +153,7 @@ MapCSS._preloadSpriteImage = function(style, url, /* callback function */ onLoad
         MapCSS.onError(e);
     };        
 	img.src = url;
-}
+};
 	
 
 MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) {
@@ -185,7 +185,7 @@ MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) 
 			img.src = url;
 		})(external_images[i]);
 	}	
-}
+};
 
 MapCSS.getImage = function(ref) {
     return MapCSS.styles[MapCSS.currentStyle].images[ref];
