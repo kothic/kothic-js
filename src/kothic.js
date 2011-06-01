@@ -130,7 +130,7 @@ var Kothic = (function () {
 		var k = 20;
 		
 		function renderPolygonFill(feature, nextFeature) {
-			var style = feature.style;
+			var style = feature.style, fillStyle;
 			if (!('fill-color' in style)) return;
 			
 			pathGeoJSON(feature, false, true);
@@ -138,8 +138,15 @@ var Kothic = (function () {
 			if (!nextFeature || (nextFeature.style !== style)) {
 				ctx.save();
 				
+				if ('fill-image' in style) {
+					var image = MapCSS.getImageAsTexture(style['fill-image']);
+					fillStyle = ctx.createPattern(image, 'repeat');
+				} else {
+					fillStyle = style["fill-color"];
+				}
+
 				setStyles({
-					fillStyle: style["fill-color"],
+					fillStyle: fillStyle,
 					globalAlpha: style["fill-opacity"] || style.opacity
 				});
 				
