@@ -1914,10 +1914,6 @@
             style['default']['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && ('place' in tags)))) {
-            style['default']['icon-image'] = 'http://osmosnimki.ru/leaf/icons/autobus_stop_14x10.png';
-        }
-
         return style;
     }
     
@@ -1962,7 +1958,7 @@
         'univer_15x11.png': {width: 15, height: 11, offset: 410},
         'wc-3_13x13.png': {width: 13, height: 13, offset: 421},
         'zoo4_14x14.png': {width: 14, height: 14, offset: 434}};
-    var external_images = ['http://osmosnimki.ru/leaf/icons/autobus_stop_14x10.png']
+    var external_images = []
     MapCSS.loadStyle('osmosnimki-maps', restyle, sprite_images, external_images);
 })(MapCSS);
     
