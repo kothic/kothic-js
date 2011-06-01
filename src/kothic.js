@@ -241,7 +241,7 @@ var Kothic = (function () {
 			setStyles({
 				fillStyle: style["text-color"],
 				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"]
+				strokeStyle: style["text-halo-color"] || "#ffffff"
 			});
 			if ("text-offset" in style){offset = style["text-offset"];}
 			if ("opacity" in style){opacity = style.opacity;}
@@ -294,7 +294,7 @@ var Kothic = (function () {
 			setStyles({
 				fillStyle: style["text-color"],
 				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"],
+				strokeStyle: style["text-halo-color"] || "#ffffff",
 				font: fontString(style["font-family"], style["font-size"])
 			});
 			
