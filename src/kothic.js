@@ -1,6 +1,6 @@
 var Kothic = (function () {
 
-	function render(canvasId, data, zoom, buffered) {
+	function render(canvasId, data, zoom, onRenderComplete, buffered) {
 		
 		var canvas, ctx,
 			buffer, realCtx,
@@ -122,7 +122,7 @@ var Kothic = (function () {
 				realCtx.drawImage(buffer, 0, 0);
 			}
 			
-			Kothic.onRenderComplete(getDebugInfo());
+			onRenderComplete(getDebugInfo());
 		}
 		
 		
@@ -130,7 +130,7 @@ var Kothic = (function () {
 			return (layersStyled - start) + ': layers styled<br />' +
 					(mapRendered - layersStyled) + ': map rendered<br />' + 
 					(finish - mapRendered) + ': icons/text rendered<br />' + 
-					'<br />' + (finish - start) + ': total<br />';
+					(finish - start) + ': total<br />';
 		}
 		
 		function renderPolygonFill(feature, nextFeature) {

@@ -47,10 +47,14 @@
 			zoom: 11
 		});
 
-		Kothic.onRenderComplete = function(log) {
-			document.getElementById('debug').innerHTML = log;
-		};
-
+		kothic.on('load', function() {
+			var messages = kothic.getDebugMessages(),
+				len = messages.length,
+				message = messages.slice(Math.max(len - 4, 0), len).join('<br />');
+			
+			document.getElementById('debug').innerHTML = message;
+		});
+		
 		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);
 		};
