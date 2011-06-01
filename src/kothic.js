@@ -239,7 +239,7 @@ var Kothic = (function () {
 			if (!img) {return;}
 				
 			setStyles({
-				fillStyle: style["text-color"],
+				fillStyle: style["text-color"] || "#000000",
 				lineWidth: style["text-halo-radius"] + 2,
 				strokeStyle: style["text-halo-color"] || "#ffffff"
 			});
@@ -292,7 +292,7 @@ var Kothic = (function () {
 			ctx.save();
 
 			setStyles({
-				fillStyle: style["text-color"],
+				fillStyle: style["text-color"] || "#000000",
 				lineWidth: style["text-halo-radius"] + 2,
 				strokeStyle: style["text-halo-color"] || "#ffffff",
 				font: fontString(style["font-family"], style["font-size"])
