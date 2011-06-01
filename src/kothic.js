@@ -483,7 +483,7 @@ var Kothic = (function () {
 					point = coords[j][0];
 					if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
 						var p2 = coords[j][1];
-						point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])]
+						point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])];
 					}
 					if (dashes) {
 						setDashPattern(point, dashes);
