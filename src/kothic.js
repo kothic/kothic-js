@@ -134,29 +134,42 @@ var Kothic = (function () {
 		}
 		
 		function renderPolygonFill(feature, nextFeature) {
-			var style = feature.style, fillStyle;
-			if (!('fill-color' in style)) return;
+			var style = feature.style;
+			if (!('fill-color' in style) && !('fill-image' in style)) {
+				return;
+			}
 			
 			pathGeoJSON(feature, false, true);
 			
 			if (!nextFeature || (nextFeature.style !== style)) {
 				ctx.save();
-				
-				if ('fill-image' in style) {
-					var image = MapCSS.getImageAsTexture(style['fill-image']);
-					fillStyle = ctx.createPattern(image, 'repeat');
-				} else {
-					fillStyle = style["fill-color"];
+				var opacity = style["fill-opacity"] || style.opacity;
+
+				if (('fill-color' in style)) {
+					//First pass fills polygon with solid color
+					setStyles({
+						fillStyle: style["fill-color"],
+						globalAlpha: opacity
+					});
+					ctx.fill();
 				}
 
-				setStyles({
-					fillStyle: fillStyle,
-					globalAlpha: style["fill-opacity"] || style.opacity
-				});
+				if ('fill-image' in style) {
+					//Second pass fills polygon with texture
+					var image = MapCSS.getImageAsTexture(style['fill-image']);
+					if (image) {
+						//Texture image may not be loaded
+						setStyles({
+							fillStyle: ctx.createPattern(image, 'repeat'),
+							globalAlpha: opacity
+						});
+						ctx.fill();
+					}
+				}
+
 				
 				pathOpened = false;
 
-				ctx.fill();
 				
 				ctx.restore();
 			}
