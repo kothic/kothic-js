@@ -1,17 +1,9 @@
 var Kothic = (function () {
 
-	var defaultStyles = {
-		strokeStyle: "rgba(0,0,0,0.5)",
-		fillStyle: "rgba(0,0,0,0.5)",
-		lineWidth: 1,
-		lineCap: "round",
-		lineJoin: "round"
-	};
-	
-	function render(canvasId, data, zoom) {
+	function render(canvasId, data, zoom, onRenderComplete, buffered) {
 		
-		var canvas, buffer, 
-			ctx, realCtx, 
+		var canvas, ctx,
+			buffer, realCtx,
 			width, height,
 			granularity,
 			ws, hs,
@@ -25,11 +17,10 @@ var Kothic = (function () {
 		var start,
 			layersStyled,
 			mapRendered,
-			iconsLoaded,
-			bufferRendered,
 			finish;
 	
 		start = +new Date();
+		
 		
 		// init all variables
 		
@@ -38,6 +29,14 @@ var Kothic = (function () {
 		
 		width = canvas.width;
 		height = canvas.height;
+		
+		if (buffered) {
+			realCtx = ctx;
+			buffer = document.createElement('canvas');
+			buffer.width = width;
+			buffer.height = height;
+			ctx = buffer.getContext('2d');
+		}
 		
 		granularity = data.granularity;
 		ws = width / granularity;
@@ -53,63 +52,54 @@ var Kothic = (function () {
 		// style and populate layer structures
 
 		populateLayers(data, zoom);
-		
+
 		layersStyled = +new Date();
 		
 		
 		// render
 		
-		setStyles(defaultStyles);
+		setStyles({
+			strokeStyle: "rgba(0,0,0,0.5)",
+			fillStyle: "rgba(0,0,0,0.5)",
+			lineWidth: 1,
+			lineCap: "round",
+			lineJoin: "round"
+		});
 		
-		renderBackground(zoom);
-		renderMap();
-		
-		mapRendered = +new Date();
-		
-		renderIconsAndText();
-		bufferRendered = +new Date();
-		
-		finish = +new Date();
-		
-		Kothic.onRenderComplete(getDebugInfo());
-		
-		function getDebugInfo() {
-			return (layersStyled - start) + ': layers styled<br />' +
-					(mapRendered - layersStyled) + ': map rendered<br />' + 
-					(bufferRendered - mapRendered) + ': icons/text rendered<br />' + 
-					'<br />' + (finish - start) + ': total<br />';
-		}
+		var layersLen = layerIds.length, 
+			i, j, features, featuresLen;
+	
+		setTimeout(renderMap, 0);
 		
 		function renderMap() {
-			var layersLen = layerIds.length, 
-				i, j, features, featuresLen;
-		
+			renderBackground(zoom);
+			
 			for (i = 0; i < layersLen; i++) {
-				
 				features = layers[layerIds[i]];
 				featuresLen = features.length;
-				
-				if (!featuresLen) continue;
 				
 				for (j = 0; j < featuresLen; j++) {
 					renderPolygonFill(features[j], features[j+1]);
 				}
-
+	
 				ctx.lineCap = "butt";
+					
 				for (j = 0; j < featuresLen; j++) {
 					renderCasing(features[j], features[j+1]);
 				}
-				
 				ctx.lineCap = "round";
+	
 				for (j = 0; j < featuresLen; j++) {
 					renderPolyline(features[j], features[j+1]);
 				}
+	
+				mapRendered = +new Date();
 			}
+			
+			setTimeout(renderIconsAndText, 0);
 		}
-		
+
 		function renderIconsAndText() {
-			var layersLen = layerIds.length, 
-				i, j, features, featuresLen;
 			
 			for (i = layersLen - 1; i >= 0; i--) {
 				
@@ -125,9 +115,23 @@ var Kothic = (function () {
 					renderText(features[j]);
 				}
 			}
+			
+			finish = +new Date();
+			
+			if (buffered) {
+				realCtx.drawImage(buffer, 0, 0);
+			}
+			
+			onRenderComplete(getDebugInfo());
 		}
 		
-		var k = 20;
+		
+		function getDebugInfo() {
+			return (layersStyled - start) + ': layers styled<br />' +
+					(mapRendered - layersStyled) + ': map rendered<br />' + 
+					(finish - mapRendered) + ': icons/text rendered<br />' + 
+					(finish - start) + ': total<br />';
+		}
 		
 		function renderPolygonFill(feature, nextFeature) {
 			var style = feature.style, fillStyle;
@@ -239,9 +243,9 @@ var Kothic = (function () {
 			if (!img) {return;}
 				
 			setStyles({
-				fillStyle: style["text-color"],
+				fillStyle: style["text-color"] || "#000000",
 				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"]
+				strokeStyle: style["text-halo-color"] || "#ffffff"
 			});
 			if ("text-offset" in style){offset = style["text-offset"];}
 			if ("opacity" in style){opacity = style.opacity;}
@@ -292,9 +296,9 @@ var Kothic = (function () {
 			ctx.save();
 
 			setStyles({
-				fillStyle: style["text-color"],
+				fillStyle: style["text-color"] || "#000000",
 				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"],
+				strokeStyle: style["text-halo-color"] || "#ffffff",
 				font: fontString(style["font-family"], style["font-size"])
 			});
 			
@@ -477,6 +481,10 @@ var Kothic = (function () {
 			if (type == "MultiLineString") {
 				for (j = 0, leng = coords.length; j < leng; j++) {
 					point = coords[j][0];
+					if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
+						var p2 = coords[j][1];
+						point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])];
+					}
 					if (dashes) {
 						setDashPattern(point, dashes);
 					}
@@ -491,6 +499,17 @@ var Kothic = (function () {
 							lineTo(point);
 						}
 					}
+					if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
+						var p2 = coords[j][coords[j].length-2];
+						point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])];
+						if (dashes) {
+							dashTo(point);
+						} else {
+							lineTo(point);
+						}
+
+					}
+					
 				}
 			}
 		}
@@ -503,7 +522,8 @@ var Kothic = (function () {
 				points = [],
 				len = feature.coordinates.length,
 				textWidth = 0,
-				textLen = text.length;
+				textLen = text.length,
+				numIter = 0;
 			
 			for (i = 0; i < len; i++) {
 				points.push(transformPoint(feature.coordinates[i]));
@@ -533,6 +553,9 @@ var Kothic = (function () {
 				letterWidth;
 				
 			while (solution < 2) {
+				if (numIter > 5) return;
+				numIter++;
+				
 				widthUsed = solution ? 2*letterWidths[text.charAt(0)] : linelength - textWidth / 2;
 				flipCount = 0;
 				prevAngle = null;
