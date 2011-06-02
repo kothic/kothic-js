@@ -653,7 +653,7 @@ var Kothic = (function () {
 				
 				ctx.save();
 				
-				ctx.translate(axy[1], axy[2]);
+				ctx.translate(Math.floor(axy[1]), Math.floor(axy[2]));
 				ctx.rotate(axy[0]);
 				
 				collides.addPointWH([
