@@ -1,5 +1,7 @@
 var Kothic = {};
 
+Kothic.styleCache = {};
+
 Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		
 	var canvas, ctx,
@@ -381,25 +383,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		
 		for (i = 0, len = features.length; i < len; i++) {
 			feature = features[i];
-	
-			var styleKey = JSON.stringify(feature.properties) + ':' + zoom + ':' + feature.type;
-			if (styleKey in styleCache) {
-				style = styleCache[styleKey];
-			} else {
-                //TODO: propagate type and selector
-                var type, selector;
-                if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
-                    type = 'way';
-                    selector = 'area';
-                } else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
-                    type = 'way';
-                    selector = 'line';
-                } else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
-                    type = 'node';
-                    selector = 'node';
-                }
-				style = styleCache[styleKey] = MapCSS.restyle(feature.properties, zoom, type, selector);
-			}
+			style = getStyle(feature, zoom);
 			
 			for (j in style) {
 				if (style.hasOwnProperty(j)) {
@@ -415,6 +399,32 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		});
 		
 		return styledFeatures;
+	}
+	
+	function getStyle(feature, zoom) {
+		var key = [MapCSS.currentStyle, 
+		           JSON.stringify(feature.properties), 
+		           zoom, feature.type].join(':'),
+			cache = Kothic.styleCache,
+			type, selector;
+		
+		if (key in cache) {
+			return cache[key];
+		}
+		
+        //TODO: propagate type and selector
+        if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
+            type = 'way';
+            selector = 'area';
+        } else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
+            type = 'way';
+            selector = 'line';
+        } else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
+            type = 'node';
+            selector = 'node';
+        }
+        cache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
+		return cache[key];
 	}
 	
 	function populateLayers(data, zoom) {
