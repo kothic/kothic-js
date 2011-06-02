@@ -11,7 +11,6 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		ws, hs,
 		layers = {}, 
 		layerIds = [],
-		styleCache = {},
 		collides,
 		dashPattern,
 		pathOpened;
@@ -137,20 +136,20 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		},
 		
 		addPointWH: function(point, w, h, d) {
-			if (!d)d=0;
-			this.buffer.push([point[0]-w/2-d, point[1]-h/2-d, point[0]+w/2-d, point[1]+w/2-d]);
+			if (!d) d = 0;
+			this.buffer.push([point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + w/2 - d]);
 		},
 		
 		checkBox: function(b) {
 			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
 				c = this.buffer[i];
-				if ((c[0]<=b[2] && c[1]<=b[3] && c[2]>=b[0] && c[3]>=b[1])) return true;
+				if ((c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1])) return true;
 			}
 			return false;
 		},
 		
 		checkPointWH: function(point, w, h) {
-			return this.checkBox([point[0]-w/2, point[1]-h/2, point[0]+w/2, point[1]+w/2]);
+			return this.checkBox([point[0] - w/2, point[1] - h/2, point[0] + w/2, point[1] + w/2]);
 		}
 	};
 
@@ -467,14 +466,14 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			ctx.beginPath();
 		}
 		
-		var i, j, k, len, pointsLen, points, prevPoint, firstPoint, point;
+		var i, j, k, len, len2, pointsLen, points, prevPoint, firstPoint, point, p2;
 		
 		function isTileBoundary(p) {
 			var v = prevPoint,
 				g = granularity;
 			
-			return ((v[0] == 0 || v[0] == g || v[1] == 0 || v[1] == g) &&
-					(p[0] == 0 || p[0] == g || p[1] == 0 || p[1] == g));
+			return ((v[0] === 0 || v[0] == g || v[1] === 0 || v[1] == g) &&
+					(p[0] === 0 || p[0] == g || p[1] === 0 || p[1] == g));
 		}
 		if (type == "Polygon"){
 			coords = [coords];
@@ -484,7 +483,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		
 		if (type == "MultiPolygon" ) {
 			for (i = 0, len = coords.length; i < len; i++) {
-				for (k = 0, leng = coords[i].length; k < leng; k++) {
+				for (k = 0, len2 = coords[i].length; k < len2; k++) {
 					points = coords[i][k];
 					pointsLen = points.length;
 					prevPoint = points[0];
@@ -521,11 +520,11 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			type = "MultiLineString";
 		}
 		if (type == "MultiLineString") {
-			for (j = 0, leng = coords.length; j < leng; j++) {
+			for (j = 0, len2 = coords.length; j < len2; j++) {
 				point = coords[j][0];
-				if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
-					var p2 = coords[j][1];
-					point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])];
+				if (point[0] === 0 || point[0] == granularity || point[1] === 0 || point[1] == granularity) {
+					p2 = coords[j][1];
+					point = [point[0] - 5 * (p2[0] - point[0]), point[1] - 5 * (p2[1] - point[1])];
 				}
 				if (dashes) {
 					setDashPattern(point, dashes);
@@ -541,17 +540,15 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 						lineTo(point);
 					}
 				}
-				if (point[0] == 0 || point[0] == granularity || point[1] == 0 || point[1] == granularity) {
-					var p2 = coords[j][coords[j].length-2];
-					point = [point[0]-5*(p2[0]-point[0]), point[1]-5*(p2[1]-point[1])];
+				if (point[0] === 0 || point[0] == granularity || point[1] === 0 || point[1] == granularity) {
+					p2 = coords[j][coords[j].length - 2];
+					point = [point[0] - 5 * (p2[0] - point[0]), point[1] - 5 * (p2[1] - point[1])];
 					if (dashes) {
 						dashTo(point);
 					} else {
 						lineTo(point);
 					}
-
 				}
-				
 			}
 		}
 	}
@@ -760,7 +757,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				x = dist;
 			}
 			
-			pt.seg % 2 ? ctx.moveTo(x, 0) : ctx.lineTo(x, 0);
+			ctx[pt.seg % 2 ? 'moveTo' : 'lineTo'](x, 0);
 			
 			if (more) {
 				pt.phs = 0;
