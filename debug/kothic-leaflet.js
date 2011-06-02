@@ -5,7 +5,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		maxZoom: 22,
 		updateWhenIdle: true,
 		unloadInvisibleTiles: true,
-		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="github.com/mourner/kothic-js">Kothic JS</a>',
+		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="github.com/kothic/kothic-js">Kothic JS</a>',
 		async: true,
 		buffered: true
 	},
