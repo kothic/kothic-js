@@ -105,14 +105,14 @@ MapCSS.loadStyle = function(style, restyle, sprite_images, external_images) {
         external_images: external_images,
         textures: {}
     };
-    
+
     if (!MapCSS.currentStyle) {
         MapCSS.currentStyle = style;
     }
 };
 
 MapCSS.loadImages = function(style, url) {
-    var sprite_loaded = !url, 
+    var sprite_loaded = !url,
 		external_images_loaded = !MapCSS.styles[style].external_images.length;
 
 	//MapCSS doesn't have any images
@@ -152,10 +152,10 @@ MapCSS._preloadSpriteImage = function(style, url, /* callback function */ onLoad
 	};
     img.onerror = function(e) {
         MapCSS.onError(e);
-    };        
+    };
 	img.src = url;
 };
-	
+
 
 MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) {
 	var external_images = MapCSS.styles[style].external_images;
@@ -185,7 +185,7 @@ MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) 
 			};
 			img.src = url;
 		})(external_images[i]);
-	}	
+	}
 };
 
 MapCSS.getImage = function(ref) {
@@ -197,15 +197,17 @@ MapCSS.getImageAsTexture = function(ref) {
 	if (!(ref in style.textures)) {
 		var img = MapCSS.styles[MapCSS.currentStyle].images[ref];
 		var canvas = document.createElement('canvas');
-		canvas.width = img.width;
-		canvas.height = img.height;
-		canvas.getContext("2d").drawImage(img.sprite, 
-			0, img.offset, img.width, img.height, 
-			0, 0, 
-			img.width, img.height);
+		if (img){
+			canvas.width = img.width;
+			canvas.height = img.height;
+			canvas.getContext("2d").drawImage(img.sprite,
+				0, img.offset, img.width, img.height,
+				0, 0,
+				img.width, img.height);
+		}
 		style.textures[ref] = canvas;
 	}
-		
+
 	return style.textures[ref];
 };
 
