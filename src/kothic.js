@@ -137,7 +137,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			if (!d) d = 0;
 			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d, id];
 			this.buffer.push(box);
-			
+
 //			ctx.save();
 //			ctx.strokeStyle = 'red';
 //			ctx.lineWidth = '1';
@@ -148,10 +148,10 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		checkBox: function(b, id) {
 			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
 				c = this.buffer[i];
-				
-				// if it's the same object (only different styles), don't detect collision  
+
+				// if it's the same object (only different styles), don't detect collision
 				if (id && (id == c[4])) return false;
-				
+
 				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) return true;
 			}
 			return false;
@@ -272,13 +272,13 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 	function renderTextAndIcon(feature) {
 		var style = feature.style,
 			text = style['text'] ? style['text'] + '' : null;
-		
+
 		if (!text && !style["icon-image"]) return;
-		
+
 		var mindistance = style["-x-mapnik-min-distance"] || 0;
-		
+
 		var img = MapCSS.getImage(style["icon-image"]);
-		
+
 		var coords;
 
 		switch (feature.type) {
@@ -290,7 +290,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			case 'MultiPolygon': //TODO: Disassemble multi polygon
 			case 'MultiLineString': ctx.restore(); return; //TODO: Disassemble multi line string
 		}
-		
+
 		var x = ws * coords[0],
 			y = hs * (granularity - coords[1]),
 			point = [x, y];
@@ -300,10 +300,10 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		if (img && !collides.checkPointWH(point, img.width, img.height, feature.kothicId)) {
 			ctx.drawImage(img.sprite,
 					0, img.offset, img.width, img.height,
-					point[0] - img.width / 2, point[1] - img.height / 2, img.width, img.height);
+					Math.floor(point[0] - img.width / 2), Math.floor(point[1] - img.height / 2), img.width, img.height);
 			collides.addPointWH(point, img.width, img.height, mindistance, feature.kothicId);
 		}
-		
+
 		if (text) {
 			setStyles({
 				fillStyle: style["text-color"] || "#000000",
@@ -311,14 +311,14 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				strokeStyle: style["text-halo-color"] || "#ffffff",
 				font: fontString(style["font-family"], style["font-size"])
 			});
-	
+
 			var opacity = style["text-opacity"] || style["opacity"] || 1,
 				textWidth = ctx.measureText(text).width,
 				letterWidth = textWidth / text.length,
 				collisionWidth = textWidth + letterWidth,
 				collisionHeight = letterWidth * 2.5 * 1.1,
 				offset = style["text-offset"] || 0;
-			
+
 			if ((style["text-allow-overlap"]!="true") && collides.checkPointWH([x, y + offset], collisionWidth, collisionHeight, feature.kothicId)) return;
 
 			if (opacity < 1){
@@ -328,7 +328,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 
 			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
-	
+
 			if (feature.type == "Polygon" || feature.type == "Point") {
 				if ("text-halo-radius" in style) ctx.strokeText(text, x, y + offset);
 				ctx.fillText(text, x, y + offset);
@@ -337,7 +337,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
 			}
 		}
-		
+
 		ctx.restore();
 	}
 
@@ -522,7 +522,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 	function transformPoint(point) {
 		return [ws * point[0], hs * (granularity - point[1])];
 	}
-	
+
 	function transformPoints(points) {
 		var transformed = [];
 		for (var i = 0, len = points.length; i < len; i++) {
