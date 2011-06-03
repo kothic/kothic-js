@@ -140,6 +140,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			if (!d) d = 0;
 			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d];
 			this.buffer.push(box);
+			
 //			ctx.save();
 //			ctx.strokeStyle = 'red';
 //			ctx.lineWidth = '1';
@@ -156,7 +157,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		},
 
 		checkPointWH: function(point, w, h) {
-			return this.checkBox([point[0] - w/2, point[1] - h/2, point[0] + w/2, point[1] + w/2]);
+			return this.checkBox([point[0] - w/2, point[1] - h/2, point[0] + w/2, point[1] + h/2]);
 		}
 	};
 
@@ -373,7 +374,8 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		if (feature.type == "Polygon" || feature.type == "Point") {
 			if ("text-halo-radius" in style) ctx.strokeText(style["text"], x, y);
 			ctx.fillText(style["text"], x, y);
-			collides.addPointWH(point, textwidth, 10, mindistance);
+			var letterHeight = ctx.measureText(style["text"].charAt(0)).width * 2.5;
+			collides.addPointWH(point, textwidth, letterHeight, mindistance);
 		} else if (feature.type == 'LineString') {
 			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), style["text"], ("text-halo-radius" in style), collides);
 		}

@@ -148,18 +148,20 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 
 		ctx.rotate(axy[0]);
 
-		collisions.addPointWH([
-			axy[1] + 0.5 * Math.cos(axy[0]) * letterWidth,
-			axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth ],
-				2.5 * letterWidth, 2.5 * letterWidth);
-		//collisions.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
-		//letter = "["+letter+"]";
-
 		ctx.fillText(letter, 0, 0);
 		//ctx.beginPath();
 		//ctx.arc(0, 0, 3, 0, Math.PI*2, true);
 		//ctx.fillText(parseInt(axy[3]), 0, 0);
 		//ctx.fill();
 		ctx.restore();
+		
+		var letterHeight = letterWidths[letter.charAt(0)] * 2.5,
+			w = Math.abs(Math.cos(axy[0]) * letterWidth) + Math.abs(Math.sin(axy[0]) * letterHeight),
+			h = Math.abs(Math.sin(axy[0]) * letterWidth) + Math.abs(Math.cos(axy[0]) * letterHeight);
+		
+		collisions.addPointWH([
+		           			axy[1] + 0.5 * Math.cos(axy[0]) * letterWidth,
+		           			axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth],
+		           				w, h);
 	}
 };
