@@ -331,6 +331,8 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 	function renderText(feature) {
 		var style = feature.style;
 		if (!style['text'] || ("icon-image" in style)) return;
+		
+		var text = style['text'] + '';
 
 		ctx.save();
 
@@ -372,12 +374,12 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		ctx.textBaseline = "middle";
 
 		if (feature.type == "Polygon" || feature.type == "Point") {
-			if ("text-halo-radius" in style) ctx.strokeText(style["text"], x, y);
-			ctx.fillText(style["text"], x, y);
-			var letterHeight = ctx.measureText(style["text"].charAt(0)).width * 2.5;
+			if ("text-halo-radius" in style) ctx.strokeText(text, x, y);
+			ctx.fillText(text, x, y);
+			var letterHeight = (textwidth / text.length) * 2.5;
 			collides.addPointWH(point, textwidth, letterHeight, mindistance);
 		} else if (feature.type == 'LineString') {
-			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), style["text"], ("text-halo-radius" in style), collides);
+			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
 		}
 
 		ctx.restore();

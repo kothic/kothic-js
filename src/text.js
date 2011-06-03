@@ -5,7 +5,8 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 		letter,
 		letterWidths = {},
 		textWidth = ctx.measureText(text).width,
-		textLen = text.length;
+		textLen = text.length,
+		numIter = 0;
 
 	// cache letter widths
 	for (i = 0; i < textLen; i++) { 
@@ -115,7 +116,7 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 		flipCount = 0;
 
 		numIter++;
-		if (numIter >= 10) return;
+		if (numIter >= 10) debugger;
 	}
 
 	var posLen = positions.length;
