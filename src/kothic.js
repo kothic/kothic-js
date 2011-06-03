@@ -81,9 +81,10 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				for (j = 0; j < featuresLen; j++) {
 					renderPolygonFill(features[j], features[j+1]);
 				}
+
 	
 				ctx.lineCap = "butt";
-					
+				ctx.beginPath();
 				for (j = 0; j < featuresLen; j++) {
 					renderCasing(features[j], features[j+1]);
 				}
@@ -231,7 +232,6 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			
 			pathOpened = false;
 			ctx.stroke();
-		
 			ctx.restore();
 		}
 	}
@@ -257,7 +257,6 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			
 			pathOpened = false;
 			ctx.stroke();
-		
 			ctx.restore();
 		}
 	}
@@ -628,25 +627,25 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 					continue;
 				}
 				
-				/*while (letterwidth > axy[3] && i<text.length){
+				while (letterWidth < axy[3] && i < textLen){
 				  i++;
 				  letter += text.substr(i,1);
-				  letterwidth = ctx.measureText(letter).width;
+				  letterWidth = ctx.measureText(letter).width;
+					letterWidths[letter] = letterWidth;
 				  if (
-				    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[3])*letterwidth,
-				                         axy[2]+0.5*Math.sin(axy[3])*letterwidth],
-				                         2.5*letterwidth,
-				                         2.5*letterwidth)
-				    || Math.abs(prevangle-axy[0])>0.2){
+				    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[0])*letterWidth,
+				                         axy[2]+0.5*Math.sin(axy[0])*letterWidth],
+				                         2.5*letterWidth,
+				                         2.5*letterWidth)
+				    || Math.abs(prevAngle-axy[0])>0.2){
 				    i = 0;
 				    positions = new Array();
 				    letter = text.substr(i,1);
 				    break;
 				  }
-
-				}*/
+				}
 				if ((axy[0] > Math.PI / 2) || (axy[0] < -Math.PI / 2)) {
-					flipCount += 1; //letter.length;
+					flipCount += letter.length;
 				}
 				
 				prevAngle = axy[0];
@@ -675,10 +674,11 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		for (i = 0; halo && (i < posLen); i++) {
 			axy = positions[i];
 			letter = axy[4];
+			letterWidth = letterWidths[letter];
 			
 			ctx.save();
 			
-			ctx.translate(axy[1], axy[2]);
+			ctx.translate(Math.floor(axy[1]+ 0.5 * Math.cos(axy[0]) * letterWidth), Math.floor(axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth));
 			ctx.rotate(axy[0]);
 			
 			ctx.strokeText(letter, 0, 0);
@@ -691,17 +691,26 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			letterWidth = letterWidths[letter];
 			
 			ctx.save();
+			//ctx.textAlign="left";
 			
-			ctx.translate(Math.floor(axy[1]), Math.floor(axy[2]));
+			
+			ctx.translate(Math.floor(axy[1]+0.5*  Math.cos(axy[0]) * letterWidth), Math.floor(axy[2]+0.5*  Math.sin(axy[0]) * letterWidth));
+			//ctx.translate(Math.floor(axy[1]), Math.floor(axy[2]));
+			
 			ctx.rotate(axy[0]);
 			
 			collides.addPointWH([
-				axy[1] + 0.5 * Math.cos(axy[3]) * letterWidth,
-				axy[2] + 0.5 * Math.sin(axy[3]) * letterWidth ],
+				axy[1] + 0.5 * Math.cos(axy[0]) * letterWidth,
+				axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth ],
 					2.5 * letterWidth, 2.5 * letterWidth);
 			//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
+			//letter = "["+letter+"]";
 			
 			ctx.fillText(letter, 0, 0);
+			ctx.beginPath();
+			//ctx.arc(0, 0, 3, 0, Math.PI*2, true); 
+			//ctx.fillText(parseInt(axy[3]), 0, 0);
+			ctx.fill();
 			ctx.restore();
 		}
 	}
