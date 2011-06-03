@@ -364,12 +364,12 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		ctx.textAlign = "center";
 		ctx.textBaseline = "middle";
 
-		if (feature.type=="Polygon" || feature.type == "Point") {
+		if (feature.type == "Polygon" || feature.type == "Point") {
 			if ("text-halo-radius" in style) ctx.strokeText(style["text"], x, y);
 			ctx.fillText(style["text"], x, y);
 			collides.addPointWH(point, textwidth, 10, mindistance);
-		} else { // LineString
-			textOnGeoJSON(feature, ("text-halo-radius" in style), style["text"]);
+		} else if (feature.type == 'LineString') {
+			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), style["text"], ("text-halo-radius" in style), collides);
 		}
 
 		ctx.restore();
@@ -552,177 +552,16 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		}
 	}
 
-	function textOnGeoJSON(feature, halo, text) {
-		if (feature.type != "LineString") return;
-
-		var i, j, letter,
-			letterWidths = {},
-			points = [],
-			len = feature.coordinates.length,
-			textWidth = 0,
-			textLen = text.length,
-			numIter = 0;
-
-		for (i = 0; i < len; i++) { // transforming points to pixel coordinates
-			points.push(transformPoint(feature.coordinates[i]));
-		}
-
-		for (i = 0; i < textLen; i++) { // caching letter widths
-			letter = text.charAt(i);
-			if (!letterWidths[letter]) {
-				letterWidths[letter] = ctx.measureText(letter).width;
-			}
-		}
-		textWidth = ctx.measureText(text).width;
-
-		//points = ST_Simplify(points, 1);
-		var linelength = ST_Length(points);
-
-		if (linelength < textWidth) return;  // if label won't fit - don't try to
-
-		var widthUsed,
-			prevAngle,
-			positions,
-			solution = 0,
-			flipCount,
-			flipped = false,
-			axy,
-			letterWidth;
-
-		while (solution < 2) { // iterating solutions - start from center or from one of the ends
-			if (numIter > 5) return;
-			numIter++;
-
-			widthUsed = solution ? letterWidths[text.charAt(0)] : linelength - textWidth / 2;
-			flipCount = 0;
-			prevAngle = null;
-			positions = [];
-
-			for (i = 0; i < textLen; i++) { // iterating label letter by letter (should be fixed to support ligatures/CJK, ok for Cyrillic/latin)
-				letter = text.charAt(i);
-
-				letterWidth = letterWidths[letter];
-				axy = ST_AngleAndCoordsAtLength(points, widthUsed);
-
-				if (widthUsed >= linelength || !axy) { // cannot fit letter - restart with next solution
-					solution++;
-					positions = [];
-					if (flipped) {  // if label was flipped, flip it back
-						points.reverse();
-						flipped = false;
-					}
-					break;
-				}
-
-				if (!prevAngle) prevAngle = axy[0];
-
-				if (collides.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth) ||
-						Math.abs(prevAngle - axy[0]) > 0.2) { // if label collides with another, restart it from here
-					widthUsed += letterWidth;
-					i = -1;
-					positions = [];
-					flipCount = 0;
-					continue;
-				}
-
-				while (letterWidth < axy[3] && i < textLen){ // try adding following letters to current, until line changes its direction
-					i++;
-					letter += text.substr(i,1);
-					if (!letterWidths[letter]) {
-						letterWidths[letter] = ctx.measureText(letter).width;
-					}
-					letterWidth = letterWidths[letter];
-					if (  // FIXME: we shouldn't check the whole cluster as one bbox, but rather iterate letter-by-letter
-				    collides.checkPointWH([axy[1]+0.5*Math.cos(axy[0])*letterWidth,
-				                         axy[2]+0.5*Math.sin(axy[0])*letterWidth],
-				                         2.5*letterWidth,
-				                         2.5*letterWidth)
-				    || Math.abs(prevAngle-axy[0])>0.2){
-				    i = 0;
-						widthUsed += letterWidth;
-						positions = [];
-						flipCount = 0;
-				    letter = text.substr(i,1);
-						letterWidth = letterWidths[letter];
-						axy = ST_AngleAndCoordsAtLength(points, widthUsed);
-						break;
-					}
-				}
-				if (!axy){continue};
-				if ((axy[0] > (Math.PI / 2)) || (axy[0] < (-Math.PI / 2))) { // if current letters cluster was upside-down, count it
-					flipCount += letter.length;
-				}
-
-				prevAngle = axy[0];
-				axy.push(letter);
-				positions.push(axy);
-				widthUsed += letterWidth;
-			}
-			if (flipCount > textLen / 2) { // if more than half of the text is upside down, flip it and restart
-				points.reverse();
-				positions = [];
-
-				if (flipped) { // if it was flipped twice - restart with other start point solution
-					solution++;
-					points.reverse();
-					flipped = false;
-				} else {
-					flipped = true;
-				}
-			}
-			if (solution >= 2) return;
-			if (positions.length > 0) break;
-			flipCount = 0;
-		}
-
-		var posLen = positions.length;
-
-		for (i = 0; halo && (i < posLen); i++) {
-			axy = positions[i];
-			letter = axy[4];
-			letterWidth = letterWidths[letter];
-
-			ctx.save();
-
-			ctx.translate(Math.floor(axy[1]+ 0.5 * Math.cos(axy[0]) * letterWidth), Math.floor(axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth));
-			ctx.rotate(axy[0]);
-
-			ctx.strokeText(letter, 0, 0);
-			ctx.restore();
-		}
-
-		for (i = 0; i < posLen; i++) {
-			axy = positions[i];
-			letter = axy[4];
-			letterWidth = letterWidths[letter];
-
-			ctx.save();
-			//ctx.textAlign="left";
-
-
-			ctx.translate(Math.floor(axy[1]+0.5*  Math.cos(axy[0]) * letterWidth), Math.floor(axy[2]+0.5*  Math.sin(axy[0]) * letterWidth));
-			//ctx.translate(Math.floor(axy[1]), Math.floor(axy[2]));
-
-			ctx.rotate(axy[0]);
-
-			collides.addPointWH([
-				axy[1] + 0.5 * Math.cos(axy[0]) * letterWidth,
-				axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth ],
-					2.5 * letterWidth, 2.5 * letterWidth);
-			//collides.addPointWH([axy[1],axy[2]],2.5*letterwidth+20,2.5*letterwidth+20);
-			//letter = "["+letter+"]";
-
-			ctx.fillText(letter, 0, 0);
-			//ctx.beginPath();
-			//ctx.arc(0, 0, 3, 0, Math.PI*2, true);
-			//ctx.fillText(parseInt(axy[3]), 0, 0);
-			//ctx.fill();
-			ctx.restore();
-		}
-	}
-
 	function transformPoint(point) {
 		return [ws * point[0], hs * (granularity - point[1])];
+	}
+	
+	function transformPoints(points) {
+		var transformed = [];
+		for (var i = 0, len = points.length; i < len; i++) {
+			transformed.push(transformPoint(points[i]));
+		}
+		return transformed;
 	}
 
 	function moveTo(point) {
