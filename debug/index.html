@@ -36,13 +36,23 @@
 			font: 10px Verdana, sans-serif;
 			z-index: 10000;
 			}
+		#mapnik {
+			margin-bottom: 10px;
+			}
 	</style>
 </head>
 <body>
 	<div id="map"></div>
-	<div id="debug">Rendering...</div>
+	<div id="debug">
+		<button id="mapnik" onclick="toggleMapnik()">Show Mapnik</button>
+		<div id="tileperf">Rendering...</div>
+	</div>
 	<script>
-		var kothic = new L.TileLayer.Kothic();
+		var kothic = new L.TileLayer.Kothic(),
+			mapnik = new L.TileLayer('http://tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
+				attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
+				maxZoom: 22
+			});
 		
 		var map = new L.Map('map', {
 			center: new L.LatLng(53.9, 27.5), 
@@ -54,13 +64,28 @@
 				len = messages.length,
 				message = messages.slice(Math.max(len - 4, 0), len).join('<br />');
 			
-			document.getElementById('debug').innerHTML = message;
+			document.getElementById('tileperf').innerHTML = message;
 		});
 		
 		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);
 		};
 		MapCSS.loadImages("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
+		
+		
+		var mapnikVisible = false,
+			button = document.getElementById('mapnik');
+		
+		function toggleMapnik() {
+			if (mapnikVisible) {
+				map.removeLayer(mapnik);
+				button.innerHTML = 'Show Mapnik';
+			} else {
+				map.addLayer(mapnik);
+				button.innerHTML = 'Hide Mapnik';
+			}
+			mapnikVisible = !mapnikVisible;
+		}
 	</script>
 </body>
 </html>
