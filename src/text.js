@@ -1,17 +1,10 @@
 
 Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
-	var i, j, numIter,
-		len = points.length,
-		letter,
-		textWidth = ctx.measureText(text).width,
-		textLen = text.length,
-		numIter = 0;
-
 	var getWidth = (function() {
 		var widthCache = {};
 		return function(text) {
 			if (!widthCache[text]) {
-				widthCache[text] = ctx.measureText(letter).width;
+				widthCache[text] = ctx.measureText(text).width;
 			}
 			return widthCache[text];
 		};
@@ -39,20 +32,40 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 	function addCollision(text, axy) {
 		return collisions.addPointWH.apply(collisions, getCollisionParams(text, axy));
 	}
-	
-	//points = ST_Simplify(points, 1);
-	var pathLen = ST_Length(points);
 
+	function renderText(axy, halo) {
+		var text = axy[4],
+			textCenter = getTextCenter(axy, getWidth(text));
+
+		ctx.save();
+
+		ctx.translate(Math.floor(textCenter[0]), Math.floor(textCenter[1]));
+		ctx.rotate(axy[0]);
+
+		ctx[halo ? 'strokeText' : 'fillText'](text, 0, 0);
+		
+		ctx.restore();
+	}
+	
+
+	//points = ST_Simplify(points, 1);
+	
+	var textWidth = ctx.measureText(text).width,
+		textLen = text.length,
+		pathLen = ST_Length(points);
+	
 	if (pathLen < textWidth) return;  // if label won't fit - don't try to
 
-	var widthUsed,
+	var letter,
+		widthUsed,
 		prevAngle,
 		positions,
 		solution = 0,
 		flipCount,
 		flipped = false,
 		axy,
-		letterWidth;
+		letterWidth,
+		i;
 
 	// iterating solutions - start from center or from one of the ends
 	while (solution < 2) { //TODO change to for?
@@ -132,43 +145,16 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 		if (solution >= 2) return;
 		if (positions.length > 0) break;
 		flipCount = 0;
-
-		numIter++;
-		if (numIter >= 10) debugger;
 	}
 
 	var posLen = positions.length;
 
 	for (i = 0; halo && (i < posLen); i++) {
-		axy = positions[i];
-		letter = axy[4];
-		letterWidth = getWidth(letter),
-		letterCenter = getTextCenter(axy, letterWidth);
-
-		ctx.save();
-
-		ctx.translate(Math.floor(letterCenter[0]), Math.floor(letterCenter[1]));
-		ctx.rotate(axy[0]);
-
-		ctx.strokeText(letter, 0, 0);
-		ctx.restore();
+		renderText(positions[i], true);
 	}
 
 	for (i = 0; i < posLen; i++) {
-		axy = positions[i];
-		letter = axy[4];
-		letterWidth = getWidth(letter),
-		letterCenter = getTextCenter(axy, letterWidth);
-
-		ctx.save();
-
-		ctx.translate(Math.floor(letterCenter[0]), Math.floor(letterCenter[1]));
-		ctx.rotate(axy[0]);
-
-		ctx.fillText(letter, 0, 0);
-		
-		ctx.restore();
-		
-		addCollision(letter, axy);
+		renderText(positions[i]);
+		addCollision(axy[4], axy);
 	}
 };
