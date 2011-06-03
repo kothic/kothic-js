@@ -133,9 +133,9 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			this.buffer.push(box);
 		},
 
-		addPointWH: function(point, w, h, d) {
+		addPointWH: function(point, w, h, d, id) {
 			if (!d) d = 0;
-			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d];
+			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d, id];
 			this.buffer.push(box);
 			
 			ctx.save();
@@ -145,16 +145,20 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			ctx.restore();
 		},
 
-		checkBox: function(b) {
+		checkBox: function(b, id) {
 			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
 				c = this.buffer[i];
-				if ((c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1])) return true;
+				
+				// if it's the same object (only different styles), don't detect collision  
+				if (id && (id == c[4])) return false;
+				
+				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) return true;
 			}
 			return false;
 		},
 
-		checkPointWH: function(point, w, h) {
-			return this.checkBox([point[0] - w/2, point[1] - h/2, point[0] + w/2, point[1] + h/2]);
+		checkPointWH: function(point, w, h, id) {
+			return this.checkBox([point[0] - w/2, point[1] - h/2, point[0] + w/2, point[1] + h/2], id);
 		}
 	};
 
@@ -293,13 +297,11 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 
 		ctx.save();
 
-		var imgDrawn = false;
-		
-		if (img && !collides.checkPointWH(point, img.width, img.height)) {
+		if (img && !collides.checkPointWH(point, img.width, img.height, feature.kothicId)) {
 			ctx.drawImage(img.sprite,
 					0, img.offset, img.width, img.height,
 					point[0] - img.width / 2, point[1] - img.height / 2, img.width, img.height);
-			imgDrawn = true;
+			collides.addPointWH(point, img.width, img.height, mindistance, feature.kothicId);
 		}
 		
 		if (text) {
@@ -312,11 +314,12 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 	
 			var opacity = style["text-opacity"] || style["opacity"] || 1,
 				textWidth = ctx.measureText(text).width,
-				collisionWidth = textWidth + 10,
-				collisionHeight = (textWidth / text.length) * 2.5 + 5,
+				letterWidth = textWidth / text.length,
+				collisionWidth = textWidth + letterWidth,
+				collisionHeight = letterWidth * 2.5 * 1.1,
 				offset = style["text-offset"] || 0;
 			
-			if ((style["text-allow-overlap"]!="true") && collides.checkPointWH([x, y + offset], collisionWidth, collisionHeight)) return;
+			if ((style["text-allow-overlap"]!="true") && collides.checkPointWH([x, y + offset], collisionWidth, collisionHeight, feature.kothicId)) return;
 
 			if (opacity < 1){
 				ctx.fillStyle = new RGBColor(ctx.fillStyle, opacity).toRGBA();
@@ -329,14 +332,10 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			if (feature.type == "Polygon" || feature.type == "Point") {
 				if ("text-halo-radius" in style) ctx.strokeText(text, x, y + offset);
 				ctx.fillText(text, x, y + offset);
-				collides.addPointWH([x, y + offset], collisionWidth, collisionHeight, mindistance);
+				collides.addPointWH([x, y + offset], collisionWidth, collisionHeight, 0, feature.kothicId);
 			} else if (feature.type == 'LineString') {
 				Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
 			}
-		}
-
-		if (imgDrawn) {
-			collides.addPointWH(point, img.width, img.height, mindistance);
 		}
 		
 		ctx.restore();
@@ -353,6 +352,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			for (j in style) {
 				if (style.hasOwnProperty(j)) {
 					restyledFeature = extend({}, feature);
+					restyledFeature.kothicId = i;
 					restyledFeature.style = style[j];
 					styledFeatures.push(restyledFeature);
 				}
