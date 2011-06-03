@@ -110,10 +110,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				if (!featuresLen) continue;
 
 				for (j = featuresLen - 1; j >= 0; j--) {
-					renderIcon(features[j]);
-				}
-				for (j = featuresLen - 1; j >= 0; j--) {
-					renderText(features[j]);
+					renderTextAndIcon(features[j]);
 				}
 			}
 
@@ -141,11 +138,11 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d];
 			this.buffer.push(box);
 			
-//			ctx.save();
-//			ctx.strokeStyle = 'red';
-//			ctx.lineWidth = '1';
-//			ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
-//			ctx.restore();
+			ctx.save();
+			ctx.strokeStyle = 'red';
+			ctx.lineWidth = '1';
+			ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+			ctx.restore();
 		},
 
 		checkBox: function(b) {
@@ -268,88 +265,16 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		}
 	}
 
-	function renderIcon(feature) {
-		var style = feature.style;
-		if (!("icon-image" in style)) return;
-
-		ctx.save();
-
-		var img = MapCSS.getImage(style["icon-image"]),
-			offset = 0,
-			opacity = 1,
-			mindistance = 0,
-			textwidth = 0;
-		if (!img) {return;}
-
-		setStyles({
-			fillStyle: style["text-color"] || "#000000",
-			lineWidth: style["text-halo-radius"] + 2,
-			strokeStyle: style["text-halo-color"] || "#ffffff"
-		});
-		if ("text-offset" in style){offset = style["text-offset"];}
-		if ("opacity" in style){opacity = style.opacity;}
-		if ("text-opacity" in style){opacity = style["text-opacity"];}
-		if ("-x-mapnik-min-distance" in style){mindistance = style["-x-mapnik-min-distance"];}
-
-		var point;
-		if (feature.type == "Point") {
-			point = [ws * feature.coordinates[0], hs * (granularity - feature.coordinates[1])];
-		}
-		if (feature.type == "Polygon") {
-			point = [ws * feature.reprpoint[0], hs * (granularity - feature.reprpoint[1])];
-		}
-		if (style["text"]){ctx.font = fontString(style["font-family"],style["font-size"]);}
-		if (collides.checkPointWH(point, img.width, img.height)) return;
-		if (style["text"]){
-			textwidth = ctx.measureText(style["text"]).width;
-			if (style["text-allow-overlap"]!="true" && collides.checkPointWH([point[0],point[1]+offset], textwidth, 10)) return;
-		}
-		if (opacity <1){
-			ctx.fillStyle = new RGBColor(ctx.fillStyle, opacity).toRGBA();
-			ctx.strokeStyle = new RGBColor(ctx.strokeStyle, opacity).toRGBA();
-		}
-
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
-
-		if(style["text"]){
-			if ("text-halo-radius" in style)
-				ctx.strokeText(style["text"], point[0],point[1]+offset);
-			ctx.fillText(style["text"], point[0],point[1]+offset);
-		}
-
-		ctx.drawImage(img.sprite,
-			0, img.offset, img.width, img.height,
-			point[0] - img.width / 2, point[1] - img.height / 2, img.width, img.height);
-
-		collides.addPointWH(point, img.width, img.height, mindistance); //TOFIX: img won't have width and height until load
-		collides.addPointWH([point[0], point[1] + offset], textwidth, 10, mindistance);
-
-		ctx.restore();
-	}
-
-	function renderText(feature) {
-		var style = feature.style;
-		if (!style['text'] || ("icon-image" in style)) return;
+	function renderTextAndIcon(feature) {
+		var style = feature.style,
+			text = style['text'] ? style['text'] + '' : null;
 		
-		var text = style['text'] + '';
-
-		ctx.save();
-
-		setStyles({
-			fillStyle: style["text-color"] || "#000000",
-			lineWidth: style["text-halo-radius"] + 2,
-			strokeStyle: style["text-halo-color"] || "#ffffff",
-			font: fontString(style["font-family"], style["font-size"])
-		});
-
-		var offset = style["text-offset"] || 0,
-			opacity = style["text-opacity"] || style["opacity"] || 1,
-			mindistance = style["-x-mapnik-min-distance"] || 0,
-			textWidth = ctx.measureText(style["text"]).width,
-			collisionWidth = textWidth + 10,
-			collisionHeight = (textWidth / text.length) * 2.5;
-
+		if (!text && !style["icon-image"]) return;
+		
+		var mindistance = style["-x-mapnik-min-distance"] || 0;
+		
+		var img = MapCSS.getImage(style["icon-image"]);
+		
 		var coords;
 
 		switch (feature.type) {
@@ -361,28 +286,59 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			case 'MultiPolygon': //TODO: Disassemble multi polygon
 			case 'MultiLineString': ctx.restore(); return; //TODO: Disassemble multi line string
 		}
+		
 		var x = ws * coords[0],
-			y = hs * (granularity - coords[1]) + offset,
+			y = hs * (granularity - coords[1]),
 			point = [x, y];
 
-		if ((style["text-allow-overlap"]!="true") && collides.checkPointWH(point, collisionWidth, collisionHeight)) return;
+		ctx.save();
 
-		if (opacity < 1){
-			ctx.fillStyle = new RGBColor(ctx.fillStyle, opacity).toRGBA();
-			ctx.strokeStyle = new RGBColor(ctx.strokeStyle, opacity).toRGBA();
+		var imgDrawn = false;
+		
+		if (img && !collides.checkPointWH(point, img.width, img.height)) {
+			ctx.drawImage(img.sprite,
+					0, img.offset, img.width, img.height,
+					point[0] - img.width / 2, point[1] - img.height / 2, img.width, img.height);
+			imgDrawn = true;
+		}
+		
+		if (text) {
+			setStyles({
+				fillStyle: style["text-color"] || "#000000",
+				lineWidth: style["text-halo-radius"] + 2,
+				strokeStyle: style["text-halo-color"] || "#ffffff",
+				font: fontString(style["font-family"], style["font-size"])
+			});
+	
+			var opacity = style["text-opacity"] || style["opacity"] || 1,
+				textWidth = ctx.measureText(text).width,
+				collisionWidth = textWidth + 10,
+				collisionHeight = (textWidth / text.length) * 2.5 + 5,
+				offset = style["text-offset"] || 0;
+			
+			if ((style["text-allow-overlap"]!="true") && collides.checkPointWH([x, y + offset], collisionWidth, collisionHeight)) return;
+
+			if (opacity < 1){
+				ctx.fillStyle = new RGBColor(ctx.fillStyle, opacity).toRGBA();
+				ctx.strokeStyle = new RGBColor(ctx.strokeStyle, opacity).toRGBA();
+			}
+
+			ctx.textAlign = "center";
+			ctx.textBaseline = "middle";
+	
+			if (feature.type == "Polygon" || feature.type == "Point") {
+				if ("text-halo-radius" in style) ctx.strokeText(text, x, y + offset);
+				ctx.fillText(text, x, y + offset);
+				collides.addPointWH([x, y + offset], collisionWidth, collisionHeight, mindistance);
+			} else if (feature.type == 'LineString') {
+				Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
+			}
 		}
 
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
-
-		if (feature.type == "Polygon" || feature.type == "Point") {
-			if ("text-halo-radius" in style) ctx.strokeText(text, x, y);
-			ctx.fillText(text, x, y);
-			collides.addPointWH(point, collisionWidth, collisionHeight, mindistance);
-		} else if (feature.type == 'LineString') {
-			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
+		if (imgDrawn) {
+			collides.addPointWH(point, img.width, img.height, mindistance);
 		}
-
+		
 		ctx.restore();
 	}
 
