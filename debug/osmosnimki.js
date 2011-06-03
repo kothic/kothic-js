@@ -10,6 +10,7 @@
 
         if (((selector == 'area' && tags['natural'] == 'coastline'))) {
             style['default']['fill-color'] = '#fcf8e4';
+            style['default']['-x-mapnik-layer'] = 'bottom';
         }
 
         if (((selector == 'area' && tags['natural'] == 'glacier') && zoom >= 3)) {
@@ -1916,7 +1917,7 @@
 
         return style;
     }
-    
+
     var sprite_images = {
         'adm1_4_6.png': {width: 4, height: 4, offset: 0},
         'adm1_5.png': {width: 5, height: 5, offset: 4},
@@ -1958,8 +1959,8 @@
         'univer_15x11.png': {width: 15, height: 11, offset: 410},
         'wc-3_13x13.png': {width: 13, height: 13, offset: 421},
         'zoo4_14x14.png': {width: 14, height: 14, offset: 434}};
-    
+
     var external_images = [];
-    
+
     MapCSS.loadStyle('osmosnimki-maps', restyle, sprite_images, external_images);
 })(MapCSS);
