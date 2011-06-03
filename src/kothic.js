@@ -150,7 +150,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				c = this.buffer[i];
 				
 				// if it's the same object (only different styles), don't detect collision  
-				if (id && (id == c[4])) return false;
+				if (id && (id == c[4])) continue;
 				
 				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) return true;
 			}
@@ -610,7 +610,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			family += (family ? ', ' : '') + 'Arial, Helvetica, sans-serif';
 		}
 
-		return weight + " " + style + " " + size +"px " + family;
+		return style + " " + weight + " " + size +"px " + family;
 	}
 
 	function getDebugInfo() {
