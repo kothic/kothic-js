@@ -138,7 +138,13 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 
 		addPointWH: function(point, w, h, d) {
 			if (!d) d = 0;
-			this.buffer.push([point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + w/2 - d]);
+			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d];
+			this.buffer.push(box);
+//			ctx.save();
+//			ctx.strokeStyle = 'red';
+//			ctx.lineWidth = '1';
+//			ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+//			ctx.restore();
 		},
 
 		checkBox: function(b) {
