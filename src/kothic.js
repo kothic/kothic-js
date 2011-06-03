@@ -346,7 +346,9 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		var offset = style["text-offset"] || 0,
 			opacity = style["text-opacity"] || style["opacity"] || 1,
 			mindistance = style["-x-mapnik-min-distance"] || 0,
-			textwidth = ctx.measureText(style["text"]).width;
+			textWidth = ctx.measureText(style["text"]).width,
+			collisionWidth = textWidth + 10,
+			collisionHeight = (textWidth / text.length) * 2.5;
 
 		var coords;
 
@@ -363,7 +365,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			y = hs * (granularity - coords[1]) + offset,
 			point = [x, y];
 
-		if ((style["text-allow-overlap"]!="true") && collides.checkPointWH(point, textwidth, 5)) return;
+		if ((style["text-allow-overlap"]!="true") && collides.checkPointWH(point, collisionWidth, collisionHeight)) return;
 
 		if (opacity < 1){
 			ctx.fillStyle = new RGBColor(ctx.fillStyle, opacity).toRGBA();
@@ -376,8 +378,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		if (feature.type == "Polygon" || feature.type == "Point") {
 			if ("text-halo-radius" in style) ctx.strokeText(text, x, y);
 			ctx.fillText(text, x, y);
-			var letterHeight = (textwidth / text.length) * 2.5;
-			collides.addPointWH(point, textwidth, letterHeight, mindistance);
+			collides.addPointWH(point, collisionWidth, collisionHeight, mindistance);
 		} else if (feature.type == 'LineString') {
 			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
 		}
