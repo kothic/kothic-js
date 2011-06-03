@@ -3,19 +3,43 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 	var i, j, numIter,
 		len = points.length,
 		letter,
-		letterWidths = {},
 		textWidth = ctx.measureText(text).width,
 		textLen = text.length,
 		numIter = 0;
 
-	// cache letter widths
-	for (i = 0; i < textLen; i++) { 
-		letter = text.charAt(i);
-		if (!letterWidths[letter]) {
-			letterWidths[letter] = ctx.measureText(letter).width;
-		}
+	var getWidth = (function() {
+		var widthCache = {};
+		return function(text) {
+			if (!widthCache[text]) {
+				widthCache[text] = ctx.measureText(letter).width;
+			}
+			return widthCache[text];
+		};
+	})();
+	
+	function getTextCenter(axy, textWidth) {
+		return [axy[1] + 0.5 * Math.cos(axy[0]) * textWidth, 
+		        axy[2] + 0.5 * Math.sin(axy[0]) * textWidth];
 	}
-
+	
+	function getCollisionParams(text, axy) {
+		var textWidth = getWidth(text),
+			textHeight = getWidth(text.charAt(0)) * 2.5,
+			angle = axy[0],
+			w = Math.abs(Math.cos(angle) * textWidth) + Math.abs(Math.sin(angle) * textHeight),
+			h = Math.abs(Math.sin(angle) * textWidth) + Math.abs(Math.cos(angle) * textHeight);
+	
+		return [getTextCenter(axy, textWidth), w, h];
+	}
+	
+	function checkCollision(text, axy) {
+		return collisions.checkPointWH.apply(collisions, getCollisionParams(text, axy));
+	}
+	
+	function addCollision(text, axy) {
+		return collisions.addPointWH.apply(collisions, getCollisionParams(text, axy));
+	}
+	
 	//points = ST_Simplify(points, 1);
 	var pathLen = ST_Length(points);
 
@@ -32,7 +56,7 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 
 	// iterating solutions - start from center or from one of the ends
 	while (solution < 2) { //TODO change to for?
-		widthUsed = solution ? letterWidths[text.charAt(0)] : (pathLen - textWidth) / 2; // ???
+		widthUsed = solution ? getWidth(text.charAt(0)) : (pathLen - textWidth) / 2; // ???
 		flipCount = 0;
 		prevAngle = null;
 		positions = [];
@@ -55,11 +79,10 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 			if (!prevAngle) prevAngle = axy[0];
 
 			letter = text.charAt(i);
-			letterWidth = letterWidths[letter];
+			letterWidth = getWidth(letter);
 
 			// if label collisions with another, restart it from here
-			if (collisions.checkPointWH([axy[1], axy[2]], 2.5 * letterWidth, 2.5 * letterWidth) ||
-					Math.abs(prevAngle - axy[0]) > 0.2) {
+			if (checkCollision(letter, axy) || Math.abs(prevAngle - axy[0]) > 0.2) {
 				widthUsed += letterWidth;
 				i = -1;
 				positions = [];
@@ -70,21 +93,16 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 			while (letterWidth < axy[3] && i < textLen){ // try adding following letters to current, until line changes its direction
 				i++;
 				letter += text.charAt(i);
-				if (!letterWidths[letter]) {
-					letterWidths[letter] = ctx.measureText(letter).width;
-				}
-				letterWidth = letterWidths[letter];
-				if (  // FIXME: we shouldn't check the whole cluster as one bbox, but rather iterate letter-by-letter
-						collisions.checkPointWH([axy[1]+0.5*Math.cos(axy[0])*letterWidth,
-						                       axy[2]+0.5*Math.sin(axy[0])*letterWidth],
-						                       2.5*letterWidth, 2.5*letterWidth)
-						                       || Math.abs(prevAngle - axy[0]) > 0.2) {
+				letterWidth = getWidth(letter);
+				
+				// FIXME: we shouldn't check the whole cluster as one bbox, but rather iterate letter-by-letter
+				if (checkCollision(letter, axy) || Math.abs(prevAngle - axy[0]) > 0.2) {
 					i = 0;
 					widthUsed += letterWidth;
 					positions = [];
 					flipCount = 0;
 					letter = text.charAt(i);
-					letterWidth = letterWidths[letter];
+					letterWidth = getWidth(letter);
 					axy = ST_AngleAndCoordsAtLength(points, widthUsed);
 					break;
 				}
@@ -124,11 +142,12 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 	for (i = 0; halo && (i < posLen); i++) {
 		axy = positions[i];
 		letter = axy[4];
-		letterWidth = letterWidths[letter];
+		letterWidth = getWidth(letter),
+		letterCenter = getTextCenter(axy, letterWidth);
 
 		ctx.save();
 
-		ctx.translate(Math.floor(axy[1]+ 0.5 * Math.cos(axy[0]) * letterWidth), Math.floor(axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth));
+		ctx.translate(Math.floor(letterCenter[0]), Math.floor(letterCenter[1]));
 		ctx.rotate(axy[0]);
 
 		ctx.strokeText(letter, 0, 0);
@@ -138,31 +157,18 @@ Kothic.textOnPath = function(ctx, points, text, halo, collisions) {
 	for (i = 0; i < posLen; i++) {
 		axy = positions[i];
 		letter = axy[4];
-		letterWidth = letterWidths[letter];
+		letterWidth = getWidth(letter),
+		letterCenter = getTextCenter(axy, letterWidth);
 
 		ctx.save();
-		//ctx.textAlign="left";
 
-
-		ctx.translate(Math.floor(axy[1]+0.5*  Math.cos(axy[0]) * letterWidth), Math.floor(axy[2]+0.5*  Math.sin(axy[0]) * letterWidth));
-		//ctx.translate(Math.floor(axy[1]), Math.floor(axy[2]));
-
+		ctx.translate(Math.floor(letterCenter[0]), Math.floor(letterCenter[1]));
 		ctx.rotate(axy[0]);
 
 		ctx.fillText(letter, 0, 0);
-		//ctx.beginPath();
-		//ctx.arc(0, 0, 3, 0, Math.PI*2, true);
-		//ctx.fillText(parseInt(axy[3]), 0, 0);
-		//ctx.fill();
+		
 		ctx.restore();
 		
-		var letterHeight = letterWidths[letter.charAt(0)] * 2.5,
-			w = Math.abs(Math.cos(axy[0]) * letterWidth) + Math.abs(Math.sin(axy[0]) * letterHeight),
-			h = Math.abs(Math.sin(axy[0]) * letterWidth) + Math.abs(Math.cos(axy[0]) * letterHeight);
-		
-		collisions.addPointWH([
-		           			axy[1] + 0.5 * Math.cos(axy[0]) * letterWidth,
-		           			axy[2] + 0.5 * Math.sin(axy[0]) * letterWidth],
-		           				w, h);
+		addCollision(letter, axy);
 	}
 };
