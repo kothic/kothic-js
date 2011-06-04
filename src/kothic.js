@@ -17,30 +17,30 @@ Kothic.render = (function() {
 		var key = [MapCSS.currentStyle,
 		           JSON.stringify(feature.properties),
 		           zoom, feature.type].join(':'),
-			cache = styleCache,
 			type, selector;
 
-		if (key in cache) {
-			return cache[key];
+		if (!styleCache[key]) {
+			//TODO: propagate type and selector
+			if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
+			    type = 'way';
+			    selector = 'area';
+			} else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
+			    type = 'way';
+			    selector = 'line';
+			} else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
+			    type = 'node';
+			    selector = 'node';
+			}
+			styleCache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
 		}
-
-		//TODO: propagate type and selector
-		if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
-		    type = 'way';
-		    selector = 'area';
-		} else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
-		    type = 'way';
-		    selector = 'line';
-		} else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
-		    type = 'node';
-		    selector = 'node';
-		}
-		cache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
-		return cache[key];
+		return styleCache[key];
 	}
 	
-	function CollisionBuffer(debugBoxes, debugChecks) {
+	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
 		this.buffer = [];
+		
+		// for debugging
+		this.ctx = ctx;
 		this.debugBoxes = debugBoxes;
 		this.debugChecks = debugChecks;
 	}
@@ -56,11 +56,11 @@ Kothic.render = (function() {
 			this.buffer.push(box);
 
 			if (this.debugBoxes) {
-				ctx.save();
-				ctx.strokeStyle = 'red';
-				ctx.lineWidth = '1';
-				ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
-				ctx.restore();
+				this.ctx.save();
+				this.ctx.strokeStyle = 'red';
+				this.ctx.lineWidth = '1';
+				this.ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+				this.ctx.restore();
 			}
 		},
 
@@ -73,11 +73,11 @@ Kothic.render = (function() {
 				
 				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) {
 					if (this.debugChecks) {
-						ctx.save();
-						ctx.strokeStyle = 'darkblue';
-						ctx.lineWidth = '1';
-						ctx.strokeRect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
-						ctx.restore();
+						this.ctx.save();
+						this.ctx.strokeStyle = 'darkblue';
+						this.ctx.lineWidth = '1';
+						this.ctx.strokeRect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
+						this.ctx.restore();
 					}
 					return true;
 				}
@@ -457,7 +457,7 @@ Kothic.render = (function() {
 		ws = width / granularity;
 		hs = height / granularity;
 
-		collides = new CollisionBuffer();
+		collides = new CollisionBuffer(/*ctx, true*/);
 		collides.addBox([0, 0, width, 0]);
 		collides.addBox([0, height, width, height]);
 		collides.addBox([width, 0, width, height]);

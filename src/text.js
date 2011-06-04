@@ -204,4 +204,4 @@ Kothic.textOnPath = (function() {
 			addCollision(collisions, ctx, axy[4], axy);
 		}
 	};
-})();
+}());
