@@ -189,26 +189,22 @@ MapCSS._preloadExternalImages = function(style, /* callback function */ onLoad) 
 };
 
 MapCSS.getImage = function(ref) {
-    return MapCSS.styles[MapCSS.currentStyle].images[ref];
-};
-
-MapCSS.getImageAsTexture = function(ref) {
-	var style = MapCSS.styles[MapCSS.currentStyle];
-	if (!(ref in style.textures)) {
-		var img = MapCSS.styles[MapCSS.currentStyle].images[ref];
+	var style = MapCSS.styles[MapCSS.currentStyle],
+		img = style.images[ref];
+	
+	if (img.sprite) {
 		var canvas = document.createElement('canvas');
-		if (img){
-			canvas.width = img.width;
-			canvas.height = img.height;
-			canvas.getContext("2d").drawImage(img.sprite,
-				0, img.offset, img.width, img.height,
-				0, 0,
-				img.width, img.height);
-		}
-		style.textures[ref] = canvas;
+		canvas.width = img.width;
+		canvas.height = img.height;
+		
+		canvas.getContext("2d").drawImage(img.sprite,
+			0, img.offset, img.width, img.height, 
+			0, 0, img.width, img.height);
+		
+		img = style.images[ref] = canvas;
 	}
 
-	return style.textures[ref];
+	return img;
 };
 
 MapCSS.restyle = function() {

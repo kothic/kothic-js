@@ -21,7 +21,7 @@ Kothic.textOnPath = (function() {
 			w = Math.abs(Math.cos(angle) * textWidth) + Math.abs(Math.sin(angle) * textHeight),
 			h = Math.abs(Math.sin(angle) * textWidth) + Math.abs(Math.cos(angle) * textHeight);
 	
-		return [getTextCenter(axy, textWidth), w, h];
+		return [getTextCenter(axy, textWidth), w, h, 0];
 	}
 	
 	function checkCollision(collisions, ctx, text, axy) {

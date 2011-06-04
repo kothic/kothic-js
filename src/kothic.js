@@ -136,7 +136,6 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		},
 
 		addPointWH: function(point, w, h, d, id) {
-			if (!d) d = 20;
 			var box = [point[0] - w/2 - d, 
 			           point[1] - h/2 - d, 
 			           point[0] + w/2 + d, 
@@ -212,7 +211,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 
 			if ('fill-image' in style) {
 				//Second pass fills polygon with texture
-				var image = MapCSS.getImageAsTexture(style['fill-image']);
+				var image = MapCSS.getImage(style['fill-image']);
 				if (image) {
 					//Texture image may not be loaded
 					setStyles({
@@ -303,7 +302,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		var style = feature.style;
 		if (!style['text']) return;
 
-		var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0,
+		var padding = parseFloat(style["-x-mapnik-min-distance"]) || 20,
 			point = getReprPoint(feature),
 			text = style['text'] + '';
 		
@@ -369,10 +368,9 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		
 		if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
 		
-		ctx.drawImage(img.sprite, 0, img.offset, img.width, img.height,
+		ctx.drawImage(img, 
 				Math.floor(point[0] - img.width / 2), 
-				Math.floor(point[1] - img.height / 2), 
-				img.width, img.height);
+				Math.floor(point[1] - img.height / 2));
 		
 		collides.addPointWH(point, img.width, img.height, padding, feature.kothicId);
 	}
