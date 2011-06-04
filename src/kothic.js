@@ -109,7 +109,8 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				if (!featuresLen) continue;
 
 				for (j = featuresLen - 1; j >= 0; j--) {
-					renderTextAndIcon(features[j]);
+					renderIcon(features[j]);
+					renderText(features[j]);
 				}
 			}
 
@@ -134,7 +135,11 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 
 		addPointWH: function(point, w, h, d, id) {
 			if (!d) d = 0;
-			var box = [point[0] - w/2 - d, point[1] - h/2 - d, point[0] + w/2 - d, point[1] + h/2 - d, id];
+			var box = [point[0] - w/2 - d, 
+			           point[1] - h/2 - d, 
+			           point[0] + w/2 + d, 
+			           point[1] + h/2 + d, 
+			           id];
 			this.buffer.push(box);
 
 //			ctx.save();
@@ -273,77 +278,101 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 			ctx.restore();
 		}
 	}
-
-	function renderTextAndIcon(feature) {
-		var style = feature.style,
-			text = style['text'] ? style['text'] + '' : null;
-
-		if (!text && !style["icon-image"]) return;
-
-		var mindistance = style["-x-mapnik-min-distance"] || 0;
-
-		var img = MapCSS.getImage(style["icon-image"]);
-
-		var coords;
+	
+	function getReprPoint(feature) {
+		var point;
 		
 		switch (feature.type) {
-			case 'Point': coords = feature.coordinates; break;
-			case 'Polygon': coords = feature.reprpoint; break;
-			case 'LineString': coords = feature.coordinates[0]; break;
+			case 'Point': point = feature.coordinates; break;
+			case 'Polygon': point = feature.reprpoint; break;
+			case 'LineString': point = feature.coordinates[0]; break;
 			case 'GeometryCollection': //TODO: Disassemble geometry collection
 			case 'MultiPoint': //TODO: Disassemble multi point
 			case 'MultiPolygon': //TODO: Disassemble multi polygon
-			case 'MultiLineString': ctx.restore(); return; //TODO: Disassemble multi line string
+			case 'MultiLineString': return; //TODO: Disassemble multi line string
 		}
 
-		var x = ws * coords[0],
-			y = hs * (granularity - coords[1]),
-			point = [x, y];
+		point = transformPoint(point);
+		
+		return point;
+	}
 
+	function renderText(feature) {
+		var style = feature.style;
+		if (!style['text']) return;
+
+		var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0,
+			point = getReprPoint(feature),
+			text = style['text'] + '';
+		
+		if (!point) return;
+		
 		ctx.save();
 
-		if (img && !collides.checkPointWH(point, img.width, img.height, feature.kothicId)) {
-			ctx.drawImage(img.sprite,
-					0, img.offset, img.width, img.height,
-					Math.floor(point[0] - img.width / 2), Math.floor(point[1] - img.height / 2), img.width, img.height);
-			collides.addPointWH(point, img.width, img.height, mindistance, feature.kothicId);
+		setStyles({
+			lineWidth: style["text-halo-radius"] + 2,
+			font: fontString(style["font-family"], style["font-size"])
+		});
+
+		var textWidth = ctx.measureText(text).width,
+			letterWidth = textWidth / text.length,
+			collisionWidth = textWidth,
+			collisionHeight = letterWidth * 2.5,
+			offset = style["text-offset"] || 0;
+
+		if ((style["text-allow-overlap"] != "true") && 
+				collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
+			ctx.restore();
+			return;
 		}
 
-		if (text) {
-			setStyles({
-				fillStyle: style["text-color"] || "#000000",
-				lineWidth: style["text-halo-radius"] + 2,
-				strokeStyle: style["text-halo-color"] || "#ffffff",
-				font: fontString(style["font-family"], style["font-size"])
-			});
+		var opacity = style["text-opacity"] || style["opacity"] || 1,
+			fillStyle = style["text-color"] || "#000000",
+			strokeStyle = style["text-halo-color"] || "#ffffff",
+			halo = ("text-halo-radius" in style);
+			
+		if (opacity < 1){
+			fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
+			strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
+		}
 
-			var opacity = style["text-opacity"] || style["opacity"] || 1,
-				textWidth = ctx.measureText(text).width,
-				letterWidth = textWidth / text.length,
-				collisionWidth = textWidth + letterWidth,
-				collisionHeight = letterWidth * 2.5 * 1.1,
-				offset = style["text-offset"] || 0;
+		setStyles({
+			fillStyle: fillStyle,
+			strokeStyle: strokeStyle,
+			textAlign: 'center',
+			textBaseline: 'middle'
+		});
 
-			if ((style["text-allow-overlap"]!="true") && collides.checkPointWH([x, y + offset], collisionWidth, collisionHeight, feature.kothicId)) return;
-
-			if (opacity < 1){
-				ctx.fillStyle = new RGBColor(ctx.fillStyle, opacity).toRGBA();
-				ctx.strokeStyle = new RGBColor(ctx.strokeStyle, opacity).toRGBA();
-			}
-
-			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-
-			if (feature.type == "Polygon" || feature.type == "Point") {
-				if ("text-halo-radius" in style) ctx.strokeText(text, x, y + offset);
-				ctx.fillText(text, x, y + offset);
-				collides.addPointWH([x, y + offset], collisionWidth, collisionHeight, 0, feature.kothicId);
-			} else if (feature.type == 'LineString') {
-				Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, ("text-halo-radius" in style), collides);
-			}
+		if (feature.type == "Polygon" || feature.type == "Point") {
+			if (halo) ctx.strokeText(text, point[0], point[1] + offset);
+			ctx.fillText(text, point[0], point[1] + offset);
+			collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
+		} else if (feature.type == 'LineString') {
+			Kothic.textOnPath(ctx, transformPoints(feature.coordinates), text, halo, collides);
 		}
 
 		ctx.restore();
+	}
+	
+	function renderIcon(feature) {
+		var style = feature.style;
+
+		if (!style["icon-image"]) return;
+		
+		var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0,
+			img = MapCSS.getImage(style["icon-image"]),
+			point = getReprPoint(feature);
+		
+		if (!img || !point) return;
+		
+		if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
+		
+		ctx.drawImage(img.sprite, 0, img.offset, img.width, img.height,
+				Math.floor(point[0] - img.width / 2), 
+				Math.floor(point[1] - img.height / 2), 
+				img.width, img.height);
+		
+		collides.addPointWH(point, img.width, img.height, padding, feature.kothicId);
 	}
 
 	function styleFeatures(features, zoom) {
@@ -597,25 +626,31 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 	}
 
 	function fontString(name, size) {
-		if (!name) {
-			return size + 'px Arial, Helvetica, sans-serif';
-		}
-
-		var family = name || '';
-
+		name = name || '';
 		size = size || 9;
+		
+		var family = name ? name + ', ' : '';
+
 		name = name.toLowerCase();
 
-		var style = (name.indexOf("italic") != -1 || name.indexOf("oblique") != -1 ? 'italic' : 'normal'),
-			weight = (name.indexOf("bold") != -1 ? 'bold' : 'normal');
+		var styles = [];
+		if (name.indexOf("italic") != -1 || name.indexOf("oblique") != -1) {
+			styles.push('italic');
+		}
+		if (name.indexOf("bold") != -1) {
+			styles.push('bold');
+		}
+		
+		styles.push(size + 'px');
 
 		if (name.indexOf('serif') != -1) {
-			family += ', Georgia, serif';
+			family += 'Georgia, serif';
 		} else {
-			family += (family ? ', ' : '') + 'Arial, Helvetica, sans-serif';
+			family += 'Arial, Helvetica, sans-serif';
 		}
+		styles.push(family);
 
-		return style + " " + weight + " " + size +"px " + family;
+		return styles.join(' ');
 	}
 
 	function getDebugInfo() {
