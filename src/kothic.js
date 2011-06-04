@@ -82,9 +82,8 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 					renderPolygonFill(features[j], features[j+1]);
 				}
 
-
 				ctx.lineCap = "butt";
-				ctx.beginPath();
+
 				for (j = 0; j < featuresLen; j++) {
 					renderCasing(features[j], features[j+1]);
 				}
@@ -150,7 +149,15 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 				c = this.buffer[i];
 				// if it's the same object (only different styles), don't detect collision
 				if (id && (id == c[4])) continue;
-				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) return true;
+				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) {
+//					var box = b;
+//					ctx.save();
+//					ctx.strokeStyle = 'orange';
+//					ctx.lineWidth = '1';
+//					ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+//					ctx.restore();
+					return true;
+				}
 			}
 			return false;
 		},
@@ -278,7 +285,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		var img = MapCSS.getImage(style["icon-image"]);
 
 		var coords;
-
+		
 		switch (feature.type) {
 			case 'Point': coords = feature.coordinates; break;
 			case 'Polygon': coords = feature.reprpoint; break;
