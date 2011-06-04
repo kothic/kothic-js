@@ -1,5 +1,5 @@
-
 Kothic.textOnPath = (function() {
+	
 	var widthCache;
 	
 	function getWidth(ctx, text) {
