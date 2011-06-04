@@ -110,6 +110,8 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 
 				for (j = featuresLen - 1; j >= 0; j--) {
 					renderIcon(features[j]);
+				}
+				for (j = featuresLen - 1; j >= 0; j--) {
 					renderText(features[j]);
 				}
 			}
@@ -134,7 +136,7 @@ Kothic.render = function(canvasId, data, zoom, onRenderComplete, buffered) {
 		},
 
 		addPointWH: function(point, w, h, d, id) {
-			if (!d) d = 0;
+			if (!d) d = 20;
 			var box = [point[0] - w/2 - d, 
 			           point[1] - h/2 - d, 
 			           point[0] + w/2 + d, 
