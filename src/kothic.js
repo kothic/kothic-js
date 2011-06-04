@@ -24,18 +24,18 @@ Kothic.render = (function() {
 			return cache[key];
 		}
 
-        //TODO: propagate type and selector
-        if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
-            type = 'way';
-            selector = 'area';
-        } else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
-            type = 'way';
-            selector = 'line';
-        } else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
-            type = 'node';
-            selector = 'node';
-        }
-        cache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
+		//TODO: propagate type and selector
+		if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
+		    type = 'way';
+		    selector = 'area';
+		} else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
+		    type = 'way';
+		    selector = 'line';
+		} else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
+		    type = 'node';
+		    selector = 'node';
+		}
+		cache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
 		return cache[key];
 	}
 	

@@ -45,15 +45,60 @@ Kothic.textOnPath = (function() {
 		
 		ctx.restore();
 	}
+	
+	function getAngleAndCoordsAtLength(points, dist) {
+		var pointsLen = points.length,
+			dx, dy, x, y,
+			i, c, pc,
+			len = 0,
+			segLen = 0,
+			angle, partLen;
+		
+		for (i = 1; i < pointsLen; i++){
+			c = points[i];
+			pc = points[i - 1];
+			
+			dx = c[0] - pc[0];
+			dy = c[1] - pc[1];
+			segLen = Math.sqrt(dx*dx + dy*dy);
+			
+			if (len + segLen >= dist) {
+				partLen = dist - len;
+				x = pc[0] + dx * partLen/segLen; 
+				y = pc[1] + dy * partLen/segLen;
+				angle = Math.atan2(dy, dx);
+				
+				return [angle, x, y, segLen - len];
+			}
+			
+			len += segLen;
+		}
+	}
+
+	function getPolyLength(points) {
+		var pointsLen = points.length,
+			c, pc, i,
+			dx, dy,
+			len = 0;
+		
+		for (i = 1; i < pointsLen; i++){
+			c = points[i];
+			pc = points[i - 1];
+			dx = pc[0] - c[0];
+			dy = pc[1] - c[1];
+			len += Math.sqrt(dx*dx + dy*dy);
+		}
+		return len;
+	}
 
 	return function(ctx, points, text, halo, collisions) {
 		widthCache = {};
 		
-		//points = ST_Simplify(points, 1);
+		// simplify points?
 		
 		var textWidth = ctx.measureText(text).width,
 			textLen = text.length,
-			pathLen = ST_Length(points);
+			pathLen = getPolyLength(points);
 		
 		if (pathLen < textWidth) return;  // if label won't fit - don't try to
 	
@@ -77,7 +122,7 @@ Kothic.textOnPath = (function() {
 	
 			// iterating label letter by letter (should be fixed to support ligatures/CJK, ok for Cyrillic/latin)
 			for (i = 0; i < textLen; i++) {
-				axy = ST_AngleAndCoordsAtLength(points, widthUsed);
+				axy = getAngleAndCoordsAtLength(points, widthUsed);
 	
 				 // if cannot fit letter - restart with next solution
 				if (widthUsed >= pathLen || !axy) {
@@ -117,7 +162,7 @@ Kothic.textOnPath = (function() {
 						flipCount = 0;
 						letter = text.charAt(i);
 						letterWidth = getWidth(ctx, letter);
-						axy = ST_AngleAndCoordsAtLength(points, widthUsed);
+						axy = getAngleAndCoordsAtLength(points, widthUsed);
 						break;
 					}
 				}
