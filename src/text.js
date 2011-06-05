@@ -68,7 +68,7 @@ Kothic.textOnPath = (function() {
 				y = pc[1] + dy * partLen/segLen;
 				angle = Math.atan2(dy, dx);
 				
-				return [angle, x, y, segLen - len];
+				return [angle, x, y, segLen - partLen];
 			}
 			
 			len += segLen;
