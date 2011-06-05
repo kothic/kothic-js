@@ -1,10 +1,10 @@
 var Kothic = {};
 
 Kothic.render = (function() {
-	
+
 	var styleCache = {},
 		pathOpened = false;
-	
+
 	function setStyles(ctx, styles) {
 		for (var i in styles) {
 			if (styles.hasOwnProperty(i) && styles[i]) {
@@ -35,10 +35,10 @@ Kothic.render = (function() {
 		}
 		return styleCache[key];
 	}
-	
+
 	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
 		this.buffer = [];
-		
+
 		// for debugging
 		this.ctx = ctx;
 		this.debugBoxes = debugBoxes;
@@ -52,7 +52,7 @@ Kothic.render = (function() {
 
 		addPointWH: function(point, w, h, d, id) {
 			var box = this.getBoxFromPoint(point, w, h, d, id);
-			
+
 			this.buffer.push(box);
 
 			if (this.debugBoxes) {
@@ -67,10 +67,10 @@ Kothic.render = (function() {
 		checkBox: function(b) {
 			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
 				c = this.buffer[i];
-				
+
 				// if it's the same object (only different styles), don't detect collision
 				if (b[4] && (b[4] == c[4])) continue;
-				
+
 				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) {
 					if (this.debugChecks) {
 						this.ctx.save();
@@ -88,12 +88,12 @@ Kothic.render = (function() {
 		checkPointWH: function(point, w, h, id) {
 			return this.checkBox(this.getBoxFromPoint(point, w, h, 0, id));
 		},
-		
+
 		getBoxFromPoint: function(point, w, h, d, id) {
-			return [point[0] - w/2 - d, 
-			        point[1] - h/2 - d, 
-			        point[0] + w/2 + d, 
-			        point[1] + h/2 + d, 
+			return [point[0] - w/2 - d,
+			        point[1] - h/2 - d,
+			        point[0] + w/2 + d,
+			        point[1] + h/2 + d,
 			        id];
 		}
 	};
@@ -158,7 +158,7 @@ Kothic.render = (function() {
 			ctx.restore();
 		}
 	}
-	
+
 	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
 		var style = feature.style;
 		if (!("casing-width" in style)) return;
@@ -187,7 +187,7 @@ Kothic.render = (function() {
 			ctx.restore();
 		}
 	}
-	
+
 	function renderPolyline(ctx, feature, nextFeature, ws, hs, granularity) {
 		var style = feature.style;
 		if (!("width" in style)) return;
@@ -216,11 +216,11 @@ Kothic.render = (function() {
 			ctx.restore();
 		}
 	}
-	
+
 	function compareZIndexes(a, b) {
 		return parseFloat(a.style["z-index"] || 0) - parseFloat(b.style["z-index"] || 0);
 	}
-	
+
 	function extend(dest, source) {
 		for (var i in source) {
 			if (source.hasOwnProperty(i)) {
@@ -229,7 +229,7 @@ Kothic.render = (function() {
 		}
 		return dest;
 	}
-	
+
 	function styleFeatures(features, zoom) {
 		var styledFeatures = [],
 			i, j, len, feature, style, restyledFeature;
@@ -280,7 +280,7 @@ Kothic.render = (function() {
 	function fontString(name, size) {
 		name = name || '';
 		size = size || 9;
-		
+
 		var family = name ? name + ', ' : '';
 
 		name = name.toLowerCase();
@@ -292,7 +292,7 @@ Kothic.render = (function() {
 		if (name.indexOf("bold") != -1) {
 			styles.push('bold');
 		}
-		
+
 		styles.push(size + 'px');
 
 		if (name.indexOf('serif') != -1) {
@@ -331,22 +331,22 @@ Kothic.render = (function() {
 		var style = feature.style;
 
 		if (!style["icon-image"]) return;
-		
+
 		var img = MapCSS.getImage(style["icon-image"]),
 			reprPoint = getReprPoint(feature);
-		
+
 		if (!img || !reprPoint) return;
-		
+
 		var point = transformPoint(reprPoint, ws, hs, granularity);
-		
+
 		if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
-		
-		ctx.drawImage(img, 
-				Math.floor(point[0] - img.width / 2), 
+
+		ctx.drawImage(img,
+				Math.floor(point[0] - img.width / 2),
 				Math.floor(point[1] - img.height / 2));
-		
+
 		var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0;
-		
+
 		collides.addPointWH(point, img.width, img.height, padding, feature.kothicId);
 	}
 
@@ -355,11 +355,11 @@ Kothic.render = (function() {
 		if (!style['text']) return;
 
 		var reprPoint = getReprPoint(feature);
-		
+
 		if (!reprPoint) return;
-		
+
 		var point = transformPoint(reprPoint, ws, hs, granularity);
-		
+
 		ctx.save();
 
 		setStyles(ctx, {
@@ -374,7 +374,7 @@ Kothic.render = (function() {
 			collisionHeight = letterWidth * 2.5,
 			offset = style["text-offset"] || 0;
 
-		if ((style["text-allow-overlap"] != "true") && 
+		if ((style["text-allow-overlap"] != "true") &&
 				collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
 			ctx.restore();
 			return;
@@ -384,7 +384,7 @@ Kothic.render = (function() {
 			fillStyle = style["text-color"] || "#000000",
 			strokeStyle = style["text-halo-color"] || "#ffffff",
 			halo = ("text-halo-radius" in style);
-			
+
 		if (opacity < 1){
 			fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
 			strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
@@ -398,22 +398,22 @@ Kothic.render = (function() {
 		});
 
 		if (feature.type == "Polygon" || feature.type == "Point") {
-			
+
 			if (halo) ctx.strokeText(text, point[0], point[1] + offset);
 			ctx.fillText(text, point[0], point[1] + offset);
-			
+
 			var padding = parseFloat(style["-x-mapnik-min-distance"]) || 20;
 			collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
-			
+
 		} else if (feature.type == 'LineString') {
-			
+
 			var points = transformPoints(feature.coordinates, ws, hs, granularity);
 			Kothic.textOnPath(ctx, points, text, halo, collides);
 		}
 
 		ctx.restore();
 	}
-	
+
 	function getDebugInfo(start, layersStyled, mapRendered, finish) {
 		return (layersStyled - start) + ': layers styled<br />' +
 				(mapRendered - layersStyled) + ': map rendered<br />' +
@@ -421,9 +421,9 @@ Kothic.render = (function() {
 				(finish - start) + ': total<br />';
 	}
 
-	
+
 	return function(canvasId, data, zoom, onRenderComplete, buffered) {
-	
+
 		var canvas, ctx,
 			buffer, realCtx,
 			width, height,
@@ -432,7 +432,7 @@ Kothic.render = (function() {
 			layers = {},
 			layerIds = [],
 			collides;
-	
+
 		var start = +new Date(),
 			layersStyled,
 			mapRendered,
@@ -444,7 +444,7 @@ Kothic.render = (function() {
 		width = canvas.width;
 		height = canvas.height;
 		ctx = canvas.getContext('2d');
-					
+
 		if (buffered) {
 			realCtx = ctx;
 			buffer = document.createElement('canvas');
@@ -468,9 +468,9 @@ Kothic.render = (function() {
 		populateLayers(layers, layerIds, data, zoom);
 
 		layersStyled = +new Date();
-	
+
 		// render
-		
+
 		setStyles(ctx, {
 			strokeStyle: "rgba(0,0,0,0.5)",
 			fillStyle: "rgba(0,0,0,0.5)",
@@ -481,14 +481,14 @@ Kothic.render = (function() {
 
 		var layersLen = layerIds.length,
 			i, j, features, featuresLen;
-		
+
 		var renderMap, renderIconsAndText;
 
 		renderMap = function() {
 			renderBackground(ctx, width, height, zoom);
 
 			for (i = 0; i < layersLen; i++) {
-				
+
 				features = layers[layerIds[i]];
 				featuresLen = features.length;
 
@@ -523,8 +523,77 @@ Kothic.render = (function() {
 				for (j = featuresLen - 1; j >= 0; j--) {
 					renderIcon(ctx, features[j], collides, ws, hs, granularity);
 				}
+				// Combining linestrings
+				/*
+				var LabelSheet = new Object();
+				var ToRender = [];
+				var t1;
+				var removed = false;
 				for (j = featuresLen - 1; j >= 0; j--) {
-					renderText(ctx, features[j], collides, ws, hs, granularity);
+					if (features[j].style["text"] && features[j].style["text-position"] == 'line') {
+						if (features[j].type != "LineString") {
+							ToRender.push(features[j]);
+						}
+						else {
+							if (features[j].style["text"] in LabelSheet){
+								for (k = LabelSheet[features[j].style["text"]].length - 1; k >= 0; k--) {
+									t1 = LabelSheet[features[j].style["text"]][k];
+									if ( (t1.style["text-position"] || 'line') == (features[j].style["text-position"]||'line')
+										&& (t1.style["text-offset"] || 0) == (features[j].style["text-offset"] || 0)
+										&& (t1.style["text-opacity"] || 1) == (features[j].style["text-opacity"] || 1)
+										&& (t1.style["z-index"] || 1) == (features[j].style["z-index"] || 1)
+									){
+										if (t1.coordinates[0] == features[j].coordinates[0]){
+											alert("removed!");
+											features[j].coordinates.reverse();
+											features[j].coordinates = features[j].coordinates.concat(t1.coordinates);
+											removed = true;
+										}
+										else if (t1.coordinates[0] == features[j].coordinates[features[j].coordinates.length-1]){
+											alert("removed!");
+											features[j].coordinates = features[j].coordinates.concat(t1.coordinates);
+											removed = true;
+										}
+										else if (t1.coordinates[t1.coordinates.length-1] == features[j].coordinates[0]){
+											alert("removed!");
+											features[j].coordinates = t1.coordinates.concat(features[j].coordinates);
+											removed = true;
+										}
+										else if (t1.coordinates[t1.coordinates.length-1] == features[j].coordinates[features[j].coordinates.length-1]){
+											alert("removed!");
+											features[j].coordinates.reverse();
+											features[j].coordinates = t1.coordinates.concat(features[j].coordinates);
+											removed = true;
+										}
+										if (removed == true) {
+											alert("removed!");
+											removed = false;
+											delete t1;
+											////FIXME;
+										}
+									}
+								}
+								LabelSheet[features[j].style["text"]].push(features[j]);
+							}
+							else {
+								LabelSheet[features[j].style["text"]] = [features[j]];
+							}
+						}
+					}
+				}
+				for (j in LabelSheet){
+					ToRender = ToRender.concat(LabelSheet[j]);
+				}
+				for (j = ToRender.length - 1; j >= 0; j--) {
+					renderText(ctx, ToRender[j], collides, ws, hs, granularity);
+				}*/
+				for (j = featuresLen - 1; j >= 0; j--) {
+					if (features[j].style["text"] && features[j].style["text-position"] == 'line')
+						renderText(ctx, features[j], collides, ws, hs, granularity);
+				}
+				for (j = featuresLen - 1; j >= 0; j--) {
+					if (features[j].style["text"] && features[j].style["text-position"] != 'line')
+						renderText(ctx, features[j], collides, ws, hs, granularity);
 				}
 			}
 
@@ -536,7 +605,7 @@ Kothic.render = (function() {
 
 			onRenderComplete(getDebugInfo(start, layersStyled, mapRendered, finish));
 		};
-		
+
 		setTimeout(renderMap, 0);
 	};
 }());
