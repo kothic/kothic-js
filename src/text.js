@@ -111,7 +111,8 @@ Kothic.textOnPath = (function() {
 			flipped = false,
 			axy,
 			letterWidth,
-			i;
+			i,
+			maxAngle = Math.PI / 6;
 	
 		// iterating solutions - start from center or from one of the ends
 		while (solution < 2) { //TODO change to for?
@@ -141,7 +142,7 @@ Kothic.textOnPath = (function() {
 				letterWidth = getWidth(ctx, letter);
 	
 				// if label collisions with another, restart it from here
-				if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > 0.2) {
+				if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > maxAngle) {
 					widthUsed += letterWidth;
 					i = -1;
 					positions = [];
@@ -155,7 +156,7 @@ Kothic.textOnPath = (function() {
 					letterWidth = getWidth(ctx, letter);
 					
 					// FIXME: we shouldn't check the whole cluster as one bbox, but rather iterate letter-by-letter
-					if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > 0.2) {
+					if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > maxAngle) {
 						i = 0;
 						widthUsed += letterWidth;
 						positions = [];
