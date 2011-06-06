@@ -43,6 +43,12 @@
 		#mapnik {
 			margin-bottom: 10px;
 			}
+		table {
+			border-collapse: collapse;
+			}
+		table td {
+			padding-right: 10px;
+			}
 	</style>
 </head>
 <body>
@@ -52,14 +58,28 @@
 		<div id="tileperf">Rendering...</div>
 	</div>
 	<script>
-		var kothic = new L.TileLayer.Kothic(),
-			mapnik = new L.TileLayer('http://tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
-				attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
-				maxZoom: 22
-			});
+		var mapnik = new L.TileLayer('http://tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
+			attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
+			maxZoom: 22
+		});
+		
+		var kothic = new L.TileLayer.Kothic();
+		/*kothic.setAdditionalStyle(function(style, tags, zoom, type, sel) {
+			var names = ['primary', 'secondary', 'tertiary', 'residential'];
+			
+			if (names.indexOf(tags['highway']) != -1 && !tags['ref'] && !tags['name']) {
+				style['default']['color'] = 'red';
+			}
+		});*/
+		/*if (tags['highway'] == 'primary' || ) {
+			style['default']['color'] = 'green';
+		} else if (tags['lit'] == 'no') {
+			style['default']['color'] = 'red';
+		}*/
 		
 		var map = new L.Map('map', {
-			center: new L.LatLng(53.9, 27.5), 
+			center: new L.LatLng(53.9, 27.5), // Minsk 
+			//center: new L.LatLng(59.89, 30.26), // St. Peterburg 
 			zoom: 11
 		});
 

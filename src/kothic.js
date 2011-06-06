@@ -13,7 +13,7 @@ Kothic.render = (function() {
 		}
 	}
 
-	function getStyle(feature, zoom) {
+	function getStyle(feature, zoom, additionalStyle) {
 		var key = [MapCSS.currentStyle,
 		           JSON.stringify(feature.properties),
 		           zoom, feature.type].join(':'),
@@ -32,6 +32,9 @@ Kothic.render = (function() {
 			    selector = 'node';
 			}
 			styleCache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
+			if (additionalStyle) {
+				additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
+			}
 		}
 		return styleCache[key];
 	}
@@ -99,7 +102,7 @@ Kothic.render = (function() {
 	};
 
 	function renderBackground(ctx, width, height, zoom) {
-		var style = MapCSS.restyle({}, zoom, "canvas")['default'];
+		var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
 
 		ctx.save();
 
@@ -119,7 +122,6 @@ Kothic.render = (function() {
 
 	function renderPolygonFill(ctx, feature, nextFeature, ws, hs, granularity) {
 		var style = feature.style;
-		if (!('fill-color' in style) && !('fill-image' in style)) return;
 
 		if (!pathOpened) {
 			pathOpened = true;
@@ -161,7 +163,6 @@ Kothic.render = (function() {
 
 	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
 		var style = feature.style;
-		if (!("casing-width" in style)) return;
 
 		var dashes = style["casing-dashes"] || style.dashes || false;
 
@@ -190,7 +191,6 @@ Kothic.render = (function() {
 
 	function renderPolyline(ctx, feature, nextFeature, ws, hs, granularity) {
 		var style = feature.style;
-		if (!("width" in style)) return;
 
 		var dashes = style.dashes;
 
@@ -230,13 +230,13 @@ Kothic.render = (function() {
 		return dest;
 	}
 
-	function styleFeatures(features, zoom) {
+	function styleFeatures(features, zoom, additionalStyle) {
 		var styledFeatures = [],
 			i, j, len, feature, style, restyledFeature;
 
 		for (i = 0, len = features.length; i < len; i++) {
 			feature = features[i];
-			style = getStyle(feature, zoom);
+			style = getStyle(feature, zoom, additionalStyle);
 
 			for (j in style) {
 				if (style.hasOwnProperty(j)) {
@@ -253,8 +253,8 @@ Kothic.render = (function() {
 		return styledFeatures;
 	}
 
-	function populateLayers(layers, layerIds, data, zoom) {
-		var styledFeatures = styleFeatures(data.features, zoom);
+	function populateLayers(layers, layerIds, data, zoom, additionalStyle) {
+		var styledFeatures = styleFeatures(data.features, zoom, additionalStyle);
 
 		for (var i = 0, len = styledFeatures.length; i < len; i++) {
 			var feature = styledFeatures[i],
@@ -327,102 +327,98 @@ Kothic.render = (function() {
 		return point;
 	}
 
-	function renderIcon(ctx, feature, collides, ws, hs, granularity) {
-		var style = feature.style;
-
-		if (!style["icon-image"]) return;
-
-		var img = MapCSS.getImage(style["icon-image"]),
+	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, granularity, renderText, renderIcon) {
+		var style = feature.style,
 			reprPoint = getReprPoint(feature);
-
-		if (!img || !reprPoint) return;
-
-		var point = transformPoint(reprPoint, ws, hs, granularity);
-
-		if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
-
-		ctx.drawImage(img,
-				Math.floor(point[0] - img.width / 2),
-				Math.floor(point[1] - img.height / 2));
-
-		var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0;
-
-		collides.addPointWH(point, img.width, img.height, padding, feature.kothicId);
-	}
-
-	function renderText(ctx, feature, collides, ws, hs, granularity) {
-		var style = feature.style;
-		if (!style['text']) return;
-
-		var reprPoint = getReprPoint(feature);
 
 		if (!reprPoint) return;
 
-		var point = transformPoint(reprPoint, ws, hs, granularity);
-
-		ctx.save();
-
-		setStyles(ctx, {
-			lineWidth: style["text-halo-radius"] + 2,
-			font: fontString(style["font-family"], style["font-size"])
-		});
-
-		var text = style['text'] + '',
-			textWidth = ctx.measureText(text).width,
-			letterWidth = textWidth / text.length,
-			collisionWidth = textWidth,
-			collisionHeight = letterWidth * 2.5,
-			offset = style["text-offset"] || 0;
-
-		if ((style["text-allow-overlap"] != "true") &&
-				collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
+		var point = transformPoint(reprPoint, ws, hs, granularity),
+			img;
+		
+		if (renderIcon) {
+			img = MapCSS.getImage(style["icon-image"]);
+			if (!img) return;
+			if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
+		}
+		
+		if (renderText) {
+			ctx.save();
+	
+			setStyles(ctx, {
+				lineWidth: style["text-halo-radius"] + 2,
+				font: fontString(style["font-family"], style["font-size"])
+			});
+	
+			var text = style['text'] + '',
+				textWidth = ctx.measureText(text).width,
+				letterWidth = textWidth / text.length,
+				collisionWidth = textWidth,
+				collisionHeight = letterWidth * 2.5,
+				offset = style["text-offset"] || 0;
+	
+			if ((style["text-allow-overlap"] != "true") &&
+					collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
+				ctx.restore();
+				return;
+			}
+	
+			var opacity = style["text-opacity"] || style["opacity"] || 1,
+				fillStyle = style["text-color"] || "#000000",
+				strokeStyle = style["text-halo-color"] || "#ffffff",
+				halo = ("text-halo-radius" in style);
+	
+			if (opacity < 1){
+				fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
+				strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
+			}
+	
+			setStyles(ctx, {
+				fillStyle: fillStyle,
+				strokeStyle: strokeStyle,
+				textAlign: 'center',
+				textBaseline: 'middle'
+			});
+	
+			if (feature.type == "Polygon" || feature.type == "Point") {
+	
+				if (halo) ctx.strokeText(text, point[0], point[1] + offset);
+				ctx.fillText(text, point[0], point[1] + offset);
+	
+				var padding = parseFloat(style["-x-mapnik-min-distance"]) || 20;
+				collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
+	
+			} else if (feature.type == 'LineString') {
+	
+				var points = transformPoints(feature.coordinates, ws, hs, granularity);
+				Kothic.textOnPath(ctx, points, text, halo, collides);
+			}
+	
 			ctx.restore();
-			return;
 		}
+		
+		if (renderIcon) {
+			ctx.drawImage(img,
+					Math.floor(point[0] - img.width / 2),
+					Math.floor(point[1] - img.height / 2));
+			
+			var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0;
 
-		var opacity = style["text-opacity"] || style["opacity"] || 1,
-			fillStyle = style["text-color"] || "#000000",
-			strokeStyle = style["text-halo-color"] || "#ffffff",
-			halo = ("text-halo-radius" in style);
-
-		if (opacity < 1){
-			fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
-			strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
+			collides.addPointWH(point, img.width, img.height, padding, feature.kothicId);
 		}
-
-		setStyles(ctx, {
-			fillStyle: fillStyle,
-			strokeStyle: strokeStyle,
-			textAlign: 'center',
-			textBaseline: 'middle'
-		});
-
-		if (feature.type == "Polygon" || feature.type == "Point") {
-
-			if (halo) ctx.strokeText(text, point[0], point[1] + offset);
-			ctx.fillText(text, point[0], point[1] + offset);
-
-			var padding = parseFloat(style["-x-mapnik-min-distance"]) || 20;
-			collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
-
-		} else if (feature.type == 'LineString') {
-
-			var points = transformPoints(feature.coordinates, ws, hs, granularity);
-			Kothic.textOnPath(ctx, points, text, halo, collides);
-		}
-
-		ctx.restore();
 	}
 
 	function getDebugInfo(start, layersStyled, mapRendered, finish) {
-		return (layersStyled - start) + ': layers styled<br />' +
-				(mapRendered - layersStyled) + ': map rendered<br />' +
-				(finish - mapRendered) + ': icons/text rendered<br />' +
-				(finish - start) + ': total<br />';
+		return {
+			layersStyled: layersStyled - start,
+			mapRendered: mapRendered - layersStyled,
+			iconsAndTextRendered: finish - mapRendered,
+			total: finish - start
+		};
 	}
 
 
-	return function(canvasId, data, zoom, onRenderComplete, buffered) {
+	return function(canvasId, data, zoom, additionalStyle, onRenderComplete, buffered) {
 
 		var canvas, ctx,
 			buffer, realCtx,
@@ -465,7 +461,7 @@ Kothic.render = (function() {
 
 		// style and populate layer structures
 
-		populateLayers(layers, layerIds, data, zoom);
+		populateLayers(layers, layerIds, data, zoom, additionalStyle);
 
 		layersStyled = +new Date();
 
@@ -480,7 +476,7 @@ Kothic.render = (function() {
 		});
 
 		var layersLen = layerIds.length,
-			i, j, features, featuresLen;
+			i, j, features, featuresLen, style;
 
 		var renderMap, renderIconsAndText;
 
@@ -493,18 +489,25 @@ Kothic.render = (function() {
 				featuresLen = features.length;
 
 				for (j = 0; j < featuresLen; j++) {
-					renderPolygonFill(ctx, features[j], features[j+1], ws, hs, granularity);
+					style = features[j].style;
+					if (('fill-color' in style) || ('fill-image' in style)) {
+						renderPolygonFill(ctx, features[j], features[j+1], ws, hs, granularity);
+					}
 				}
 
 				ctx.lineCap = "butt";
 
 				for (j = 0; j < featuresLen; j++) {
-					renderCasing(ctx, features[j], features[j+1], ws, hs, granularity);
+					if ("casing-width" in features[j].style) {
+						renderCasing(ctx, features[j], features[j+1], ws, hs, granularity);
+					}
 				}
 				ctx.lineCap = "round";
 
 				for (j = 0; j < featuresLen; j++) {
-					renderPolyline(ctx, features[j], features[j+1], ws, hs, granularity);
+					if ("width" in features[j].style) {
+						renderPolyline(ctx, features[j], features[j+1], ws, hs, granularity);
+					}
 				}
 
 				mapRendered = +new Date();
@@ -520,80 +523,36 @@ Kothic.render = (function() {
 				features = layers[layerIds[i]];
 				featuresLen = features.length;
 
+				// render icons without text
 				for (j = featuresLen - 1; j >= 0; j--) {
-					renderIcon(ctx, features[j], collides, ws, hs, granularity);
-				}
-				// Combining linestrings
-				/*
-				var LabelSheet = new Object();
-				var ToRender = [];
-				var t1;
-				var removed = false;
-				for (j = featuresLen - 1; j >= 0; j--) {
-					if (features[j].style["text"] && features[j].style["text-position"] == 'line') {
-						if (features[j].type != "LineString") {
-							ToRender.push(features[j]);
-						}
-						else {
-							if (features[j].style["text"] in LabelSheet){
-								for (k = LabelSheet[features[j].style["text"]].length - 1; k >= 0; k--) {
-									t1 = LabelSheet[features[j].style["text"]][k];
-									if ( (t1.style["text-position"] || 'line') == (features[j].style["text-position"]||'line')
-										&& (t1.style["text-offset"] || 0) == (features[j].style["text-offset"] || 0)
-										&& (t1.style["text-opacity"] || 1) == (features[j].style["text-opacity"] || 1)
-										&& (t1.style["z-index"] || 1) == (features[j].style["z-index"] || 1)
-									){
-										if (t1.coordinates[0] == features[j].coordinates[0]){
-											alert("removed!");
-											features[j].coordinates.reverse();
-											features[j].coordinates = features[j].coordinates.concat(t1.coordinates);
-											removed = true;
-										}
-										else if (t1.coordinates[0] == features[j].coordinates[features[j].coordinates.length-1]){
-											alert("removed!");
-											features[j].coordinates = features[j].coordinates.concat(t1.coordinates);
-											removed = true;
-										}
-										else if (t1.coordinates[t1.coordinates.length-1] == features[j].coordinates[0]){
-											alert("removed!");
-											features[j].coordinates = t1.coordinates.concat(features[j].coordinates);
-											removed = true;
-										}
-										else if (t1.coordinates[t1.coordinates.length-1] == features[j].coordinates[features[j].coordinates.length-1]){
-											alert("removed!");
-											features[j].coordinates.reverse();
-											features[j].coordinates = t1.coordinates.concat(features[j].coordinates);
-											removed = true;
-										}
-										if (removed == true) {
-											alert("removed!");
-											removed = false;
-											delete t1;
-											////FIXME;
-										}
-									}
-								}
-								LabelSheet[features[j].style["text"]].push(features[j]);
-							}
-							else {
-								LabelSheet[features[j].style["text"]] = [features[j]];
-							}
-						}
+					style = features[j].style;
+					if (("icon-image" in style) && !style["text"]) {
+						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, false, true);
 					}
 				}
-				for (j in LabelSheet){
-					ToRender = ToRender.concat(LabelSheet[j]);
-				}
-				for (j = ToRender.length - 1; j >= 0; j--) {
-					renderText(ctx, ToRender[j], collides, ws, hs, granularity);
-				}*/
+				
+				// render text on paths
 				for (j = featuresLen - 1; j >= 0; j--) {
-					if (features[j].style["text"] && features[j].style["text-position"] == 'line')
-						renderText(ctx, features[j], collides, ws, hs, granularity);
+					style = features[j].style;
+					if (style["text"] && style["text-position"] == 'line') {
+						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, false);
+					}
 				}
+
+				// render horizontal text on features without icons
 				for (j = featuresLen - 1; j >= 0; j--) {
-					if (features[j].style["text"] && features[j].style["text-position"] != 'line')
-						renderText(ctx, features[j], collides, ws, hs, granularity);
+					style = features[j].style;
+					if (style["text"] && style["text-position"] != 'line' && !("icon-image" in style)) {
+						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, false);
+					}
+				}
+
+				// for features with both icon and text, render both or neither
+				for (j = featuresLen - 1; j >= 0; j--) {
+					style = features[j].style;
+					if (("icon-image" in style) && style["text"]) {
+						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, true);
+					}
 				}
 			}
 
