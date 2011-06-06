@@ -5,19 +5,19 @@ Kothic.render = (function() {
 	var styleCache = {},
 		pathOpened = false;
 
-	function setStyles(ctx, styles) {
-		for (var i in styles) {
-			if (styles.hasOwnProperty(i) && styles[i]) {
-				ctx[i] = styles[i];
-			}
-		}
-	}
-
+	var defaultCanvasStyles = {
+		strokeStyle: "rgba(0,0,0,0.5)",
+		fillStyle: "rgba(0,0,0,0.5)",
+		lineWidth: 1,
+		lineCap: "round",
+		lineJoin: "round"
+	};
+	
 	function getStyle(feature, zoom, additionalStyle) {
-		var key = [MapCSS.currentStyle,
-		           JSON.stringify(feature.properties),
-		           zoom, feature.type].join(':'),
-			type, selector;
+		var type, selector,
+			key = [MapCSS.currentStyle,
+			       JSON.stringify(feature.properties),
+			       zoom, feature.type].join(':');
 
 		if (!styleCache[key]) {
 			//TODO: propagate type and selector
@@ -36,70 +36,77 @@ Kothic.render = (function() {
 				additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
 			}
 		}
+		
 		return styleCache[key];
 	}
 
-	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
-		this.buffer = [];
-
-		// for debugging
-		this.ctx = ctx;
-		this.debugBoxes = debugBoxes;
-		this.debugChecks = debugChecks;
+	function extend(dest, source) {
+		for (var i in source) {
+			if (source.hasOwnProperty(i)) {
+				dest[i] = source[i];
+			}
+		}
+		return dest;
 	}
 
-	CollisionBuffer.prototype = {
-		addBox: function(box) {
-			this.buffer.push(box);
-		},
+	function compareZIndexes(a, b) {
+		return parseFloat(a.style["z-index"] || 0) - parseFloat(b.style["z-index"] || 0);
+	}
 
-		addPointWH: function(point, w, h, d, id) {
-			var box = this.getBoxFromPoint(point, w, h, d, id);
+	function styleFeatures(features, zoom, additionalStyle) {
+		var styledFeatures = [],
+			i, j, len, feature, style, restyledFeature;
 
-			this.buffer.push(box);
+		for (i = 0, len = features.length; i < len; i++) {
+			feature = features[i];
+			style = getStyle(feature, zoom, additionalStyle);
 
-			if (this.debugBoxes) {
-				this.ctx.save();
-				this.ctx.strokeStyle = 'red';
-				this.ctx.lineWidth = '1';
-				this.ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
-				this.ctx.restore();
-			}
-		},
-
-		checkBox: function(b) {
-			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
-				c = this.buffer[i];
-
-				// if it's the same object (only different styles), don't detect collision
-				if (b[4] && (b[4] == c[4])) continue;
-
-				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) {
-					if (this.debugChecks) {
-						this.ctx.save();
-						this.ctx.strokeStyle = 'darkblue';
-						this.ctx.lineWidth = '1';
-						this.ctx.strokeRect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
-						this.ctx.restore();
-					}
-					return true;
+			for (j in style) {
+				if (style.hasOwnProperty(j)) {
+					restyledFeature = extend({}, feature);
+					restyledFeature.kothicId = i + 1;
+					restyledFeature.style = style[j];
+					styledFeatures.push(restyledFeature);
 				}
 			}
-			return false;
-		},
-
-		checkPointWH: function(point, w, h, id) {
-			return this.checkBox(this.getBoxFromPoint(point, w, h, 0, id));
-		},
-
-		getBoxFromPoint: function(point, w, h, d, id) {
-			return [point[0] - w/2 - d,
-			        point[1] - h/2 - d,
-			        point[0] + w/2 + d,
-			        point[1] + h/2 + d,
-			        id];
 		}
-	};
+
+		styledFeatures.sort(compareZIndexes);
+
+		return styledFeatures;
+	}
+
+	function populateLayers(layers, layerIds, data, zoom, additionalStyle) {
+		var styledFeatures = styleFeatures(data.features, zoom, additionalStyle);
+
+		for (var i = 0, len = styledFeatures.length; i < len; i++) {
+			var feature = styledFeatures[i],
+				layerId = parseFloat(feature.properties.layer) || 0,
+				layerStyle = feature.style["-x-mapnik-layer"];
+
+			if (layerStyle == "top" ) {
+				layerId = 10000;
+			}
+			if (layerStyle == "bottom" ) {
+				layerId = -10000;
+			}
+			if (!(layerId in layers)) {
+				layers[layerId] = [];
+				layerIds.push(layerId);
+			}
+			layers[layerId].push(feature);
+		}
+
+		layerIds.sort();
+	}
+
+	function setStyles(ctx, styles) {
+		for (var i in styles) {
+			if (styles.hasOwnProperty(i) && styles[i]) {
+				ctx[i] = styles[i];
+			}
+		}
+	}
 
 	function renderBackground(ctx, width, height, zoom) {
 		var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
@@ -217,67 +224,98 @@ Kothic.render = (function() {
 		}
 	}
 
-	function compareZIndexes(a, b) {
-		return parseFloat(a.style["z-index"] || 0) - parseFloat(b.style["z-index"] || 0);
-	}
-
-	function extend(dest, source) {
-		for (var i in source) {
-			if (source.hasOwnProperty(i)) {
-				dest[i] = source[i];
-			}
+	function transformPoints(points, ws, hs, granularity) {
+		var transformed = [];
+		for (var i = 0, len = points.length; i < len; i++) {
+			transformed.push(transformPoint(points[i], ws, hs, granularity));
 		}
-		return dest;
+		return transformed;
 	}
 
-	function styleFeatures(features, zoom, additionalStyle) {
-		var styledFeatures = [],
-			i, j, len, feature, style, restyledFeature;
+	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
+		this.buffer = [];
 
-		for (i = 0, len = features.length; i < len; i++) {
-			feature = features[i];
-			style = getStyle(feature, zoom, additionalStyle);
+		// for debugging
+		this.ctx = ctx;
+		this.debugBoxes = debugBoxes;
+		this.debugChecks = debugChecks;
+	}
 
-			for (j in style) {
-				if (style.hasOwnProperty(j)) {
-					restyledFeature = extend({}, feature);
-					restyledFeature.kothicId = i;
-					restyledFeature.style = style[j];
-					styledFeatures.push(restyledFeature);
+	CollisionBuffer.prototype = {
+		addBox: function(box) {
+			this.buffer.push(box);
+		},
+
+		addPointWH: function(point, w, h, d, id) {
+			var box = this.getBoxFromPoint(point, w, h, d, id);
+
+			this.buffer.push(box);
+
+			if (this.debugBoxes) {
+				this.ctx.save();
+				this.ctx.strokeStyle = 'red';
+				this.ctx.lineWidth = '1';
+				this.ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+				this.ctx.restore();
+			}
+		},
+
+		checkBox: function(b) {
+			for (var i = 0, len = this.buffer.length, c; i < len; i++) {
+				c = this.buffer[i];
+
+				// if it's the same object (only different styles), don't detect collision
+				if (b[4] && (b[4] == c[4])) continue;
+
+				if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) {
+					if (this.debugChecks) {
+						this.ctx.save();
+						this.ctx.strokeStyle = 'darkblue';
+						this.ctx.lineWidth = '1';
+						this.ctx.strokeRect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
+						this.ctx.restore();
+					}
+					return true;
 				}
 			}
+			return false;
+		},
+
+		checkPointWH: function(point, w, h, id) {
+			return this.checkBox(this.getBoxFromPoint(point, w, h, 0, id));
+		},
+
+		getBoxFromPoint: function(point, w, h, d, id) {
+			return [point[0] - w/2 - d,
+			        point[1] - h/2 - d,
+			        point[0] + w/2 + d,
+			        point[1] + h/2 + d,
+			        id];
 		}
+	};
 
-		styledFeatures.sort(compareZIndexes);
-
-		return styledFeatures;
+	function addBoundaryCollisions(collisions, width, height) {
+		collisions.addBox([0, 0, width, 0]);
+		collisions.addBox([0, height, width, height]);
+		collisions.addBox([width, 0, width, height]);
+		collisions.addBox([0, 0, 0, height]);
+	}
+	
+	function getReprPoint(feature) {
+		var point;
+		switch (feature.type) {
+			case 'Point': point = feature.coordinates; break;
+			case 'Polygon': point = feature.reprpoint; break;
+			case 'LineString': point = feature.coordinates[0]; break;
+			case 'GeometryCollection': //TODO: Disassemble geometry collection
+			case 'MultiPoint': //TODO: Disassemble multi point
+			case 'MultiPolygon': //TODO: Disassemble multi polygon
+			case 'MultiLineString': return; //TODO: Disassemble multi line string
+		}
+		return point;
 	}
 
-	function populateLayers(layers, layerIds, data, zoom, additionalStyle) {
-		var styledFeatures = styleFeatures(data.features, zoom, additionalStyle);
-
-		for (var i = 0, len = styledFeatures.length; i < len; i++) {
-			var feature = styledFeatures[i],
-				layerId = parseFloat(feature.properties.layer) || 0,
-				layerStyle = feature.style["-x-mapnik-layer"];
-
-			if (layerStyle == "top" ) {
-				layerId = 10000;
-			}
-			if (layerStyle == "bottom" ) {
-				layerId = -10000;
-			}
-			if (!(layerId in layers)) {
-				layers[layerId] = [];
-				layerIds.push(layerId);
-			}
-			layers[layerId].push(feature);
-		}
-
-		layerIds.sort();
-	}
-
-	function fontString(name, size) {
+	function getFontString(name, size) {
 		name = name || '';
 		size = size || 9;
 
@@ -305,28 +343,6 @@ Kothic.render = (function() {
 		return styles.join(' ');
 	}
 
-	function transformPoints(points, ws, hs, granularity) {
-		var transformed = [];
-		for (var i = 0, len = points.length; i < len; i++) {
-			transformed.push(transformPoint(points[i], ws, hs, granularity));
-		}
-		return transformed;
-	}
-
-	function getReprPoint(feature) {
-		var point;
-		switch (feature.type) {
-			case 'Point': point = feature.coordinates; break;
-			case 'Polygon': point = feature.reprpoint; break;
-			case 'LineString': point = feature.coordinates[0]; break;
-			case 'GeometryCollection': //TODO: Disassemble geometry collection
-			case 'MultiPoint': //TODO: Disassemble multi point
-			case 'MultiPolygon': //TODO: Disassemble multi polygon
-			case 'MultiLineString': return; //TODO: Disassemble multi line string
-		}
-		return point;
-	}
-
 	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, granularity, renderText, renderIcon) {
 		var style = feature.style,
 			reprPoint = getReprPoint(feature);
@@ -347,7 +363,7 @@ Kothic.render = (function() {
 	
 			setStyles(ctx, {
 				lineWidth: style["text-halo-radius"] + 2,
-				font: fontString(style["font-family"], style["font-size"])
+				font: getFontString(style["font-family"], style["font-size"])
 			});
 	
 			var text = style['text'] + '',
@@ -416,50 +432,35 @@ Kothic.render = (function() {
 			total: finish - start
 		};
 	}
-
+	
 
 	return function(canvasId, data, zoom, additionalStyle, onRenderComplete, buffered) {
 
-		var canvas, ctx,
-			buffer, realCtx,
-			width, height,
-			granularity,
-			ws, hs,
-			layers = {},
-			layerIds = [],
-			collides;
+		var canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId),
+			ctx = canvas.getContext('2d'),
+			width = canvas.width, 
+			height = canvas.height,
+			granularity = data.granularity,
+			ws = width / granularity,
+			hs = height / granularity,
+			layers = {}, layerIds = [],
+			collides = new CollisionBuffer(/*ctx, true*/),
+			buffer, realCtx;
 
 		var start = +new Date(),
 			layersStyled,
 			mapRendered,
 			finish;
 
-		// init all variables
-
-		canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId);
-		width = canvas.width;
-		height = canvas.height;
-		ctx = canvas.getContext('2d');
-
 		if (buffered) {
-			realCtx = ctx;
 			buffer = document.createElement('canvas');
+			
 			buffer.width = width;
 			buffer.height = height;
+			
+			realCtx = ctx;
 			ctx = buffer.getContext('2d');
 		}
-
-		granularity = data.granularity;
-		ws = width / granularity;
-		hs = height / granularity;
-
-		collides = new CollisionBuffer(/*ctx, true*/);
-		collides.addBox([0, 0, width, 0]);
-		collides.addBox([0, height, width, height]);
-		collides.addBox([width, 0, width, height]);
-		collides.addBox([0, 0, 0, height]);
-
-		// style and populate layer structures
 
 		populateLayers(layers, layerIds, data, zoom, additionalStyle);
 
@@ -467,18 +468,11 @@ Kothic.render = (function() {
 
 		// render
 
-		setStyles(ctx, {
-			strokeStyle: "rgba(0,0,0,0.5)",
-			fillStyle: "rgba(0,0,0,0.5)",
-			lineWidth: 1,
-			lineCap: "round",
-			lineJoin: "round"
-		});
+		setStyles(ctx, defaultCanvasStyles);
 
 		var layersLen = layerIds.length,
-			i, j, features, featuresLen, style;
-
-		var renderMap, renderIconsAndText;
+			i, j, features, featuresLen, style,
+			renderMap, renderIconsAndText;
 
 		renderMap = function() {
 			renderBackground(ctx, width, height, zoom);
@@ -517,7 +511,8 @@ Kothic.render = (function() {
 		};
 
 		renderIconsAndText = function() {
-
+			addBoundaryCollisions(collides, width, height);
+			
 			for (i = layersLen - 1; i >= 0; i--) {
 
 				features = layers[layerIds[i]];
