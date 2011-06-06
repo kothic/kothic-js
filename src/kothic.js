@@ -13,7 +13,7 @@ Kothic.render = (function() {
 		}
 	}
 
-	function getStyle(feature, zoom) {
+	function getStyle(feature, zoom, additionalStyle) {
 		var key = [MapCSS.currentStyle,
 		           JSON.stringify(feature.properties),
 		           zoom, feature.type].join(':'),
@@ -32,6 +32,9 @@ Kothic.render = (function() {
 			    selector = 'node';
 			}
 			styleCache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
+			if (additionalStyle) {
+				additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
+			}
 		}
 		return styleCache[key];
 	}
@@ -99,7 +102,7 @@ Kothic.render = (function() {
 	};
 
 	function renderBackground(ctx, width, height, zoom) {
-		var style = MapCSS.restyle({}, zoom, "canvas")['default'];
+		var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
 
 		ctx.save();
 
@@ -227,13 +230,13 @@ Kothic.render = (function() {
 		return dest;
 	}
 
-	function styleFeatures(features, zoom) {
+	function styleFeatures(features, zoom, additionalStyle) {
 		var styledFeatures = [],
 			i, j, len, feature, style, restyledFeature;
 
 		for (i = 0, len = features.length; i < len; i++) {
 			feature = features[i];
-			style = getStyle(feature, zoom);
+			style = getStyle(feature, zoom, additionalStyle);
 
 			for (j in style) {
 				if (style.hasOwnProperty(j)) {
@@ -250,8 +253,8 @@ Kothic.render = (function() {
 		return styledFeatures;
 	}
 
-	function populateLayers(layers, layerIds, data, zoom) {
-		var styledFeatures = styleFeatures(data.features, zoom);
+	function populateLayers(layers, layerIds, data, zoom, additionalStyle) {
+		var styledFeatures = styleFeatures(data.features, zoom, additionalStyle);
 
 		for (var i = 0, len = styledFeatures.length; i < len; i++) {
 			var feature = styledFeatures[i],
@@ -415,7 +418,7 @@ Kothic.render = (function() {
 	}
 
 
-	return function(canvasId, data, zoom, onRenderComplete, buffered) {
+	return function(canvasId, data, zoom, additionalStyle, onRenderComplete, buffered) {
 
 		var canvas, ctx,
 			buffer, realCtx,
@@ -458,7 +461,7 @@ Kothic.render = (function() {
 
 		// style and populate layer structures
 
-		populateLayers(layers, layerIds, data, zoom);
+		populateLayers(layers, layerIds, data, zoom, additionalStyle);
 
 		layersStyled = +new Date();
 

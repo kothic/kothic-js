@@ -34,7 +34,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 				layer.tileDrawn(canvas);
 			}
 			
-			Kothic.render(canvas, data, zoom + 2, onRenderComplete, buffered);
+			Kothic.render(canvas, data, zoom + 2, layer._additionalStyle, onRenderComplete, buffered);
 		};
 	},
 	
@@ -46,6 +46,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		var key = [(zoom - 2), tilePoint.x, tilePoint.y].join('/');
 		this._canvases[key] = canvas;
 		this._loadScript('http://osmosnimki.ru/vtile/' + key + '.js');
+	},
+	
+	setAdditionalStyle: function(fn) {
+		this._additionalStyle = fn;
 	},
 	
 	_loadScript: function(url) {
