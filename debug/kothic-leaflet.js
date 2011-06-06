@@ -5,7 +5,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		maxZoom: 22,
 		updateWhenIdle: true,
 		unloadInvisibleTiles: true,
-		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="github.com/kothic/kothic-js">Kothic JS</a>',
+		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
 		async: true,
 		buffered: true
 	},
@@ -24,11 +24,11 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 				buffered = layer.options.buffered;
 			
 			function onRenderComplete(debugInfo) {
-				var debugStr = '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />' + 
-						debugInfo.layersStyled + ': layers styled<br />' +
-						debugInfo.mapRendered + ': map rendered<br />' +
-						debugInfo.iconsAndTextRendered + ': icons/text rendered<br />' +
-						debugInfo.total + ': total<br />';
+				var debugStr = '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />' +
+						'<table><tr><td>' + debugInfo.layersStyled + '</td><td>layers styled</td></tr>' +
+						'<tr><td>' + debugInfo.mapRendered + '</td><td>map rendered</td></tr>' +
+						'<tr><td>' + debugInfo.iconsAndTextRendered + '</td><td>icons/text rendered</td></tr>' +
+						'<tr><td>' + debugInfo.total + '</td><td>total</td></tr></table>';
 				
 				layer._debugMessages.push(debugStr);
 				layer.tileDrawn(canvas);
