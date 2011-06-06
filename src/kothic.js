@@ -406,10 +406,12 @@ Kothic.render = (function() {
 	}
 
 	function getDebugInfo(start, layersStyled, mapRendered, finish) {
-		return (layersStyled - start) + ': layers styled<br />' +
-				(mapRendered - layersStyled) + ': map rendered<br />' +
-				(finish - mapRendered) + ': icons/text rendered<br />' +
-				(finish - start) + ': total<br />';
+		return {
+			layersStyled: layersStyled - start,
+			mapRendered: mapRendered - layersStyled,
+			iconsAndTextRendered: finish - mapRendered,
+			total: finish - start
+		};
 	}
 
 

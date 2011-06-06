@@ -24,9 +24,13 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 				buffered = layer.options.buffered;
 			
 			function onRenderComplete(debugInfo) {
-				var tileStr = '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />';
+				var debugStr = '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />' + 
+						debugInfo.layersStyled + ': layers styled<br />' +
+						debugInfo.mapRendered + ': map rendered<br />' +
+						debugInfo.iconsAndTextRendered + ': icons/text rendered<br />' +
+						debugInfo.total + ': total<br />';
 				
-				layer._debugMessages.push(tileStr + debugInfo);
+				layer._debugMessages.push(debugStr);
 				layer.tileDrawn(canvas);
 			}
 			
