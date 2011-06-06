@@ -28,8 +28,8 @@ Kothic.textOnPath = (function() {
 	function checkCollision(collisions, ctx, text, axy) {
 		var i, widthUsed = 0;
 		for (i = 0; i <= text.length; i++){
-			if (collisions.checkPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed))){return true};
-			widthUsed += getWidth(ctx, text.charAt(i))
+			if (collisions.checkPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed))) return true;
+			widthUsed += getWidth(ctx, text.charAt(i));
 		};
 		return false;
 	}
@@ -38,10 +38,8 @@ Kothic.textOnPath = (function() {
 		var i, widthUsed = 0;
 		for (i = 0; i <= text.length; i++){
 			collisions.addPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed));
-			widthUsed += getWidth(ctx, text.charAt(i))
+			widthUsed += getWidth(ctx, text.charAt(i));
 		};
-		//return false;
-		//return collisions.addPointWH.apply(collisions, getCollisionParams(ctx, text, axy));
 	}
 
 	function renderText(ctx, axy, halo) {
