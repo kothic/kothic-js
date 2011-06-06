@@ -65,12 +65,17 @@
 		
 		var kothic = new L.TileLayer.Kothic();
 		/*kothic.setAdditionalStyle(function(style, tags, zoom, type, sel) {
-			if (tags['lit'] == 'yes') {
-				style['default']['color'] = 'green';
-			} else if (tags['lit'] == 'no') {
+			var names = ['primary', 'secondary', 'tertiary', 'residential'];
+			
+			if (names.indexOf(tags['highway']) != -1 && !tags['ref'] && !tags['name']) {
 				style['default']['color'] = 'red';
 			}
 		});*/
+		/*if (tags['highway'] == 'primary' || ) {
+			style['default']['color'] = 'green';
+		} else if (tags['lit'] == 'no') {
+			style['default']['color'] = 'red';
+		}*/
 		
 		var map = new L.Map('map', {
 			center: new L.LatLng(53.9, 27.5), // Minsk 
