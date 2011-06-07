@@ -336,7 +336,7 @@ Kothic.render = (function() {
 		if (name.indexOf('serif') != -1) {
 			family += 'Georgia, serif';
 		} else {
-			family += 'Arial, Helvetica, sans-serif';
+			family += '"Helvetica Neue", Arial, Helvetica, sans-serif';
 		}
 		styles.push(family);
 
