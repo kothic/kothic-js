@@ -50,6 +50,12 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 	
 	setAdditionalStyle: function(fn) {
 		this._additionalStyle = fn;
+		
+		// TODO implement layer.redraw() in Leaflet
+		if (this._map && this._map._container) {
+			this._reset();
+			this._update();
+		}
 	},
 	
 	_loadScript: function(url) {
