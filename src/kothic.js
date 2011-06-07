@@ -3,7 +3,8 @@ var Kothic = {};
 Kothic.render = (function() {
 
 	var styleCache = {},
-		pathOpened = false;
+		pathOpened = false,
+		lastId = 0;
 
 	var defaultCanvasStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
@@ -14,8 +15,10 @@ Kothic.render = (function() {
 	};
 	
 	function getStyle(feature, zoom, additionalStyle) {
+		additionalStyle.kothicId = additionalStyle.kothicId || ++lastId;
+		
 		var type, selector,
-			key = [MapCSS.currentStyle,
+			key = [MapCSS.currentStyle, additionalStyle.kothicId,
 			       JSON.stringify(feature.properties),
 			       zoom, feature.type].join(':');
 
