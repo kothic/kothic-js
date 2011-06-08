@@ -15,10 +15,14 @@ Kothic.render = (function() {
 	};
 	
 	function getStyle(feature, zoom, additionalStyle) {
-		additionalStyle.kothicId = additionalStyle.kothicId || ++lastId;
+		var id2 = 0;
+		
+		if (additionalStyle) {
+			id2 = additionalStyle.kothicId = additionalStyle.kothicId || ++lastId;
+		}
 		
 		var type, selector,
-			key = [MapCSS.currentStyle, additionalStyle.kothicId,
+			key = [MapCSS.currentStyle, id2,
 			       JSON.stringify(feature.properties),
 			       zoom, feature.type].join(':');
 
