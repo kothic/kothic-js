@@ -386,7 +386,8 @@ Kothic.render = (function() {
 		if (renderIcon) {
 			img = MapCSS.getImage(style["icon-image"]);
 			if (!img) return;
-			if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
+			if ((style["allow-overlap"] != "true") && 
+					collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
 		}
 		
 		if (renderText) {
