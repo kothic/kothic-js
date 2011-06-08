@@ -125,23 +125,45 @@ Kothic.render = (function() {
 		}
 	}
 
+	function fill(ctx, style, fillFn) {
+		var opacity = style["fill-opacity"] || style.opacity,
+			image;
+
+		ctx.save();
+		
+		if (('fill-color' in style)) {
+			// first pass fills with solid color
+			setStyles(ctx, {
+				fillStyle: style["fill-color"],
+				globalAlpha: opacity
+			});
+			fillFn();
+		}
+
+		if ('fill-image' in style) {
+			// second pass fills with texture
+			image = MapCSS.getImage(style['fill-image']);
+			if (image) {
+				setStyles(ctx, {
+					fillStyle: ctx.createPattern(image, 'repeat'),
+					globalAlpha: opacity
+				});
+			}
+			fillFn();
+		}
+		ctx.restore();
+	}
+
 	function renderBackground(ctx, width, height, zoom) {
 		var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
 
 		ctx.save();
 
-		setStyles(ctx, {
-			fillStyle: style["fill-color"],
-			globalAlpha: style["fill-opacity"] || style.opacity
+		fill(ctx, style, function() {
+			ctx.fillRect(-1, -1, width + 1, height + 1);
 		});
 
-		ctx.fillRect(-1, -1, width + 1, height + 1);
-
 		ctx.restore();
-	}
-
-	function transformPoint(point, ws, hs, granularity) {
-		return [ws * point[0], hs * (granularity - point[1])];
 	}
 
 	function renderPolygonFill(ctx, feature, nextFeature, ws, hs, granularity) {
@@ -158,35 +180,16 @@ Kothic.render = (function() {
 			(nextStyle['fill-color'] === style['fill-color']) &&
 			(nextStyle['fill-image'] === style['fill-image']) &&
 			(nextStyle['fill-opacity'] === style['fill-opacity'])) return;
-		
+
 		ctx.save();
-		var opacity = style["fill-opacity"] || style.opacity;
 
-		if (('fill-color' in style)) {
-			// first pass fills polygon with solid color
-			setStyles(ctx, {
-				fillStyle: style["fill-color"],
-				globalAlpha: opacity
-			});
+		fill(ctx, style, function() {;
 			ctx.fill();
-		}
-
-		if ('fill-image' in style) {
-			// second pass fills polygon with texture
-			var image = MapCSS.getImage(style['fill-image']);
-			if (image) {
-				// texture image may not be loaded
-				setStyles(ctx, {
-					fillStyle: ctx.createPattern(image, 'repeat'),
-					globalAlpha: opacity
-				});
-				ctx.fill();
-			}
-		}
+		});
+		
+		ctx.restore();
 
 		pathOpened = false;
-
-		ctx.restore();
 	}
 
 	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
@@ -253,14 +256,6 @@ Kothic.render = (function() {
 		pathOpened = false;
 		ctx.stroke();
 		ctx.restore();
-	}
-
-	function transformPoints(points, ws, hs, granularity) {
-		var transformed = [];
-		for (var i = 0, len = points.length; i < len; i++) {
-			transformed.push(transformPoint(points[i], ws, hs, granularity));
-		}
-		return transformed;
 	}
 
 	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
@@ -372,6 +367,18 @@ Kothic.render = (function() {
 		styles.push(family);
 
 		return styles.join(' ');
+	}
+
+	function transformPoint(point, ws, hs, granularity) {
+		return [ws * point[0], hs * (granularity - point[1])];
+	}
+	
+	function transformPoints(points, ws, hs, granularity) {
+		var transformed = [];
+		for (var i = 0, len = points.length; i < len; i++) {
+			transformed.push(transformPoint(points[i], ws, hs, granularity));
+		}
+		return transformed;
 	}
 
 	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, granularity, renderText, renderIcon) {
