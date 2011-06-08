@@ -11,7 +11,7 @@ Kothic.render = (function() {
 	var styleCache = {},
 		pathOpened = false,
 		lastId = 0;
-
+	
 	var defaultCanvasStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
 		fillStyle: "rgba(0,0,0,0.5)",
@@ -31,6 +31,10 @@ Kothic.render = (function() {
 			key = [MapCSS.currentStyle, id2,
 			       JSON.stringify(feature.properties),
 			       zoom, feature.type].join(':');
+		
+		// TODO improve caching mechanism
+		// such caching is not as efficient as it might seem because of a lot of objects 
+		// with the same style except text property
 
 		if (!styleCache[key]) {
 			//TODO: propagate type and selector
@@ -141,7 +145,8 @@ Kothic.render = (function() {
 	}
 
 	function renderPolygonFill(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style;
+		var style = feature.style,
+			nextStyle = nextFeature && nextFeature.style;
 
 		if (!pathOpened) {
 			pathOpened = true;
@@ -149,40 +154,44 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, false, true, ws, hs, granularity);
 
-		if (!nextFeature || (nextFeature.style !== style)) {
-			ctx.save();
-			var opacity = style["fill-opacity"] || style.opacity;
+		if (nextFeature && 
+			(nextStyle['fill-color'] === style['fill-color']) &&
+			(nextStyle['fill-image'] === style['fill-image']) &&
+			(nextStyle['fill-opacity'] === style['fill-opacity'])) return;
+		
+		ctx.save();
+		var opacity = style["fill-opacity"] || style.opacity;
 
-			if (('fill-color' in style)) {
-				// first pass fills polygon with solid color
+		if (('fill-color' in style)) {
+			// first pass fills polygon with solid color
+			setStyles(ctx, {
+				fillStyle: style["fill-color"],
+				globalAlpha: opacity
+			});
+			ctx.fill();
+		}
+
+		if ('fill-image' in style) {
+			// second pass fills polygon with texture
+			var image = MapCSS.getImage(style['fill-image']);
+			if (image) {
+				// texture image may not be loaded
 				setStyles(ctx, {
-					fillStyle: style["fill-color"],
+					fillStyle: ctx.createPattern(image, 'repeat'),
 					globalAlpha: opacity
 				});
 				ctx.fill();
 			}
-
-			if ('fill-image' in style) {
-				// second pass fills polygon with texture
-				var image = MapCSS.getImage(style['fill-image']);
-				if (image) {
-					// texture image may not be loaded
-					setStyles(ctx, {
-						fillStyle: ctx.createPattern(image, 'repeat'),
-						globalAlpha: opacity
-					});
-					ctx.fill();
-				}
-			}
-
-			pathOpened = false;
-
-			ctx.restore();
 		}
+
+		pathOpened = false;
+
+		ctx.restore();
 	}
 
 	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style;
+		var style = feature.style,
+			nextStyle = nextFeature && nextFeature.style;
 
 		var dashes = style["casing-dashes"] || style.dashes || false;
 
@@ -192,25 +201,31 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
-		if (!nextFeature || (nextFeature.style !== style)) {
-			ctx.save();
+		if (nextFeature && 
+				(nextStyle.width === style.width) &&
+				(nextStyle['casing-width'] === style['casing-width']) &&
+				(nextStyle['casing-color'] === style['casing-color']) &&
+				(nextStyle['casing-opacity'] === style['casing-opacity'])) return;
+			
+		ctx.save();
 
-			setStyles(ctx, {
-				lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
-				strokeStyle: style["casing-color"] || style["color"],
-				lineCap: style["casing-linecap"] || style["linecap"],
-				lineJoin: style["casing-linejoin"] || style["linejoin"],
-				globalAlpha: style["casing-opacity"] || style["opacity"]
-			});
+		setStyles(ctx, {
+			lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
+			strokeStyle: style["casing-color"],
+			lineCap: style["casing-linecap"] || style.linecap,
+			lineJoin: style["casing-linejoin"] || style.linejoin,
+			globalAlpha: style["casing-opacity"]
+		});
 
-			pathOpened = false;
-			ctx.stroke();
-			ctx.restore();
-		}
+		pathOpened = false;
+		ctx.stroke();
+		
+		ctx.restore();
 	}
 
 	function renderPolyline(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style;
+		var style = feature.style,
+			nextStyle = nextFeature && nextFeature.style;
 
 		var dashes = style.dashes;
 
@@ -220,21 +235,24 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
-		if (!nextFeature || (nextFeature.style !== style)) {
-			ctx.save();
+		if (nextFeature && 
+				(nextStyle.width === style.width) &&
+				(nextStyle.color === style.color) &&
+				(nextStyle.opacity === style.opacity)) return;
+		
+		ctx.save();
 
-			setStyles(ctx, {
-				lineWidth: style.width,
-				strokeStyle: style.color,
-				lineCap: style.linecap,
-				lineJoin: style.linejoin,
-				globalAlpha: style.opacity
-			});
+		setStyles(ctx, {
+			lineWidth: style.width,
+			strokeStyle: style.color,
+			lineCap: style.linecap,
+			lineJoin: style.linejoin,
+			globalAlpha: style.opacity
+		});
 
-			pathOpened = false;
-			ctx.stroke();
-			ctx.restore();
-		}
+		pathOpened = false;
+		ctx.stroke();
+		ctx.restore();
 	}
 
 	function transformPoints(points, ws, hs, granularity) {
