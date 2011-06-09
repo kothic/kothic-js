@@ -123,9 +123,6 @@ Kothic.path = (function() {
 				
 				for (j = 0; j < pointsLen; j++) {
 					point = points[j];
-
-					if (isTileBoundary(point, granularity) && feature.properties.name == 'ÌÊÀÄ') debugger;
-					
 					screenPoint = transformPoint(point, ws, hs, granularity);
 
 					// continue path off the tile by 10px to fix path edges between tiles
