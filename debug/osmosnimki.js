@@ -1,2209 +1,1900 @@
 
 (function(MapCSS) {
     function restyle(tags, zoom, type, selector) {
-        var g_217 = 'shop';
-        var g_261 = 'town_6.png';
-        var g_68 = 'text-allow-overlap';
-        var g_102 = 'reservoir';
-        var g_143 = '#ffd780';
-        var g_59 = 'text';
-        var g_1 = '#C4D4F5';
-        var g_10 = '#fcfeff';
-        var g_19 = 'hamlet';
-        var g_183 = 'mus_13x12.png';
-        var g_274 = '40';
-        var g_297 = '#7848a0';
-        var g_92 = 'pitch';
-        var g_213 = 'post_office';
-        var g_76 = 'recreation_ground';
-        var g_173 = 'autobus_stop_14x10.png';
-        var g_212 = 'hotell_14x14.png';
-        var g_305 = 'addr:housenumber';
-        var g_193 = 'toilets';
-        var g_277 = 'nature_reserve';
-        var g_270 = '20';
-        var g_187 = 'courthouse';
-        var g_69 = 'text-halo-radius';
-        var g_24 = 'residential';
-        var g_85 = 'cemetery';
-        var g_224 = '3';
-        var g_178 = 'pharmacy';
-        var g_205 = 'kindergarten';
-        var g_66 = 'text-color';
-        var g_55 = 'wood';
-        var g_159 = 'black';
-        var g_229 = '4';
-        var g_103 = '#285fd1';
-        var g_268 = '14';
-        var g_176 = 'fuel';
-        var g_151 = 'railway';
-        var g_246 = 'population';
-        var g_220 = 'administrative';
-        var g_208 = 'school_13x13.png';
-        var g_198 = 'pravosl_kupol_11x15.png';
-        var g_54 = 'forest';
-        var g_265 = '11';
-        var g_285 = '#4976d1';
-        var g_34 = 'garden';
-        var g_153 = '#303030';
-        var g_288 = '4500';
-        var g_230 = '#000000';
-        var g_207 = 'school';
-        var g_33 = 'leisure';
-        var g_307 = 'milestone';
-        var g_250 = 'allow-overlap';
-        var g_222 = '2';
-        var g_40 = 'sady10.png';
-        var g_70 = '#ffffff';
-        var g_308 = 'pk';
-        var g_125 = 'secondary';
-        var g_195 = 'place_of_worship';
-        var g_194 = 'wc-3_13x13.png';
-        var g_58 = 'name';
-        var g_231 = 'tram';
-        var g_191 = 'university';
-        var g_149 = 'arrows';
-        var g_269 = '50';
-        var g_181 = 'cinema_14x14.png';
-        var g_53 = 'desert22.png';
-        var g_172 = 'bus_stop';
-        var g_174 = 'tram_stop';
-        var g_43 = 'kust1.png';
-        var g_155 = 'subway';
-        var g_56 = '#d6f4c6';
-        var g_95 = 'river';
-        var g_169 = 'node';
-        var g_62 = 'font-size';
-        var g_11 = 'glacier.png';
-        var g_75 = 'meadow';
-        var g_30 = '#cb8904';
-        var g_133 = 'secondary_link';
-        var g_214 = 'post_14x11.png';
-        var g_209 = 'library';
-        var g_237 = '#000d6c';
-        var g_150 = 'line-style';
-        var g_179 = 'med1_11x14.png';
-        var g_78 = 'wetland';
-        var g_170 = 'aut2_16x16_park.png';
-        var g_50 = 'parking';
-        var g_244 = '#1e7ca5';
-        var g_162 = 'sport';
-        var g_39 = 'parks2.png';
-        var g_77 = '#f4ffe5';
-        var g_138 = 'primary_link';
-        var g_0 = 'canvas';
-        var g_223 = '#202020';
-        var g_7 = 'bottom';
-        var g_154 = '#606060';
-        var g_300 = '#cca352';
-        var g_240 = '#1300bb';
-        var g_168 = 'bus_station';
-        var g_145 = 'motorway_link';
-        var g_99 = '#abc4f5';
-        var g_124 = 'track';
-        var g_72 = '0 ';
-        var g_2 = 'fill-color';
-        var g_218 = 'superm_12x12.png';
-        var g_201 = '#111111';
-        var g_245 = 'capital';
-        var g_129 = 'parking_aisle';
-        var g_63 = 'DejaVu Serif Italic';
-        var g_219 = 'boundary';
-        var g_216 = 'rest_14x14.png';
-        var g_71 = 'text-halo-color';
-        var g_104 = 'highway';
-        var g_304 = '#D8D1D1';
-        var g_203 = 'text-opacity';
-        var g_197 = 'christian';
-        var g_157 = 'barrier';
-        var g_164 = '#a0a0a0';
-        var g_239 = 'metro_others6.png';
-        var g_23 = 'landuse';
-        var g_247 = '5000000';
-        var g_264 = 'adm1_6_test2.png';
-        var g_101 = 'water';
-        var g_272 = '25';
-        var g_134 = 'tertiary_link';
-        var g_4 = 'coastline';
-        var g_139 = 'trunk';
-        var g_200 = 'max-width';
-        var g_116 = 'path';
-        var g_276 = '100';
-        var g_64 = 'font-family';
-        var g_160 = 'wall';
-        var g_144 = 'trunk_link';
-        var g_6 = '#fcf8e4';
-        var g_132 = '#fcffd1';
-        var g_206 = 'kindergarten_14x14.png';
-        var g_80 = 'farmland';
-        var g_185 = 'zoo';
-        var g_115 = 'footway';
-        var g_215 = 'restaurant';
-        var g_291 = '3500';
-        var g_293 = 'country';
-        var g_137 = '#fcea97';
-        var g_258 = '7';
-        var g_108 = '#404040';
-        var g_109 = 'DejaVu Sans Book';
-        var g_13 = 'place';
-        var g_255 = '100000';
-        var g_38 = '#c4e9a4';
-        var g_47 = 'military';
-        var g_45 = '#ecffe5';
-        var g_73 = '-x-mapnik-min-distance';
-        var g_182 = 'museum';
-        var g_123 = 'road';
-        var g_282 = 'DejaVu Sans ExtraLight';
-        var g_259 = 'town_4.png';
-        var g_232 = 'rway44.png';
-        var g_46 = 'industrial';
-        var g_90 = 'bull2.png';
-        var g_17 = 'fill-opacity';
-        var g_31 = 'color';
-        var g_146 = '#fa6478';
-        var g_42 = '#e5f5dc';
-        var g_136 = 'primary';
-        var g_84 = '#ffe1d0';
-        var g_236 = 'DejaVu Sans Mono Book';
-        var g_12 = 'fill-image';
-        var g_186 = 'zoo4_14x14.png';
-        var g_20 = 'village';
-        var g_22 = '#f3eceb';
-        var g_199 = '#623f00';
-        var g_281 = 'continent';
-        var g_51 = '#ecedf4';
-        var g_126 = 'tertiary';
-        var g_166 = 'red';
-        var g_98 = 'canal';
-        var g_14 = 'city';
-        var g_188 = 'sud_14x13.png';
-        var g_221 = 'admin_level';
-        var g_158 = 'fence';
-        var g_127 = 'service';
-        var g_5 = 'area';
-        var g_122 = 'linecap';
-        var g_147 = 'top';
-        var g_275 = '80';
-        var g_16 = '#FAF7F7';
-        var g_29 = 'width';
-        var g_306 = 'center';
-        var g_135 = 'DejaVu Sans Bold';
-        var g_91 = 'stadium';
-        var g_227 = '6';
-        var g_60 = 'text-offset';
-        var g_226 = '#ff99cc';
-        var g_165 = 'white';
-        var g_25 = 'urban';
-        var g_128 = 'living_street';
-        var g_271 = '0.2';
-        var g_263 = 'adm1_5.png';
-        var g_96 = 'way';
-        var g_302 = 'public';
-        var g_211 = 'hotel';
-        var g_37 = 'park';
-        var g_57 = 'garages';
-        var g_18 = 'z-index';
-        var g_105 = 'construction';
-        var g_251 = '8';
-        var g_121 = 'butt';
-        var g_106 = 'line';
-        var g_249 = 'true';
-        var g_100 = 'riverbank';
-        var g_36 = '#edf2c1';
-        var g_15 = 'town';
-        var g_61 = '10';
-        var g_295 = '13';
-        var g_267 = '12';
-        var g_253 = 'left';
-        var g_296 = '16';
-        var g_301 = '#E7CCB4';
-        var g_79 = 'swamp_world2.png';
-        var g_257 = 'adm_4.png';
-        var g_48 = '#ddd8da';
-        var g_241 = 'subway_entrance';
-        var g_171 = 'icon-image';
-        var g_278 = '#3c8000';
-        var g_87 = 'aeroway';
-        var g_287 = 'ele';
-        var g_196 = 'religion';
-        var g_74 = 'grass';
-        var g_242 = 'airport_world.png';
-        var g_234 = 'transport';
-        var g_113 = 'casing-color';
-        var g_177 = 'tankstelle1_10x11.png';
-        var g_49 = 'amenity';
-        var g_175 = 'tramway_14x13.png';
-        var g_67 = 'false';
-        var g_284 = 'sea';
-        var g_97 = 'stream';
-        var g_180 = 'cinema';
-        var g_273 = '0.3';
-        var g_192 = 'univer_15x11.png';
-        var g_32 = 'allotments';
-        var g_107 = 'text-position';
-        var g_118 = 'pedestrian';
-        var g_289 = 'mountain_peak6.png';
-        var g_28 = '#f4d7c7';
-        var g_233 = 'station';
-        var g_94 = 'waterway';
-        var g_283 = 'ocean';
-        var g_279 = 'DejaVu Sans Oblique';
-        var g_111 = 'casing-width';
-        var g_235 = 'rw_stat_stanzii_2_blue.png';
-        var g_280 = '#547bd1';
-        var g_131 = 'unclassified';
-        var g_161 = 'marking';
-        var g_290 = '#664229';
-        var g_93 = '#e3deb1';
-        var g_21 = 'locality';
-        var g_9 = 'glacier';
-        var g_238 = '0';
-        var g_262 = '1000000';
-        var g_117 = 'cycleway';
-        var g_202 = '1';
-        var g_82 = 'field';
-        var g_298 = 'suburb';
-        var g_256 = '5';
-        var g_26 = '#F7EFEB';
-        var g_204 = '#777777';
-        var g_228 = '#101010';
-        var g_110 = '9';
-        var g_266 = 'adm_6.png';
-        var g_114 = 'dashes';
-        var g_292 = '2500';
-        var g_130 = 'opacity';
-        var g_294 = '#dd5875';
-        var g_41 = 'scrub';
-        var g_299 = 'building';
-        var g_189 = 'theatre';
-        var g_81 = 'farm';
-        var g_167 = '#c00000';
-        var g_148 = 'oneway';
-        var g_152 = 'rail';
-        var g_141 = 'motorway';
-        var g_120 = 'steps';
-        var g_112 = '#996703';
-        var g_286 = 'peak';
-        var g_89 = '#008ac6';
-        var g_254 = 'text-align';
-        var g_52 = 'desert';
-        var g_248 = 'adm_5.png';
-        var g_88 = 'aerodrome';
-        var g_184 = 'tourism';
-        var g_86 = 'cemetry7_2.png';
-        var g_3 = 'natural';
-        var g_210 = 'lib_13x14.png';
-        var g_35 = 'orchard';
-        var g_190 = 'teater_14x14.png';
-        var g_303 = '#edc2ba';
-        var g_163 = 'colour';
-        var g_156 = '#072889';
-        var g_140 = '#fbcd40';
-        var g_44 = 'heath';
-        var g_260 = 'adm1_4_6.png';
-        var g_225 = '#7e0156';
-        var g_65 = 'green';
-        var g_142 = '#fc9265';
-        var g_243 = 'DejaVu Sans Condensed Bold';
-        var g_27 = 'rural';
-        var g_83 = '#fff5c4';
-        var g_252 = '#505050';
-        var g_119 = '#bf96ce';
-        var g_8 = '-x-mapnik-layer';
         var s_default = {};
         var s_centerline = {};
         var s_ticks = {};
         var s_label = {};
 
-        if ((selector == g_0)) {
-            s_default[g_2] = g_1;
+        if ((selector == 'canvas')) {
+            s_default['fill-color'] = '#C4D4F5';
         }
 
-        if (((selector == g_5 && tags[g_3] == g_4))) {
-            s_default[g_2] = g_6;
-            s_default[g_8] = g_7;
+        if (((selector == 'area' && tags['natural'] == 'coastline'))) {
+            s_default['fill-color'] = '#fcf8e4';
+            s_default['-x-mapnik-layer'] = 'bottom';
         }
 
-        if (((selector == g_5 && tags[g_3] == g_9) && zoom >= 3)) {
-            s_default[g_2] = g_10;
-            s_default[g_12] = g_11;
+        if (((selector == 'area' && tags['natural'] == 'glacier') && zoom >= 3)) {
+            s_default['fill-color'] = '#fcfeff';
+            s_default['fill-image'] = 'glacier.png';
         }
 
-        if (((selector == g_5 && tags[g_13] == g_14) && zoom >= 10)
-            || ((selector == g_5 && tags[g_13] == g_15) && zoom >= 10)) {
-            s_default[g_2] = g_16;
-            s_default[g_17] = 0.6;
-            s_default[g_18] = 1;
+        if (((selector == 'area' && tags['place'] == 'city') && zoom >= 10)
+            || ((selector == 'area' && tags['place'] == 'town') && zoom >= 10)) {
+            s_default['fill-color'] = '#FAF7F7';
+            s_default['fill-opacity'] = 0.6;
+            s_default['z-index'] = 1;
         }
 
-        if (((selector == g_5 && tags[g_13] == g_19) && zoom >= 10)
-            || ((selector == g_5 && tags[g_13] == g_20) && zoom >= 10)
-            || ((selector == g_5 && tags[g_13] == g_21) && zoom >= 10)) {
-            s_default[g_2] = g_22;
-            s_default[g_17] = 0.6;
-            s_default[g_18] = 1;
+        if (((selector == 'area' && tags['place'] == 'hamlet') && zoom >= 10)
+            || ((selector == 'area' && tags['place'] == 'village') && zoom >= 10)
+            || ((selector == 'area' && tags['place'] == 'locality') && zoom >= 10)) {
+            s_default['fill-color'] = '#f3eceb';
+            s_default['fill-opacity'] = 0.6;
+            s_default['z-index'] = 1;
         }
 
-        if (((selector == g_5 && tags[g_23] == g_24) && zoom >= 10)
-            || ((selector == g_5 && tags[g_24] == g_25) && zoom >= 10)) {
-            s_default[g_2] = g_26;
-            s_default[g_18] = 2;
+        if (((selector == 'area' && tags['landuse'] == 'residential') && zoom >= 10)
+            || ((selector == 'area' && tags['residential'] == 'urban') && zoom >= 10)) {
+            s_default['fill-color'] = '#F7EFEB';
+            s_default['z-index'] = 2;
         }
 
-        if (((selector == g_5 && tags[g_24] == g_27) && zoom >= 10)) {
-            s_default[g_2] = g_28;
-            s_default[g_18] = 2;
+        if (((selector == 'area' && tags['residential'] == 'rural') && zoom >= 10)) {
+            s_default['fill-color'] = '#f4d7c7';
+            s_default['z-index'] = 2;
         }
 
-        if (((selector == g_5 && tags[g_23] == g_24) && zoom >= 16)) {
-            s_default[g_29] = 0.3;
-            s_default[g_31] = g_30;
-            s_default[g_18] = 2;
+        if (((selector == 'area' && tags['landuse'] == 'residential') && zoom >= 16)) {
+            s_default['width'] = 0.3;
+            s_default['color'] = '#cb8904';
+            s_default['z-index'] = 2;
         }
 
-        if (((selector == g_5 && tags[g_23] == g_32) && zoom >= 10)
-            || ((selector == g_5 && tags[g_33] == g_34) && zoom >= 10 && zoom <= 15)
-            || ((selector == g_5 && tags[g_23] == g_35) && zoom >= 10 && zoom <= 15)) {
-            s_default[g_2] = g_36;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['landuse'] == 'allotments') && zoom >= 10)
+            || ((selector == 'area' && tags['leisure'] == 'garden') && zoom >= 10 && zoom <= 15)
+            || ((selector == 'area' && tags['landuse'] == 'orchard') && zoom >= 10 && zoom <= 15)) {
+            s_default['fill-color'] = '#edf2c1';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_33] == g_37) && zoom >= 10)) {
-            s_default[g_2] = g_38;
-            s_default[g_18] = 3;
-            s_default[g_12] = g_39;
+        if (((selector == 'area' && tags['leisure'] == 'park') && zoom >= 10)) {
+            s_default['fill-color'] = '#c4e9a4';
+            s_default['z-index'] = 3;
+            s_default['fill-image'] = 'parks2.png';
         }
 
-        if (((selector == g_5 && tags[g_33] == g_34) && zoom >= 16)
-            || ((selector == g_5 && tags[g_23] == g_35) && zoom >= 16)) {
-            s_default[g_12] = g_40;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['leisure'] == 'garden') && zoom >= 16)
+            || ((selector == 'area' && tags['landuse'] == 'orchard') && zoom >= 16)) {
+            s_default['fill-image'] = 'sady10.png';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_3] == g_41) && zoom >= 12)) {
-            s_default[g_2] = g_42;
-            s_default[g_12] = g_43;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['natural'] == 'scrub') && zoom >= 12)) {
+            s_default['fill-color'] = '#e5f5dc';
+            s_default['fill-image'] = 'kust1.png';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_3] == g_44) && zoom >= 12)) {
-            s_default[g_2] = g_45;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['natural'] == 'heath') && zoom >= 12)) {
+            s_default['fill-color'] = '#ecffe5';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_23] == g_46) && zoom >= 10)
-            || ((selector == g_5 && tags[g_23] == g_47) && zoom >= 10)) {
-            s_default[g_2] = g_48;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['landuse'] == 'industrial') && zoom >= 10)
+            || ((selector == 'area' && tags['landuse'] == 'military') && zoom >= 10)) {
+            s_default['fill-color'] = '#ddd8da';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_49] == g_50) && zoom >= 15)) {
-            s_default[g_2] = g_51;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['amenity'] == 'parking') && zoom >= 15)) {
+            s_default['fill-color'] = '#ecedf4';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_3] == g_52) && zoom >= 4)) {
-            s_default[g_12] = g_53;
+        if (((selector == 'area' && tags['natural'] == 'desert') && zoom >= 4)) {
+            s_default['fill-image'] = 'desert22.png';
         }
 
-        if (((selector == g_5 && tags[g_3] == g_54) && zoom >= 4)
-            || ((selector == g_5 && tags[g_3] == g_55) && zoom >= 4)
-            || ((selector == g_5 && tags[g_23] == g_54) && zoom >= 4)
-            || ((selector == g_5 && tags[g_23] == g_55) && zoom >= 4)) {
-            s_default[g_2] = g_56;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['natural'] == 'forest') && zoom >= 4)
+            || ((selector == 'area' && tags['natural'] == 'wood') && zoom >= 4)
+            || ((selector == 'area' && tags['landuse'] == 'forest') && zoom >= 4)
+            || ((selector == 'area' && tags['landuse'] == 'wood') && zoom >= 4)) {
+            s_default['fill-color'] = '#d6f4c6';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_23] == g_57) && zoom >= 10)) {
-            s_default[g_2] = g_48;
-            s_default[g_18] = 3;
+        if (((selector == 'area' && tags['landuse'] == 'garages') && zoom >= 10)) {
+            s_default['fill-color'] = '#ddd8da';
+            s_default['z-index'] = 3;
         }
 
-        if (((selector == g_5 && tags[g_3] == g_54) && zoom >= 10)
-            || ((selector == g_5 && tags[g_3] == g_55) && zoom >= 10)
-            || ((selector == g_5 && tags[g_23] == g_54) && zoom >= 10)
-            || ((selector == g_5 && tags[g_23] == g_55) && zoom >= 10)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_63;
-            s_default[g_66] = g_65;
-            s_default[g_68] = g_67;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_72;
+        if (((selector == 'area' && tags['natural'] == 'forest') && zoom >= 10)
+            || ((selector == 'area' && tags['natural'] == 'wood') && zoom >= 10)
+            || ((selector == 'area' && tags['landuse'] == 'forest') && zoom >= 10)
+            || ((selector == 'area' && tags['landuse'] == 'wood') && zoom >= 10)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Serif Italic';
+            s_default['text-color'] = 'green';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0 ';
         }
 
-        if (((selector == g_5 && tags[g_23] == g_74) && zoom >= 12)
-            || ((selector == g_5 && tags[g_3] == g_74) && zoom >= 12)
-            || ((selector == g_5 && tags[g_3] == g_75) && zoom >= 12)
-            || ((selector == g_5 && tags[g_23] == g_75) && zoom >= 12)
-            || ((selector == g_5 && tags[g_23] == g_76) && zoom >= 12)) {
-            s_default[g_2] = g_77;
-            s_default[g_18] = 4;
+        if (((selector == 'area' && tags['landuse'] == 'grass') && zoom >= 12)
+            || ((selector == 'area' && tags['natural'] == 'grass') && zoom >= 12)
+            || ((selector == 'area' && tags['natural'] == 'meadow') && zoom >= 12)
+            || ((selector == 'area' && tags['landuse'] == 'meadow') && zoom >= 12)
+            || ((selector == 'area' && tags['landuse'] == 'recreation_ground') && zoom >= 12)) {
+            s_default['fill-color'] = '#f4ffe5';
+            s_default['z-index'] = 4;
         }
 
-        if (((selector == g_5 && tags[g_3] == g_78) && zoom >= 10)) {
-            s_default[g_12] = g_79;
-            s_default[g_18] = 4;
+        if (((selector == 'area' && tags['natural'] == 'wetland') && zoom >= 10)) {
+            s_default['fill-image'] = 'swamp_world2.png';
+            s_default['z-index'] = 4;
         }
 
-        if (((selector == g_5 && tags[g_23] == g_80) && zoom >= 10)
-            || ((selector == g_5 && tags[g_23] == g_81) && zoom >= 10)
-            || ((selector == g_5 && tags[g_23] == g_82) && zoom >= 10)) {
-            s_default[g_2] = g_83;
-            s_default[g_18] = 5;
-        }
+        if (((selector == 'area' && tags['landuse'] == 'farmland') && zoom >= 10)
+            || ((selector == 'area' && tags['landuse'] == 'farm') && zoom >= 10)
+            || ((selector == 'area' && tags['landuse'] == 'field') && zoom >= 10)) {
+            s_default['fill-color'] = '#fff5c4';
+            s_default['z-index'] = 5;
+        }
 
-        if (((selector == g_5 && tags[g_13] == g_14) && zoom >= 6 && zoom <= 9)
-            || ((selector == g_5 && tags[g_13] == g_15) && zoom >= 6 && zoom <= 9)) {
-            s_default[g_2] = g_84;
-            s_default[g_17] = 0.6;
-            s_default[g_18] = 5;
-        }
-
-        if (((selector == g_5 && tags[g_23] == g_85) && zoom >= 10)) {
-            s_default[g_2] = g_42;
-            s_default[g_18] = 5;
-            s_default[g_12] = g_86;
-        }
-
-        if (((selector == g_5 && tags[g_87] == g_88) && zoom >= 13)) {
-            s_default[g_31] = g_89;
-            s_default[g_29] = 0.8;
-            s_default[g_18] = 5;
-            s_default[g_12] = g_90;
-        }
-
-        if (((selector == g_5 && tags[g_33] == g_91) && zoom >= 12)
-            || ((selector == g_5 && tags[g_33] == g_92) && zoom >= 12)) {
-            s_default[g_2] = g_93;
-            s_default[g_18] = 5;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_95) && zoom >= 7 && zoom <= 10)) {
-            s_default[g_31] = g_1;
-            s_default[g_29] = .6;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_97) && zoom >= 9 && zoom <= 10)) {
-            s_default[g_31] = g_1;
-            s_default[g_29] = .3;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_95) && zoom >= 10 && zoom <= 14)) {
-            s_default[g_31] = g_1;
-            s_default[g_29] = .7;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_95) && zoom >= 15)) {
-            s_default[g_31] = g_1;
-            s_default[g_29] = .9;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_97) && zoom >= 10)) {
-            s_default[g_31] = g_1;
-            s_default[g_29] = .5;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_98) && zoom >= 10)) {
-            s_default[g_31] = g_99;
-            s_default[g_29] = .6;
-            s_default[g_18] = 9;
-        }
-
-        if (((selector == g_5 && tags[g_94] == g_100) && zoom >= 5)
-            || ((selector == g_5 && tags[g_3] == g_101) && zoom >= 5)
-            || ((selector == g_5 && tags[g_23] == g_102) && zoom >= 10)) {
-            s_default[g_2] = g_1;
-            s_default[g_31] = g_1;
-            s_default[g_29] = .1;
-            s_default[g_18] = 9;
-        }
-
-        if (((selector == g_5 && tags[g_3] == g_101) && zoom >= 9)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 1;
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_63;
-            s_default[g_66] = g_103;
-            s_default[g_68] = g_67;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_105) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_29] = 2;
-            s_default[g_31] = g_70;
-            s_default[g_18] = 10;
-            s_default[g_114] = [9,9];
-        }
-
-        if (((type == g_96 && tags[g_104] == g_105) && zoom >= 17)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_29] = 3;
-            s_default[g_31] = g_70;
-            s_default[g_18] = 10;
-            s_default[g_114] = [9,9];
-        }
-
-        if (((type == g_96 && tags[g_104] == g_115) && zoom >= 15)
-            || ((type == g_96 && tags[g_104] == g_116) && zoom >= 15)
-            || ((type == g_96 && tags[g_104] == g_117) && zoom >= 15)
-            || ((type == g_96 && tags[g_104] == g_118) && zoom >= 15)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_111] = .3;
-            s_default[g_113] = g_119;
-            s_default[g_29] = .2;
-            s_default[g_31] = g_70;
-            s_default[g_18] = 10;
-            s_default[g_114] = [2,2];
-        }
-
-        if (((type == g_96 && tags[g_104] == g_120) && zoom >= 15)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_111] = .3;
-            s_default[g_113] = g_70;
-            s_default[g_29] = 3;
-            s_default[g_31] = g_119;
-            s_default[g_18] = 10;
-            s_default[g_114] = [1,1];
-            s_default[g_122] = g_121;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_123) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_124) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_24) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_125) && zoom >= 9 && zoom <= 10)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 9 && zoom <= 10)
-            || ((type == g_96 && tags[g_104] == g_127 && (tags[g_128] == '-1' || tags[g_128] == 'false' || tags[g_128] == 'no') && tags[g_127] !== g_129) && zoom >= 14 && zoom <= 15)) {
-            s_default[g_29] = 0.3;
-            s_default[g_130] = 0.6;
-            s_default[g_31] = g_112;
-            s_default[g_18] = 10;
-            s_default[g_8] = g_7;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_123) && zoom >= 13 && zoom <= 14)
-            || ((type == g_96 && tags[g_104] == g_124) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 0.6;
-            s_default[g_130] = 0.5;
-            s_default[g_31] = g_112;
-            s_default[g_18] = 10;
-            s_default[g_8] = g_7;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_123) && zoom >= 14 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_124) && zoom >= 14 && zoom <= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 1.5;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_123) && zoom >= 16)
-            || ((type == g_96 && tags[g_104] == g_124) && zoom >= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 2.5;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 9;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_24) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 1.2;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.3;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 10;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_127 && (tags[g_128] == '1' || tags[g_128] == 'true' || tags[g_128] == 'yes')) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_127 && tags[g_127] == g_129) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_29] = 0.2;
-            s_default[g_130] = 0.5;
-            s_default[g_31] = g_112;
-            s_default[g_18] = 10;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_127 && (tags[g_128] == '1' || tags[g_128] == 'true' || tags[g_128] == 'yes')) && zoom >= 16)
-            || ((type == g_96 && tags[g_104] == g_127 && tags[g_127] == g_129) && zoom >= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 1.2;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.3;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 10;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_24) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_131) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_127 && (tags[g_128] == '-1' || tags[g_128] == 'false' || tags[g_128] == 'no') && tags[g_127] !== g_129) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 2.5;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 10;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_24) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_131) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_128) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_127 && (tags[g_128] == '-1' || tags[g_128] == 'false' || tags[g_128] == 'no') && tags[g_127] !== g_129) && zoom >= 16 && zoom <= 17)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 3.5;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 10;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_24) && zoom >= 17)
-            || ((type == g_96 && tags[g_104] == g_131) && zoom >= 17)
-            || ((type == g_96 && tags[g_104] == g_128) && zoom >= 17)
-            || ((type == g_96 && tags[g_104] == g_127 && (tags[g_128] == '-1' || tags[g_128] == 'false' || tags[g_128] == 'no') && tags[g_127] !== g_129) && zoom >= 17)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 4.5;
-            s_default[g_31] = g_70;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 10;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 10 && zoom <= 11)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_29] = 1.2;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.35;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 11 && zoom <= 12)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 11 && zoom <= 12)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 1.4;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.35;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 12 && zoom <= 13)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 3;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.35;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 13 && zoom <= 14)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 13 && zoom <= 14)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 13 && zoom <= 14)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_109;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 4;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.35;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 14 && zoom <= 15)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 5;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 6;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 16 && zoom <= 17)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 7;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 17 && zoom <= 18)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 8;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_125) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_133) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_126) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_134) && zoom >= 18 && zoom <= 18)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 9;
-            s_default[g_31] = g_132;
-            s_default[g_111] = 0.5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 11;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_29] = 1;
-            s_default[g_31] = g_137;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 8 && zoom <= 9)) {
-            s_default[g_29] = 2;
-            s_default[g_31] = g_137;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 9 && zoom <= 10)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 9 && zoom <= 10)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 2;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 10 && zoom <= 11)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 10 && zoom <= 11)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 3;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 11 && zoom <= 12)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 11 && zoom <= 12)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 4;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 12 && zoom <= 13)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 5;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 13 && zoom <= 14)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 6;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 14 && zoom <= 15)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 7;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 8;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 16 && zoom <= 17)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 9;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 17 && zoom <= 18)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 10;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_136) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 18 && zoom <= 18)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 11;
-            s_default[g_31] = g_137;
-            s_default[g_111] = .5;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 12;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 6 && zoom <= 7)) {
-            s_default[g_29] = 0.9;
-            s_default[g_31] = g_140;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_141) && zoom >= 6 && zoom <= 7)) {
-            s_default[g_29] = 1;
-            s_default[g_31] = g_142;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_29] = 1;
-            s_default[g_31] = g_140;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_141) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_29] = 1.2;
-            s_default[g_31] = g_142;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 8 && zoom <= 9)) {
-            s_default[g_29] = 2;
-            s_default[g_31] = g_140;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_141) && zoom >= 8 && zoom <= 9)) {
-            s_default[g_29] = 2;
-            s_default[g_31] = g_142;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 9 && zoom <= 10)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 9 && zoom <= 10)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 3;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 10 && zoom <= 11)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 10 && zoom <= 11)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 4;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 11 && zoom <= 12)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 11 && zoom <= 12)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 5;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 12 && zoom <= 13)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 12 && zoom <= 13)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 7;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 13 && zoom <= 14)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 8;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_144) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 14 && zoom <= 15)
-            || ((type == g_96 && tags[g_104] == g_145) && zoom >= 14 && zoom <= 15)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 9;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_144) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 15 && zoom <= 16)
-            || ((type == g_96 && tags[g_104] == g_145) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 10;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_144) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 16 && zoom <= 17)
-            || ((type == g_96 && tags[g_104] == g_145) && zoom >= 16 && zoom <= 17)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 11;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_144) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 17 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_145) && zoom >= 17 && zoom <= 18)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 12;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_144) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 18 && zoom <= 18)
-            || ((type == g_96 && tags[g_104] == g_145) && zoom >= 18 && zoom <= 18)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_107] = g_106;
-            s_default[g_66] = g_108;
-            s_default[g_64] = g_135;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_29] = 13;
-            s_default[g_31] = g_143;
-            s_default[g_111] = 1;
-            s_default[g_113] = g_112;
-            s_default[g_18] = 13;
-        }
-
-        if (((type == g_96 && tags[g_104] == g_139) && zoom >= 9)
-            || ((type == g_96 && tags[g_104] == g_144) && zoom >= 9)
-            || ((type == g_96 && tags[g_104] == g_141) && zoom >= 9)
-            || ((type == g_96 && tags[g_104] == g_145) && zoom >= 9)
-            || ((type == g_96 && tags[g_104] == g_136) && zoom >= 13)
-            || ((type == g_96 && tags[g_104] == g_138) && zoom >= 13)) {
-            s_centerline[g_29] = .3;
-            s_centerline[g_31] = g_146;
-            s_centerline[g_18] = 14;
-            s_centerline[g_8] = g_147;
-        }
-
-        if (((type == g_96 && (tags[g_148] == '1' || tags[g_148] == 'true' || tags[g_148] == 'yes')) && zoom >= 17)) {
-            s_default[g_150] = g_149;
-            s_default[g_18] = 15;
-            s_default[g_8] = g_147;
-        }
-
-        if (((selector == g_106 && tags[g_151] == g_152) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_29] = .5;
-            s_default[g_31] = g_153;
-            s_default[g_18] = 15;
-        }
-
-        if (((selector == g_106 && tags[g_151] == g_152) && zoom >= 7 && zoom <= 8)) {
-            s_ticks[g_29] = .3;
-            s_ticks[g_31] = g_70;
-            s_ticks[g_114] = [3,3];
-            s_ticks[g_18] = 16;
-        }
-
-        if (((selector == g_106 && tags[g_151] == g_152) && zoom >= 8 && zoom <= 9)) {
-            s_default[g_29] = .6;
-            s_default[g_31] = g_153;
-            s_default[g_18] = 15;
-        }
-
-        if (((selector == g_106 && tags[g_151] == g_152) && zoom >= 8 && zoom <= 9)) {
-            s_ticks[g_29] = .35;
-            s_ticks[g_31] = g_70;
-            s_ticks[g_114] = [3,3];
-            s_ticks[g_18] = 16;
-        }
-
-        if (((selector == g_106 && tags[g_151] == g_152) && zoom >= 9)) {
-            s_default[g_29] = 1.4;
-            s_default[g_31] = g_154;
-            s_default[g_18] = 15;
-        }
-
-        if (((selector == g_106 && tags[g_151] == g_152) && zoom >= 9)) {
-            s_ticks[g_29] = 1;
-            s_ticks[g_31] = g_70;
-            s_ticks[g_114] = [6,6];
-            s_ticks[g_18] = 16;
-        }
-
-        if (((type == g_96 && tags[g_151] == g_155) && zoom >= 12)) {
-            s_default[g_29] = 3;
-            s_default[g_31] = g_156;
-            s_default[g_18] = 15;
-            s_default[g_114] = [3,3];
-            s_default[g_130] = 0.3;
-            s_default[g_122] = g_121;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_96 && tags[g_157] == g_158) && zoom >= 16)) {
-            s_default[g_29] = .3;
-            s_default[g_31] = g_159;
-            s_default[g_18] = 16;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_96 && tags[g_157] == g_160) && zoom >= 16)) {
-            s_default[g_29] = .5;
-            s_default[g_31] = g_159;
-            s_default[g_18] = 16;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_96 && tags[g_161] == g_162 && (!(g_163 in tags)) && (!(g_31 in tags))) && zoom >= 15)) {
-            s_default[g_29] = .5;
-            s_default[g_31] = g_164;
-            s_default[g_18] = 16;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_96 && tags[g_161] == g_162 && tags[g_163] == g_165) && zoom >= 15)
-            || ((type == g_96 && tags[g_161] == g_162 && tags[g_31] == g_165) && zoom >= 15)) {
-            s_default[g_29] = 1;
-            s_default[g_31] = g_165;
-            s_default[g_18] = 16;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_96 && tags[g_161] == g_162 && tags[g_163] == g_166) && zoom >= 15)
-            || ((type == g_96 && tags[g_161] == g_162 && tags[g_31] == g_166) && zoom >= 15)) {
-            s_default[g_29] = 1;
-            s_default[g_31] = g_167;
-            s_default[g_18] = 16;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_96 && tags[g_161] == g_162 && tags[g_163] == g_159) && zoom >= 15)
-            || ((type == g_96 && tags[g_161] == g_162 && tags[g_31] == g_159) && zoom >= 15)) {
-            s_default[g_29] = 1;
-            s_default[g_31] = g_159;
-            s_default[g_18] = 16;
-            s_default[g_8] = g_147;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_168) && zoom >= 15)) {
-            s_default[g_171] = g_170;
-        }
-
-        if (((type == g_169 && tags[g_104] == g_172) && zoom >= 16)) {
-            s_default[g_171] = g_173;
-        }
-
-        if (((type == g_169 && tags[g_151] == g_174) && zoom >= 16)) {
-            s_default[g_171] = g_175;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_176) && zoom >= 15)) {
-            s_default[g_171] = g_177;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_178) && zoom >= 16)) {
-            s_default[g_171] = g_179;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_180) && zoom >= 16)) {
-            s_default[g_171] = g_181;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_182) && zoom >= 15)) {
-            s_default[g_171] = g_183;
-        }
-
-        if (((type == g_169 && tags[g_184] == g_185) && zoom >= 16)) {
-            s_default[g_171] = g_186;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_187) && zoom >= 16)) {
-            s_default[g_171] = g_188;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_189) && zoom >= 16)) {
-            s_default[g_171] = g_190;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_191) && zoom >= 16)) {
-            s_default[g_171] = g_192;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_193) && zoom >= 16)) {
-            s_default[g_171] = g_194;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_195 && tags[g_196] == g_197) && zoom >= 16)) {
-            s_default[g_171] = g_198;
-        }
-
-        if (((selector == g_5 && tags[g_49] == g_195 && tags[g_196] == g_197) && zoom >= 16)) {
-            s_default[g_171] = g_198;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_195) && zoom >= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_66] = g_199;
-            s_default[g_64] = g_63;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_60] = 3;
-            s_default[g_200] = 70;
-        }
-
-        if (((selector == g_5 && tags[g_49] == g_195) && zoom >= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_66] = g_199;
-            s_default[g_64] = g_63;
-            s_default[g_62] = g_110;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_60] = 3;
-            s_default[g_200] = 70;
-            s_default[g_18] = 16;
-            s_default[g_29] = 0.1;
-            s_default[g_31] = g_201;
-            s_default[g_203] = g_202;
-            s_default[g_2] = g_204;
-            s_default[g_17] = 0.5;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_205) && zoom >= 17)) {
-            s_default[g_171] = g_206;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_207) && zoom >= 17)) {
-            s_default[g_171] = g_208;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_209) && zoom >= 17)) {
-            s_default[g_171] = g_210;
-        }
-
-        if (((type == g_169 && tags[g_184] == g_211) && zoom >= 17)) {
-            s_default[g_171] = g_212;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_213) && zoom >= 17)) {
-            s_default[g_171] = g_214;
-        }
-
-        if (((type == g_169 && tags[g_49] == g_215) && zoom >= 17)) {
-            s_default[g_171] = g_216;
-        }
-
-        if (((type == g_169 && (g_217 in tags)) && zoom >= 17)) {
-            s_default[g_171] = g_218;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_222))) {
-            s_default[g_29] = 0.5;
-            s_default[g_31] = g_223;
-            s_default[g_114] = [6,4];
-            s_default[g_130] = 0.7;
-            s_default[g_18] = 16;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_224) && zoom >= 3 && zoom <= 4)) {
-            s_default[g_29] = 0.4;
-            s_default[g_31] = g_225;
-            s_default[g_114] = [3,3];
-            s_default[g_130] = 0.5;
-            s_default[g_18] = 16;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_224) && zoom >= 4)) {
-            s_default[g_29] = 1.3;
-            s_default[g_31] = g_226;
-            s_default[g_130] = 0.5;
-            s_default[g_18] = 16;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_227) && zoom >= 10)) {
-            s_default[g_29] = 0.5;
-            s_default[g_31] = g_228;
-            s_default[g_114] = [1,2];
-            s_default[g_130] = 0.6;
-            s_default[g_18] = 16.1;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_229) && zoom >= 4 && zoom <= 5)) {
-            s_default[g_29] = 0.3;
-            s_default[g_31] = g_230;
-            s_default[g_114] = [1,2];
-            s_default[g_130] = 0.8;
-            s_default[g_18] = 16.3;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_229) && zoom >= 6)) {
-            s_default[g_29] = 0.7;
-            s_default[g_31] = g_230;
-            s_default[g_114] = [1,2];
-            s_default[g_130] = 0.8;
-            s_default[g_18] = 16.3;
-        }
-
-        if (((type == g_96 && tags[g_151] == g_231) && zoom >= 12)) {
-            s_default[g_150] = g_232;
-            s_default[g_18] = 17;
-        }
-
-        if (((type == g_169 && tags[g_151] == g_233 && tags[g_234] !== g_155) && zoom >= 9)) {
-            s_default[g_171] = g_235;
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 7;
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_236;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_237;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_151] == g_233 && tags[g_234] == g_155) && zoom >= 12 && zoom <= 15)) {
-            s_default[g_171] = g_239;
-            s_default[g_18] = 17;
-        }
-
-        if (((type == g_169 && tags[g_151] == g_233 && tags[g_234] == g_155) && zoom >= 12 && zoom <= 15)) {
-            s_label[g_59] = tags[g_58];
-            s_label[g_60] = 11;
-            s_label[g_62] = g_110;
-            s_label[g_64] = g_109;
-            s_label[g_69] = 2;
-            s_label[g_66] = g_240;
-            s_label[g_71] = g_70;
-            s_label[g_68] = g_67;
-            s_label[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_151] == g_241) && zoom >= 16)) {
-            s_default[g_171] = g_239;
-            s_default[g_18] = 17;
-        }
-
-        if (((type == g_169 && tags[g_151] == g_241 && (g_58 in tags)) && zoom >= 16)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 11;
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_109;
-            s_default[g_69] = 2;
-            s_default[g_66] = g_240;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_87] == g_88) && zoom >= 10)) {
-            s_default[g_171] = g_242;
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 12;
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_243;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_244;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_18] = 17;
-        }
-
-        if (((type == g_169 && (tags[g_245] == '1' || tags[g_245] == 'true' || tags[g_245] == 'yes') && tags[g_246] > g_247) && zoom >= 3 && zoom <= 6)) {
-            s_default[g_171] = g_248;
-            s_default[g_250] = g_249;
-        }
-
-        if (((type == g_169 && (tags[g_245] == '1' || tags[g_245] == 'true' || tags[g_245] == 'yes') && tags[g_246] > g_247) && zoom >= 3 && zoom <= 4)) {
-            s_default[g_60] = 4;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_252;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_254] = g_253;
-        }
-
-        if (((type == g_169 && (tags[g_245] == '1' || tags[g_245] == 'true' || tags[g_245] == 'yes') && tags[g_246] > g_247) && zoom >= 4 && zoom <= 6)) {
-            s_default[g_60] = 6;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_153;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_254] = g_253;
-        }
-
-        if (((type == g_169 && (g_13 in tags) && tags[g_246] < g_255 && (g_245 in tags) && tags[g_221] < g_256) && zoom >= 4 && zoom <= 5)) {
-            s_default[g_171] = g_257;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_258;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_108;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && (g_13 in tags) && tags[g_246] >= g_255 && tags[g_246] <= g_247 && (g_245 in tags) && tags[g_221] < g_256) && zoom >= 4 && zoom <= 5)) {
-            s_default[g_171] = g_248;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_108;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_18] = 1;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15 && (g_245 in tags)) && zoom >= 5 && zoom <= 6)) {
-            s_default[g_171] = g_259;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] < g_255) && zoom >= 6 && zoom <= 7)
-            || ((type == g_169 && tags[g_13] == g_15 && tags[g_246] < g_255 && (g_221 in tags)) && zoom >= 6 && zoom <= 7)) {
-            s_default[g_171] = g_260;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] < g_255) && zoom >= 7 && zoom <= 8)
-            || ((type == g_169 && tags[g_13] == g_15 && tags[g_246] < g_255) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_171] = g_261;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15 && (!(g_246 in tags))) && zoom >= 7 && zoom <= 8)
-            || ((type == g_169 && tags[g_13] == g_14 && (!(g_246 in tags))) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_171] = g_261;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15) && zoom >= 8 && zoom <= 9)) {
-            s_default[g_171] = g_261;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] >= g_255 && tags[g_246] <= g_262) && zoom >= 6 && zoom <= 8)
-            || ((type == g_169 && tags[g_13] == g_15 && tags[g_246] >= g_255 && tags[g_246] <= g_262 && (g_221 in tags)) && zoom >= 6 && zoom <= 7)) {
-            s_default[g_171] = g_263;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_153;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] >= g_255 && tags[g_246] <= g_262) && zoom >= 7 && zoom <= 8)
-            || ((type == g_169 && tags[g_13] == g_15 && tags[g_246] >= g_255 && tags[g_246] <= g_262) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_171] = g_263;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_153;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] > g_262) && zoom >= 6 && zoom <= 7)) {
-            s_default[g_171] = g_264;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_108;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_18] = 1;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] > g_262 && tags[g_246] < g_247) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_171] = g_264;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_265;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_108;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_18] = 2;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && tags[g_246] >= g_247) && zoom >= 7 && zoom <= 8)) {
-            s_default[g_171] = g_266;
-            s_default[g_60] = 5;
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_267;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_108;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_18] = 3;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && (tags[g_245] == '1' || tags[g_245] == 'true' || tags[g_245] == 'yes')) && zoom >= 9 && zoom <= 11)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = -20;
-            s_default[g_62] = g_268;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 4;
-            s_default[g_66] = g_228;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_269;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14 && (tags[g_245] == '-1' || tags[g_245] == 'false' || tags[g_245] == 'no')) && zoom >= 9 && zoom <= 11)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = -20;
-            s_default[g_62] = g_268;
-            s_default[g_64] = g_135;
-            s_default[g_69] = 2;
-            s_default[g_66] = g_228;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-            s_default[g_73] = g_238;
-            s_default[g_18] = 1;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15) && zoom >= 11 && zoom <= 12)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_267;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15) && zoom >= 12 && zoom <= 13)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_270;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_203] = g_271;
-            s_default[g_68] = g_249;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14) && zoom >= 12 && zoom <= 13)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_272;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_203] = g_273;
-            s_default[g_68] = g_249;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_274;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_203] = g_271;
-            s_default[g_68] = g_249;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14) && zoom >= 13 && zoom <= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_269;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_203] = g_273;
-            s_default[g_68] = g_249;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_15) && zoom >= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_275;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_203] = g_271;
-            s_default[g_68] = g_249;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_14) && zoom >= 14)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_276;
-            s_default[g_64] = g_109;
-            s_default[g_66] = g_228;
-            s_default[g_203] = g_273;
-            s_default[g_68] = g_249;
-            s_default[g_18] = 20;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_20) && zoom >= 9)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 1;
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_109;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_154;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_19) && zoom >= 9)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 1;
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_109;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_252;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-        }
-
-        if (((selector == g_5 && tags[g_23] == g_277) && zoom >= 9)
-            || ((selector == g_5 && tags[g_33] == g_37) && zoom >= 11)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 1;
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_63;
-            s_default[g_69] = 0;
-            s_default[g_66] = g_278;
-            s_default[g_71] = g_70;
-            s_default[g_68] = g_67;
-        }
-
-        if (((type == g_96 && tags[g_94] == g_97) && zoom >= 10)
-            || ((type == g_96 && tags[g_94] == g_95) && zoom >= 9)
-            || ((type == g_96 && tags[g_94] == g_98) && zoom >= 13)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_110;
-            s_default[g_64] = g_279;
-            s_default[g_66] = g_280;
-            s_default[g_69] = 1;
-            s_default[g_71] = g_70;
-            s_default[g_107] = g_106;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_281) && zoom <= 3)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = -10;
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_282;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_18] = -1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_281) && zoom >= 2 && zoom <= 3)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = -10;
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_282;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_18] = -1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_283) && zoom <= 6)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_279;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_18] = -1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_283) && zoom >= 7)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_265;
-            s_default[g_64] = g_279;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_223;
-            s_default[g_71] = g_70;
-            s_default[g_18] = -1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_284) && zoom <= 6)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_279;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_285;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_284) && zoom >= 7)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_279;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_285;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_3] == g_286 && tags[g_287] > g_288) && zoom >= 3 && zoom <= 4)) {
-            s_default[g_171] = g_289;
-            s_default[g_59] = tags[g_287];
-            s_default[g_60] = 3;
-            s_default[g_62] = g_258;
-            s_default[g_64] = g_236;
-            s_default[g_69] = 0;
-            s_default[g_66] = g_290;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_3] == g_286 && tags[g_287] > g_291) && zoom >= 5 && zoom <= 6)) {
-            s_default[g_171] = g_289;
-            s_default[g_59] = tags[g_287];
-            s_default[g_60] = 3;
-            s_default[g_62] = g_258;
-            s_default[g_64] = g_236;
-            s_default[g_69] = 0;
-            s_default[g_66] = g_290;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_3] == g_286 && tags[g_287] > g_292) && zoom >= 7 && zoom <= 12)) {
-            s_default[g_171] = g_289;
-            s_default[g_59] = tags[g_287];
-            s_default[g_60] = 3;
-            s_default[g_62] = g_258;
-            s_default[g_64] = g_236;
-            s_default[g_69] = 0;
-            s_default[g_66] = g_290;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_3] == g_286) && zoom >= 12)) {
-            s_default[g_171] = g_289;
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 3;
-            s_default[g_62] = g_258;
-            s_default[g_64] = g_236;
-            s_default[g_69] = 0;
-            s_default[g_66] = g_290;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_293) && zoom >= 2 && zoom <= 3)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_61;
-            s_default[g_64] = g_109;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_294;
-            s_default[g_71] = g_70;
-            s_default[g_18] = 1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_293) && zoom >= 4 && zoom <= 8)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_295;
-            s_default[g_64] = g_109;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_166;
-            s_default[g_71] = g_70;
-            s_default[g_18] = 1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_293) && zoom >= 8 && zoom <= 10)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 0;
-            s_default[g_62] = g_296;
-            s_default[g_64] = g_109;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_166;
-            s_default[g_71] = g_70;
-            s_default[g_18] = 1;
-            s_default[g_73] = g_238;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_224) && zoom >= 3 && zoom <= 5)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = -5;
-            s_default[g_62] = g_251;
-            s_default[g_64] = g_282;
-            s_default[g_69] = 0;
-            s_default[g_66] = g_228;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-            s_default[g_200] = 50;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_229) && zoom >= 6 && zoom <= 10)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = 17;
-            s_default[g_62] = g_268;
-            s_default[g_64] = g_282;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_154;
-            s_default[g_71] = g_70;
-            s_default[g_73] = g_238;
-        }
-
-        if (((selector == g_5 && tags[g_219] == g_220 && tags[g_221] == g_227) && zoom >= 10)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_60] = -10;
-            s_default[g_62] = g_267;
-            s_default[g_64] = g_282;
-            s_default[g_69] = 1;
-            s_default[g_66] = g_297;
-            s_default[g_71] = g_70;
-        }
-
-        if (((type == g_169 && tags[g_13] == g_298) && zoom >= 12)) {
-            s_default[g_59] = tags[g_58];
-            s_default[g_62] = g_267;
-            s_default[g_64] = g_282;
-            s_default[g_66] = g_297;
-            s_default[g_18] = 20;
-        }
-
-        if (((selector == g_5 && (g_299 in tags)) && zoom >= 13)) {
-            s_default[g_29] = .3;
-            s_default[g_31] = g_300;
-            s_default[g_18] = 17;
-        }
-
-        if (((selector == g_5 && (tags[g_299] == '1' || tags[g_299] == 'true' || tags[g_299] == 'yes')) && zoom >= 15)) {
-            s_default[g_2] = g_301;
-            s_default[g_18] = 17;
-        }
-
-        if (((selector == g_5 && tags[g_299] == g_302) && zoom >= 15)) {
-            s_default[g_2] = g_303;
-            s_default[g_18] = 17;
-        }
-
-        if (((selector == g_5 && (g_299 in tags) && (tags[g_299] == '-1' || tags[g_299] == 'false' || tags[g_299] == 'no') && tags[g_299] !== g_302) && zoom >= 15)) {
-            s_default[g_2] = g_304;
-            s_default[g_18] = 17;
-        }
-
-        if (((selector == g_5 && (g_299 in tags)) && zoom >= 15 && zoom <= 16)) {
-            s_default[g_59] = tags[g_305];
-            s_default[g_69] = 1;
-            s_default[g_107] = g_306;
-            s_default[g_62] = g_258;
-            s_default[g_73] = g_61;
-            s_default[g_130] = 0.8;
-        }
-
-        if (((selector == g_5 && (g_299 in tags)) && zoom >= 17)) {
-            s_default[g_59] = tags[g_305];
-            s_default[g_69] = 1;
-            s_default[g_107] = g_306;
-            s_default[g_62] = g_251;
-            s_default[g_73] = g_61;
-            s_default[g_130] = 0.8;
-        }
-
-        if (((type == g_169 && tags[g_104] == g_307 && (g_308 in tags)) && zoom >= 13)) {
-            s_default[g_59] = tags[g_308];
-            s_default[g_62] = g_258;
-            s_default[g_69] = 5;
-            s_default[g_73] = g_238;
+        if (((selector == 'area' && tags['place'] == 'city') && zoom >= 6 && zoom <= 9)
+            || ((selector == 'area' && tags['place'] == 'town') && zoom >= 6 && zoom <= 9)) {
+            s_default['fill-color'] = '#ffe1d0';
+            s_default['fill-opacity'] = 0.6;
+            s_default['z-index'] = 5;
+        }
+
+        if (((selector == 'area' && tags['landuse'] == 'cemetery') && zoom >= 10)) {
+            s_default['fill-color'] = '#e5f5dc';
+            s_default['z-index'] = 5;
+            s_default['fill-image'] = 'cemetry7_2.png';
+        }
+
+        if (((selector == 'area' && tags['aeroway'] == 'aerodrome') && zoom >= 13)) {
+            s_default['color'] = '#008ac6';
+            s_default['width'] = 0.8;
+            s_default['z-index'] = 5;
+            s_default['fill-image'] = 'bull2.png';
+        }
+
+        if (((selector == 'area' && tags['leisure'] == 'stadium') && zoom >= 12)
+            || ((selector == 'area' && tags['leisure'] == 'pitch') && zoom >= 12)) {
+            s_default['fill-color'] = '#e3deb1';
+            s_default['z-index'] = 5;
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 7 && zoom <= 10)) {
+            s_default['color'] = '#C4D4F5';
+            s_default['width'] = .6;
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'stream') && zoom >= 9 && zoom <= 10)) {
+            s_default['color'] = '#C4D4F5';
+            s_default['width'] = .3;
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 10 && zoom <= 14)) {
+            s_default['color'] = '#C4D4F5';
+            s_default['width'] = .7;
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 15)) {
+            s_default['color'] = '#C4D4F5';
+            s_default['width'] = .9;
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'stream') && zoom >= 10)) {
+            s_default['color'] = '#C4D4F5';
+            s_default['width'] = .5;
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'canal') && zoom >= 10)) {
+            s_default['color'] = '#abc4f5';
+            s_default['width'] = .6;
+            s_default['z-index'] = 9;
+        }
+
+        if (((selector == 'area' && tags['waterway'] == 'riverbank') && zoom >= 5)
+            || ((selector == 'area' && tags['natural'] == 'water') && zoom >= 5)
+            || ((selector == 'area' && tags['landuse'] == 'reservoir') && zoom >= 10)) {
+            s_default['fill-color'] = '#C4D4F5';
+            s_default['color'] = '#C4D4F5';
+            s_default['width'] = .1;
+            s_default['z-index'] = 9;
+        }
+
+        if (((selector == 'area' && tags['natural'] == 'water') && zoom >= 9)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 1;
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Serif Italic';
+            s_default['text-color'] = '#285fd1';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+        }
+
+        if (((type == 'way' && tags['highway'] == 'construction') && zoom >= 15 && zoom <= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['width'] = 2;
+            s_default['color'] = '#ffffff';
+            s_default['z-index'] = 10;
+            s_default['dashes'] = [9,9];
+        }
+
+        if (((type == 'way' && tags['highway'] == 'construction') && zoom >= 17)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['width'] = 3;
+            s_default['color'] = '#ffffff';
+            s_default['z-index'] = 10;
+            s_default['dashes'] = [9,9];
+        }
+
+        if (((type == 'way' && tags['highway'] == 'footway') && zoom >= 15)
+            || ((type == 'way' && tags['highway'] == 'path') && zoom >= 15)
+            || ((type == 'way' && tags['highway'] == 'cycleway') && zoom >= 15)
+            || ((type == 'way' && tags['highway'] == 'pedestrian') && zoom >= 15)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['casing-width'] = .3;
+            s_default['casing-color'] = '#bf96ce';
+            s_default['width'] = .2;
+            s_default['color'] = '#ffffff';
+            s_default['z-index'] = 10;
+            s_default['dashes'] = [2,2];
+        }
+
+        if (((type == 'way' && tags['highway'] == 'steps') && zoom >= 15)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['casing-width'] = .3;
+            s_default['casing-color'] = '#ffffff';
+            s_default['width'] = 3;
+            s_default['color'] = '#bf96ce';
+            s_default['z-index'] = 10;
+            s_default['dashes'] = [1,1];
+            s_default['linecap'] = 'butt';
+        }
+
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'residential') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'secondary') && zoom >= 9 && zoom <= 10)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 9 && zoom <= 10)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 14 && zoom <= 15)) {
+            s_default['width'] = 0.3;
+            s_default['opacity'] = 0.6;
+            s_default['color'] = '#996703';
+            s_default['z-index'] = 10;
+            s_default['-x-mapnik-layer'] = 'bottom';
+        }
+
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 13 && zoom <= 14)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 0.6;
+            s_default['opacity'] = 0.5;
+            s_default['color'] = '#996703';
+            s_default['z-index'] = 10;
+            s_default['-x-mapnik-layer'] = 'bottom';
+        }
+
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 14 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 14 && zoom <= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 1.5;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 16)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 2.5;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 9;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 1.2;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.3;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 10;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '1' || tags['living_street'] == 'true' || tags['living_street'] == 'yes')) && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'service' && tags['service'] == 'parking_aisle') && zoom >= 15 && zoom <= 16)) {
+            s_default['width'] = 0.2;
+            s_default['opacity'] = 0.5;
+            s_default['color'] = '#996703';
+            s_default['z-index'] = 10;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '1' || tags['living_street'] == 'true' || tags['living_street'] == 'yes')) && zoom >= 16)
+            || ((type == 'way' && tags['highway'] == 'service' && tags['service'] == 'parking_aisle') && zoom >= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 1.2;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.3;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 10;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 15 && zoom <= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 2.5;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 10;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'living_street') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 16 && zoom <= 17)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 3.5;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 10;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 17)
+            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 17)
+            || ((type == 'way' && tags['highway'] == 'living_street') && zoom >= 17)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 17)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 4.5;
+            s_default['color'] = '#ffffff';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 10;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 10 && zoom <= 11)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['width'] = 1.2;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.35;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 11 && zoom <= 12)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 11 && zoom <= 12)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 1.4;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.35;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 12 && zoom <= 13)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 3;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.35;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 13 && zoom <= 14)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 13 && zoom <= 14)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 13 && zoom <= 14)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 4;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.35;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 14 && zoom <= 15)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 5;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 15 && zoom <= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 6;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 16 && zoom <= 17)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 7;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 17 && zoom <= 18)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 8;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 18 && zoom <= 18)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 9;
+            s_default['color'] = '#fcffd1';
+            s_default['casing-width'] = 0.5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 11;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 7 && zoom <= 8)) {
+            s_default['width'] = 1;
+            s_default['color'] = '#fcea97';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 8 && zoom <= 9)) {
+            s_default['width'] = 2;
+            s_default['color'] = '#fcea97';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 9 && zoom <= 10)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 9 && zoom <= 10)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 2;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 10 && zoom <= 11)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 10 && zoom <= 11)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 3;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 11 && zoom <= 12)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 11 && zoom <= 12)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 4;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 12 && zoom <= 13)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 5;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 13 && zoom <= 14)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 6;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 14 && zoom <= 15)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 7;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 15 && zoom <= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 8;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 16 && zoom <= 17)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 9;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 17 && zoom <= 18)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 10;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 18 && zoom <= 18)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 11;
+            s_default['color'] = '#fcea97';
+            s_default['casing-width'] = .5;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 12;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 6 && zoom <= 7)) {
+            s_default['width'] = 0.9;
+            s_default['color'] = '#fbcd40';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 6 && zoom <= 7)) {
+            s_default['width'] = 1;
+            s_default['color'] = '#fc9265';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 7 && zoom <= 8)) {
+            s_default['width'] = 1;
+            s_default['color'] = '#fbcd40';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 7 && zoom <= 8)) {
+            s_default['width'] = 1.2;
+            s_default['color'] = '#fc9265';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 8 && zoom <= 9)) {
+            s_default['width'] = 2;
+            s_default['color'] = '#fbcd40';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 8 && zoom <= 9)) {
+            s_default['width'] = 2;
+            s_default['color'] = '#fc9265';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 9 && zoom <= 10)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 9 && zoom <= 10)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 3;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 10 && zoom <= 11)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 10 && zoom <= 11)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 4;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 11 && zoom <= 12)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 11 && zoom <= 12)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 5;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 12 && zoom <= 13)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 12 && zoom <= 13)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 7;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 13 && zoom <= 14)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 8;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 14 && zoom <= 15)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 14 && zoom <= 15)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 9;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 15 && zoom <= 16)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 15 && zoom <= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 10;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 16 && zoom <= 17)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 16 && zoom <= 17)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 11;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 17 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 17 && zoom <= 18)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 12;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 18 && zoom <= 18)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 18 && zoom <= 18)) {
+            s_default['text'] = tags['name'];
+            s_default['text-position'] = 'line';
+            s_default['text-color'] = '#404040';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['width'] = 13;
+            s_default['color'] = '#ffd780';
+            s_default['casing-width'] = 1;
+            s_default['casing-color'] = '#996703';
+            s_default['z-index'] = 13;
+        }
+
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 9)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 9)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 9)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 9)
+            || ((type == 'way' && tags['highway'] == 'primary') && zoom >= 13)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 13)) {
+            s_centerline['width'] = .3;
+            s_centerline['color'] = '#fa6478';
+            s_centerline['z-index'] = 14;
+            s_centerline['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && (tags['oneway'] == '1' || tags['oneway'] == 'true' || tags['oneway'] == 'yes')) && zoom >= 17)) {
+            s_default['line-style'] = 'arrows';
+            s_default['z-index'] = 15;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 7 && zoom <= 8)) {
+            s_default['width'] = .5;
+            s_default['color'] = '#303030';
+            s_default['z-index'] = 15;
+        }
+
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 7 && zoom <= 8)) {
+            s_ticks['width'] = .3;
+            s_ticks['color'] = '#ffffff';
+            s_ticks['dashes'] = [3,3];
+            s_ticks['z-index'] = 16;
+        }
+
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 8 && zoom <= 9)) {
+            s_default['width'] = .6;
+            s_default['color'] = '#303030';
+            s_default['z-index'] = 15;
+        }
+
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 8 && zoom <= 9)) {
+            s_ticks['width'] = .35;
+            s_ticks['color'] = '#ffffff';
+            s_ticks['dashes'] = [3,3];
+            s_ticks['z-index'] = 16;
+        }
+
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 9)) {
+            s_default['width'] = 1.4;
+            s_default['color'] = '#606060';
+            s_default['z-index'] = 15;
+        }
+
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 9)) {
+            s_ticks['width'] = 1;
+            s_ticks['color'] = '#ffffff';
+            s_ticks['dashes'] = [6,6];
+            s_ticks['z-index'] = 16;
+        }
+
+        if (((type == 'way' && tags['railway'] == 'subway') && zoom >= 12)) {
+            s_default['width'] = 3;
+            s_default['color'] = '#072889';
+            s_default['z-index'] = 15;
+            s_default['dashes'] = [3,3];
+            s_default['opacity'] = 0.3;
+            s_default['linecap'] = 'butt';
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && tags['barrier'] == 'fence') && zoom >= 16)) {
+            s_default['width'] = .3;
+            s_default['color'] = 'black';
+            s_default['z-index'] = 16;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && tags['barrier'] == 'wall') && zoom >= 16)) {
+            s_default['width'] = .5;
+            s_default['color'] = 'black';
+            s_default['z-index'] = 16;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && tags['marking'] == 'sport' && (!('colour' in tags)) && (!('color' in tags))) && zoom >= 15)) {
+            s_default['width'] = .5;
+            s_default['color'] = '#a0a0a0';
+            s_default['z-index'] = 16;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && tags['marking'] == 'sport' && tags['colour'] == 'white') && zoom >= 15)
+            || ((type == 'way' && tags['marking'] == 'sport' && tags['color'] == 'white') && zoom >= 15)) {
+            s_default['width'] = 1;
+            s_default['color'] = 'white';
+            s_default['z-index'] = 16;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && tags['marking'] == 'sport' && tags['colour'] == 'red') && zoom >= 15)
+            || ((type == 'way' && tags['marking'] == 'sport' && tags['color'] == 'red') && zoom >= 15)) {
+            s_default['width'] = 1;
+            s_default['color'] = '#c00000';
+            s_default['z-index'] = 16;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'way' && tags['marking'] == 'sport' && tags['colour'] == 'black') && zoom >= 15)
+            || ((type == 'way' && tags['marking'] == 'sport' && tags['color'] == 'black') && zoom >= 15)) {
+            s_default['width'] = 1;
+            s_default['color'] = 'black';
+            s_default['z-index'] = 16;
+            s_default['-x-mapnik-layer'] = 'top';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'bus_station') && zoom >= 15)) {
+            s_default['icon-image'] = 'aut2_16x16_park.png';
+        }
+
+        if (((type == 'node' && tags['highway'] == 'bus_stop') && zoom >= 16)) {
+            s_default['icon-image'] = 'autobus_stop_14x10.png';
+        }
+
+        if (((type == 'node' && tags['railway'] == 'tram_stop') && zoom >= 16)) {
+            s_default['icon-image'] = 'tramway_14x13.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'fuel') && zoom >= 15)) {
+            s_default['icon-image'] = 'tankstelle1_10x11.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'pharmacy') && zoom >= 16)) {
+            s_default['icon-image'] = 'med1_11x14.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'cinema') && zoom >= 16)) {
+            s_default['icon-image'] = 'cinema_14x14.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'museum') && zoom >= 15)) {
+            s_default['icon-image'] = 'mus_13x12.png';
+        }
+
+        if (((type == 'node' && tags['tourism'] == 'zoo') && zoom >= 16)) {
+            s_default['icon-image'] = 'zoo4_14x14.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'courthouse') && zoom >= 16)) {
+            s_default['icon-image'] = 'sud_14x13.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'theatre') && zoom >= 16)) {
+            s_default['icon-image'] = 'teater_14x14.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'university') && zoom >= 16)) {
+            s_default['icon-image'] = 'univer_15x11.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'toilets') && zoom >= 16)) {
+            s_default['icon-image'] = 'wc-3_13x13.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'place_of_worship' && tags['religion'] == 'christian') && zoom >= 16)) {
+            s_default['icon-image'] = 'pravosl_kupol_11x15.png';
+        }
+
+        if (((selector == 'area' && tags['amenity'] == 'place_of_worship' && tags['religion'] == 'christian') && zoom >= 16)) {
+            s_default['icon-image'] = 'pravosl_kupol_11x15.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'place_of_worship') && zoom >= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-color'] = '#623f00';
+            s_default['font-family'] = 'DejaVu Serif Italic';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-offset'] = 3;
+            s_default['max-width'] = 70;
+        }
+
+        if (((selector == 'area' && tags['amenity'] == 'place_of_worship') && zoom >= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['text-color'] = '#623f00';
+            s_default['font-family'] = 'DejaVu Serif Italic';
+            s_default['font-size'] = '9';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-offset'] = 3;
+            s_default['max-width'] = 70;
+            s_default['z-index'] = 16;
+            s_default['width'] = 0.1;
+            s_default['color'] = '#111111';
+            s_default['text-opacity'] = '1';
+            s_default['fill-color'] = '#777777';
+            s_default['fill-opacity'] = 0.5;
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'kindergarten') && zoom >= 17)) {
+            s_default['icon-image'] = 'kindergarten_14x14.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'school') && zoom >= 17)) {
+            s_default['icon-image'] = 'school_13x13.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'library') && zoom >= 17)) {
+            s_default['icon-image'] = 'lib_13x14.png';
+        }
+
+        if (((type == 'node' && tags['tourism'] == 'hotel') && zoom >= 17)) {
+            s_default['icon-image'] = 'hotell_14x14.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'post_office') && zoom >= 17)) {
+            s_default['icon-image'] = 'post_14x11.png';
+        }
+
+        if (((type == 'node' && tags['amenity'] == 'restaurant') && zoom >= 17)) {
+            s_default['icon-image'] = 'rest_14x14.png';
+        }
+
+        if (((type == 'node' && ('shop' in tags)) && zoom >= 17)) {
+            s_default['icon-image'] = 'superm_12x12.png';
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '2'))) {
+            s_default['width'] = 0.5;
+            s_default['color'] = '#202020';
+            s_default['dashes'] = [6,4];
+            s_default['opacity'] = 0.7;
+            s_default['z-index'] = 16;
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <= 4)) {
+            s_default['width'] = 0.4;
+            s_default['color'] = '#7e0156';
+            s_default['dashes'] = [3,3];
+            s_default['opacity'] = 0.5;
+            s_default['z-index'] = 16;
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 4)) {
+            s_default['width'] = 1.3;
+            s_default['color'] = '#ff99cc';
+            s_default['opacity'] = 0.5;
+            s_default['z-index'] = 16;
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '6') && zoom >= 10)) {
+            s_default['width'] = 0.5;
+            s_default['color'] = '#101010';
+            s_default['dashes'] = [1,2];
+            s_default['opacity'] = 0.6;
+            s_default['z-index'] = 16.1;
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 4 && zoom <= 5)) {
+            s_default['width'] = 0.3;
+            s_default['color'] = '#000000';
+            s_default['dashes'] = [1,2];
+            s_default['opacity'] = 0.8;
+            s_default['z-index'] = 16.3;
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 6)) {
+            s_default['width'] = 0.7;
+            s_default['color'] = '#000000';
+            s_default['dashes'] = [1,2];
+            s_default['opacity'] = 0.8;
+            s_default['z-index'] = 16.3;
+        }
+
+        if (((type == 'way' && tags['railway'] == 'tram') && zoom >= 12)) {
+            s_default['line-style'] = 'rway44.png';
+            s_default['z-index'] = 17;
+        }
+
+        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] !== 'subway') && zoom >= 9)) {
+            s_default['icon-image'] = 'rw_stat_stanzii_2_blue.png';
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 7;
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Mono Book';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#000d6c';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <= 15)) {
+            s_default['icon-image'] = 'metro_others6.png';
+            s_default['z-index'] = 17;
+        }
+
+        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <= 15)) {
+            s_label['text'] = tags['name'];
+            s_label['text-offset'] = 11;
+            s_label['font-size'] = '9';
+            s_label['font-family'] = 'DejaVu Sans Book';
+            s_label['text-halo-radius'] = 2;
+            s_label['text-color'] = '#1300bb';
+            s_label['text-halo-color'] = '#ffffff';
+            s_label['text-allow-overlap'] = 'false';
+            s_label['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['railway'] == 'subway_entrance') && zoom >= 16)) {
+            s_default['icon-image'] = 'metro_others6.png';
+            s_default['z-index'] = 17;
+        }
+
+        if (((type == 'node' && tags['railway'] == 'subway_entrance' && ('name' in tags)) && zoom >= 16)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 11;
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-halo-radius'] = 2;
+            s_default['text-color'] = '#1300bb';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['aeroway'] == 'aerodrome') && zoom >= 10)) {
+            s_default['icon-image'] = 'airport_world.png';
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 12;
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Condensed Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#1e7ca5';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['z-index'] = 17;
+        }
+
+        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 3 && zoom <= 6)) {
+            s_default['icon-image'] = 'adm_5.png';
+            s_default['allow-overlap'] = 'true';
+        }
+
+        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 3 && zoom <= 4)) {
+            s_default['text-offset'] = 4;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#505050';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['text-align'] = 'left';
+        }
+
+        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 4 && zoom <= 6)) {
+            s_default['text-offset'] = 6;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#303030';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['text-align'] = 'left';
+        }
+
+        if (((type == 'node' && ('place' in tags) && tags['population'] < '100000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <= 5)) {
+            s_default['icon-image'] = 'adm_4.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '7';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#404040';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && ('place' in tags) && tags['population'] >= '100000' && tags['population'] <= '5000000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <= 5)) {
+            s_default['icon-image'] = 'adm_5.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#404040';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['z-index'] = 1;
+        }
+
+        if (((type == 'node' && tags['place'] == 'town' && ('capital' in tags)) && zoom >= 5 && zoom <= 6)) {
+            s_default['icon-image'] = 'town_4.png';
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] < '100000') && zoom >= 6 && zoom <= 7)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000' && ('admin_level' in tags)) && zoom >= 6 && zoom <= 7)) {
+            s_default['icon-image'] = 'adm1_4_6.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] < '100000') && zoom >= 7 && zoom <= 8)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000') && zoom >= 7 && zoom <= 8)) {
+            s_default['icon-image'] = 'town_6.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'town' && (!('population' in tags))) && zoom >= 7 && zoom <= 8)
+            || ((type == 'node' && tags['place'] == 'city' && (!('population' in tags))) && zoom >= 7 && zoom <= 8)) {
+            s_default['icon-image'] = 'town_6.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 8 && zoom <= 9)) {
+            s_default['icon-image'] = 'town_6.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 6 && zoom <= 8)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000' && ('admin_level' in tags)) && zoom >= 6 && zoom <= 7)) {
+            s_default['icon-image'] = 'adm1_5.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#303030';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 7 && zoom <= 8)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 7 && zoom <= 8)) {
+            s_default['icon-image'] = 'adm1_5.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#303030';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000') && zoom >= 6 && zoom <= 7)) {
+            s_default['icon-image'] = 'adm1_6_test2.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#404040';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['z-index'] = 1;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000' && tags['population'] < '5000000') && zoom >= 7 && zoom <= 8)) {
+            s_default['icon-image'] = 'adm1_6_test2.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '11';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#404040';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['z-index'] = 2;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '5000000') && zoom >= 7 && zoom <= 8)) {
+            s_default['icon-image'] = 'adm_6.png';
+            s_default['text-offset'] = 5;
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '12';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#404040';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['z-index'] = 3;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes')) && zoom >= 9 && zoom <= 11)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = -20;
+            s_default['font-size'] = '14';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 4;
+            s_default['text-color'] = '#101010';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '50';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '-1' || tags['capital'] == 'false' || tags['capital'] == 'no')) && zoom >= 9 && zoom <= 11)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = -20;
+            s_default['font-size'] = '14';
+            s_default['font-family'] = 'DejaVu Sans Bold';
+            s_default['text-halo-radius'] = 2;
+            s_default['text-color'] = '#101010';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['z-index'] = 1;
+        }
+
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 11 && zoom <= 12)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '12';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 12 && zoom <= 13)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '20';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-opacity'] = '0.2';
+            s_default['text-allow-overlap'] = 'true';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city') && zoom >= 12 && zoom <= 13)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '25';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-opacity'] = '0.3';
+            s_default['text-allow-overlap'] = 'true';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '40';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-opacity'] = '0.2';
+            s_default['text-allow-overlap'] = 'true';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city') && zoom >= 13 && zoom <= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '50';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-opacity'] = '0.3';
+            s_default['text-allow-overlap'] = 'true';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '80';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-opacity'] = '0.2';
+            s_default['text-allow-overlap'] = 'true';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'city') && zoom >= 14)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '100';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-color'] = '#101010';
+            s_default['text-opacity'] = '0.3';
+            s_default['text-allow-overlap'] = 'true';
+            s_default['z-index'] = 20;
+        }
+
+        if (((type == 'node' && tags['place'] == 'village') && zoom >= 9)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 1;
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#606060';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+        }
+
+        if (((type == 'node' && tags['place'] == 'hamlet') && zoom >= 9)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 1;
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#505050';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+        }
+
+        if (((selector == 'area' && tags['landuse'] == 'nature_reserve') && zoom >= 9)
+            || ((selector == 'area' && tags['leisure'] == 'park') && zoom >= 11)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 1;
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Serif Italic';
+            s_default['text-halo-radius'] = 0;
+            s_default['text-color'] = '#3c8000';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-allow-overlap'] = 'false';
+        }
+
+        if (((type == 'way' && tags['waterway'] == 'stream') && zoom >= 10)
+            || ((type == 'way' && tags['waterway'] == 'river') && zoom >= 9)
+            || ((type == 'way' && tags['waterway'] == 'canal') && zoom >= 13)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '9';
+            s_default['font-family'] = 'DejaVu Sans Oblique';
+            s_default['text-color'] = '#547bd1';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['text-position'] = 'line';
+        }
+
+        if (((type == 'node' && tags['place'] == 'continent') && zoom <= 3)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = -10;
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Sans ExtraLight';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = -1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'continent') && zoom >= 2 && zoom <= 3)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = -10;
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans ExtraLight';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = -1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'ocean') && zoom <= 6)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Oblique';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = -1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'ocean') && zoom >= 7)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '11';
+            s_default['font-family'] = 'DejaVu Sans Oblique';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#202020';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = -1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'sea') && zoom <= 6)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans Oblique';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#4976d1';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'sea') && zoom >= 7)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Sans Oblique';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#4976d1';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '4500') && zoom >= 3 && zoom <= 4)) {
+            s_default['icon-image'] = 'mountain_peak6.png';
+            s_default['text'] = tags['ele'];
+            s_default['text-offset'] = 3;
+            s_default['font-size'] = '7';
+            s_default['font-family'] = 'DejaVu Sans Mono Book';
+            s_default['text-halo-radius'] = 0;
+            s_default['text-color'] = '#664229';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '3500') && zoom >= 5 && zoom <= 6)) {
+            s_default['icon-image'] = 'mountain_peak6.png';
+            s_default['text'] = tags['ele'];
+            s_default['text-offset'] = 3;
+            s_default['font-size'] = '7';
+            s_default['font-family'] = 'DejaVu Sans Mono Book';
+            s_default['text-halo-radius'] = 0;
+            s_default['text-color'] = '#664229';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '2500') && zoom >= 7 && zoom <= 12)) {
+            s_default['icon-image'] = 'mountain_peak6.png';
+            s_default['text'] = tags['ele'];
+            s_default['text-offset'] = 3;
+            s_default['font-size'] = '7';
+            s_default['font-family'] = 'DejaVu Sans Mono Book';
+            s_default['text-halo-radius'] = 0;
+            s_default['text-color'] = '#664229';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['natural'] == 'peak') && zoom >= 12)) {
+            s_default['icon-image'] = 'mountain_peak6.png';
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 3;
+            s_default['font-size'] = '7';
+            s_default['font-family'] = 'DejaVu Sans Mono Book';
+            s_default['text-halo-radius'] = 0;
+            s_default['text-color'] = '#664229';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'country') && zoom >= 2 && zoom <= 3)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '10';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#dd5875';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = 1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'country') && zoom >= 4 && zoom <= 8)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '13';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = 'red';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = 1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((type == 'node' && tags['place'] == 'country') && zoom >= 8 && zoom <= 10)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 0;
+            s_default['font-size'] = '16';
+            s_default['font-family'] = 'DejaVu Sans Book';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = 'red';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['z-index'] = 1;
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <= 5)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = -5;
+            s_default['font-size'] = '8';
+            s_default['font-family'] = 'DejaVu Sans ExtraLight';
+            s_default['text-halo-radius'] = 0;
+            s_default['text-color'] = '#101010';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+            s_default['max-width'] = 50;
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 6 && zoom <= 10)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = 17;
+            s_default['font-size'] = '14';
+            s_default['font-family'] = 'DejaVu Sans ExtraLight';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#606060';
+            s_default['text-halo-color'] = '#ffffff';
+            s_default['-x-mapnik-min-distance'] = '0';
+        }
+
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '6') && zoom >= 10)) {
+            s_default['text'] = tags['name'];
+            s_default['text-offset'] = -10;
+            s_default['font-size'] = '12';
+            s_default['font-family'] = 'DejaVu Sans ExtraLight';
+            s_default['text-halo-radius'] = 1;
+            s_default['text-color'] = '#7848a0';
+            s_default['text-halo-color'] = '#ffffff';
+        }
+
+        if (((type == 'node' && tags['place'] == 'suburb') && zoom >= 12)) {
+            s_default['text'] = tags['name'];
+            s_default['font-size'] = '12';
+            s_default['font-family'] = 'DejaVu Sans ExtraLight';
+            s_default['text-color'] = '#7848a0';
+            s_default['z-index'] = 20;
+        }
+
+        if (((selector == 'area' && ('building' in tags)) && zoom >= 13)) {
+            s_default['width'] = .3;
+            s_default['color'] = '#cca352';
+            s_default['z-index'] = 17;
+        }
+
+        if (((selector == 'area' && (tags['building'] == '1' || tags['building'] == 'true' || tags['building'] == 'yes')) && zoom >= 15)) {
+            s_default['fill-color'] = '#E7CCB4';
+            s_default['z-index'] = 17;
+        }
+
+        if (((selector == 'area' && tags['building'] == 'public') && zoom >= 15)) {
+            s_default['fill-color'] = '#edc2ba';
+            s_default['z-index'] = 17;
+        }
+
+        if (((selector == 'area' && ('building' in tags) && (tags['building'] == '-1' || tags['building'] == 'false' || tags['building'] == 'no') && tags['building'] !== 'public') && zoom >= 15)) {
+            s_default['fill-color'] = '#D8D1D1';
+            s_default['z-index'] = 17;
+        }
+
+        if (((selector == 'area' && ('building' in tags)) && zoom >= 15 && zoom <= 16)) {
+            s_default['text'] = tags['addr:housenumber'];
+            s_default['text-halo-radius'] = 1;
+            s_default['text-position'] = 'center';
+            s_default['font-size'] = '7';
+            s_default['-x-mapnik-min-distance'] = '10';
+            s_default['opacity'] = 0.8;
+        }
+
+        if (((selector == 'area' && ('building' in tags)) && zoom >= 17)) {
+            s_default['text'] = tags['addr:housenumber'];
+            s_default['text-halo-radius'] = 1;
+            s_default['text-position'] = 'center';
+            s_default['font-size'] = '8';
+            s_default['-x-mapnik-min-distance'] = '10';
+            s_default['opacity'] = 0.8;
+        }
+
+        if (((type == 'node' && tags['highway'] == 'milestone' && ('pk' in tags)) && zoom >= 13)) {
+            s_default['text'] = tags['pk'];
+            s_default['font-size'] = '7';
+            s_default['text-halo-radius'] = 5;
+            s_default['-x-mapnik-min-distance'] = '0';
         }
 
         var style = {};

@@ -34,10 +34,9 @@ NUMERIC_PROPERTIES = (
 
 images = set()
 subparts = set(['default'])
-strings = {}
 
 def wrap_key(key):
-	return strings.setdefault(key, "g_%d" % len(strings))
+	return "'%s'" % key
 
 def propagate_import(url):
     content = open(url).read()
@@ -51,7 +50,7 @@ def escape_value(key, value, subpart):
     elif key in DASH_PROPERTIES:
         return "[%s]" % value
     else:
-        return wrap_key(value)
+        return "'%s'" % value
 
 def mapcss_as_aj(self):
     imports = "".join(map(lambda imp: propagate_import(imp.url).as_js, self.imports))
@@ -272,19 +271,16 @@ if __name__ == "__main__":
     subparts_var = "\n".join(map(lambda subpart: "        var s_%s = {};" % subpart, subparts))
     subparts_fill = "\n".join(map(lambda subpart: "        if (s_%s) {\n            style['%s'] = s_%s;\n        }" % (subpart, subpart, subpart), subparts))
 
-    string_constants = "\n".join(["        var %s = '%s';" % (v, k) for (k, v) in strings.items()])
-
     js = """
 (function(MapCSS) {
     function restyle(tags, zoom, type, selector) {
-%s
 %s
 %s
         var style = {};
 %s        
         return style;
     }
-    """ % (string_constants, subparts_var, mapcss_js, subparts_fill)
+    """ % (subparts_var, mapcss_js, subparts_fill)
     
     if options.sprite:
         sprite = options.sprite
