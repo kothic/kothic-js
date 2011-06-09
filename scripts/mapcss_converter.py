@@ -33,6 +33,11 @@ NUMERIC_PROPERTIES = (
 )
 
 images = set()
+subparts = set(['default'])
+strings = {}
+
+def wrap_key(key):
+	return strings.setdefault(key, "g_%d" % len(strings))
 
 def propagate_import(url):
     content = open(url).read()
@@ -46,7 +51,7 @@ def escape_value(key, value, subpart):
     elif key in DASH_PROPERTIES:
         return "[%s]" % value
     else:
-        return "'%s'" % value
+        return wrap_key(value)
 
 def mapcss_as_aj(self):
     imports = "".join(map(lambda imp: propagate_import(imp.url).as_js, self.imports))
@@ -73,50 +78,49 @@ def selector_as_js(self):
         subject_property = 'selector'
         
     if self.criteria:
-        return "(%s == '%s' && %s)" % (subject_property, self.subject, criteria)
+        return "(%s == %s && %s)" % (subject_property, wrap_key(self.subject), criteria)
     else:
-        return "%s == '%s'" % (subject_property, self.subject)
+        return "%s == %s" % (subject_property, wrap_key(self.subject))
     
 def condition_check_as_js(self):
+    k = wrap_key(self.key)
     if self.value == 'yes' and self.sign == '=':
-        return "(tags['%s'] == '1' || tags['%s'] == 'true' || tags['%s'] == 'yes')" % (self.key, self.key, self.key)
+        return "(tags[%s] == '1' || tags[%s] == 'true' || tags[%s] == 'yes')" % (k, k, k)
     elif self.value == 'yes' and (self.sign == '!=' or self.sign == '<>'):
-        return "(tags['%s'] == '-1' || tags['%s'] == 'false' || tags['%s'] == 'no')" % (self.key, self.key, self.key)
+        return "(tags[%s] == '-1' || tags[%s] == 'false' || tags[%s] == 'no')" % (k, k, k)
     else:
-        return "tags['%s'] %s '%s'" % (self.key, CHECK_OPERATORS[self.sign], self.value)
+        return "tags[%s] %s %s" % (k, CHECK_OPERATORS[self.sign], wrap_key(self.value))
 
 def condition_tag_as_js(self):
-    return "('%s' in tags)" % (self.key)
+    return "(%s in tags)" % (wrap_key(self.key))
 
 def condition_nottag_as_js(self):
-    return "(!('%s' in tags))" % (self.key)
+    return "(!(%s in tags))" % (wrap_key(self.key))
     
 def action_as_js(self, subpart):
     if len(filter(lambda x: x, map(lambda x: isinstance(x, ast.StyleStatement), self.statements))) > 0:
-        prep = ''
         if subpart != "default":
-            prep = """
-        if (typeof(style['%s']) === 'undefined') {
-            style['%s'] = {};
-        }
-""" % (subpart, subpart)
+			subparts.add(subpart)
+
         return """{
-%s%s
-        }\n""" % (prep, "\n".join(map(lambda x: x.as_js(subpart), self.statements)))
+%s
+        }\n""" % ("\n".join(map(lambda x: x.as_js(subpart), self.statements)))
     else:
         return "{\n    %s\n    }" % "\n".join(map(lambda x: x.as_js(), self.statements))
     
 def style_statement_as_js(self, subpart):
     val = escape_value(self.key, self.value, subpart)
+    k = wrap_key(self.key)
     if self.key == 'text':
-        return "            style['%s']['text'] = tags[%s];" % (subpart, val)
+        return "            s_%s[%s] = tags[%s];" % (subpart, k, val)
     else:
         if self.key in ('icon-image', 'fill-image'):
-            images.add(val.strip("'\""))
-        return "            style['%s']['%s'] = %s;" % (subpart, self.key, val)
+            images.add(self.value)
+        return "            s_%s[%s] = %s;" % (subpart, k, val)
     
 def tag_statement_as_js(self, subpart):
-    return "            tags['%s'] = %s" % (self.key, escape_value(self.key, self.value, subpart))
+    k = wrap_key(self.key)
+    return "            tags[%s] = %s" % (k, escape_value(self.key, self.value, subpart))
     
 def eval_as_js(self, subpart):
     return self.expression.as_js(subpart)
@@ -126,7 +130,7 @@ def eval_function_as_js(self, subpart):
     if self.function == 'tag':
         return "MapCSS.e_tag(tags, %s)" % (args)
     elif self.function == 'prop':
-        return "MapCSS.e_prop(style['%s'], %s)" % (subpart, args)
+        return "MapCSS.e_prop(s_%s, %s)" % (subpart, args)
     else:
         return "MapCSS.e_%s(%s)" % (self.function, args)
 
@@ -264,16 +268,23 @@ if __name__ == "__main__":
     parser = MapCSSParser(debug=False)
     mapcss = parser.parse(content) 
     
+    mapcss_js = mapcss.as_js()
+    subparts_var = "\n".join(map(lambda subpart: "        var s_%s = {};" % subpart, subparts))
+    subparts_fill = "\n".join(map(lambda subpart: "        if (s_%s) {\n            style['%s'] = s_%s;\n        }" % (subpart, subpart, subpart), subparts))
+
+    string_constants = "\n".join(["        var %s = '%s';" % (v, k) for (k, v) in strings.items()])
 
     js = """
 (function(MapCSS) {
     function restyle(tags, zoom, type, selector) {
-        var style = {};
-        style["default"] = {};
 %s
+%s
+%s
+        var style = {};
+%s        
         return style;
     }
-    """ % mapcss.as_js()
+    """ % (string_constants, subparts_var, mapcss_js, subparts_fill)
     
     if options.sprite:
         sprite = options.sprite
