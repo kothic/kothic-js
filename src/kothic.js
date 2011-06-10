@@ -418,19 +418,12 @@ Kothic.render = (function() {
 				return;
 			}
 	
-			var opacity = style["text-opacity"] || style["opacity"] || 1,
-				fillStyle = style["text-color"] || "#000000",
-				strokeStyle = style["text-halo-color"] || "#ffffff",
-				halo = ("text-halo-radius" in style);
-	
-			if (opacity < 1){
-				fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
-				strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
-			}
+			var halo = ("text-halo-radius" in style);
 	
 			setStyles(ctx, {
-				fillStyle: fillStyle,
-				strokeStyle: strokeStyle,
+				fillStyle: style["text-color"] || "#000000",
+				strokeStyle: style["text-halo-color"] || "#ffffff",
+				globalAlpha: style["text-opacity"] || style["opacity"],
 				textAlign: 'center',
 				textBaseline: 'middle'
 			});
