@@ -20,7 +20,7 @@ area - площадные объекты (обычно - замкнутые пу
 
  */
 
-area[natural=coastline] {fill-color: #fcf8e4}
+area[natural=coastline] {fill-color: #fcf8e4;-x-mapnik-layer: bottom}
 
 
 area|z3-[natural=glacier]{fill-color: #fcfeff; fill-image: glacier.png}

@@ -1,6 +1,7 @@
 L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 	options: {
 		tileSize: 256 * 4,
+		zoomOffset: 2,
 		minZoom: 2,
 		maxZoom: 22,
 		updateWhenIdle: true,
@@ -18,24 +19,33 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		
 		var layer = this;
 		
-		window.onKothicDataResponse = function(data, zoom, x, y) {
-			var key = [zoom, x, y].join('/'),
-				canvas = layer._canvases[key],
-				buffered = layer.options.buffered;
-			
-			function onRenderComplete(debugInfo) {
-				var debugStr = '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />' +
-						'<table><tr><td>' + debugInfo.layersStyled + '</td><td>layers styled</td></tr>' +
-						'<tr><td>' + debugInfo.mapRendered + '</td><td>map rendered</td></tr>' +
-						'<tr><td>' + debugInfo.iconsAndTextRendered + '</td><td>icons/text rendered</td></tr>' +
-						'<tr><td>' + debugInfo.total + '</td><td>total</td></tr></table>';
-				
-				layer._debugMessages.push(debugStr);
-				layer.tileDrawn(canvas);
-			}
-			
-			Kothic.render(canvas, data, zoom + 2, layer._additionalStyle, onRenderComplete, buffered);
-		};
+		window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
+	},
+	
+	_onKothicDataResponse: function(data, zoom, x, y) {
+		var key = [zoom, x, y].join('/'),
+			canvas = this._canvases[key],
+			buffered = this.options.buffered,
+			zoomOffset = this.options.zoomOffset,
+			layer = this;
+		
+		function onRenderComplete(debugInfo) {
+			// TODO move this logic outside
+			var debugStr = layer.getDebugStr(debugInfo, x, y, zoom);
+			layer._debugMessages.push(debugStr);
+			layer.tileDrawn(canvas);
+		}
+		
+		Kothic.render(canvas, data, zoom + zoomOffset, layer._additionalStyle, onRenderComplete, buffered);
+		delete this._canvases[key];
+	},
+	
+	getDebugStr: function(debugInfo, x, y, zoom) {
+		return '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />' +
+			'<table><tr><td>' + debugInfo.layersStyled + '</td><td>layers styled</td></tr>' +
+			'<tr><td>' + debugInfo.mapRendered + '</td><td>map rendered</td></tr>' +
+			'<tr><td>' + debugInfo.iconsAndTextRendered + '</td><td>icons/text rendered</td></tr>' +
+			'<tr><td>' + debugInfo.total + '</td><td>total</td></tr></table>';
 	},
 	
 	getDebugMessages: function() {
@@ -43,13 +53,21 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 	},
 	
 	drawTile: function(canvas, tilePoint, zoom) {
-		var key = [(zoom - 2), tilePoint.x, tilePoint.y].join('/');
+		var zoomOffset = this.options.zoomOffset,
+			key = [(zoom - zoomOffset), tilePoint.x, tilePoint.y].join('/');
+		
 		this._canvases[key] = canvas;
 		this._loadScript('http://osmosnimki.ru/vtile/' + key + '.js');
 	},
 	
 	setAdditionalStyle: function(fn) {
 		this._additionalStyle = fn;
+		
+		// TODO implement layer.redraw() in Leaflet
+		if (this._map && this._map._container) {
+			this._reset();
+			this._update();
+		}
 	},
 	
 	_loadScript: function(url) {

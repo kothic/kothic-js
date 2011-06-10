@@ -1,10 +1,17 @@
+/**
+ * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
+ * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
+ * See http://github.com/kothic/kothic-js for more information.
+ */
+
 var Kothic = {};
 
 Kothic.render = (function() {
 
 	var styleCache = {},
-		pathOpened = false;
-
+		pathOpened = false,
+		lastId = 0;
+	
 	var defaultCanvasStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
 		fillStyle: "rgba(0,0,0,0.5)",
@@ -14,10 +21,20 @@ Kothic.render = (function() {
 	};
 	
 	function getStyle(feature, zoom, additionalStyle) {
+		var id2 = 0;
+		
+		if (additionalStyle) {
+			id2 = additionalStyle.kothicId = additionalStyle.kothicId || ++lastId;
+		}
+		
 		var type, selector,
-			key = [MapCSS.currentStyle,
+			key = [MapCSS.currentStyle, id2,
 			       JSON.stringify(feature.properties),
 			       zoom, feature.type].join(':');
+		
+		// TODO improve caching mechanism
+		// such caching is not as efficient as it might seem because of a lot of objects 
+		// with the same style except text property
 
 		if (!styleCache[key]) {
 			//TODO: propagate type and selector
@@ -108,27 +125,50 @@ Kothic.render = (function() {
 		}
 	}
 
+	function fill(ctx, style, fillFn) {
+		var opacity = style["fill-opacity"] || style.opacity,
+			image;
+
+		ctx.save();
+		
+		if (('fill-color' in style)) {
+			// first pass fills with solid color
+			setStyles(ctx, {
+				fillStyle: style["fill-color"],
+				globalAlpha: opacity
+			});
+			fillFn();
+		}
+
+		if ('fill-image' in style) {
+			// second pass fills with texture
+			image = MapCSS.getImage(style['fill-image']);
+			if (image) {
+				setStyles(ctx, {
+					fillStyle: ctx.createPattern(image, 'repeat'),
+					globalAlpha: opacity
+				});
+			}
+			fillFn();
+		}
+		ctx.restore();
+	}
+
 	function renderBackground(ctx, width, height, zoom) {
 		var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
 
 		ctx.save();
 
-		setStyles(ctx, {
-			fillStyle: style["fill-color"],
-			globalAlpha: style["fill-opacity"] || style.opacity
+		fill(ctx, style, function() {
+			ctx.fillRect(-1, -1, width + 1, height + 1);
 		});
-
-		ctx.fillRect(-1, -1, width + 1, height + 1);
 
 		ctx.restore();
 	}
 
-	function transformPoint(point, ws, hs, granularity) {
-		return [ws * point[0], hs * (granularity - point[1])];
-	}
-
 	function renderPolygonFill(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style;
+		var style = feature.style,
+			nextStyle = nextFeature && nextFeature.style;
 
 		if (!pathOpened) {
 			pathOpened = true;
@@ -136,40 +176,25 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, false, true, ws, hs, granularity);
 
-		if (!nextFeature || (nextFeature.style !== style)) {
-			ctx.save();
-			var opacity = style["fill-opacity"] || style.opacity;
+		if (nextFeature && 
+			(nextStyle['fill-color'] === style['fill-color']) &&
+			(nextStyle['fill-image'] === style['fill-image']) &&
+			(nextStyle['fill-opacity'] === style['fill-opacity'])) return;
 
-			if (('fill-color' in style)) {
-				// first pass fills polygon with solid color
-				setStyles(ctx, {
-					fillStyle: style["fill-color"],
-					globalAlpha: opacity
-				});
-				ctx.fill();
-			}
+		ctx.save();
 
-			if ('fill-image' in style) {
-				// second pass fills polygon with texture
-				var image = MapCSS.getImage(style['fill-image']);
-				if (image) {
-					// texture image may not be loaded
-					setStyles(ctx, {
-						fillStyle: ctx.createPattern(image, 'repeat'),
-						globalAlpha: opacity
-					});
-					ctx.fill();
-				}
-			}
+		fill(ctx, style, function() {;
+			ctx.fill();
+		});
+		
+		ctx.restore();
 
-			pathOpened = false;
-
-			ctx.restore();
-		}
+		pathOpened = false;
 	}
 
 	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style;
+		var style = feature.style,
+			nextStyle = nextFeature && nextFeature.style;
 
 		var dashes = style["casing-dashes"] || style.dashes || false;
 
@@ -179,25 +204,31 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
-		if (!nextFeature || (nextFeature.style !== style)) {
-			ctx.save();
+		if (nextFeature && 
+				(nextStyle.width === style.width) &&
+				(nextStyle['casing-width'] === style['casing-width']) &&
+				(nextStyle['casing-color'] === style['casing-color']) &&
+				(nextStyle['casing-opacity'] === style['casing-opacity'])) return;
+			
+		ctx.save();
 
-			setStyles(ctx, {
-				lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
-				strokeStyle: style["casing-color"] || style["color"],
-				lineCap: style["casing-linecap"] || style["linecap"],
-				lineJoin: style["casing-linejoin"] || style["linejoin"],
-				globalAlpha: style["casing-opacity"] || style["opacity"]
-			});
+		setStyles(ctx, {
+			lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
+			strokeStyle: style["casing-color"],
+			lineCap: style["casing-linecap"] || style.linecap,
+			lineJoin: style["casing-linejoin"] || style.linejoin,
+			globalAlpha: style["casing-opacity"]
+		});
 
-			pathOpened = false;
-			ctx.stroke();
-			ctx.restore();
-		}
+		pathOpened = false;
+		ctx.stroke();
+		
+		ctx.restore();
 	}
 
 	function renderPolyline(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style;
+		var style = feature.style,
+			nextStyle = nextFeature && nextFeature.style;
 
 		var dashes = style.dashes;
 
@@ -207,29 +238,24 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
-		if (!nextFeature || (nextFeature.style !== style)) {
-			ctx.save();
+		if (nextFeature && 
+				(nextStyle.width === style.width) &&
+				(nextStyle.color === style.color) &&
+				(nextStyle.opacity === style.opacity)) return;
+		
+		ctx.save();
 
-			setStyles(ctx, {
-				lineWidth: style.width,
-				strokeStyle: style.color,
-				lineCap: style.linecap,
-				lineJoin: style.linejoin,
-				globalAlpha: style.opacity
-			});
+		setStyles(ctx, {
+			lineWidth: style.width,
+			strokeStyle: style.color,
+			lineCap: style.linecap,
+			lineJoin: style.linejoin,
+			globalAlpha: style.opacity
+		});
 
-			pathOpened = false;
-			ctx.stroke();
-			ctx.restore();
-		}
-	}
-
-	function transformPoints(points, ws, hs, granularity) {
-		var transformed = [];
-		for (var i = 0, len = points.length; i < len; i++) {
-			transformed.push(transformPoint(points[i], ws, hs, granularity));
-		}
-		return transformed;
+		pathOpened = false;
+		ctx.stroke();
+		ctx.restore();
 	}
 
 	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
@@ -343,6 +369,18 @@ Kothic.render = (function() {
 		return styles.join(' ');
 	}
 
+	function transformPoint(point, ws, hs, granularity) {
+		return [ws * point[0], hs * (granularity - point[1])];
+	}
+	
+	function transformPoints(points, ws, hs, granularity) {
+		var transformed = [];
+		for (var i = 0, len = points.length; i < len; i++) {
+			transformed.push(transformPoint(points[i], ws, hs, granularity));
+		}
+		return transformed;
+	}
+
 	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, granularity, renderText, renderIcon) {
 		var style = feature.style,
 			reprPoint = getReprPoint(feature);
@@ -355,7 +393,8 @@ Kothic.render = (function() {
 		if (renderIcon) {
 			img = MapCSS.getImage(style["icon-image"]);
 			if (!img) return;
-			if (collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
+			if ((style["allow-overlap"] != "true") && 
+					collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
 		}
 		
 		if (renderText) {
@@ -379,19 +418,12 @@ Kothic.render = (function() {
 				return;
 			}
 	
-			var opacity = style["text-opacity"] || style["opacity"] || 1,
-				fillStyle = style["text-color"] || "#000000",
-				strokeStyle = style["text-halo-color"] || "#ffffff",
-				halo = ("text-halo-radius" in style);
-	
-			if (opacity < 1){
-				fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
-				strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
-			}
+			var halo = ("text-halo-radius" in style);
 	
 			setStyles(ctx, {
-				fillStyle: fillStyle,
-				strokeStyle: strokeStyle,
+				fillStyle: style["text-color"] || "#000000",
+				strokeStyle: style["text-halo-color"] || "#ffffff",
+				globalAlpha: style["text-opacity"] || style["opacity"],
 				textAlign: 'center',
 				textBaseline: 'middle'
 			});
