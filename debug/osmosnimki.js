@@ -53,8 +53,8 @@
         }
 
         if (((selector == 'area' && tags['landuse'] == 'allotments') && zoom >= 10)
-            || ((selector == 'area' && tags['leisure'] == 'garden') && zoom >= 10 && zoom <= 15)
-            || ((selector == 'area' && tags['landuse'] == 'orchard') && zoom >= 10 && zoom <= 15)) {
+            || ((selector == 'area' && tags['leisure'] == 'garden') && zoom >= 10 && zoom <15)
+            || ((selector == 'area' && tags['landuse'] == 'orchard') && zoom >= 10 && zoom <15)) {
             s_default['fill-color'] = '#edf2c1';
             s_default['z-index'] = 3;
         }
@@ -146,8 +146,8 @@
             s_default['z-index'] = 5;
         }
 
-        if (((selector == 'area' && tags['place'] == 'city') && zoom >= 6 && zoom <= 9)
-            || ((selector == 'area' && tags['place'] == 'town') && zoom >= 6 && zoom <= 9)) {
+        if (((selector == 'area' && tags['place'] == 'city') && zoom >= 6 && zoom <9)
+            || ((selector == 'area' && tags['place'] == 'town') && zoom >= 6 && zoom <9)) {
             s_default['fill-color'] = '#ffe1d0';
             s_default['fill-opacity'] = 0.6;
             s_default['z-index'] = 5;
@@ -172,19 +172,19 @@
             s_default['z-index'] = 5;
         }
 
-        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 7 && zoom <= 10)) {
+        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 7 && zoom <10)) {
             s_default['color'] = '#C4D4F5';
             s_default['width'] = .6;
             s_default['z-index'] = 9;
         }
 
-        if (((type == 'way' && tags['waterway'] == 'stream') && zoom >= 9 && zoom <= 10)) {
+        if (((type == 'way' && tags['waterway'] == 'stream') && zoom >= 9 && zoom <10)) {
             s_default['color'] = '#C4D4F5';
             s_default['width'] = .3;
             s_default['z-index'] = 9;
         }
 
-        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 10 && zoom <= 14)) {
+        if (((type == 'way' && tags['waterway'] == 'river') && zoom >= 10 && zoom <14)) {
             s_default['color'] = '#C4D4F5';
             s_default['width'] = .7;
             s_default['z-index'] = 9;
@@ -228,7 +228,7 @@
             s_default['text-halo-color'] = '#ffffff';
         }
 
-        if (((type == 'way' && tags['highway'] == 'construction') && zoom >= 15 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'construction') && zoom >= 15 && zoom <16)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -304,12 +304,12 @@
             s_default['linecap'] = 'butt';
         }
 
-        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'residential') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'secondary') && zoom >= 9 && zoom <= 10)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 9 && zoom <= 10)
-            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 14 && zoom <= 15)) {
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'residential') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'secondary') && zoom >= 9 && zoom <10)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 9 && zoom <10)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 14 && zoom <15)) {
             s_default['width'] = 0.3;
             s_default['opacity'] = 0.6;
             s_default['color'] = '#996703';
@@ -317,8 +317,8 @@
             //s_default['-x-mapnik-layer'] = 'bottom';
         }
 
-        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 13 && zoom <= 14)
-            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 13 && zoom <14)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -333,8 +333,8 @@
            // s_default['-x-mapnik-layer'] = 'bottom';
         }
 
-        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 14 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 14 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'road') && zoom >= 14 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'track') && zoom >= 14 && zoom <16)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -365,7 +365,7 @@
             s_default['z-index'] = 9;
         }
 
-        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -380,8 +380,8 @@
             s_default['z-index'] = 10;
         }
 
-        if (((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '1' || tags['living_street'] == 'true' || tags['living_street'] == 'yes')) && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'service' && tags['service'] == 'parking_aisle') && zoom >= 15 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '1' || tags['living_street'] == 'true' || tags['living_street'] == 'yes')) && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'service' && tags['service'] == 'parking_aisle') && zoom >= 15 && zoom <16)) {
             s_default['width'] = 0.2;
             s_default['opacity'] = 0.5;
             s_default['color'] = '#996703';
@@ -404,9 +404,9 @@
             s_default['z-index'] = 10;
         }
 
-        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 15 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 15 && zoom <16)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -421,10 +421,10 @@
             s_default['z-index'] = 10;
         }
 
-        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'living_street') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 16 && zoom <= 17)) {
+        if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'living_street') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 16 && zoom <17)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -457,7 +457,7 @@
             s_default['z-index'] = 10;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 10 && zoom <= 11)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 10 && zoom <11)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['width'] = 1.2;
@@ -467,8 +467,8 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 11 && zoom <= 12)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 11 && zoom <= 12)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 11 && zoom <12)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 11 && zoom <12)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -485,10 +485,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 12 && zoom <= 13)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 12 && zoom <13)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -505,10 +505,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 13 && zoom <= 14)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 13 && zoom <= 14)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 13 && zoom <= 14)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 13 && zoom <14)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 13 && zoom <14)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 13 && zoom <14)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -523,10 +523,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 14 && zoom <= 15)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 14 && zoom <15)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -541,10 +541,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 15 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 15 && zoom <16)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -559,10 +559,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 16 && zoom <= 17)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 16 && zoom <17)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -577,10 +577,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 17 && zoom <= 18)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 17 && zoom <18)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -595,10 +595,10 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 18 && zoom <= 18)) {
+        if (((type == 'way' && tags['highway'] == 'secondary') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'tertiary') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom >= 18 && zoom <18)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -613,20 +613,20 @@
             s_default['z-index'] = 11;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 7 && zoom <8)) {
             s_default['width'] = 1;
             s_default['color'] = '#fcea97';
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 8 && zoom <= 9)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 8 && zoom <9)) {
             s_default['width'] = 2;
             s_default['color'] = '#fcea97';
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 9 && zoom <= 10)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 9 && zoom <= 10)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 9 && zoom <10)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 9 && zoom <10)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -641,8 +641,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 10 && zoom <= 11)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 10 && zoom <= 11)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 10 && zoom <11)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 10 && zoom <11)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -657,8 +657,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 11 && zoom <= 12)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 11 && zoom <= 12)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 11 && zoom <12)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 11 && zoom <12)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -673,8 +673,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 12 && zoom <= 13)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 12 && zoom <13)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -689,8 +689,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 13 && zoom <= 14)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 13 && zoom <14)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -705,8 +705,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 14 && zoom <= 15)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 14 && zoom <15)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -721,8 +721,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 15 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 15 && zoom <16)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -737,8 +737,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 16 && zoom <= 17)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 16 && zoom <17)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -753,8 +753,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 17 && zoom <= 18)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 17 && zoom <18)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -769,8 +769,8 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 18 && zoom <= 18)) {
+        if (((type == 'way' && tags['highway'] == 'primary') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'primary_link') && zoom >= 18 && zoom <18)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -785,44 +785,44 @@
             s_default['z-index'] = 12;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 6 && zoom <= 7)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 6 && zoom <7)) {
             s_default['width'] = 0.9;
             s_default['color'] = '#fbcd40';
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 6 && zoom <= 7)) {
+        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 6 && zoom <7)) {
             s_default['width'] = 1;
             s_default['color'] = '#fc9265';
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 7 && zoom <8)) {
             s_default['width'] = 1;
             s_default['color'] = '#fbcd40';
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 7 && zoom <8)) {
             s_default['width'] = 1.2;
             s_default['color'] = '#fc9265';
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 8 && zoom <= 9)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 8 && zoom <9)) {
             s_default['width'] = 2;
             s_default['color'] = '#fbcd40';
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 8 && zoom <= 9)) {
+        if (((type == 'way' && tags['highway'] == 'motorway') && zoom >= 8 && zoom <9)) {
             s_default['width'] = 2;
             s_default['color'] = '#fc9265';
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 9 && zoom <= 10)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 9 && zoom <= 10)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 9 && zoom <10)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 9 && zoom <10)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -837,8 +837,8 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 10 && zoom <= 11)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 10 && zoom <= 11)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 10 && zoom <11)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 10 && zoom <11)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -853,8 +853,8 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 11 && zoom <= 12)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 11 && zoom <= 12)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 11 && zoom <12)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 11 && zoom <12)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -869,8 +869,8 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 12 && zoom <= 13)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 12 && zoom <= 13)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 12 && zoom <13)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 12 && zoom <13)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -885,8 +885,8 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 13 && zoom <= 14)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 13 && zoom <14)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -901,10 +901,10 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 14 && zoom <= 15)
-            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 14 && zoom <= 15)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 14 && zoom <15)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 14 && zoom <15)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -919,10 +919,10 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 15 && zoom <= 16)
-            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 15 && zoom <= 16)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 15 && zoom <16)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 15 && zoom <16)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -937,10 +937,10 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 16 && zoom <= 17)
-            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 16 && zoom <= 17)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 16 && zoom <17)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 16 && zoom <17)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -955,10 +955,10 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 17 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 17 && zoom <= 18)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 17 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 17 && zoom <18)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -973,10 +973,10 @@
             s_default['z-index'] = 13;
         }
 
-        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 18 && zoom <= 18)
-            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 18 && zoom <= 18)) {
+        if (((type == 'way' && tags['highway'] == 'trunk') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'motorway') && zoom >= 18 && zoom <18)
+            || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom >= 18 && zoom <18)) {
             s_default['text'] = tags['name'];
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
@@ -1009,26 +1009,26 @@
             s_default['-x-mapnik-layer'] = 'top';
         }
 
-        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 7 && zoom <= 8)) {
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 7 && zoom <8)) {
             s_default['width'] = .5;
             s_default['color'] = '#303030';
             s_default['z-index'] = 15;
         }
 
-        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 7 && zoom <= 8)) {
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 7 && zoom <8)) {
             s_ticks['width'] = .3;
             s_ticks['color'] = '#ffffff';
             s_ticks['dashes'] = [3,3];
             s_ticks['z-index'] = 16;
         }
 
-        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 8 && zoom <= 9)) {
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 8 && zoom <9)) {
             s_default['width'] = .6;
             s_default['color'] = '#303030';
             s_default['z-index'] = 15;
         }
 
-        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 8 && zoom <= 9)) {
+        if (((selector == 'line' && tags['railway'] == 'rail') && zoom >= 8 && zoom <9)) {
             s_ticks['width'] = .35;
             s_ticks['color'] = '#ffffff';
             s_ticks['dashes'] = [3,3];
@@ -1223,7 +1223,7 @@
             s_default['z-index'] = 16;
         }
 
-        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <= 4)) {
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <4)) {
             s_default['width'] = 0.4;
             s_default['color'] = '#7e0156';
             s_default['dashes'] = [3,3];
@@ -1246,7 +1246,7 @@
             s_default['z-index'] = 16.1;
         }
 
-        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 4 && zoom <= 5)) {
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 4 && zoom <5)) {
             s_default['width'] = 0.3;
             s_default['color'] = '#000000';
             s_default['dashes'] = [1,2];
@@ -1280,12 +1280,12 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <= 15)) {
+        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <15)) {
             s_default['icon-image'] = 'metro_others6.png';
             s_default['z-index'] = 17;
         }
 
-        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <= 15)) {
+        if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <15)) {
             s_label['text'] = tags['name'];
             s_label['text-offset'] = 11;
             s_label['font-size'] = '9';
@@ -1327,12 +1327,12 @@
             s_default['z-index'] = 17;
         }
 
-        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 3 && zoom <= 6)) {
+        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 3 && zoom <6)) {
             s_default['icon-image'] = 'adm_5.png';
             s_default['allow-overlap'] = 'true';
         }
 
-        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 3 && zoom <= 4)) {
+        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 3 && zoom <4)) {
             s_default['text-offset'] = 4;
             s_default['text'] = tags['name'];
             s_default['font-size'] = '8';
@@ -1345,7 +1345,7 @@
             s_default['text-align'] = 'left';
         }
 
-        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 4 && zoom <= 6)) {
+        if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 4 && zoom <6)) {
             s_default['text-offset'] = 6;
             s_default['text'] = tags['name'];
             s_default['font-size'] = '10';
@@ -1358,7 +1358,7 @@
             s_default['text-align'] = 'left';
         }
 
-        if (((type == 'node' && ('place' in tags) && tags['population'] < '100000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <= 5)) {
+        if (((type == 'node' && ('place' in tags) && tags['population'] < '100000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <5)) {
             s_default['icon-image'] = 'adm_4.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1371,7 +1371,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && ('place' in tags) && tags['population'] >= '100000' && tags['population'] <= '5000000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <= 5)) {
+        if (((type == 'node' && ('place' in tags) && tags['population'] >= '100000' && tags['population'] <= '5000000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <5)) {
             s_default['icon-image'] = 'adm_5.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1385,12 +1385,12 @@
             s_default['z-index'] = 1;
         }
 
-        if (((type == 'node' && tags['place'] == 'town' && ('capital' in tags)) && zoom >= 5 && zoom <= 6)) {
+        if (((type == 'node' && tags['place'] == 'town' && ('capital' in tags)) && zoom >= 5 && zoom <6)) {
             s_default['icon-image'] = 'town_4.png';
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] < '100000') && zoom >= 6 && zoom <= 7)
-            || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000' && ('admin_level' in tags)) && zoom >= 6 && zoom <= 7)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] < '100000') && zoom >= 6 && zoom <7)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000' && ('admin_level' in tags)) && zoom >= 6 && zoom <7)) {
             s_default['icon-image'] = 'adm1_4_6.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1403,8 +1403,8 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] < '100000') && zoom >= 7 && zoom <= 8)
-            || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] < '100000') && zoom >= 7 && zoom <8)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000') && zoom >= 7 && zoom <8)) {
             s_default['icon-image'] = 'town_6.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1417,8 +1417,8 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'town' && (!('population' in tags))) && zoom >= 7 && zoom <= 8)
-            || ((type == 'node' && tags['place'] == 'city' && (!('population' in tags))) && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'node' && tags['place'] == 'town' && (!('population' in tags))) && zoom >= 7 && zoom <8)
+            || ((type == 'node' && tags['place'] == 'city' && (!('population' in tags))) && zoom >= 7 && zoom <8)) {
             s_default['icon-image'] = 'town_6.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1431,7 +1431,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'town') && zoom >= 8 && zoom <= 9)) {
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 8 && zoom <9)) {
             s_default['icon-image'] = 'town_6.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1444,8 +1444,8 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 6 && zoom <= 8)
-            || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000' && ('admin_level' in tags)) && zoom >= 6 && zoom <= 7)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 6 && zoom <8)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000' && ('admin_level' in tags)) && zoom >= 6 && zoom <7)) {
             s_default['icon-image'] = 'adm1_5.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1458,8 +1458,8 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 7 && zoom <= 8)
-            || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 7 && zoom <8)
+            || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom >= 7 && zoom <8)) {
             s_default['icon-image'] = 'adm1_5.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1472,7 +1472,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000') && zoom >= 6 && zoom <= 7)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000') && zoom >= 6 && zoom <7)) {
             s_default['icon-image'] = 'adm1_6_test2.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1486,7 +1486,7 @@
             s_default['z-index'] = 1;
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000' && tags['population'] < '5000000') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000' && tags['population'] < '5000000') && zoom >= 7 && zoom <8)) {
             s_default['icon-image'] = 'adm1_6_test2.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1500,7 +1500,7 @@
             s_default['z-index'] = 2;
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '5000000') && zoom >= 7 && zoom <= 8)) {
+        if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '5000000') && zoom >= 7 && zoom <8)) {
             s_default['icon-image'] = 'adm_6.png';
             s_default['text-offset'] = 5;
             s_default['text'] = tags['name'];
@@ -1514,7 +1514,7 @@
             s_default['z-index'] = 3;
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes')) && zoom >= 9 && zoom <= 11)) {
+        if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes')) && zoom >= 9 && zoom <11)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = -20;
             s_default['font-size'] = '14';
@@ -1527,7 +1527,7 @@
             s_default['z-index'] = 20;
         }
 
-        if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '-1' || tags['capital'] == 'false' || tags['capital'] == 'no')) && zoom >= 9 && zoom <= 11)) {
+        if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '-1' || tags['capital'] == 'false' || tags['capital'] == 'no')) && zoom >= 9 && zoom <11)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = -20;
             s_default['font-size'] = '14';
@@ -1540,7 +1540,7 @@
             s_default['z-index'] = 1;
         }
 
-        if (((type == 'node' && tags['place'] == 'town') && zoom >= 11 && zoom <= 12)) {
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 11 && zoom <12)) {
             s_default['text'] = tags['name'];
             s_default['font-size'] = '12';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1550,7 +1550,7 @@
             s_default['z-index'] = 20;
         }
 
-        if (((type == 'node' && tags['place'] == 'town') && zoom >= 12 && zoom <= 13)) {
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 12 && zoom <13)) {
             s_default['text'] = tags['name'];
             s_default['font-size'] = '20';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1560,7 +1560,7 @@
             s_default['z-index'] = 20;
         }
 
-        if (((type == 'node' && tags['place'] == 'city') && zoom >= 12 && zoom <= 13)) {
+        if (((type == 'node' && tags['place'] == 'city') && zoom >= 12 && zoom <13)) {
             s_default['text'] = tags['name'];
             s_default['font-size'] = '25';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1570,7 +1570,7 @@
             s_default['z-index'] = 20;
         }
 
-        if (((type == 'node' && tags['place'] == 'town') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'node' && tags['place'] == 'town') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['font-size'] = '40';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1580,7 +1580,7 @@
             s_default['z-index'] = 20;
         }
 
-        if (((type == 'node' && tags['place'] == 'city') && zoom >= 13 && zoom <= 14)) {
+        if (((type == 'node' && tags['place'] == 'city') && zoom >= 13 && zoom <14)) {
             s_default['text'] = tags['name'];
             s_default['font-size'] = '50';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1656,7 +1656,7 @@
             s_default['text-position'] = 'line';
         }
 
-        if (((type == 'node' && tags['place'] == 'continent') && zoom <= 3)) {
+        if (((type == 'node' && tags['place'] == 'continent') && zoom <3)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = -10;
             s_default['font-size'] = '10';
@@ -1668,7 +1668,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'continent') && zoom >= 2 && zoom <= 3)) {
+        if (((type == 'node' && tags['place'] == 'continent') && zoom >= 2 && zoom <3)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = -10;
             s_default['font-size'] = '8';
@@ -1680,7 +1680,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'ocean') && zoom <= 6)) {
+        if (((type == 'node' && tags['place'] == 'ocean') && zoom <6)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = 0;
             s_default['font-size'] = '8';
@@ -1704,7 +1704,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'sea') && zoom <= 6)) {
+        if (((type == 'node' && tags['place'] == 'sea') && zoom <6)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = 0;
             s_default['font-size'] = '8';
@@ -1726,7 +1726,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '4500') && zoom >= 3 && zoom <= 4)) {
+        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '4500') && zoom >= 3 && zoom <4)) {
             s_default['icon-image'] = 'mountain_peak6.png';
             s_default['text'] = tags['ele'];
             s_default['text-offset'] = 3;
@@ -1738,7 +1738,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '3500') && zoom >= 5 && zoom <= 6)) {
+        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '3500') && zoom >= 5 && zoom <6)) {
             s_default['icon-image'] = 'mountain_peak6.png';
             s_default['text'] = tags['ele'];
             s_default['text-offset'] = 3;
@@ -1750,7 +1750,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '2500') && zoom >= 7 && zoom <= 12)) {
+        if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '2500') && zoom >= 7 && zoom <12)) {
             s_default['icon-image'] = 'mountain_peak6.png';
             s_default['text'] = tags['ele'];
             s_default['text-offset'] = 3;
@@ -1774,7 +1774,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'country') && zoom >= 2 && zoom <= 3)) {
+        if (((type == 'node' && tags['place'] == 'country') && zoom >= 2 && zoom <3)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = 0;
             s_default['font-size'] = '10';
@@ -1786,7 +1786,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'country') && zoom >= 4 && zoom <= 8)) {
+        if (((type == 'node' && tags['place'] == 'country') && zoom >= 4 && zoom <8)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = 0;
             s_default['font-size'] = '13';
@@ -1798,7 +1798,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((type == 'node' && tags['place'] == 'country') && zoom >= 8 && zoom <= 10)) {
+        if (((type == 'node' && tags['place'] == 'country') && zoom >= 8 && zoom <10)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = 0;
             s_default['font-size'] = '16';
@@ -1810,7 +1810,7 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <= 5)) {
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <5)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = -5;
             s_default['font-size'] = '8';
@@ -1822,7 +1822,7 @@
             s_default['max-width'] = 50;
         }
 
-        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 6 && zoom <= 10)) {
+        if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 6 && zoom <10)) {
             s_default['text'] = tags['name'];
             s_default['text-offset'] = 17;
             s_default['font-size'] = '14';
@@ -1872,7 +1872,7 @@
             s_default['z-index'] = 17;
         }
 
-        if (((selector == 'area' && ('building' in tags)) && zoom >= 15 && zoom <= 16)) {
+        if (((selector == 'area' && ('building' in tags)) && zoom >= 15 && zoom <16)) {
             s_default['text'] = tags['addr:housenumber'];
             s_default['text-halo-radius'] = 1;
             s_default['text-position'] = 'center';
