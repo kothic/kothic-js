@@ -37,8 +37,15 @@
 			background: rgba(255,255,255,0.7);
 			border: 1px solid #ddd;
 			padding: 10px;
-			font: 10px Verdana, sans-serif;
 			z-index: 10000;
+			font: 12px/1.4 Verdana, sans-serif;
+			width: 160px;
+			}
+		#tileperf {
+			font: 10px/1 Verdana, sans-serif;
+			}
+		#tileperf table {
+			margin-top: 3px;
 			}
 		#mapnik {
 			margin-bottom: 10px;
@@ -54,6 +61,7 @@
 <body>
 	<div id="map"></div>
 	<div id="debug">
+		<p>OpenStreetMap data rendered on the browser using <a href="http://github.com/kothic/kothic-js">Kothic JS</a></p>
 		<button id="mapnik" onclick="toggleMapnik()">Show Mapnik</button>
 		<div id="tileperf">Rendering...</div>
 	</div>
@@ -63,7 +71,7 @@
 			maxZoom: 22
 		});
 		
-		var kothic = new L.TileLayer.Kothic();
+		var kothic = new L.TileLayer.Kothic({minZoom: 8});
 		
 		kothic.setAdditionalStyle(function(style, tags, zoom, type, sel) {
 			//...
