@@ -9,6 +9,8 @@ It was initially developed as a JavaScript port of [Kothic](http://wiki.openstre
 
 ### Contributing to Kothic JS
 
-Kothic JS is Open Source and licensed under a BSD license, so we'll be glad to accept your contributions! Please send your pull requests to one of the guys below.
+Kothic JS is licensed under a BSD license, and we'll be glad to accept your contributions! Please send your pull requests to one of the guys below.
 
-**Core contributors:** Darafei Praliaskouski ([@Komzpa](https://github.com/Komzpa)), Vladimir Agafonkin ([@mourner](https://github.com/mourner)), Maksim Gurtovenko ([@Miroff](https://github.com/Miroff))
+#### Core contributors
+
+Darafei Praliaskouski ([@Komzpa](https://github.com/Komzpa)), Vladimir Agafonkin ([@mourner](https://github.com/mourner)), Maksim Gurtovenko ([@Miroff](https://github.com/Miroff))
