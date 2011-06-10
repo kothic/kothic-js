@@ -6,11 +6,11 @@
 /* коментарии отделяются так и могут встречаться везде, где можно поставить пробел */
 
 canvas {fill-color:  #C4D4F5}
-/* 
+/*
 селектор, что рисовать.
 
-canvas - фон, считается одним большим полигоном, намного больше карты. 
-    К нему можно применять свойства заливок. 
+canvas - фон, считается одним большим полигоном, намного больше карты.
+    К нему можно применять свойства заливок.
     Для mapnik'a нельзя выбирать разные параметры фона для разных зумов, и не поддерживаются иные параметры, кроме цвета
 
 node - точка.
@@ -35,9 +35,9 @@ area|z10-[place=town],
 area|z10-[place=hamlet],
 area|z10-[place=village],
 area|z10-[place=locality]
-/* 
+/*
 квадратные скобки после объекта - селектор по тегам.
-основные варианты: 
+основные варианты:
 тег=значение
 тег!=значение - выбрать все, кроме тег=значение
 тег - тег присутствует, значение не важно
@@ -81,12 +81,12 @@ area|z10-[leisure=park] {fill-color: #c4e9a4; z-index:3;fill-image:parks2.png}
 area|z16-[leisure=garden],
 area|z16-[landuse=orchard]
        {fill-image:sady10.png; z-index:3}
-       
+
 area|z12-[natural=scrub]
        {fill-color: #e5f5dc;fill-image:kust1.png; z-index:3}
 area|z12-[natural=heath]
        {fill-color: #ecffe5; z-index:3}
-       
+
 
 area|z10-[landuse=industrial],area|z10-[landuse=military] {fill-color: #ddd8da; z-index:3}
 
@@ -98,7 +98,7 @@ area|z4-[natural=desert] {fill-image: desert22.png}
 /*
 после селектора типа объекта можно опционально ограничить зумы:
 |zA-B, A < B
-если нам не нужна какая-то из границ ("от минимального зума до такого-то" 
+если нам не нужна какая-то из границ ("от минимального зума до такого-то"
 либо "от такого-то до бесконечности") - число A или B можно опустить.
 */
 
@@ -139,7 +139,7 @@ area|z12-[leisure=pitch],
 
 
 way|z7-10[waterway=river]   {color: #C4D4F5; width: .6; z-index:9}
-/* 
+/*
 свойства с префиксом fill- в основном относятся к заливкам, без префиксов - к линиям.
 width - ширина линии
 color - цвет линии
@@ -220,13 +220,13 @@ way|z12[highway=residential],
 way|z9[highway=secondary],
 way|z9-10[highway=tertiary],
 way|z14[highway=service][living_street!=yes][service!=parking_aisle]
-        {width:0.3; opacity: 0.6; color: #996703; z-index:10; -x-mapnik-layer: bottom;}
+        {width:0.3; opacity: 0.6; color: #996703; z-index:10;}
 
 
 way|z13[highway=road],
 way|z13[highway=track]
 {text: name; text-position: line; text-color: #404040; font-family: DejaVu Sans Book; font-size:9; text-halo-radius: 1; text-halo-color: #ffffff;
-        width:0.6; opacity: 0.5; color: #996703; z-index:10; -x-mapnik-layer: bottom;}
+        width:0.6; opacity: 0.5; color: #996703; z-index:10;}
 
 way|z14-16[highway=road],
 way|z14-16[highway=track]
@@ -577,7 +577,7 @@ way|z13-[highway=primary_link]::centerline,
 
 
 
-/* 
+/*
 
 для линий можно определять subpart'ы и рисовать одну линию несколько раз _даже после появления каскадинга_ (иначе сходные правила будут объединен в одно с затиранием некоторых свойств)
 
@@ -736,7 +736,7 @@ node|z4-6[capital=yes][population>5000000] {text-offset:6; text:name; font-size:
 
 node|z4-5[place][population<100000][capital][admin_level<5] { icon-image:adm_4.png;
   text-offset:5; text:name; font-size: 7; font-family: DejaVu Sans Bold; text-halo-radius:1; text-color:#404040;text-halo-color:#ffffff; text-allow-overlap: false; -x-mapnik-min-distance:0;}
-  
+
 node|z4-5[place][population>=100000][population<=5000000][capital][admin_level<5] {icon-image:adm_5.png;
 text-offset:5; text:name; font-size: 8; font-family: DejaVu Sans Bold; text-halo-radius:1; text-color:#404040;text-halo-color:#ffffff; text-allow-overlap: false; -x-mapnik-min-distance:0;z-index:1}
 
@@ -835,7 +835,7 @@ node|z7-[place=sea]
 {text:name; text-offset:0; font-size:10; font-family: DejaVu Sans Oblique; text-halo-radius:1; text-color:#4976d1;text-halo-color:#ffffff;-x-mapnik-min-distance:0}
 
 node|z3-4[natural=peak][ele>4500]
-{icon-image: mountain_peak6.png; 
+{icon-image: mountain_peak6.png;
 text:ele; text-offset:3; font-size:7; font-family: DejaVu Sans Mono Book; text-halo-radius:0; text-color:#664229;text-halo-color:#ffffff;-x-mapnik-min-distance:0;
 }
 node|z5-6[natural=peak][ele>3500]
