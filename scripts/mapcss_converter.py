@@ -157,10 +157,9 @@ def selector_get_zoom(self):
     zoom = zoom.strip("|")
     if zoom and zoom[0] == 'z':
         zoom = zoom[1:].split('-')
-        if len(zoom) == 1 and int(zoom[0]) < 18:
-            zoom.append(int(zoom[0]) + 1)
-        elif len(zoom) == 1:
-            zoom.append(int(zoom[0]))
+        if len(zoom) == 1:
+            return ' && zoom === %d' % int(zoom[0])
+        print zoom
 
         cond = ''
         if zoom[0]:
