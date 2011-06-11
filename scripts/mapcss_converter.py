@@ -159,7 +159,6 @@ def selector_get_zoom(self):
         zoom = zoom[1:].split('-')
         if len(zoom) == 1:
             return ' && zoom === %d' % int(zoom[0])
-        print zoom
 
         cond = ''
         if zoom[0]:
