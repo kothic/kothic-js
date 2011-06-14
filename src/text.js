@@ -48,7 +48,7 @@ Kothic.textOnPath = (function() {
 
 		ctx.save();
 
-		ctx.translate(Math.floor(textCenter[0]), Math.floor(textCenter[1]));
+		ctx.translate(textCenter[0], textCenter[1]);
 		ctx.rotate(axy[0]);
 
 		ctx[halo ? 'strokeText' : 'fillText'](text, 0, 0);
@@ -164,9 +164,9 @@ Kothic.textOnPath = (function() {
 					i++;
 					letter += text.charAt(i);
 					letterWidth = getWidth(ctx, letter);
-
-					// FIXME: we shouldn't check the whole cluster as one bbox, but rather iterate letter-by-letter
-					if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > maxAngle) {
+					if (checkCollision(collisions, ctx, letter, axy)) {
+						letter = letter.slice(0,-1);
+						letterWidth = getWidth(ctx, letter);
 						i = 0;
 						widthUsed += letterWidth;
 						positions = [];
@@ -176,6 +176,7 @@ Kothic.textOnPath = (function() {
 						axy = getAngleAndCoordsAtLength(points, widthUsed);
 						break;
 					}
+					if (letterWidth >= axy[3]) break;
 				}
 				if (!axy) continue;
 				if ((axy[0] > (Math.PI / 2)) || (axy[0] < (-Math.PI / 2))) { // if current letters cluster was upside-down, count it
