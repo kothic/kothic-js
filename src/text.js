@@ -56,15 +56,18 @@ Kothic.textOnPath = (function() {
 		ctx.restore();
 	}
 
-	function getAngleAndCoordsAtLength(points, dist) {
+	function getAngleAndCoordsAtLength(points, dist, width) {
 		var pointsLen = points.length,
 			dx, dy, x, y,
 			i, c, pc,
 			len = 0,
 			segLen = 0,
-			angle, partLen;
+			angle, partLen, sameseg = true;
+			gotxy = false;
+		width = width || 3; // by default we think that a letter is 3 px wide
 
 		for (i = 1; i < pointsLen; i++){
+			if (gotxy) sameseg = false;
 			c = points[i];
 			pc = points[i - 1];
 
@@ -72,13 +75,20 @@ Kothic.textOnPath = (function() {
 			dy = c[1] - pc[1];
 			segLen = Math.sqrt(dx*dx + dy*dy);
 
-			if (len + segLen >= dist) {
+			if (!gotxy && len + segLen >= dist) {
 				partLen = dist - len;
 				x = pc[0] + dx * partLen/segLen;
 				y = pc[1] + dy * partLen/segLen;
-				angle = Math.atan2(dy, dx);
 
-				return [angle, x, y, segLen - partLen];
+				gotxy = true;
+			}
+			if (gotxy && len + segLen  >= dist+width) {
+				partLen = dist + width - len;
+				dx = pc[0] + dx * partLen/segLen;
+				dy = pc[1] + dy * partLen/segLen;
+				angle = Math.atan2(dy-y, dx-x);
+				if (sameseg) return [angle, x, y, segLen - partLen]
+				else         return [angle, x, y, 0];
 			}
 
 			len += segLen;
@@ -133,7 +143,9 @@ Kothic.textOnPath = (function() {
 
 			// iterating label letter by letter (should be fixed to support ligatures/CJK, ok for Cyrillic/latin)
 			for (i = 0; i < textLen; i++) {
-				axy = getAngleAndCoordsAtLength(points, widthUsed);
+				letter = text.charAt(i);
+				letterWidth = getWidth(ctx, letter);
+				axy = getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 
 				 // if cannot fit letter - restart with next solution
 				if (widthUsed >= pathLen || !axy) {
@@ -147,9 +159,6 @@ Kothic.textOnPath = (function() {
 				}
 
 				if (!prevAngle) prevAngle = axy[0];
-
-				letter = text.charAt(i);
-				letterWidth = getWidth(ctx, letter);
 
 				// if label collisions with another, restart it from here
 				if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > maxAngle) {
@@ -165,18 +174,20 @@ Kothic.textOnPath = (function() {
 					letter += text.charAt(i);
 					letterWidth = getWidth(ctx, letter);
 					if (checkCollision(collisions, ctx, letter, axy)) {
-						letter = letter.slice(0,-1);
-						letterWidth = getWidth(ctx, letter);
 						i = 0;
 						widthUsed += letterWidth;
 						positions = [];
 						flipCount = 0;
 						letter = text.charAt(i);
 						letterWidth = getWidth(ctx, letter);
-						axy = getAngleAndCoordsAtLength(points, widthUsed);
+						axy = getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 						break;
 					}
-					if (letterWidth >= axy[3]) break;
+					if (letterWidth >= axy[3]){
+						i--;
+						letter = letter.slice(0,-1);
+						letterWidth = getWidth(ctx, letter);
+						break};
 				}
 				if (!axy) continue;
 				if ((axy[0] > (Math.PI / 2)) || (axy[0] < (-Math.PI / 2))) { // if current letters cluster was upside-down, count it
