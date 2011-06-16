@@ -28,7 +28,7 @@ Kothic.render = (function() {
 		}
 
 		var type, selector,
-			key = [MapCSS.currentStyle, id2,
+			key = [id2,
 			       JSON.stringify(feature.properties),
 			       zoom, feature.type].join(':');
 

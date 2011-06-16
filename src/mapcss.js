@@ -1,8 +1,9 @@
 var MapCSS = {
     styles: {},
-    currentStyle: '',
+    currentStyles: [],
     onError: function(e) {},
     onImagesLoad: function() {},
+    images: {},
     
     e_min: function(/*...*/) {
 	    return Math.min.apply(null, arguments);
@@ -106,9 +107,7 @@ var MapCSS = {
 			external_images_loaded: !external_images.length
 	    };
 	
-	    if (!MapCSS.currentStyle) {
-	        MapCSS.currentStyle = style;
-	    }
+        MapCSS.currentStyles.push(style);
 	},
 
     /**
@@ -123,12 +122,14 @@ var MapCSS = {
     },
 
 	preloadSpriteImage: function(style, url) {
+        var images = MapCSS.styles[style].images;
+        delete MapCSS.styles[style].images;
 		var img = new Image();
 		img.onload = function() {
-			var images = MapCSS.styles[style].images;
 			for(var image in images) {
 				if (images.hasOwnProperty(image)) {
 					images[image].sprite = img;
+                    MapCSS.images[image] = images[image];
 				}
 			}
             MapCSS.styles[style].sprite_loaded = true;
@@ -150,7 +151,7 @@ var MapCSS = {
 				var img = new Image();
 				img.onload = function() {
 					loaded++;
-					MapCSS.styles[style].images[url] = {
+                    MapCSS.images[url] = {
 						sprite: img,
 						height: img.height,
 						width: img.width,
@@ -174,8 +175,7 @@ var MapCSS = {
 	},
 
 	getImage: function(ref) {
-		var style = MapCSS.styles[MapCSS.currentStyle],
-			img = style.images[ref];
+		var img = MapCSS.images[ref];
 		
 		if (img.sprite) {
 			var canvas = document.createElement('canvas');
@@ -186,13 +186,19 @@ var MapCSS = {
 				0, img.offset, img.width, img.height, 
 				0, 0, img.width, img.height);
 			
-			img = style.images[ref] = canvas;
+			img = MapCSS.images[ref] = canvas;
 		}
 	
 		return img;
 	},
 
-	restyle: function() {
-	    return MapCSS.styles[MapCSS.currentStyle].restyle.apply(MapCSS, arguments);
+	restyle: function(style, tags, zoom, type, selector) {
+        var styleName;
+        for (var i = 0; i < MapCSS.currentStyles.length; i++) {
+            styleName = MapCSS.currentStyles[i];
+            style = MapCSS.styles[styleName].restyle(style, tags, zoom, type, selector);
+        }
+        
+	    return style;
 	}
 };
