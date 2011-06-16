@@ -183,12 +183,14 @@ Kothic.textOnPath = (function() {
 						axy = getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 						break;
 					}
-					if (letterWidth >= axy[3]){
+					if (letterWidth >= axy[3]) {
 						i--;
-						letter = letter.slice(0,-1);
+						letter = letter.slice(0, -1);
 						letterWidth = getWidth(ctx, letter);
-						break};
+						break;
+					}
 				}
+				
 				if (!axy) continue;
 				if ((axy[0] > (Math.PI / 2)) || (axy[0] < (-Math.PI / 2))) { // if current letters cluster was upside-down, count it
 					flipCount += letter.length;
