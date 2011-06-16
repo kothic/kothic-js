@@ -10,15 +10,15 @@
 	
 	<!-- Leaflet -->
 	<script src="leaflet/leaflet.js"></script>
-	<script src="kothic-leaflet.js"></script>
 	
 	<!-- Kothic -->
 	<script src="../src/kothic.js"></script>
 	<script src="../src/mapcss.js"></script>
 	<script src="../src/text.js"></script>
 	<script src="../src/path.js"></script>
-	<script src="../src/rgbcolor.js"></script>
 	
+	<script src="../dist/kothic-leaflet.js"></script>
+
 	<!-- Kothic style -->
 	<script src="osmosnimki.js"></script>
 	
@@ -37,8 +37,15 @@
 			background: rgba(255,255,255,0.7);
 			border: 1px solid #ddd;
 			padding: 10px;
-			font: 10px Verdana, sans-serif;
 			z-index: 10000;
+			font: 12px/1.4 Verdana, sans-serif;
+			width: 160px;
+			}
+		#tileperf {
+			font: 10px/1 Verdana, sans-serif;
+			}
+		#tileperf table {
+			margin-top: 3px;
 			}
 		#mapnik {
 			margin-bottom: 10px;
@@ -54,6 +61,7 @@
 <body>
 	<div id="map"></div>
 	<div id="debug">
+		<p>OpenStreetMap data rendered on the browser using <a href="http://github.com/kothic/kothic-js">Kothic JS</a></p>
 		<button id="mapnik" onclick="toggleMapnik()">Show Mapnik</button>
 		<div id="tileperf">Rendering...</div>
 	</div>
@@ -63,24 +71,15 @@
 			maxZoom: 22
 		});
 		
-		var kothic = new L.TileLayer.Kothic();
-		/*kothic.setAdditionalStyle(function(style, tags, zoom, type, sel) {
-			var names = ['primary', 'secondary', 'tertiary', 'residential'];
-			
-			if (names.indexOf(tags['highway']) != -1 && !tags['ref'] && !tags['name']) {
-				style['default']['color'] = 'red';
-			}
-		});*/
-		/*if (tags['highway'] == 'primary' || ) {
-			style['default']['color'] = 'green';
-		} else if (tags['lit'] == 'no') {
-			style['default']['color'] = 'red';
-		}*/
+		var kothic = new L.TileLayer.Kothic({minZoom: 8});
+		
+		kothic.setAdditionalStyle(function(style, tags, zoom, type, sel) {
+			//...
+		});
 		
 		var map = new L.Map('map', {
-			center: new L.LatLng(53.9, 27.5), // Minsk 
-			//center: new L.LatLng(59.89, 30.26), // St. Peterburg 
-			zoom: 11
+			center: new L.LatLng(53.9, 27.55), // Minsk 
+			zoom: 12
 		});
 
 		kothic.on('load', function() {

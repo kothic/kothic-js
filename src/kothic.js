@@ -11,7 +11,7 @@ Kothic.render = (function() {
 	var styleCache = {},
 		pathOpened = false,
 		lastId = 0;
-	
+
 	var defaultCanvasStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
 		fillStyle: "rgba(0,0,0,0.5)",
@@ -19,21 +19,21 @@ Kothic.render = (function() {
 		lineCap: "round",
 		lineJoin: "round"
 	};
-	
+
 	function getStyle(feature, zoom, additionalStyle) {
 		var id2 = 0;
-		
+
 		if (additionalStyle) {
 			id2 = additionalStyle.kothicId = additionalStyle.kothicId || ++lastId;
 		}
-		
+
 		var type, selector,
 			key = [MapCSS.currentStyle, id2,
 			       JSON.stringify(feature.properties),
 			       zoom, feature.type].join(':');
-		
+
 		// TODO improve caching mechanism
-		// such caching is not as efficient as it might seem because of a lot of objects 
+		// such caching is not as efficient as it might seem because of a lot of objects
 		// with the same style except text property
 
 		if (!styleCache[key]) {
@@ -54,7 +54,7 @@ Kothic.render = (function() {
 				additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
 			}
 		}
-		
+
 		return styleCache[key];
 	}
 
@@ -131,7 +131,7 @@ Kothic.render = (function() {
 			image;
 
 		ctx.save();
-		
+
 		if (('fill-color' in style)) {
 			// first pass fills with solid color
 			setStyles(ctx, {
@@ -178,7 +178,7 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, false, true, ws, hs, granularity);
 
-		if (nextFeature && 
+		if (nextFeature &&
 			(nextStyle['fill-color'] === style['fill-color']) &&
 			(nextStyle['fill-image'] === style['fill-image']) &&
 			(nextStyle['fill-opacity'] === style['fill-opacity'])) return;
@@ -188,7 +188,7 @@ Kothic.render = (function() {
 		fill(ctx, style, function() {;
 			ctx.fill();
 		});
-		
+
 		ctx.restore();
 
 		pathOpened = false;
@@ -206,12 +206,12 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
-		if (nextFeature && 
+		if (nextFeature &&
 				(nextStyle.width === style.width) &&
 				(nextStyle['casing-width'] === style['casing-width']) &&
 				(nextStyle['casing-color'] === style['casing-color']) &&
 				(nextStyle['casing-opacity'] === style['casing-opacity'])) return;
-			
+
 		ctx.save();
 
 		setStyles(ctx, {
@@ -224,7 +224,7 @@ Kothic.render = (function() {
 
 		pathOpened = false;
 		ctx.stroke();
-		
+
 		ctx.restore();
 	}
 
@@ -240,11 +240,11 @@ Kothic.render = (function() {
 		}
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
-		if (nextFeature && 
+		if (nextFeature &&
 				(nextStyle.width === style.width) &&
 				(nextStyle.color === style.color) &&
 				(nextStyle.opacity === style.opacity)) return;
-		
+
 		ctx.save();
 
 		setStyles(ctx, {
@@ -328,7 +328,7 @@ Kothic.render = (function() {
 		collisions.addBox([width, 0, width, height]);
 		collisions.addBox([0, 0, 0, height]);
 	}
-	
+
 	function getReprPoint(feature) {
 		var point;
 		switch (feature.type) {
@@ -357,6 +357,8 @@ Kothic.render = (function() {
 		}
 		if (name.indexOf("bold") != -1) {
 			styles.push('bold');
+			//family += '"'+name.replace("bold", "")+'", ';
+			family += name.replace("bold", "")+ ', ';
 		}
 
 		styles.push(size + 'px');
@@ -364,9 +366,10 @@ Kothic.render = (function() {
 		if (name.indexOf('serif') != -1) {
 			family += 'Georgia, serif';
 		} else {
-			family += 'Arial, Helvetica, sans-serif';
+			family += '"Helvetica Neue", Arial, Helvetica, sans-serif';
 		}
 		styles.push(family);
+
 
 		return styles.join(' ');
 	}
@@ -374,7 +377,7 @@ Kothic.render = (function() {
 	function transformPoint(point, ws, hs, granularity) {
 		return [ws * point[0], hs * (granularity - point[1])];
 	}
-	
+
 	function transformPoints(points, ws, hs, granularity) {
 		var transformed = [];
 		for (var i = 0, len = points.length; i < len; i++) {
@@ -391,74 +394,67 @@ Kothic.render = (function() {
 
 		var point = transformPoint(reprPoint, ws, hs, granularity),
 			img;
-		
+
 		if (renderIcon) {
 			img = MapCSS.getImage(style["icon-image"]);
 			if (!img) return;
-			if ((style["allow-overlap"] != "true") && 
+			if ((style["allow-overlap"] != "true") &&
 					collides.checkPointWH(point, img.width, img.height, feature.kothicId)) return;
 		}
-		
+
 		if (renderText) {
 			ctx.save();
-	
+
 			setStyles(ctx, {
 				lineWidth: style["text-halo-radius"] + 2,
 				font: getFontString(style["font-family"], style["font-size"])
 			});
-	
+
 			var text = style['text'] + '',
 				textWidth = ctx.measureText(text).width,
 				letterWidth = textWidth / text.length,
 				collisionWidth = textWidth,
 				collisionHeight = letterWidth * 2.5,
 				offset = style["text-offset"] || 0;
-	
+
 			if ((style["text-allow-overlap"] != "true") &&
 					collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
 				ctx.restore();
 				return;
 			}
-	
-			var opacity = style["text-opacity"] || style["opacity"] || 1,
-				fillStyle = style["text-color"] || "#000000",
-				strokeStyle = style["text-halo-color"] || "#ffffff",
-				halo = ("text-halo-radius" in style);
-	
-			if (opacity < 1){
-				fillStyle = new RGBColor(fillStyle, opacity).toRGBA();
-				strokeStyle = new RGBColor(strokeStyle, opacity).toRGBA();
-			}
-	
+
+			var halo = ("text-halo-radius" in style);
+
 			setStyles(ctx, {
-				fillStyle: fillStyle,
-				strokeStyle: strokeStyle,
+				fillStyle: style["text-color"] || "#000000",
+				strokeStyle: style["text-halo-color"] || "#ffffff",
+				globalAlpha: style["text-opacity"] || style["opacity"],
 				textAlign: 'center',
 				textBaseline: 'middle'
 			});
-	
+
 			if (feature.type == "Polygon" || feature.type == "Point") {
-	
+
 				if (halo) ctx.strokeText(text, point[0], point[1] + offset);
 				ctx.fillText(text, point[0], point[1] + offset);
-	
+
 				var padding = parseFloat(style["-x-mapnik-min-distance"]) || 20;
 				collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
-	
+
 			} else if (feature.type == 'LineString') {
-	
+
 				var points = transformPoints(feature.coordinates, ws, hs, granularity);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
 			}
-	
+
 			ctx.restore();
 		}
-		
+
 		if (renderIcon) {
 			ctx.drawImage(img,
 					Math.floor(point[0] - img.width / 2),
 					Math.floor(point[1] - img.height / 2));
-			
+
 			var padding = parseFloat(style["-x-mapnik-min-distance"]) || 0;
 
 			collides.addPointWH(point, img.width, img.height, padding, feature.kothicId);
@@ -473,13 +469,13 @@ Kothic.render = (function() {
 			total: finish - start
 		};
 	}
-	
+
 
 	return function(canvasId, data, zoom, additionalStyle, onRenderComplete, buffered) {
 
 		var canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId),
 			ctx = canvas.getContext('2d'),
-			width = canvas.width, 
+			width = canvas.width,
 			height = canvas.height,
 			granularity = data.granularity,
 			ws = width / granularity,
@@ -495,10 +491,10 @@ Kothic.render = (function() {
 
 		if (buffered) {
 			buffer = document.createElement('canvas');
-			
+
 			buffer.width = width;
 			buffer.height = height;
-			
+
 			realCtx = ctx;
 			ctx = buffer.getContext('2d');
 		}
@@ -553,7 +549,7 @@ Kothic.render = (function() {
 
 		renderIconsAndText = function() {
 			addBoundaryCollisions(collides, width, height);
-			
+
 			for (i = layersLen - 1; i >= 0; i--) {
 
 				features = layers[layerIds[i]];
@@ -566,7 +562,7 @@ Kothic.render = (function() {
 						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, false, true);
 					}
 				}
-				
+
 				// render text on paths
 				for (j = featuresLen - 1; j >= 0; j--) {
 					style = features[j].style;
