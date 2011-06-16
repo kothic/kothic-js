@@ -101,7 +101,9 @@ var MapCSS = {
 	        restyle: restyle,
 	        images: sprite_images,
 	        external_images: external_images,
-	        textures: {}
+	        textures: {},
+            sprite_loaded: !sprite_images,
+			external_images_loaded: !external_images.length
 	    };
 	
 	    if (!MapCSS.currentStyle) {
@@ -109,35 +111,18 @@ var MapCSS = {
 	    }
 	},
 
-	loadImages: function(style, url) {
-	    var sprite_loaded = !url,
-			external_images_loaded = !MapCSS.styles[style].external_images.length;
-	
-		//MapCSS doesn't have any images
-		if (external_images_loaded && sprite_loaded) {
-			MapCSS.onImagesLoad();
+    /**
+     * Call MapCSS.onImagesLoad callback if all sprite and external 
+     * images was loaded 
+     */
+    _onImagesLoad: function(style) {
+		if (MapCSS.styles[style].external_images_loaded && 
+                MapCSS.styles[style].sprite_loaded) {
+				MapCSS.onImagesLoad();
 		}
-	
-		if (!external_images_loaded) {
-			MapCSS._preloadExternalImages(style, function() {
-				external_images_loaded = true;
-				if (external_images_loaded && sprite_loaded) {
-					MapCSS.onImagesLoad();
-				}
-			});
-		}
-	
-		if (!sprite_loaded) {
-			MapCSS._preloadSpriteImage(style, url, function () {
-				sprite_loaded = true;
-				if (external_images_loaded && sprite_loaded) {
-					MapCSS.onImagesLoad();
-				}
-			});
-		}
-	},
+    },
 
-	_preloadSpriteImage: function(style, url, /* callback function */ onLoad) {
+	preloadSpriteImage: function(style, url) {
 		var img = new Image();
 		img.onload = function() {
 			var images = MapCSS.styles[style].images;
@@ -146,7 +131,8 @@ var MapCSS = {
 					images[image].sprite = img;
 				}
 			}
-			onLoad();
+            MapCSS.styles[style].sprite_loaded = true;
+			MapCSS._onImagesLoad(style);
 		};
 	    img.onerror = function(e) {
 	        MapCSS.onError(e);
@@ -154,7 +140,7 @@ var MapCSS = {
 		img.src = url;
 	},
 
-	_preloadExternalImages: function(style, /* callback function */ onLoad) {
+	preloadExternalImages: function(style) {
 		var external_images = MapCSS.styles[style].external_images;
 		delete MapCSS.styles[style].external_images;
 	
@@ -171,13 +157,15 @@ var MapCSS = {
 						offset: 0
 					};
 					if (loaded == len) {
-						onLoad();
+                        MapCSS.styles[style].external_images_loaded = true;
+            			MapCSS._onImagesLoad(style);
 					}
 				};
 				img.onerror = function() {
 					loaded++;
 					if (loaded == len) {
-						onLoad();
+                        MapCSS.styles[style].external_images_loaded = true;
+            			MapCSS._onImagesLoad(style);
 					}
 				};
 				img.src = url;

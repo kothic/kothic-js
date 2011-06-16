@@ -1,6 +1,6 @@
 
 (function(MapCSS) {
-    function restyle(tags, zoom, type, selector) {
+    function restyle(style, tags, zoom, type, selector) {
         var s_default = {};
         var s_centerline = {};
         var s_ticks = {};
@@ -1897,7 +1897,6 @@
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
-        var style = {};
         if (s_default) {
             style['default'] = s_default;
         }
@@ -1958,5 +1957,6 @@
     var external_images = [];
     
     MapCSS.loadStyle('osmosnimki-maps', restyle, sprite_images, external_images);
+    MapCSS.preloadExternalImages('osmosnimki-maps');
 })(MapCSS);
     

@@ -48,7 +48,8 @@ Kothic.render = (function() {
 			    type = 'node';
 			    selector = 'node';
 			}
-			styleCache[key] = MapCSS.restyle(feature.properties, zoom, type, selector);
+            styleCache[key] = styleCache[key] || {};
+			styleCache[key] = MapCSS.restyle(styleCache[key], feature.properties, zoom, type, selector);
 			if (additionalStyle) {
 				additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
 			}
@@ -155,7 +156,8 @@ Kothic.render = (function() {
 	}
 
 	function renderBackground(ctx, width, height, zoom) {
-		var style = MapCSS.restyle({}, zoom, "canvas", "canvas")['default'];
+		var style = {};
+        MapCSS.restyle(style, {}, zoom, "canvas", "canvas")['default'];
 
 		ctx.save();
 

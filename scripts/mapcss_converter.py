@@ -243,6 +243,10 @@ if __name__ == "__main__":
         dest="input", 
         help="MapCSS input file, required")    
 
+    parser.add_option("-n", "--name",
+        dest="name", 
+        help="MapCSS style name, optional")    
+
     parser.add_option("-o", "--output",
         dest="output", 
         help="JS output file. If not specified [stylename].js will be used")    
@@ -261,7 +265,10 @@ if __name__ == "__main__":
         print "--mapcss parameter is required"
         raise SystemExit
 
-    style_name = re.sub("\..*", "", options.input)
+    if options.name:
+        style_name = options.name
+    else:
+        style_name = re.sub("\..*", "", options.input)
 
     content = open(options.input).read()
     parser = MapCSSParser(debug=False)
@@ -273,10 +280,9 @@ if __name__ == "__main__":
 
     js = """
 (function(MapCSS) {
-    function restyle(tags, zoom, type, selector) {
+    function restyle(style, tags, zoom, type, selector) {
 %s
 %s
-        var style = {};
 %s        
         return style;
     }
@@ -300,10 +306,12 @@ if __name__ == "__main__":
     var external_images = [%s];
     
     MapCSS.loadStyle('%s', restyle, sprite_images, external_images);
+    MapCSS.preloadExternalImages('%s');
 })(MapCSS);
     """ % (
             ",".join(map(image_as_js, sprite_images)), 
             ", ".join(map(lambda i: "'%s'" % i, external_images)), 
+            style_name,
             style_name)
     
     with open(output, "w") as fh:

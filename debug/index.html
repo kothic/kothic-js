@@ -94,8 +94,7 @@
 		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);
 		};
-		MapCSS.loadImages("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
-		
+		MapCSS.preloadSpriteImage("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
 		
 		var mapnikVisible = false,
 			button = document.getElementById('mapnik');
