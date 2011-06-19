@@ -565,18 +565,10 @@ Kothic.render = (function() {
 					}
 				}
 
-				// render text on paths
+				// render text on features without icons
 				for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
 					style = features[j].style;
-					if (style["text"] && style["text-position"] == 'line') {
-						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, false);
-					}
-				}
-
-				// render horizontal text on features without icons
-				for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
-					style = features[j].style;
-					if (style["text"] && style["text-position"] != 'line' && !("icon-image" in style)) {
+					if (style["text"] && !("icon-image" in style)) {
 						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, false);
 					}
 				}
