@@ -337,7 +337,7 @@ Kothic.render = (function() {
 			case 'LineString': point = feature.coordinates[0]; break;
 			case 'GeometryCollection': //TODO: Disassemble geometry collection
 			case 'MultiPoint': //TODO: Disassemble multi point
-			case 'MultiPolygon': //TODO: Disassemble multi polygon
+			case 'MultiPolygon': point = feature.reprpoint; break;//TODO: Disassemble multi polygon
 			case 'MultiLineString': return; //TODO: Disassemble multi line string
 		}
 		return point;
@@ -416,12 +416,8 @@ Kothic.render = (function() {
 				collisionWidth = textWidth,
 				collisionHeight = letterWidth * 2.5,
 				offset = style["text-offset"] || 0;
+			//var positions = style["text-positions"]
 
-			if ((style["text-allow-overlap"] != "true") &&
-					collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
-				ctx.restore();
-				return;
-			}
 
 			var halo = ("text-halo-radius" in style);
 
@@ -434,6 +430,11 @@ Kothic.render = (function() {
 			});
 
 			if (feature.type == "Polygon" || feature.type == "Point") {
+				if ((style["text-allow-overlap"] != "true") &&
+						collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
+					ctx.restore();
+					return;
+				}
 
 				if (halo) ctx.strokeText(text, point[0], point[1] + offset);
 				ctx.fillText(text, point[0], point[1] + offset);
