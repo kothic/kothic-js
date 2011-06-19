@@ -550,6 +550,7 @@ Kothic.render = (function() {
 
 		renderIconsAndText = function() {
 			addBoundaryCollisions(collides, width, height);
+			var textOnCanvasAvailable = ctx.strokeText && ctx.fillText && ctx.measureText;
 
 			for (i = layersLen - 1; i >= 0; i--) {
 
@@ -565,7 +566,7 @@ Kothic.render = (function() {
 				}
 
 				// render text on paths
-				for (j = featuresLen - 1; j >= 0; j--) {
+				for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
 					style = features[j].style;
 					if (style["text"] && style["text-position"] == 'line') {
 						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, false);
@@ -573,7 +574,7 @@ Kothic.render = (function() {
 				}
 
 				// render horizontal text on features without icons
-				for (j = featuresLen - 1; j >= 0; j--) {
+				for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
 					style = features[j].style;
 					if (style["text"] && style["text-position"] != 'line' && !("icon-image" in style)) {
 						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, false);
@@ -584,7 +585,7 @@ Kothic.render = (function() {
 				for (j = featuresLen - 1; j >= 0; j--) {
 					style = features[j].style;
 					if (("icon-image" in style) && style["text"]) {
-						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, true, true);
+						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, textOnCanvasAvailable, true);
 					}
 				}
 			}
