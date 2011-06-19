@@ -424,7 +424,7 @@ Kothic.render = (function() {
 			setStyles(ctx, {
 				fillStyle: style["text-color"] || "#000000",
 				strokeStyle: style["text-halo-color"] || "#ffffff",
-				globalAlpha: style["text-opacity"] || style["opacity"],
+				globalAlpha: style["text-opacity"] || style["opacity"] || 1,
 				textAlign: 'center',
 				textBaseline: 'middle'
 			});
@@ -439,7 +439,7 @@ Kothic.render = (function() {
 				if (halo) ctx.strokeText(text, point[0], point[1] + offset);
 				ctx.fillText(text, point[0], point[1] + offset);
 
-				var padding = parseFloat(style["-x-mapnik-min-distance"]) || 20;
+				var padding = style["-x-mapnik-min-distance"] || 20;
 				collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
 
 			} else if (feature.type == 'LineString') {
