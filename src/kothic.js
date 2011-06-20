@@ -18,7 +18,9 @@ Kothic.render = (function() {
 		fillStyle: "rgba(0,0,0,0.5)",
 		lineWidth: 1,
 		lineCap: "round",
-		lineJoin: "round"
+		lineJoin: "round",
+		textAlign: 'center',
+		textBaseline: 'middle'
 	};
 
 	function getStyle(feature, zoom, additionalStyle) {
@@ -456,8 +458,9 @@ Kothic.render = (function() {
 
 				var points = transformPoints(feature.coordinates, ws, hs, granularity);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
-				delete canvasLastStyles.textAlign;
+				delete canvasLastStyles.textAlign;   // FIXME: why do we have to do this? where does canvas gets .restored without save?
 				delete canvasLastStyles.strokeStyle;
+				delete canvasLastStyles.textBaseline;
 			}
 
 		}
