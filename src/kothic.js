@@ -130,13 +130,11 @@ Kothic.render = (function() {
 		var opacity = style["fill-opacity"] || style.opacity,
 			image;
 
-		ctx.save();
-
 		if (('fill-color' in style)) {
 			// first pass fills with solid color
 			setStyles(ctx, {
 				fillStyle: style["fill-color"],
-				globalAlpha: opacity
+				globalAlpha: opacity || 1
 			});
 			fillFn();
 		}
@@ -147,25 +145,21 @@ Kothic.render = (function() {
 			if (image) {
 				setStyles(ctx, {
 					fillStyle: ctx.createPattern(image, 'repeat'),
-					globalAlpha: opacity
+					globalAlpha: opacity || 1
 				});
 			}
 			fillFn();
 		}
-		ctx.restore();
 	}
 
 	function renderBackground(ctx, width, height, zoom) {
 		var style = {};
         MapCSS.restyle(style, {}, zoom, "canvas", "canvas")['default'];
 
-		ctx.save();
-
 		fill(ctx, style, function() {
 			ctx.fillRect(-1, -1, width + 1, height + 1);
 		});
 
-		ctx.restore();
 	}
 
 	function renderPolygonFill(ctx, feature, nextFeature, ws, hs, granularity) {
@@ -183,13 +177,9 @@ Kothic.render = (function() {
 			(nextStyle['fill-image'] === style['fill-image']) &&
 			(nextStyle['fill-opacity'] === style['fill-opacity'])) return;
 
-		ctx.save();
-
 		fill(ctx, style, function() {;
 			ctx.fill();
 		});
-
-		ctx.restore();
 
 		pathOpened = false;
 	}
@@ -210,22 +200,22 @@ Kothic.render = (function() {
 				(nextStyle.width === style.width) &&
 				(nextStyle['casing-width'] === style['casing-width']) &&
 				(nextStyle['casing-color'] === style['casing-color']) &&
-				(nextStyle['casing-opacity'] === style['casing-opacity'])) return;
-
-		ctx.save();
+				((nextStyle['casing-dashes'] || nextStyle['dashes'] || false) === (style['casing-dashes'] || style['dashes'] || false)) &&
+				((nextStyle['casing-linecap'] || nextStyle['linecap'] || false) === (style['casing-linecap'] || style['linecap'] || false)) &&
+				((nextStyle['casing-linejoin'] || nextStyle['linejoin'] || false) === (style['casing-linejoin'] || style['linejoin'] || false)) &&
+				((nextStyle['casing-opacity'] || nextStyle['opacity']) === (style['opacity'] || style['casing-opacity']))) return;
 
 		setStyles(ctx, {
 			lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
-			strokeStyle: style["casing-color"],
-			lineCap: style["casing-linecap"] || style.linecap,
-			lineJoin: style["casing-linejoin"] || style.linejoin,
-			globalAlpha: style["casing-opacity"]
+			strokeStyle: style["casing-color"] || "#000000",
+			lineCap: style["casing-linecap"] || style.linecap || "butt",
+			lineJoin: style["casing-linejoin"] || style.linejoin || "round",
+			globalAlpha: style["casing-opacity"] || 1
 		});
 
 		pathOpened = false;
 		ctx.stroke();
 
-		ctx.restore();
 	}
 
 	function renderPolyline(ctx, feature, nextFeature, ws, hs, granularity) {
@@ -243,21 +233,40 @@ Kothic.render = (function() {
 		if (nextFeature &&
 				(nextStyle.width === style.width) &&
 				(nextStyle.color === style.color) &&
+				(nextStyle.linecap === style.linecap) &&
+				(nextStyle.linejoin === style.linejoin) &&
+				(nextStyle.image === style.image) &&
 				(nextStyle.opacity === style.opacity)) return;
 
-		ctx.save();
+		if (('color' in style) || not ('image' in style)) {
+			setStyles(ctx, {
+				lineWidth: style.width || 1,
+				strokeStyle: style.color||'#000000',
+				lineCap: style.linecap || "round",
+				lineJoin: style.linejoin || "round",
+				globalAlpha: style.opacity || 1
+			});
+			ctx.stroke();
+		}
 
-		setStyles(ctx, {
-			lineWidth: style.width,
-			strokeStyle: style.color,
-			lineCap: style.linecap,
-			lineJoin: style.linejoin,
-			globalAlpha: style.opacity
-		});
+		
 
+		if ('image' in style) {
+			// second pass fills with texture
+			image = MapCSS.getImage(style['image']);
+			if (image) {
+				setStyles(ctx, {
+					strokeStyle: ctx.createPattern(image, 'repeat'),
+					lineWidth: style.width || 1,
+					lineCap: style.linecap || "round",
+					lineJoin: style.linejoin || "round",
+					globalAlpha: style.opacity || 1
+				});
+				ctx.stroke();
+			}
+
+		}
 		pathOpened = false;
-		ctx.stroke();
-		ctx.restore();
 	}
 
 	function CollisionBuffer(ctx, debugBoxes, debugChecks) {
@@ -537,7 +546,7 @@ Kothic.render = (function() {
 				ctx.lineCap = "round";
 
 				for (j = 0; j < featuresLen; j++) {
-					if ("width" in features[j].style) {
+					if (features[j].style.width) {
 						renderPolyline(ctx, features[j], features[j+1], ws, hs, granularity);
 					}
 				}
