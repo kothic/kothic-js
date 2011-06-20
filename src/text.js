@@ -62,7 +62,7 @@ Kothic.textOnPath = (function() {
 			i, c, pc,
 			len = 0,
 			segLen = 0,
-			angle, partLen, sameseg = true;
+			angle, partLen, sameseg = true,
 			gotxy = false;
 		width = width || 3; // by default we think that a letter is 3 px wide
 
