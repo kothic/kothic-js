@@ -10,7 +10,8 @@ Kothic.render = (function() {
 
 	var styleCache = {},
 		pathOpened = false,
-		lastId = 0;
+		lastId = 0,
+		canvasLastStyles = {};
 
 	var defaultCanvasStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
@@ -120,8 +121,9 @@ Kothic.render = (function() {
 
 	function setStyles(ctx, styles) {
 		for (var i in styles) {
-			if (styles.hasOwnProperty(i) && styles[i]) {
+			if (styles.hasOwnProperty(i) && canvasLastStyles[i] != styles[i]) {
 				ctx[i] = styles[i];
+				canvasLastStyles[i] = styles[i];
 			}
 		}
 	}
@@ -133,7 +135,7 @@ Kothic.render = (function() {
 		if (('fill-color' in style)) {
 			// first pass fills with solid color
 			setStyles(ctx, {
-				fillStyle: style["fill-color"],
+				fillStyle: style["fill-color"] || "#000000",
 				globalAlpha: opacity || 1
 			});
 			fillFn();
@@ -173,9 +175,9 @@ Kothic.render = (function() {
 		Kothic.path(ctx, feature, false, true, ws, hs, granularity);
 
 		if (nextFeature &&
-			(nextStyle['fill-color'] === style['fill-color']) &&
-			(nextStyle['fill-image'] === style['fill-image']) &&
-			(nextStyle['fill-opacity'] === style['fill-opacity'])) return;
+			(nextStyle['fill-color'] == style['fill-color']) &&
+			(nextStyle['fill-image'] == style['fill-image']) &&
+			(nextStyle['fill-opacity'] == style['fill-opacity'])) return;
 
 		fill(ctx, style, function() {;
 			ctx.fill();
@@ -197,13 +199,13 @@ Kothic.render = (function() {
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
 		if (nextFeature &&
-				(nextStyle.width === style.width) &&
-				(nextStyle['casing-width'] === style['casing-width']) &&
-				(nextStyle['casing-color'] === style['casing-color']) &&
-				((nextStyle['casing-dashes'] || nextStyle['dashes'] || false) === (style['casing-dashes'] || style['dashes'] || false)) &&
-				((nextStyle['casing-linecap'] || nextStyle['linecap'] || false) === (style['casing-linecap'] || style['linecap'] || false)) &&
-				((nextStyle['casing-linejoin'] || nextStyle['linejoin'] || false) === (style['casing-linejoin'] || style['linejoin'] || false)) &&
-				((nextStyle['casing-opacity'] || nextStyle['opacity']) === (style['opacity'] || style['casing-opacity']))) return;
+				(nextStyle.width == style.width) &&
+				(nextStyle['casing-width'] == style['casing-width']) &&
+				(nextStyle['casing-color'] == style['casing-color']) &&
+				((nextStyle['casing-dashes'] || nextStyle['dashes'] || false) == (style['casing-dashes'] || style['dashes'] || false)) &&
+				((nextStyle['casing-linecap'] || nextStyle['linecap'] || false) == (style['casing-linecap'] || style['linecap'] || false)) &&
+				((nextStyle['casing-linejoin'] || nextStyle['linejoin'] || false) == (style['casing-linejoin'] || style['linejoin'] || false)) &&
+				((nextStyle['casing-opacity'] || nextStyle['opacity']) == (style['opacity'] || style['casing-opacity']))) return;
 
 		setStyles(ctx, {
 			lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
@@ -256,7 +258,7 @@ Kothic.render = (function() {
 			image = MapCSS.getImage(style['image']);
 			if (image) {
 				setStyles(ctx, {
-					strokeStyle: ctx.createPattern(image, 'repeat'),
+					strokeStyle: ctx.createPattern(image, 'repeat') || "#000000",
 					lineWidth: style.width || 1,
 					lineCap: style.linecap || "round",
 					lineJoin: style.linejoin || "round",
@@ -412,10 +414,10 @@ Kothic.render = (function() {
 		}
 
 		if (renderText) {
-			ctx.save();
+			
 
 			setStyles(ctx, {
-				lineWidth: style["text-halo-radius"] + 2,
+				lineWidth: style["text-halo-radius"] * 2,
 				font: getFontString(style["font-family"], style["font-size"])
 			});
 
@@ -441,7 +443,6 @@ Kothic.render = (function() {
 			if (feature.type == "Polygon" || feature.type == "Point") {
 				if ((style["text-allow-overlap"] != "true") &&
 						collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
-					ctx.restore();
 					return;
 				}
 
@@ -455,9 +456,10 @@ Kothic.render = (function() {
 
 				var points = transformPoints(feature.coordinates, ws, hs, granularity);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
+				delete canvasLastStyles.textAlign;
+				delete canvasLastStyles.strokeStyle;
 			}
 
-			ctx.restore();
 		}
 
 		if (renderIcon) {
