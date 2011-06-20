@@ -205,8 +205,8 @@ Kothic.render = (function() {
 				(nextStyle['casing-width'] == style['casing-width']) &&
 				(nextStyle['casing-color'] == style['casing-color']) &&
 				((nextStyle['casing-dashes'] || nextStyle['dashes'] || false) == (style['casing-dashes'] || style['dashes'] || false)) &&
-				((nextStyle['casing-linecap'] || nextStyle['linecap'] || false) == (style['casing-linecap'] || style['linecap'] || false)) &&
-				((nextStyle['casing-linejoin'] || nextStyle['linejoin'] || false) == (style['casing-linejoin'] || style['linejoin'] || false)) &&
+				((nextStyle['casing-linecap'] || nextStyle['linecap'] || "butt") == (style['casing-linecap'] || style['linecap'] || "butt")) &&
+				((nextStyle['casing-linejoin'] || nextStyle['linejoin'] || "round") == (style['casing-linejoin'] || style['linejoin'] || "round")) &&
 				((nextStyle['casing-opacity'] || nextStyle['opacity']) == (style['opacity'] || style['casing-opacity']))) return;
 
 		setStyles(ctx, {
@@ -235,12 +235,12 @@ Kothic.render = (function() {
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
 		if (nextFeature &&
-				(nextStyle.width === style.width) &&
-				(nextStyle.color === style.color) &&
-				(nextStyle.linecap === style.linecap) &&
-				(nextStyle.linejoin === style.linejoin) &&
-				(nextStyle.image === style.image) &&
-				(nextStyle.opacity === style.opacity)) return;
+				((nextStyle.width || 1) == (style.width || 1)) &&
+				((nextStyle.color || "#000000") == (style.color || "#000000")) &&
+				(nextStyle.linecap == style.linecap) &&
+				(nextStyle.linejoin == style.linejoin) &&
+				(nextStyle.image == style.image) &&
+				(nextStyle.opacity == style.opacity)) return;
 
 		if (('color' in style) || not ('image' in style)) {
 			setStyles(ctx, {
