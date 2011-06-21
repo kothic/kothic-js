@@ -35,6 +35,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 			layer._debugMessages.push(debugStr);
 			layer.tileDrawn(canvas);
 		}
+        
+        this._invertYAxe(data)
 		
 		Kothic.render(canvas, data, zoom + zoomOffset, layer._additionalStyle, onRenderComplete, buffered);
 		delete this._canvases[key];
@@ -59,6 +61,37 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		this._canvases[key] = canvas;
 		this._loadScript('http://osmosnimki.ru/vtile/' + key + '.js');
 	},
+    
+    _invertYAxe: function(data) {
+        var type, coordinates, tileSize = data.granularity;
+        for (var i = 0; i < data.features.length; i++) {
+            coordinates = data.features[i].coordinates;
+            type = data.features[i].type;
+            if (type == 'Point') {
+                coordinates[1] = tileSize - coordinates[1];
+            } else if (type == 'MultiPoint' || type == 'LineString') {
+                for (var j = 0; j < coordinates.length; j++) {
+                    coordinates[j][1] = tileSize - coordinates[j][1];
+                }
+            } else if (type == 'MultiLineString' || type == 'Polygon') {
+                for (var k = 0; k < coordinates.length; k++) {
+                    for (var j = 0; j < coordinates[k].length; j++) {
+                        coordinates[k][j][1] = tileSize - coordinates[k][j][1];
+                    }
+                }
+            } else if (type == 'MultiPolygon') {
+                for (var l = 0; l < coordinates.length; l++) {
+                    for (var k = 0; k < coordinates[l].length; k++) {
+                        for (var j = 0; j < coordinates[l][k].length; j++) {
+                            coordinates[l][k][j][1] = tileSize - coordinates[l][k][j][1];
+                        }
+                    }
+                }
+            } else {
+                window.console && window.console.log("Unexpected GeoJSON type: " + type);
+            }
+        }
+    },
 	
 	setAdditionalStyle: function(fn) {
 		this._additionalStyle = fn;

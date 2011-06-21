@@ -64,8 +64,8 @@ Kothic.path = (function() {
 		return p[0] === 0 || p[0] == size || p[1] === 0 || p[1] == size;
 	}
 	
-	function transformPoint(point, ws, hs, granularity) {
-		return [ws * point[0], hs * (granularity - point[1])];
+	function transformPoint(point, ws, hs) {
+		return [ws * point[0], hs * point[1]];
 	}
 	
 	
@@ -99,7 +99,7 @@ Kothic.path = (function() {
 	
 					for (j = 0; j <= pointsLen; j++) {
 						point = points[j] || points[0];
-						screenPoint = transformPoint(point, ws, hs, granularity);
+						screenPoint = transformPoint(point, ws, hs);
 						
 						if (j === 0 || (!fill && 
 								isTileBoundary(point, granularity) && 
@@ -123,7 +123,7 @@ Kothic.path = (function() {
 				
 				for (j = 0; j < pointsLen; j++) {
 					point = points[j];
-					screenPoint = transformPoint(point, ws, hs, granularity);
+					screenPoint = transformPoint(point, ws, hs);
 
 					// continue path off the tile by some abount to fix path edges between tiles
 					if ((j === 0 || j == pointsLen - 1) && isTileBoundary(point, granularity)) {
@@ -134,7 +134,7 @@ Kothic.path = (function() {
 						dist = Math.sqrt(dx * dx + dy * dy);
 						
 						screenPoint = [screenPoint[0] + pad * dx/dist, 
-						               screenPoint[1] - pad * dy/dist];
+						               screenPoint[1] + pad * dy/dist];
 					}
 					
 					if (j === 0) {
