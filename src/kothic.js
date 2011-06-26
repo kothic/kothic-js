@@ -253,7 +253,7 @@ Kothic.render = (function() {
 			ctx.stroke();
 		}
 
-		
+
 
 		if ('image' in style) {
 			// second pass fills with texture
@@ -416,7 +416,7 @@ Kothic.render = (function() {
 		}
 
 		if (renderText) {
-			
+
 
 			setStyles(ctx, {
 				lineWidth: style["text-halo-radius"] * 2,
@@ -458,9 +458,7 @@ Kothic.render = (function() {
 
 				var points = transformPoints(feature.coordinates, ws, hs, granularity);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
-				delete canvasLastStyles.textAlign;   // FIXME: why do we have to do this? where does canvas gets .restored without save?
-				delete canvasLastStyles.strokeStyle;
-				delete canvasLastStyles.textBaseline;
+				canvasLastStyles = {};   // FIXME: why do we have to do this? where does canvas gets .restored without save?
 			}
 
 		}
