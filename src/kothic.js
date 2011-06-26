@@ -10,8 +10,7 @@ Kothic.render = (function() {
 
 	var styleCache = {},
 		pathOpened = false,
-		lastId = 0,
-		canvasLastStyles = {};
+		lastId = 0;
 
 	var defaultCanvasStyles = {
 		strokeStyle: "rgba(0,0,0,0.5)",
@@ -123,9 +122,8 @@ Kothic.render = (function() {
 
 	function setStyles(ctx, styles) {
 		for (var i in styles) {
-			if (styles.hasOwnProperty(i) && canvasLastStyles[i] != styles[i]) {
+			if (styles.hasOwnProperty(i)){
 				ctx[i] = styles[i];
-				canvasLastStyles[i] = styles[i];
 			}
 		}
 	}
@@ -151,14 +149,15 @@ Kothic.render = (function() {
 					fillStyle: ctx.createPattern(image, 'repeat'),
 					globalAlpha: opacity || 1
 				});
+				fillFn();
 			}
-			fillFn();
+
 		}
 	}
 
 	function renderBackground(ctx, width, height, zoom) {
 		var style = {};
-        MapCSS.restyle(style, {}, zoom, "canvas", "canvas")['default'];
+    style = MapCSS.restyle(style, {}, zoom, "canvas", "canvas")['default'];
 
 		fill(ctx, style, function() {
 			ctx.fillRect(-1, -1, width + 1, height + 1);
@@ -181,7 +180,7 @@ Kothic.render = (function() {
 			(nextStyle['fill-image'] == style['fill-image']) &&
 			(nextStyle['fill-opacity'] == style['fill-opacity'])) return;
 
-		fill(ctx, style, function() {;
+		fill(ctx, style, function() {
 			ctx.fill();
 		});
 
@@ -458,7 +457,6 @@ Kothic.render = (function() {
 
 				var points = transformPoints(feature.coordinates, ws, hs, granularity);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
-				canvasLastStyles = {};   // FIXME: why do we have to do this? where does canvas gets .restored without save?
 			}
 
 		}
