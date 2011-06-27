@@ -342,11 +342,14 @@ Kothic.render = (function() {
 	}
 
 	function getReprPoint(feature) {
-		var point;
+		var point, len;
 		switch (feature.type) {
 			case 'Point': point = feature.coordinates; break;
 			case 'Polygon': point = feature.reprpoint; break;
-			case 'LineString': point = feature.coordinates[0]; break;
+			case 'LineString':	len = Kothic.geomops.getPolyLength(feature.coordinates);
+													point = Kothic.geomops.getAngleAndCoordsAtLength(feature.coordinates, len/2, 0);
+													point = [point[1],point[2]];
+													break;
 			case 'GeometryCollection': //TODO: Disassemble geometry collection
 			case 'MultiPoint': //TODO: Disassemble multi point
 			case 'MultiPolygon': point = feature.reprpoint; break;//TODO: Disassemble multi polygon
@@ -396,6 +399,90 @@ Kothic.render = (function() {
 			transformed.push(transformPoint(points[i], ws, hs, granularity));
 		}
 		return transformed;
+	}
+
+	function renderShield(ctx, feature, collides, ws, hs, granularity) {
+		var style = feature.style,
+			reprPoint = getReprPoint(feature);
+		if (!reprPoint) return;
+		var point = transformPoint(reprPoint, ws, hs, granularity),
+			img, len = 0, found = false;
+		if (style["shield-image"]){
+			img = MapCSS.getImage(style["icon-image"]);
+			if (!img) return;
+		}
+
+		setStyles(ctx, {
+			font: getFontString(style["shield-font-family"]||style["font-family"],
+													style["shield-font-size"]||style["font-size"]),
+			fillStyle: style["shield-text-color"] || "#000000",
+			globalAlpha: style["shield-text-opacity"] || style["opacity"] || 1,
+			textAlign: 'center',
+			textBaseline: 'middle'
+		});
+
+		var text = style['shield-text'] + '',
+			textWidth = ctx.measureText(text).width,
+			letterWidth = textWidth / text.length,
+			collisionWidth = textWidth+2,
+			collisionHeight = letterWidth * 1.8;
+		if (feature.type = 'LineString') {
+			len = Kothic.geomops.getPolyLength(feature.coordinates);
+			if (Math.max(collisionHeight / hs, collisionWidth/ws) > len) return;
+			for (var i = 0, sgn = 1; i += Math.max(len/30, collisionHeight / ws), sgn *= -1; i < len/2 ){
+				reprPoint = Kothic.geomops.getAngleAndCoordsAtLength(feature.coordinates, len/2+sgn*i, 0);
+				if (!reprPoint) break;
+				reprPoint = [reprPoint[1],reprPoint[2]];
+				point = transformPoint(reprPoint, ws, hs, granularity);
+				if (img && (style["allow-overlap"] != "true") &&
+					collides.checkPointWH(point, img.width, img.height, feature.kothicId)) continue;
+				if ((style["allow-overlap"] != "true") &&
+					collides.checkPointWH(point, collisionWidth, collisionHeight, feature.kothicId)) continue;
+				found = true;
+				break;
+			}
+		}
+		if (!found) return;
+
+		if (style["shield-casing-width"]){
+			setStyles(ctx, {
+				fillStyle: style["shield-casing-color"] || "#000000",
+				globalAlpha: style["shield-casing-opacity"] || style["opacity"] || 1
+			});
+			ctx.fillRect(point[0] - collisionWidth/2 - (style["shield-casing-width"]||0) - (style["shield-frame-width"]||0),
+									 point[1] - collisionHeight/2 - (style["shield-casing-width"]||0) - (style["shield-frame-width"]||0),
+									 collisionWidth + 2*(style["shield-casing-width"]||0) + 2*(style["shield-frame-width"]||0),
+									 collisionHeight + 2*(style["shield-casing-width"]||0) + 2*(style["shield-frame-width"]||0));
+		}
+		if (style["shield-frame-width"]){
+			setStyles(ctx, {
+				fillStyle: style["shield-frame-color"] || "#000000",
+				globalAlpha: style["shield-frame-opacity"] || style["opacity"] || 1
+			});
+			ctx.fillRect(point[0] - collisionWidth/2 - (style["shield-frame-width"]||0),
+									 point[1] - collisionHeight/2  - (style["shield-frame-width"]||0),
+									 collisionWidth + 2*(style["shield-frame-width"]||0),
+									 collisionHeight + 2*(style["shield-frame-width"]||0));
+		}
+		if (style["shield-color"]){
+			setStyles(ctx, {
+				fillStyle: style["shield-color"] || "#000000",
+				globalAlpha: style["shield-opacity"] || style["opacity"] || 1
+			});
+			ctx.fillRect(point[0] - collisionWidth/2,
+									 point[1] - collisionHeight/2,
+									 collisionWidth,
+									 collisionHeight);
+		}
+		setStyles(ctx, {
+				fillStyle: style["shield-text-color"] || "#000000",
+				globalAlpha: style["shield-text-opacity"] || style["opacity"] || 1
+		});
+		console.log(point);
+		ctx.fillText(text, point[0], Math.ceil(point[1]));
+		if (img) collides.addPointWH(point, img.width, img.height, 0, feature.kothicId);
+		collides.addPointWH(point, collisionHeight, collisionWidth,
+												(style["shield-casing-width"]||0) + (style["shield-frame-width"]||0), feature.kothicId);
 	}
 
 	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, granularity, renderText, renderIcon) {
@@ -458,7 +545,6 @@ Kothic.render = (function() {
 				var points = transformPoints(feature.coordinates, ws, hs, granularity);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
 			}
-
 		}
 
 		if (renderIcon) {
@@ -588,6 +674,14 @@ Kothic.render = (function() {
 					style = features[j].style;
 					if (("icon-image" in style) && style["text"]) {
 						renderTextIconOrBoth(ctx, features[j], collides, ws, hs, granularity, textOnCanvasAvailable, true);
+					}
+				}
+
+				// render shields with text
+				for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
+					style = features[j].style;
+					if (style["shield-text"]) {
+						renderShield(ctx, features[j], collides, ws, hs, granularity);
 					}
 				}
 			}
