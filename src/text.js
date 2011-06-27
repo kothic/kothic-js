@@ -56,61 +56,6 @@ Kothic.textOnPath = (function() {
 		ctx.restore();
 	}
 
-	function getAngleAndCoordsAtLength(points, dist, width) {
-		var pointsLen = points.length,
-			dx, dy, x, y,
-			i, c, pc,
-			len = 0,
-			segLen = 0,
-			angle, partLen, sameseg = true,
-			gotxy = false;
-		width = width || 3; // by default we think that a letter is 3 px wide
-
-		for (i = 1; i < pointsLen; i++){
-			if (gotxy) sameseg = false;
-			c = points[i];
-			pc = points[i - 1];
-
-			dx = c[0] - pc[0];
-			dy = c[1] - pc[1];
-			segLen = Math.sqrt(dx*dx + dy*dy);
-
-			if (!gotxy && len + segLen >= dist) {
-				partLen = dist - len;
-				x = pc[0] + dx * partLen/segLen;
-				y = pc[1] + dy * partLen/segLen;
-
-				gotxy = true;
-			}
-			if (gotxy && len + segLen  >= dist+width) {
-				partLen = dist + width - len;
-				dx = pc[0] + dx * partLen/segLen;
-				dy = pc[1] + dy * partLen/segLen;
-				angle = Math.atan2(dy-y, dx-x);
-				if (sameseg) return [angle, x, y, segLen - partLen]
-				else         return [angle, x, y, 0];
-			}
-
-			len += segLen;
-		}
-	}
-
-	function getPolyLength(points) {
-		var pointsLen = points.length,
-			c, pc, i,
-			dx, dy,
-			len = 0;
-
-		for (i = 1; i < pointsLen; i++){
-			c = points[i];
-			pc = points[i - 1];
-			dx = pc[0] - c[0];
-			dy = pc[1] - c[1];
-			len += Math.sqrt(dx*dx + dy*dy);
-		}
-		return len;
-	}
-
 	return function(ctx, points, text, halo, collisions) {
 		widthCache = {};
 
@@ -118,7 +63,7 @@ Kothic.textOnPath = (function() {
 
 		var textWidth = ctx.measureText(text).width,
 			textLen = text.length,
-			pathLen = getPolyLength(points);
+			pathLen = Kothic.geomops.getPolyLength(points);
 
 		if (pathLen < textWidth) return;  // if label won't fit - don't try to
 
@@ -145,7 +90,7 @@ Kothic.textOnPath = (function() {
 			for (i = 0; i < textLen; i++) {
 				letter = text.charAt(i);
 				letterWidth = getWidth(ctx, letter);
-				axy = getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
+				axy = Kothic.geomops.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 
 				 // if cannot fit letter - restart with next solution
 				if (widthUsed >= pathLen || !axy) {
@@ -180,7 +125,7 @@ Kothic.textOnPath = (function() {
 						flipCount = 0;
 						letter = text.charAt(i);
 						letterWidth = getWidth(ctx, letter);
-						axy = getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
+						axy = Kothic.geomops.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 						break;
 					}
 					if (letterWidth >= axy[3]) {
@@ -190,7 +135,7 @@ Kothic.textOnPath = (function() {
 						break;
 					}
 				}
-				
+
 				if (!axy) continue;
 				if ((axy[0] > (Math.PI / 2)) || (axy[0] < (-Math.PI / 2))) { // if current letters cluster was upside-down, count it
 					flipCount += letter.length;
