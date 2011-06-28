@@ -390,14 +390,14 @@ Kothic.render = (function() {
 		return styles.join(' ');
 	}
 
-	function transformPoint(point, ws, hs, granularity) {
-		return [ws * point[0], hs * (granularity - point[1])];
+	function transformPoint(point, ws, hs) {
+		return [ws * point[0], hs * point[1]];
 	}
 
-	function transformPoints(points, ws, hs, granularity) {
+	function transformPoints(points, ws, hs) {
 		var transformed = [];
 		for (var i = 0, len = points.length; i < len; i++) {
-			transformed.push(transformPoint(points[i], ws, hs, granularity));
+			transformed.push(transformPoint(points[i], ws, hs));
 		}
 		return transformed;
 	}
@@ -495,7 +495,7 @@ Kothic.render = (function() {
 
 		if (!reprPoint) return;
 
-		var point = transformPoint(reprPoint, ws, hs, granularity),
+		var point = transformPoint(reprPoint, ws, hs),
 			img;
 
 		if (renderIcon) {
@@ -546,7 +546,7 @@ Kothic.render = (function() {
 
 			} else if (feature.type == 'LineString') {
 
-				var points = transformPoints(feature.coordinates, ws, hs, granularity);
+				var points = transformPoints(feature.coordinates, ws, hs);
 				Kothic.textOnPath(ctx, points, text, halo, collides);
 			}
 		}
