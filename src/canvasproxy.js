@@ -1,5 +1,8 @@
 CanvasProxy = function(ctx) {
 	var _ctx = ctx;
+	var stubGeometry = false;
+	var stubContext = false;
+	var stubText = false;
 	var _curProps = {
 		strokeStyle: "rgba(0,0,0,0.5)",
 		fillStyle: "rgba(0,0,0,0.5)",
@@ -11,7 +14,7 @@ CanvasProxy = function(ctx) {
 		textBaseline: 'middle'
 	};
 
-  var _textMeasureCache = {};
+  _textMeasureCache = {};
 	for (var i in this._curProps) {
 		if (_curProps.hasOwnProperty(i)) {
 			this[i] = _curProps[i];
@@ -118,4 +121,26 @@ CanvasProxy = function(ctx) {
 		if (!_textMeasureCache[font][x]) {_textMeasureCache[font][x] = _ctx.measureText(x);};
 		return _textMeasureCache[font][x];
 	}
+	if (stubGeometry){
+		var z = ["fill","stroke","createPattern","moveTo","lineTo","drawImage","fillRect"]
+		for (var i in z){
+			i = z[i];
+			this[i] = function(a,b,c,d,e,f,g){}
+		}
+	}
+	if (stubContext){
+		var z = ["save","restore","translate","beginPath"]
+		for (var i in z){
+			i = z[i];
+			this[i] = function(a,b,c,d,e,f,g){}
+		}
+	}
+	if (stubText){
+		var z = ["fillText","measureText","strokeText"]
+		for (var i in z){
+			i = z[i];
+			this[i] = function(a,b,c,d,e,f,g){return 4}
+		}
+	}
+
 }
