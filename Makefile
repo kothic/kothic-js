@@ -4,4 +4,5 @@ dist/kothic.js: Makefile
         --js src/mapcss.js \
         --js src/path.js \
         --js src/text.js \
+        --js src/geomops.js \
 		--js_output_file dist/kothic.js
