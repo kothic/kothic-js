@@ -1,12 +1,9 @@
 Kothic.textOnPath = (function() {
 
-	var widthCache;
+//	var widthCache;
 
 	function getWidth(ctx, text) {
-		if (!widthCache[text]) {
-			widthCache[text] = ctx.measureText(text).width;
-		}
-		return widthCache[text];
+		return ctx.measureText(text).width;
 	}
 
 	function getTextCenter(axy, textWidth) {
@@ -57,7 +54,7 @@ Kothic.textOnPath = (function() {
 	}
 
 	return function(ctx, points, text, halo, collisions) {
-		widthCache = {};
+		//widthCache = {};
 
 		// simplify points?
 
