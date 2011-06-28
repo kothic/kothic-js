@@ -104,7 +104,6 @@ CanvasProxy = function(ctx) {
 	this.fillText = function(x,y,z){
 		this._checkFill();
 		this._checkText();
-		console.log([this.fillStyle, _ctx.fillStyle]);
 		_ctx.fillText(x,y,z)
 	}
 	this.strokeText = function(x,y,z){
