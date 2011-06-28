@@ -2,21 +2,24 @@
 <html>
 <head>
 	<title>A canvas Map of Minsk</title>
-	
+
 	<link rel="stylesheet" href="leaflet/leaflet.css" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="leaflet/leaflet.ie.css" /><![endif]-->
-	
+
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	
+
 	<!-- Leaflet -->
 	<script src="leaflet/leaflet.js"></script>
-	
+
+	<!-- CanvasProxy -->
+	<script src="../src/canvasproxy.js"></script>
 	<!-- Kothic -->
 	<script src="../src/kothic.js"></script>
 	<script src="../src/mapcss.js"></script>
 	<script src="../src/text.js"></script>
 	<script src="../src/path.js"></script>
-	
+	<script src="../src/geomops.js"></script>
+
 	<script src="../dist/kothic-leaflet.js"></script>
 
 	<!-- Kothic style -->
@@ -24,7 +27,7 @@
 
 	<!-- Kothic style -->
 	<script src="surface.js"></script>
-	
+
 	<style>
 		body {
 			padding: 0;
@@ -73,11 +76,11 @@
 			attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
 			maxZoom: 22
 		});
-		
+
 		var kothic = new L.TileLayer.Kothic({minZoom: 8});
-		
+
 		var map = new L.Map('map', {
-			center: new L.LatLng(53.9, 27.55), // Minsk 
+			center: new L.LatLng(53.9, 27.55), // Minsk
 			zoom: 12
 		});
 
@@ -85,18 +88,18 @@
 			var messages = kothic.getDebugMessages(),
 				len = messages.length,
 				message = messages.slice(Math.max(len - 4, 0), len).join('<br />');
-			
+
 			document.getElementById('tileperf').innerHTML = message;
 		});
-		
+
 		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);
 		};
 		MapCSS.preloadSpriteImage("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
-		
+
 		var mapnikVisible = false,
 			button = document.getElementById('mapnik');
-            
+
 		function toggleMapnik() {
 			if (mapnikVisible) {
 				map.removeLayer(mapnik);
