@@ -157,11 +157,12 @@ Kothic.render = (function() {
 
 	function renderBackground(ctx, width, height, zoom) {
 		var style = {};
-    style = MapCSS.restyle(style, {}, zoom, "canvas", "canvas")['default'];
-
-		fill(ctx, style, function() {
-			ctx.fillRect(-1, -1, width + 1, height + 1);
-		});
+    style = MapCSS.restyle(style, {}, zoom, "canvas", "canvas");
+		for (var i = 0; i < style.length; i++){
+			fill(ctx, style, function() {
+				ctx.fillRect(-1, -1, width + 1, height + 1);
+			});
+		}
 
 	}
 
@@ -429,7 +430,7 @@ Kothic.render = (function() {
 		if (feature.type = 'LineString') {
 			len = Kothic.geomops.getPolyLength(feature.coordinates);
 			if (Math.max(collisionHeight / hs, collisionWidth/ws) > len) return;
-			for (var i = 0, sgn = 1; i += Math.max(len/30, collisionHeight / ws), sgn *= -1; i < len/2 ){
+			for (var i = 0, sgn = 1; i < len/2; i += Math.max(len/30, collisionHeight / ws), sgn *= -1){
 				reprPoint = Kothic.geomops.getAngleAndCoordsAtLength(feature.coordinates, len/2+sgn*i, 0);
 				if (!reprPoint) break;
 				reprPoint = [reprPoint[1],reprPoint[2]];
@@ -474,15 +475,18 @@ Kothic.render = (function() {
 									 collisionWidth,
 									 collisionHeight);
 		}
+		if (img) ctx.drawImage(img,
+								Math.floor(point[0] - img.width / 2),
+								Math.floor(point[1] - img.height / 2));
 		setStyles(ctx, {
 				fillStyle: style["shield-text-color"] || "#000000",
 				globalAlpha: style["shield-text-opacity"] || style["opacity"] || 1
 		});
-		console.log(point);
+
 		ctx.fillText(text, point[0], Math.ceil(point[1]));
 		if (img) collides.addPointWH(point, img.width, img.height, 0, feature.kothicId);
 		collides.addPointWH(point, collisionHeight, collisionWidth,
-												(style["shield-casing-width"]||0) + (style["shield-frame-width"]||0), feature.kothicId);
+												(parseFloat(style["shield-casing-width"])||0) + (parseFloat(style["shield-frame-width"])||0) + (parseFloat(style["-x-mapnik-min-distance"])||30), feature.kothicId);
 	}
 
 	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, granularity, renderText, renderIcon) {
@@ -558,7 +562,7 @@ Kothic.render = (function() {
 		}
 	}
 
-	function getDebugInfo(start, layersStyled, mapRendered, finish) {
+	function getDebugInfo(start, layersStyled, mapRendered, finish, ctx) {
 		return {
 			layersStyled: layersStyled - start,
 			mapRendered: mapRendered - layersStyled,
@@ -594,7 +598,8 @@ Kothic.render = (function() {
 
 			realCtx = ctx;
 			ctx = buffer.getContext('2d');
-		}
+		};
+		if (window.CanvasProxy) {ctx = new CanvasProxy(ctx);}
 
 		populateLayers(layers, layerIds, data, zoom, additionalStyle);
 
@@ -692,7 +697,7 @@ Kothic.render = (function() {
 				realCtx.drawImage(buffer, 0, 0);
 			}
 
-			onRenderComplete(getDebugInfo(start, layersStyled, mapRendered, finish));
+			onRenderComplete(getDebugInfo(start, layersStyled, mapRendered, finish, ctx));
 		};
 
 		setTimeout(renderMap, 0);
