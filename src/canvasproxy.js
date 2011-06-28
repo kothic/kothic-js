@@ -51,7 +51,7 @@ CanvasProxy = function(ctx) {
 		}
 	}
 	this._resetAfterRestore = function(){
-		var z = ["fillStyle", "textAlign", "textBaseline","globalAlpha"]
+		var z = ["fillStyle", "strokeStyle", "lineCap", "textAlign", "textBaseline","globalAlpha"]
 		for (var i in z){
 			i = z[i];
 			if (this[i]){
