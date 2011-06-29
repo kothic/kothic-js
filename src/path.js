@@ -1,5 +1,10 @@
-Kothic.path = (function() {
+/**
+ * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
+ * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
+ * See http://github.com/kothic/kothic-js for more information.
+ */
 
+Kothic.path = (function() {
 	var dashPattern;
 
 	function setDashPattern(point, dashes) {
@@ -64,11 +69,6 @@ Kothic.path = (function() {
 		return p[0] === 0 || p[0] == size || p[1] === 0 || p[1] == size;
 	}
 
-	function transformPoint(point, ws, hs) {
-		return [ws * point[0], hs * point[1]];
-	}
-
-
 	return function(ctx, feature, dashes, fill, ws, hs, granularity) {
 		var type = feature.type,
 				coords = feature.coordinates;
@@ -99,7 +99,7 @@ Kothic.path = (function() {
 
 					for (j = 0; j <= pointsLen; j++) {
 						point = points[j] || points[0];
-						screenPoint = transformPoint(point, ws, hs);
+						screenPoint = Kothic.utils.transformPoint(point, ws, hs);
 
 						if (j === 0 || (!fill &&
 								isTileBoundary(point, granularity) &&
@@ -123,7 +123,7 @@ Kothic.path = (function() {
 
 				for (j = 0; j < pointsLen; j++) {
 					point = points[j];
-					screenPoint = transformPoint(point, ws, hs);
+					screenPoint = Kothic.utils.transformPoint(point, ws, hs);
 
 					// continue path off the tile by some abount to fix path edges between tiles
 					if ((j === 0 || j == pointsLen - 1) && isTileBoundary(point, granularity)) {

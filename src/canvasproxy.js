@@ -1,3 +1,9 @@
+/**
+ * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
+ * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
+ * See http://github.com/kothic/kothic-js for more information.
+ */
+
 CanvasProxy = function(ctx) {
 	var _ctx = ctx;
 	var stubGeometry = false;
@@ -152,5 +158,4 @@ CanvasProxy = function(ctx) {
 			}
 		}
 	}
-
 }
