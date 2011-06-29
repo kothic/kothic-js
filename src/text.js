@@ -8,40 +8,40 @@ Kothic.textOnPath = (function() {
 
 	function getTextCenter(axy, textWidth) {
 		return [axy[1] + 0.5 * Math.cos(axy[0]) * textWidth,
-		        axy[2] + 0.5 * Math.sin(axy[0]) * textWidth];
+			axy[2] + 0.5 * Math.sin(axy[0]) * textWidth];
 	}
 
 	function getCollisionParams(ctx, text, axy, pxoffset) {
 		pxoffset = pxoffset || 0;
 		var textWidth = getWidth(ctx, text),
-			textHeight = getWidth(ctx, text.charAt(0)) * 1.5,
-			angle = axy[0],
-			w = Math.abs(Math.cos(angle) * textWidth) + Math.abs(Math.sin(angle) * textHeight),
-			h = Math.abs(Math.sin(angle) * textWidth) + Math.abs(Math.cos(angle) * textHeight);
+				textHeight = getWidth(ctx, text.charAt(0)) * 1.5,
+				angle = axy[0],
+				w = Math.abs(Math.cos(angle) * textWidth) + Math.abs(Math.sin(angle) * textHeight),
+				h = Math.abs(Math.sin(angle) * textWidth) + Math.abs(Math.cos(angle) * textHeight);
 
-		return [getTextCenter(axy, textWidth+2*pxoffset), w, h, 0];
+		return [getTextCenter(axy, textWidth + 2 * pxoffset), w, h, 0];
 	}
 
 	function checkCollision(collisions, ctx, text, axy) {
 		var i, widthUsed = 0;
-		for (i = 0; i <= text.length; i++){
+		for (i = 0; i <= text.length; i++) {
 			if (collisions.checkPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed))) return true;
 			widthUsed += getWidth(ctx, text.charAt(i));
-		};
+		}
 		return false;
 	}
 
 	function addCollision(collisions, ctx, text, axy) {
 		var i, widthUsed = 0;
-		for (i = 0; i <= text.length; i++){
+		for (i = 0; i <= text.length; i++) {
 			collisions.addPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed));
 			widthUsed += getWidth(ctx, text.charAt(i));
-		};
+		}
 	}
 
 	function renderText(ctx, axy, halo) {
 		var text = axy[4],
-			textCenter = getTextCenter(axy, getWidth(ctx, text));
+				textCenter = getTextCenter(axy, getWidth(ctx, text));
 
 		ctx.save();
 
@@ -59,22 +59,22 @@ Kothic.textOnPath = (function() {
 		// simplify points?
 
 		var textWidth = ctx.measureText(text).width,
-			textLen = text.length,
-			pathLen = Kothic.geomops.getPolyLength(points);
+				textLen = text.length,
+				pathLen = Kothic.geomops.getPolyLength(points);
 
 		if (pathLen < textWidth) return;  // if label won't fit - don't try to
 
 		var letter,
-			widthUsed,
-			prevAngle,
-			positions,
-			solution = 0,
-			flipCount,
-			flipped = false,
-			axy,
-			letterWidth,
-			i,
-			maxAngle = Math.PI / 6;
+				widthUsed,
+				prevAngle,
+				positions,
+				solution = 0,
+				flipCount,
+				flipped = false,
+				axy,
+				letterWidth,
+				i,
+				maxAngle = Math.PI / 6;
 
 		// iterating solutions - start from center or from one of the ends
 		while (solution < 2) { //TODO change to for?
@@ -89,7 +89,7 @@ Kothic.textOnPath = (function() {
 				letterWidth = getWidth(ctx, letter);
 				axy = Kothic.geomops.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 
-				 // if cannot fit letter - restart with next solution
+				// if cannot fit letter - restart with next solution
 				if (widthUsed >= pathLen || !axy) {
 					solution++;
 					positions = [];
@@ -111,7 +111,7 @@ Kothic.textOnPath = (function() {
 					continue;
 				}
 
-				while (letterWidth < axy[3] && i < textLen){ // try adding following letters to current, until line changes its direction
+				while (letterWidth < axy[3] && i < textLen) { // try adding following letters to current, until line changes its direction
 					i++;
 					letter += text.charAt(i);
 					letterWidth = getWidth(ctx, letter);

@@ -25,10 +25,10 @@ Kothic.path = (function() {
 
 	function dashTo(ctx, point) {
 		var pt = dashPattern,
-			dx = point[0] - pt.x,
-			dy = point[1] - pt.y,
-			dist = Math.sqrt(dx * dx + dy * dy),
-			x, more, t;
+				dx = point[0] - pt.x,
+				dy = point[1] - pt.y,
+				dist = Math.sqrt(dx * dx + dy * dy),
+				x, more, t;
 
 		ctx.save();
 		ctx.translate(pt.x, pt.y);
@@ -71,28 +71,28 @@ Kothic.path = (function() {
 
 	return function(ctx, feature, dashes, fill, ws, hs, granularity) {
 		var type = feature.type,
-			coords = feature.coordinates;
+				coords = feature.coordinates;
 
 		if (type == "Polygon") {
 			coords = [coords];
 			type = "MultiPolygon";
 		}
 
-		if (type == "LineString"){
+		if (type == "LineString") {
 			coords = [coords];
 			type = "MultiLineString";
 		}
 
 		var i, j, k,
-			points,
-			len = coords.length,
-			len2, pointsLen,
-			prevPoint, point, screenPoint,
-			dx, dy, dist, pad = 50;
+				points,
+				len = coords.length,
+				len2, pointsLen,
+				prevPoint, point, screenPoint,
+				dx, dy, dist, pad = 50;
 
-		if (type == "MultiPolygon" ) {
+		if (type == "MultiPolygon") {
 			for (i = 0; i < len; i++) {
-				for (k = 0, len2 = coords[i].length; k < len2; k++) {
+				for (k = 0,len2 = coords[i].length; k < len2; k++) {
 					points = coords[i][k];
 					pointsLen = points.length;
 					prevPoint = points[0];
@@ -130,11 +130,11 @@ Kothic.path = (function() {
 						prevPoint = points[j ? pointsLen - 2 : 1];
 
 						dx = point[0] - prevPoint[0],
-						dy = point[1] - prevPoint[1],
-						dist = Math.sqrt(dx * dx + dy * dy);
+								dy = point[1] - prevPoint[1],
+								dist = Math.sqrt(dx * dx + dy * dy);
 
-						screenPoint = [screenPoint[0] + pad * dx/dist,
-						               screenPoint[1] + pad * dy/dist];
+						screenPoint = [screenPoint[0] + pad * dx / dist,
+							screenPoint[1] + pad * dy / dist];
 					}
 
 					if (j === 0) {
