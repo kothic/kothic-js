@@ -1,7 +1,5 @@
 Kothic.textOnPath = (function() {
 
-//	var widthCache;
-
 	function getWidth(ctx, text) {
 		return ctx.measureText(text).width;
 	}
@@ -25,7 +23,9 @@ Kothic.textOnPath = (function() {
 	function checkCollision(collisions, ctx, text, axy) {
 		var i, widthUsed = 0;
 		for (i = 0; i <= text.length; i++) {
-			if (collisions.checkPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed))) return true;
+			if (collisions.checkPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed))) {
+				return true;
+			}
 			widthUsed += getWidth(ctx, text.charAt(i));
 		}
 		return false;
@@ -133,7 +133,10 @@ Kothic.textOnPath = (function() {
 					}
 				}
 
-				if (!axy) continue;
+				if (!axy) {
+					continue;
+				}
+
 				if ((axy[0] > (Math.PI / 2)) || (axy[0] < (-Math.PI / 2))) { // if current letters cluster was upside-down, count it
 					flipCount += letter.length;
 				}
@@ -142,7 +145,8 @@ Kothic.textOnPath = (function() {
 				axy.push(letter);
 				positions.push(axy);
 				widthUsed += letterWidth;
-			}
+			} //for
+
 			if (flipCount > textLen / 2) { // if more than half of the text is upside down, flip it and restart
 				points.reverse();
 				positions = [];
@@ -155,9 +159,15 @@ Kothic.textOnPath = (function() {
 					flipped = true;
 				}
 			}
-			if (solution >= 2) return;
-			if (positions.length > 0) break;
-		}
+
+			if (solution >= 2) {
+				return;
+			}
+
+			if (positions.length > 0) {
+				break;
+			}
+		} //while
 
 		var posLen = positions.length;
 

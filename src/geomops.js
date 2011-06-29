@@ -24,10 +24,14 @@ Kothic.geomops.getAngleAndCoordsAtLength = function (points, dist, width) {
 			segLen = 0,
 			angle, partLen, sameseg = true,
 			gotxy = false;
+
 	width = width || 0; // by default we think that a letter is 0 px wide
 
 	for (i = 1; i < pointsLen; i++) {
-		if (gotxy) sameseg = false;
+		if (gotxy) {
+			sameseg = false;
+		}
+
 		c = points[i];
 		pc = points[i - 1];
 
@@ -42,13 +46,18 @@ Kothic.geomops.getAngleAndCoordsAtLength = function (points, dist, width) {
 
 			gotxy = true;
 		}
+
 		if (gotxy && len + segLen >= dist + width) {
 			partLen = dist + width - len;
 			dx = pc[0] + dx * partLen / segLen;
 			dy = pc[1] + dy * partLen / segLen;
 			angle = Math.atan2(dy - y, dx - x);
-			if (sameseg) return [angle, x, y, segLen - partLen]
-			else         return [angle, x, y, 0];
+
+			if (sameseg) {
+				return [angle, x, y, segLen - partLen];
+			} else {
+				return [angle, x, y, 0];
+			}
 		}
 
 		len += segLen;

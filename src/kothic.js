@@ -606,7 +606,7 @@ Kothic.render = (function() {
 			realCtx = ctx;
 			ctx = buffer.getContext('2d');
 		}
-		;
+
 		if (window.CanvasProxy) {
 			ctx = new CanvasProxy(ctx);
 		}
