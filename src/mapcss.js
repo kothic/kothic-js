@@ -1,11 +1,13 @@
 var MapCSS = {
 	styles: {},
 	currentStyles: [],
+	images: {},
+
 	onError: function(e) {
 	},
+
 	onImagesLoad: function() {
 	},
-	images: {},
 
 	e_min: function(/*...*/) {
 		return Math.min.apply(null, arguments);
@@ -61,19 +63,19 @@ var MapCSS = {
 		return Math.sqrt(arg);
 	},
 
-	e_boolean: function(arg) {
-		if (arg == '0' || arg == 'false' || arg === '') {
-			return 'false';
-		} else {
-			return 'true';
-		}
-	},
-
 	e_boolean: function(arg, if_exp, else_exp) {
-		if (MapCSS.e_boolean(arg) == 'true') {
-			return if_exp;
-		} else {
+		if (typeof(if_exp) == 'undefined') {
+			if_exp = 'true';
+		}
+
+		if (typeof(else_exp) == 'undefined') {
+			else_exp = 'false';
+		}
+
+		if (arg == '0' || arg == 'false' || arg === '') {
 			return else_exp;
+		} else {
+			return if_exp;
 		}
 	},
 
