@@ -5,10 +5,11 @@
  */
 
 Kothic = (function() {
-	var Kothic = {};
+	var Kothic = {
+	};
 
-	function populateLayers(layers, layerIds, data, zoom, additionalStyle) {
-		var styledFeatures = Kothic.style.styleFeatures(data.features, zoom, additionalStyle);
+	function populateLayers(layers, layerIds, data, zoom, styles, additionalStyle) {
+		var styledFeatures = Kothic.style.styleFeatures(data.features, zoom, styles, additionalStyle);
 
 		for (var i = 0, len = styledFeatures.length; i < len; i++) {
 			var feature = styledFeatures[i],
@@ -47,9 +48,9 @@ Kothic = (function() {
 		};
 	}
 
-	function renderBackground(ctx, width, height, zoom) {
+	function renderBackground(ctx, width, height, zoom, styles) {
 		var style = {};
-		style = MapCSS.restyle(style, {}, zoom, "canvas", "canvas");
+		style = MapCSS.restyle(styles, style, {}, zoom, "canvas", "canvas");
 		for (var i = 0; i < style.length; i++) {
 			fill(ctx, style, function() {
 				ctx.fillRect(-1, -1, width + 1, height + 1);
@@ -57,7 +58,7 @@ Kothic = (function() {
 		}
 	}
 
-	Kothic.render = function(canvasId, data, zoom, additionalStyle, onRenderComplete, buffered) {
+	Kothic.render = function(canvasId, data, zoom, styles, additionalStyle, onRenderComplete, buffered) {
 		var canvas = (typeof canvasId == 'string' ? document.getElementById(canvasId) : canvasId),
 				ctx = canvas.getContext('2d'),
 				width = canvas.width,
@@ -88,7 +89,7 @@ Kothic = (function() {
 			ctx = new CanvasProxy(ctx);
 		}
 
-		populateLayers(layers, layerIds, data, zoom, additionalStyle);
+		populateLayers(layers, layerIds, data, zoom, styles, additionalStyle);
 
 		layersStyled = +new Date();
 
@@ -100,7 +101,7 @@ Kothic = (function() {
 				i, j, features, featuresLen, style;
 
 		var renderMap = function() {
-			renderBackground(ctx, width, height, zoom);
+			renderBackground(ctx, width, height, zoom, styles);
 
 			for (i = 0; i < layersLen; i++) {
 

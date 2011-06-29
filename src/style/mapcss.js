@@ -6,10 +6,10 @@
 
 var MapCSS = {
 	styles: {},
-	currentStyles: [],
+	availableStyles: [],
 	images: {},
 
-	onError: function(e) {
+	onError: function() {
 	},
 
 	onImagesLoad: function() {
@@ -104,7 +104,7 @@ var MapCSS = {
 	},
 
 	e_zmetric: function(arg) {
-		return MapCSS.metric(arg);
+		return MapCSS.e_metric(arg);
 	},
 
 	loadStyle: function(style, restyle, sprite_images, external_images) {
@@ -117,7 +117,7 @@ var MapCSS = {
 			external_images_loaded: !external_images.length
 		};
 
-		MapCSS.currentStyles.push(style);
+		MapCSS.availableStyles.push(style);
 	},
 
 	/**
@@ -202,13 +202,11 @@ var MapCSS = {
 		return img;
 	},
 
-	restyle: function(style, tags, zoom, type, selector) {
-		var styleName;
-		for (var i = 0; i < MapCSS.currentStyles.length; i++) {
-			styleName = MapCSS.currentStyles[i];
-			style = MapCSS.styles[styleName].restyle(style, tags, zoom, type, selector);
+	restyle: function(styleNames, objectStyle, tags, zoom, type, selector) {
+		for (var i = 0; i < styleNames.length; i++) {
+			objectStyle = MapCSS.styles[styleNames[i]].restyle(objectStyle, tags, zoom, type, selector);
 		}
 
-		return style;
+		return objectStyle;
 	}
 };

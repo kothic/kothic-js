@@ -22,7 +22,7 @@ Kothic.style = (function() {
 			textBaseline: 'middle'
 		},
 
-		getStyle: function (feature, zoom, additionalStyle) {
+		getStyle: function (feature, zoom, styleNames, additionalStyle) {
 			var id2 = 0;
 
 			if (additionalStyle) {
@@ -51,7 +51,7 @@ Kothic.style = (function() {
 					selector = 'node';
 				}
 				styleCache[key] = styleCache[key] || {};
-				styleCache[key] = MapCSS.restyle(styleCache[key], feature.properties, zoom, type, selector);
+				styleCache[key] = MapCSS.restyle(styleNames, styleCache[key], feature.properties, zoom, type, selector);
 				if (additionalStyle) {
 					additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
 				}
@@ -60,13 +60,13 @@ Kothic.style = (function() {
 			return styleCache[key];
 		},
 
-		styleFeatures: function (features, zoom, additionalStyle) {
+		styleFeatures: function (features, zoom, styleNames, additionalStyle) {
 			var styledFeatures = [],
 					i, j, len, feature, style, restyledFeature;
 
 			for (i = 0,len = features.length; i < len; i++) {
 				feature = features[i];
-				style = this.getStyle(feature, zoom, additionalStyle);
+				style = this.getStyle(feature, zoom, styleNames, additionalStyle);
 
 				for (j in style) {
 					if (style.hasOwnProperty(j)) {
