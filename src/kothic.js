@@ -34,8 +34,8 @@ Kothic = (function() {
 
 	function addBoundaryCollisions(collisions, width, height) {
 		collisions.addBox([0, 0, width, 0]);
-		collisions.addBox([0, height, width, height]);
-		collisions.addBox([width, 0, width, height]);
+		collisions.addBox([0, height, width, 0]);
+		collisions.addBox([width, 0, 0, height]);
 		collisions.addBox([0, 0, 0, height]);
 	}
 

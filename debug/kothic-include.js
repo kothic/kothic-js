@@ -13,7 +13,8 @@
 		'style/style.js',
 		'utils/collisions.js',
 		'utils/geomops.js',
-		'utils/utils.js'
+		'utils/utils.js',
+		'utils/rtree.js'
 	];
 
 	function getSrcUrl() {
