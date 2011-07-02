@@ -42,7 +42,7 @@ var RTree = function(width){
 		return Object.prototype.toString.call(o) === '[object Array]'; 
 	};
 
-	/* @function
+	/**@function
 	 * @description Function to generate unique strings for element IDs
 	 * @param {String} n			The prefix to use for the IDs generated.
 	 * @return {String}				A guarenteed unique ID.
@@ -77,7 +77,7 @@ var RTree = function(width){
 	  return(larea * fill / lgeo); 
 	};
 	
-	/* find the best specific node(s) for object to be deleted from
+	/**find the best specific node(s) for object to be deleted from
 	 * [ leaf node parent ] = _remove_subtree(rectangle, object, root)
 	 * @private
 	 */
@@ -159,7 +159,7 @@ var RTree = function(width){
 		return(ret_array);
 	};
 
-	/* choose the best damn node for rectangle to be inserted into
+	/**choose the best damn node for rectangle to be inserted into
 	 * [ leaf node parent ] = _choose_leaf_subtree(rectangle, root to start search at)
 	 * @private
 	 */
@@ -214,7 +214,7 @@ var RTree = function(width){
 		return(best_choice_stack);
 	};
 
-	/* split a set of nodes into two roughly equally-filled nodes
+	/**split a set of nodes into two roughly equally-filled nodes
 	 * [ an array of two new arrays of nodes ] = linear_split(array of nodes)
 	 * @private
 	 */
@@ -226,7 +226,7 @@ var RTree = function(width){
 		return(n);
 	};
 	
-	/* insert the best source rectangle into the best fitting parent node: a or b
+	/**insert the best source rectangle into the best fitting parent node: a or b
 	 * [] = pick_next(array of source nodes, target node array a, target node array b)
 	 * @private
 	 */
@@ -270,7 +270,7 @@ var RTree = function(width){
 		}
 	};
 
-	/* pick the "best" two starter nodes to use as seeds using the "linear" criteria
+	/**pick the "best" two starter nodes to use as seeds using the "linear" criteria
 	 * [ an array of two new arrays of nodes ] = pick_linear(array of source nodes)
 	 * @private
 	 */
@@ -318,7 +318,7 @@ var RTree = function(width){
 		return(node);
 	};
 
-	/* non-recursive internal search function 
+	/**non-recursive internal search function 
 	 * [ nodes | objects ] = _search_subtree(rectangle, [return node data], [array to fill], root to begin search at)
 	 * @private
 	 */
@@ -361,7 +361,7 @@ var RTree = function(width){
 		return(return_array);
 	};
 	
-	/* non-recursive internal insert function
+	/**non-recursive internal insert function
 	 * [] = _insert_subtree(rectangle, object to insert, root to begin insertion at)
 	 * @private
 	 */
@@ -434,7 +434,7 @@ var RTree = function(width){
 		} while(tree_stack.length > 0);
 	};
 
-	/* quick 'n' dirty function for plugins or manually drawing the tree
+	/**quick 'n' dirty function for plugins or manually drawing the tree
 	 * [ tree ] = RTree.get_tree(): returns the raw tree data. useful for adding
 	 * @public
 	 * !! DEPRECATED !!
@@ -443,7 +443,7 @@ var RTree = function(width){
 		return _T;
 	};
 	
-	/* quick 'n' dirty function for plugins or manually loading the tree
+	/**quick 'n' dirty function for plugins or manually loading the tree
 	 * [ tree ] = RTree.set_tree(sub-tree, where to attach): returns the raw tree data. useful for adding
 	 * @public
 	 * !! DEPRECATED !!
@@ -454,7 +454,7 @@ var RTree = function(width){
 		return(_attach_data(where, new_tree));
 	};
 	
-	/* non-recursive search function 
+	/**non-recursive search function 
 	 * [ nodes | objects ] = RTree.search(rectangle, [return node data], [array to fill])
 	 * @public
 	 */
@@ -475,7 +475,7 @@ var RTree = function(width){
 		return(_search_subtree.apply(this, arguments));
 	};
 		
-	/* partially-recursive toJSON function
+	/**partially-recursive toJSON function
 	 * [ string ] = RTree.toJSON([rectangle], [tree])
 	 * @public
 	 */
@@ -553,7 +553,7 @@ var RTree = function(width){
 		return(return_string);
 	};
 	
-	/* non-recursive function that deletes a specific
+	/**non-recursive function that deletes a specific
 	 * [ number ] = RTree.remove(rectangle, obj)
 	 */
 	this.remove = function(rect, obj) {
@@ -582,7 +582,7 @@ var RTree = function(width){
 		}
 	};
 		
-	/* non-recursive insert function
+	/**non-recursive insert function
 	 * [] = RTree.insert(rectangle, object to insert)
 	 */
 	this.insert = function(rect, obj) {
@@ -592,14 +592,14 @@ var RTree = function(width){
 		return(_insert_subtree({x:rect.x,y:rect.y,w:rect.w,h:rect.h,leaf:obj}, _T));
 	};
 	
-	/* non-recursive delete function
+	/**non-recursive delete function
 	 * [deleted object] = RTree.remove(rectangle, [object to delete])
 	 */
 
 //End of RTree
 };
 
-/* Rectangle - Generic rectangle object - Not yet used */
+/**Rectangle - Generic rectangle object - Not yet used */
 
 RTree.Rectangle = function(ix, iy, iw, ih) { // new Rectangle(bounds) or new Rectangle(x, y, w, h)
     var x, x2, y, y2, w, h;
@@ -660,7 +660,7 @@ RTree.Rectangle = function(ix, iy, iw, ih) { // new Rectangle(bounds) or new Rec
 };
 
 
-/* returns true if rectangle 1 overlaps rectangle 2
+/**returns true if rectangle 1 overlaps rectangle 2
  * [ boolean ] = overlap_rectangle(rectangle a, rectangle b)
  * @static function
  */
@@ -668,7 +668,7 @@ RTree.Rectangle.overlap_rectangle = function(a, b) {
 	return(a.x < (b.x+b.w) && (a.x+a.w) > b.x && a.y < (b.y+b.h) && (a.y+a.h) > b.y);
 };
 
-/* returns true if rectangle a is contained in rectangle b
+/**returns true if rectangle a is contained in rectangle b
  * [ boolean ] = contains_rectangle(rectangle a, rectangle b)
  * @static function
  */
@@ -676,7 +676,7 @@ RTree.Rectangle.contains_rectangle = function(a, b) {
 	return((a.x+a.w) <= (b.x+b.w) && a.x >= b.x && (a.y+a.h) <= (b.y+b.h) && a.y >= b.y);
 };
 
-/* expands rectangle A to include rectangle B, rectangle B is untouched
+/**expands rectangle A to include rectangle B, rectangle B is untouched
  * [ rectangle a ] = expand_rectangle(rectangle a, rectangle b)
  * @static function
  */
@@ -689,7 +689,7 @@ RTree.Rectangle.expand_rectangle = function(a, b)	{
 	return(a);
 };
 
-/* generates a minimally bounding rectangle for all rectangles in
+/**generates a minimally bounding rectangle for all rectangles in
  * array "nodes". If rect is set, it is modified into the MBR. Otherwise,
  * a new rectangle is generated and returned.
  * [ rectangle a ] = make_MBR(rectangle array nodes, rectangle rect)
