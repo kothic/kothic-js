@@ -68,7 +68,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
     _invertYAxe: function(data) {
         var type, coordinates, tileSize = data.granularity;
         for (var i = 0; i < data.features.length; i++) {
-            coordinates = data.features[i].coordinates;
+            var feature = data.features[i];
+            coordinates = feature.coordinates;
             type = data.features[i].type;
             if (type == 'Point') {
                 coordinates[1] = tileSize - coordinates[1];
@@ -92,6 +93,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
                 }
             } else {
                 window.console && window.console.log("Unexpected GeoJSON type: " + type);
+            }
+            
+            if ('reprpoint' in feature) {
+                feature.reprpoint[1] = tileSize - feature.reprpoint[1];
             }
         }
     },
