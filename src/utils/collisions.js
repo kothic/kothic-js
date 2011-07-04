@@ -5,13 +5,12 @@
  */
 
 (function(Kothic) {
-	Kothic.CollisionBuffer = function (ctx, debugBoxes, debugChecks) {
+	Kothic.CollisionBuffer = function (ctx, debugBoxes) {
 		this.buffer = new RTree();
 
 		// for debugging
 		this.ctx = ctx;
 		this.debugBoxes = debugBoxes;
-		this.debugChecks = debugChecks;
 	}
 
 	Kothic.CollisionBuffer.prototype = {
@@ -40,16 +39,7 @@
 				c = obj[i];
 
 				// if it's the same object (only different styles), don't detect collision
-				if (id == c) continue;
-
-				/** if (c[0] <= b[2] && c[1] <= b[3] && c[2] >= b[0] && c[3] >= b[1]) {
-					if (this.debugChecks) {
-						this.ctx.save();
-						this.ctx.strokeStyle = 'darkblue';
-						this.ctx.lineWidth = '1';
-						this.ctx.strokeRect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
-						this.ctx.restore();
-					} **/
+				if (id == c.leaf) continue;
 				return true;
 			}
 			return false;
