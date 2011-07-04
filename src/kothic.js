@@ -192,3 +192,6 @@ Kothic = (function() {
 
 	return Kothic;
 })();
+
+
+Kothic["render"] = Kothic.render;
