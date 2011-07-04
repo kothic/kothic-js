@@ -7,10 +7,6 @@
 Kothic.style = (function() {
 	var styleCache = {}, lastId = 0;
 
-	function compareZIndexes(a, b) {
-		return parseFloat(a.style["z-index"] || 0) - parseFloat(b.style["z-index"] || 0);
-	}
-
 	return {
 		defaultCanvasStyles: {
 			strokeStyle: "rgba(0,0,0,0.5)",
@@ -78,7 +74,11 @@ Kothic.style = (function() {
 				}
 			}
 
-			styledFeatures.sort(compareZIndexes);
+			styledFeatures.sort(
+				function (a,b){
+					return parseFloat(a.style["z-index"]) - parseFloat(b.style["z-index"] || 0)
+				}
+			);
 
 			return styledFeatures;
 		},
