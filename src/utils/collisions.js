@@ -5,12 +5,10 @@
  */
 
 (function(Kothic) {
-	Kothic.CollisionBuffer = function (ctx, debugBoxes) {
+	Kothic.CollisionBuffer = function (height, width) {
 		this.buffer = new RTree();
-
-		// for debugging
-		this.ctx = ctx;
-		this.debugBoxes = debugBoxes;
+		this.height = height;
+		this.width = width;
 	}
 
 	Kothic.CollisionBuffer.prototype = {
@@ -19,22 +17,15 @@
 		},
 
 		addPointWH: function(point, w, h, d, id) {
-			var box = this.getBoxFromPoint(point, w, h, d);
-
-			this.buffer.insert(box, id);
-
-			if (this.debugBoxes) {
-				this.ctx.save();
-				this.ctx.strokeStyle = 'red';
-				this.ctx.lineWidth = '1';
-				this.ctx.strokeRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
-				this.ctx.restore();
-			}
+			this.buffer.insert(this.getBoxFromPoint(point, w, h, d), id);
 		},
 
 		checkBox: function(b, id) {
-            var obj = [];
-            var objects = this.buffer.search(b, true, obj);
+			if (this.height && !(b.x1 >= 0 && b.y1 >= 0 && b.y2 <= this.height && b.x2 <= this.width)){
+				return true;
+			};
+			var obj = [];
+			var objects = this.buffer.search(b, true, obj);
 			for (var i = 0, len = obj.length, c; i < len; i++) {
 				c = obj[i];
 
