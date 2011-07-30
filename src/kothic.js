@@ -32,12 +32,6 @@ Kothic = (function() {
 		layerIds.sort();
 	}
 
-	function addBoundaryCollisions(collisions, width, height) {
-		collisions.addBox([0, 0, width, 0]);
-		collisions.addBox([0, height, width, 0]);
-		collisions.addBox([width, 0, 0, height]);
-		collisions.addBox([0, 0, 0, height]);
-	}
 
 	function getDebugInfo(start, layersStyled, mapRendered, finish) {
 		return {
@@ -67,7 +61,7 @@ Kothic = (function() {
 				ws = width / granularity,
 				hs = height / granularity,
 				layers = {}, layerIds = [],
-				collides = new Kothic.CollisionBuffer(/*ctx, true*/),
+				collides = new Kothic.CollisionBuffer(height,width),
 				buffer, realCtx;
 
 		var start = +new Date(),
@@ -137,7 +131,6 @@ Kothic = (function() {
 		};
 
 		var renderIconsAndText = function() {
-			addBoundaryCollisions(collides, width, height);
 			var textOnCanvasAvailable = ctx.strokeText && ctx.fillText && ctx.measureText;
 
 			for (i = layersLen - 1; i >= 0; i--) {
