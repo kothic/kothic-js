@@ -49,14 +49,11 @@ Kothic.textOnPath = (function() {
 		var text = axy[4],
 				textCenter = getTextCenter(axy, getWidth(ctx, text));
 
-		ctx.save();
-
 		ctx.translate(textCenter[0], textCenter[1]);
 		ctx.rotate(axy[0]);
-
 		ctx[halo ? 'strokeText' : 'fillText'](text, 0, 0);
-
-		ctx.restore();
+		ctx.rotate(-axy[0]);
+		ctx.translate(-textCenter[0], -textCenter[1]);
 	}
 
 	return function(ctx, points, text, halo, collisions) {
