@@ -6,13 +6,13 @@
 
 Kothic.texticons = (function() {
 	function renderTextIconOrBoth(ctx, feature, collides, ws, hs, renderText, renderIcon) {
-		var style = feature.style,
-				reprPoint = Kothic.utils.getReprPoint(feature);
-
-		if (!reprPoint) return;
-
-		var point = Kothic.utils.transformPoint(reprPoint, ws, hs),
-				img;
+		var style = feature.style, 
+								img;
+		if (renderIcon || (renderText && feature.type != "LineString")) {
+			var reprPoint = Kothic.utils.getReprPoint(feature);
+			if (!reprPoint) return;
+			var point = Kothic.utils.transformPoint(reprPoint, ws, hs);
+		}
 
 		if (renderIcon) {
 			img = MapCSS.getImage(style["icon-image"]);
