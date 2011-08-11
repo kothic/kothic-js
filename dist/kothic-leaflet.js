@@ -41,17 +41,33 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		if (!layer._styles) {
 			layer._styles = MapCSS.availableStyles;
 		}
-
-		Kothic.render(canvas, data, zoom + zoomOffset, layer._styles, layer._additionalStyle, onRenderComplete, buffered);
+        
+		new Kothic().render(new Kothic.Canvas(canvas, {buffererd: buffered}), data, zoom + zoomOffset, layer._styles, layer._additionalStyle, onRenderComplete);
 		delete this._canvases[key];
 	},
 
-	getDebugStr: function(debugInfo, x, y, zoom) {
-		return '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />' +
-			'<table><tr><td>' + debugInfo.layersStyled + '</td><td>layers styled</td></tr>' +
-			'<tr><td>' + debugInfo.mapRendered + '</td><td>map rendered</td></tr>' +
-			'<tr><td>' + debugInfo.iconsAndTextRendered + '</td><td>icons/text rendered</td></tr>' +
-			'<tr><td>' + debugInfo.total + '</td><td>total</td></tr>' + '</table>';
+	getDebugStr: function(trace, x, y, zoom) {
+        var msg = '<b>tile ' + x + ':' + y + ':' + zoom + '</b><br />';
+        msg += '<table>';
+        
+        for (var k in trace.stats) {
+            if (!trace.stats.hasOwnProperty(k)) {
+                continue;
+            }
+            msg += '<tr><td>' + trace.stats[k] + '</td><td>' + k + '</td></tr>';
+        }
+        
+        msg += '</table><table>';
+        
+        var tPrev = trace.events[0].timestamp, start = tPrev;
+        for (var i = 1; i < trace.events.length; i++) {
+            msg += '<tr><td>' + (trace.events[i].timestamp - tPrev) + '&nbsp;ms</td><td>' + trace.events[i].message + '</td></tr>';
+            tPrev = trace.events[i].timestamp;
+        }
+        
+        msg += '<tr><td>' + (tPrev - start) + '&nbsp;ms</td><td>total</td></tr>';
+        msg += '</table>';
+        return msg;
 	},
 
 	getDebugMessages: function() {
@@ -63,8 +79,9 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 			key = [(zoom - zoomOffset), tilePoint.x, tilePoint.y].join('/');
 
 		this._canvases[key] = canvas;
-		this._loadScript('http://osmosnimki.ru/vtile/' + key + '.js');
+		this._loadScript('http://osmosnimki.ru/vtile/' + key + '.js');        
 	},
+    
     _invertYAxe: function(data) {
         var type, coordinates, tileSize = data.granularity;
         for (var i = 0; i < data.features.length; i++) {

@@ -3,9 +3,9 @@
 		'kothic.js',
 		'canvas/canvasproxy.js',
 		'canvas/path.js',
+		'canvas/canvas.js',
 		'renderer/line.js',
 		'renderer/polygon.js',
-		'renderer/renderer.js',
 		'renderer/shields.js',
 		'renderer/texticons.js',
 		'renderer/text.js',
@@ -14,7 +14,8 @@
 		'utils/collisions.js',
 		'utils/geomops.js',
 		'utils/utils.js',
-		'utils/rtree.js'
+		'utils/rtree.js',
+		'utils/tracer.js'
 	];
 
 	function getSrcUrl() {

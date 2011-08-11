@@ -5,33 +5,6 @@
  */
 
 Kothic.polygon = (function() {
-	function fill(ctx, style, fillFn) {
-		var opacity = style["fill-opacity"] || style.opacity,
-				image;
-
-		if (('fill-color' in style)) {
-			// first pass fills with solid color
-			Kothic.style.setStyles(ctx, {
-						fillStyle: style["fill-color"] || "#000000",
-						globalAlpha: opacity || 1
-					});
-			fillFn();
-		}
-
-		if ('fill-image' in style) {
-			// second pass fills with texture
-			image = MapCSS.getImage(style['fill-image']);
-			if (image) {
-				Kothic.style.setStyles(ctx, {
-							fillStyle: ctx.createPattern(image, 'repeat'),
-							globalAlpha: opacity || 1
-						});
-				fillFn();
-			}
-
-		}
-	}
-
 	return {
 		pathOpened: false,
 		render: function (ctx, feature, nextFeature, ws, hs, granularity) {
@@ -52,11 +25,35 @@ Kothic.polygon = (function() {
 				return;
 			}
 
-			fill(ctx, style, function() {
+			this.fill(ctx, style, function() {
 				ctx.fill();
 			});
 
 			this.pathOpened = false;
-		}
+		},
+	    fill: function (ctx, style, fillFn) {
+		    var opacity = style["fill-opacity"] || style.opacity, image;
+
+		    if (('fill-color' in style)) {
+		    	// first pass fills with solid color
+	    		Kothic.style.setStyles(ctx, {
+    						fillStyle: style["fill-color"] || "#000000",
+						    globalAlpha: opacity || 1
+				    	});
+			    fillFn();
+		    }
+
+		    if ('fill-image' in style) {
+			    // second pass fills with texture
+			    image = MapCSS.getImage(style['fill-image']);
+			    if (image) {
+		    		Kothic.style.setStyles(ctx, {
+    							fillStyle: ctx.createPattern(image, 'repeat'),
+	    						globalAlpha: opacity || 1
+				    		});
+			    	fillFn();
+		    	}
+	    	}
+    	}
 	};
 })();
