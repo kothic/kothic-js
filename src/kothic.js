@@ -23,14 +23,7 @@ Kothic = L.Class.extend({
 
         //Setup layer styles
 		var layers = this._populateLayers(data.features, zoom, styles, additionalStyle);
-        var layerIds = [];
-        for (var layerId in layers) {
-            if (layers.hasOwnProperty(layerId)) {
-                layerIds.push(layerId);
-            }
-            layerIds.sort();
-        }
-
+        var layerIds = Kothic.utils.getOrderedKeys(layers);
         trace.addEvent("layers styled");
 
 		//Render the map
@@ -89,10 +82,12 @@ Kothic = L.Class.extend({
 
     _renderBackground: function(ctx, width, height, zoom, styles) {
 		var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas");
-
-        Kothic.polygon.fill(ctx, style['default'], function() {
-            ctx.fillRect(-1, -1, width + 1, height + 1);
-        });
+        var style_names = Kothic.utils.getOrderedKeys(style);
+        for (var i = 0; i < style_names.length; i++) {
+            Kothic.polygon.fill(ctx, style[style_names[i]], function() {
+                ctx.fillRect(-1, -1, width + 1, height + 1);
+            });
+        }
 	},
     
     _renderGeometryFeatures: function (layerIds, layers, ctx, ws, hs, granularity) {

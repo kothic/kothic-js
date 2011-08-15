@@ -10,7 +10,7 @@
         }
 
         if (Object.keys(s_default).length > 0) {
-            style['default'] = s_default;
+            style['surface_default'] = s_default;
         }
         return style;
     }

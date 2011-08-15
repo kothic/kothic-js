@@ -1896,16 +1896,16 @@
         }
 
         if (Object.keys(s_default).length > 0) {
-            style['default'] = s_default;
+            style['osmosnimki_default'] = s_default;
         }
         if (Object.keys(s_centerline).length > 0) {
-            style['centerline'] = s_centerline;
+            style['osmosnimki_centerline'] = s_centerline;
         }
         if (Object.keys(s_ticks).length > 0) {
-            style['ticks'] = s_ticks;
+            style['osmosnimki_ticks'] = s_ticks;
         }
         if (Object.keys(s_label).length > 0) {
-            style['label'] = s_label;
+            style['osmosnimki_label'] = s_label;
         }
         return style;
     }

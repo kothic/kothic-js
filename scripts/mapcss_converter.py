@@ -274,7 +274,7 @@ if __name__ == "__main__":
 
     mapcss_js = mapcss.as_js()
     subparts_var = "\n".join(map(lambda subpart: "        var s_%s = {};" % subpart, subparts))
-    subparts_fill = "\n".join(map(lambda subpart: "        if (Object.keys(s_%s).length > 0) {\n            style['%s'] = s_%s;\n        }" % (subpart, subpart, subpart), subparts))
+    subparts_fill = "\n".join(map(lambda subpart: "        if (Object.keys(s_%s).length > 0) {\n            style['%s_%s'] = s_%s;\n        }" % (subpart, style_name, subpart, subpart), subparts))
 
     js = """
 (function(MapCSS) {

@@ -60,7 +60,7 @@ Kothic.style = (function() {
 			var styledFeatures = [],
 					i, j, len, feature, style, restyledFeature;
 
-			for (i = 0,len = features.length; i < len; i++) {
+			for (i = 0, len = features.length; i < len; i++) {
 				feature = features[i];
 				style = this.getStyle(feature, zoom, styleNames, additionalStyle);
 

@@ -54,6 +54,18 @@ Kothic.utils = {
 			}
 		}
 		return dest;
-	}
+	},
+    
+    getOrderedKeys: function(dict) {
+        var keys = [];
+        for (var key in dict) {
+            if (dict.hasOwnProperty(key)) {
+                keys.push(key);
+            }
+        }
+        
+        keys.sort();
+        return keys;
+    }
 };
 
