@@ -175,6 +175,7 @@ Kothic = (function() {
 
 			if (buffered) {
 				realCtx.drawImage(buffer, 0, 0);
+        delete buffer;
 			}
 
 			onRenderComplete(getDebugInfo(start, layersStyled, mapRendered, finish));
