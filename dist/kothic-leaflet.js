@@ -42,7 +42,11 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 			layer._styles = MapCSS.availableStyles;
 		}
         
-		new Kothic().render(new Kothic.Canvas(canvas, {buffererd: buffered}), data, zoom + zoomOffset, layer._styles, layer._additionalStyle, onRenderComplete);
+		new Kothic({
+            buffered: buffered,
+            styles: layer._styles, 
+            additionalStyle: layer._additionalStyle
+        }).render(canvas, data, zoom + zoomOffset, onRenderComplete);
 		delete this._canvases[key];
 	},
 

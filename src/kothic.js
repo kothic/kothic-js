@@ -6,16 +6,27 @@
 //TODO: Remove extra L.Class and L.Util dependency
 Kothic = L.Class.extend({
     options: {
+        buffered: false,
+        useCanvasProxy: false,
+        styles: []
     }, 
     
-    initialize: function() {
+    initialize: function(options) {
+        L.Util.setOptions(this, options);
     },
     
-    render: function (canvas, data, zoom, styles, additionalStyle, onRenderComplete) {
+    render: function (canvasOrId, data, zoom, onRenderComplete) {
+        var canvas = new Kothic.Canvas(canvasOrId, {
+            buffererd: this.options.buffered,
+            useCanvasProxy: this.options.useCanvasProxy
+        })
+        
 		var width = canvas.width, height = canvas.height,
             granularity = data.granularity,
             ws = width / granularity, hs = height / granularity, 
-            ctx = canvas.ctx;
+            ctx = canvas.ctx,
+            styles = this.options.styles,
+            additionalStyle = this.options.additionalStyle;
                 
         this.collisionBuffer = new Kothic.CollisionBuffer(height, width);
                 
