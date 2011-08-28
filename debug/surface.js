@@ -10,10 +10,10 @@
             s_overlay['z-index'] = 100;
         }
 
-        if (Object.keys(s_default).length > 0) {
+        if (!K.Utils.isEmpty(s_default)) {
             style['default'] = s_default;
         }
-        if (Object.keys(s_overlay).length > 0) {
+        if (!K.Utils.isEmpty(s_overlay)) {
             style['overlay'] = s_overlay;
         }
         return style;
