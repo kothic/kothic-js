@@ -111,7 +111,7 @@ def style_statement_as_js(self, subpart):
     val = escape_value(self.key, self.value, subpart)
     k = wrap_key(self.key)
     if self.key == 'text':
-        return "            s_%s[%s] = tags[%s];" % (subpart, k, val)
+        return "            s_%s[%s] = MapCSS.e_localize(tags, %s);" % (subpart, k, val)
     else:
         if self.key in ('icon-image', 'fill-image'):
             images.add(self.value)

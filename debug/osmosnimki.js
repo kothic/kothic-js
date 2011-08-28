@@ -114,7 +114,7 @@
             || ((selector == 'area' && tags['natural'] == 'wood') && zoom >= 10)
             || ((selector == 'area' && tags['landuse'] == 'forest') && zoom >= 10)
             || ((selector == 'area' && tags['landuse'] == 'wood') && zoom >= 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Serif Italic';
@@ -218,7 +218,7 @@
         }
 
         if (((selector == 'area' && tags['natural'] == 'water') && zoom >= 9)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 1;
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Serif Italic';
@@ -229,7 +229,7 @@
         }
 
         if (((type == 'way' && tags['highway'] == 'construction') && zoom >= 15 && zoom <= 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -247,7 +247,7 @@
         }
 
         if (((type == 'way' && tags['highway'] == 'construction') && zoom >= 17)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -268,7 +268,7 @@
             || ((type == 'way' && tags['highway'] == 'path') && zoom >= 15)
             || ((type == 'way' && tags['highway'] == 'cycleway') && zoom >= 15)
             || ((type == 'way' && tags['highway'] == 'pedestrian') && zoom >= 15)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -286,7 +286,7 @@
         }
 
         if (((type == 'way' && tags['highway'] == 'steps') && zoom >= 15)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -318,7 +318,7 @@
 
         if (((type == 'way' && tags['highway'] == 'road') && zoom === 13)
             || ((type == 'way' && tags['highway'] == 'track') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -333,7 +333,7 @@
 
         if (((type == 'way' && tags['highway'] == 'road') && zoom >= 14 && zoom <= 16)
             || ((type == 'way' && tags['highway'] == 'track') && zoom >= 14 && zoom <= 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -349,7 +349,7 @@
 
         if (((type == 'way' && tags['highway'] == 'road') && zoom >= 16)
             || ((type == 'way' && tags['highway'] == 'track') && zoom >= 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -364,7 +364,7 @@
         }
 
         if (((type == 'way' && tags['highway'] == 'residential') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -388,7 +388,7 @@
 
         if (((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '1' || tags['living_street'] == 'true' || tags['living_street'] == 'yes')) && zoom >= 16)
             || ((type == 'way' && tags['highway'] == 'service' && tags['service'] == 'parking_aisle') && zoom >= 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -405,7 +405,7 @@
         if (((type == 'way' && tags['highway'] == 'residential') && zoom >= 14 && zoom <= 15)
             || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 14 && zoom <= 15)
             || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom === 15)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -423,7 +423,7 @@
             || ((type == 'way' && tags['highway'] == 'unclassified') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'living_street') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom === 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -441,7 +441,7 @@
             || ((type == 'way' && tags['highway'] == 'unclassified') && zoom >= 17)
             || ((type == 'way' && tags['highway'] == 'living_street') && zoom >= 17)
             || ((type == 'way' && tags['highway'] == 'service' && (tags['living_street'] == '-1' || tags['living_street'] == 'false' || tags['living_street'] == 'no') && tags['service'] !== 'parking_aisle') && zoom >= 17)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -456,7 +456,7 @@
         }
 
         if (((type == 'way' && tags['highway'] == 'secondary') && zoom === 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['width'] = 1.2;
             s_default['color'] = '#fcffd1';
@@ -467,7 +467,7 @@
 
         if (((type == 'way' && tags['highway'] == 'secondary') && zoom === 11)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -487,7 +487,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 12)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 12)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 12)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -507,7 +507,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 13)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 13)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -525,7 +525,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 14)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 14)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -543,7 +543,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 15)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 15)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 15)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -561,7 +561,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -579,7 +579,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 17)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 17)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 17)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -597,7 +597,7 @@
             || ((type == 'way' && tags['highway'] == 'secondary_link') && zoom === 18)
             || ((type == 'way' && tags['highway'] == 'tertiary') && zoom === 18)
             || ((type == 'way' && tags['highway'] == 'tertiary_link') && zoom === 18)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -625,7 +625,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 9)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 9)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -641,7 +641,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 10)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -657,7 +657,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 11)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -673,7 +673,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 12)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 12)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -689,7 +689,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 13)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -705,7 +705,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 14)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -721,7 +721,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 15)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 15)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -737,7 +737,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -753,7 +753,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 17)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 17)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -769,7 +769,7 @@
 
         if (((type == 'way' && tags['highway'] == 'primary') && zoom === 18)
             || ((type == 'way' && tags['highway'] == 'primary_link') && zoom === 18)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -821,7 +821,7 @@
 
         if (((type == 'way' && tags['highway'] == 'trunk') && zoom === 9)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 9)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -837,7 +837,7 @@
 
         if (((type == 'way' && tags['highway'] == 'trunk') && zoom === 10)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -853,7 +853,7 @@
 
         if (((type == 'way' && tags['highway'] == 'trunk') && zoom === 11)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -869,7 +869,7 @@
 
         if (((type == 'way' && tags['highway'] == 'trunk') && zoom === 12)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 12)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -885,7 +885,7 @@
 
         if (((type == 'way' && tags['highway'] == 'trunk') && zoom === 13)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -903,7 +903,7 @@
             || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom === 14)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 14)
             || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom === 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -921,7 +921,7 @@
             || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom === 15)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 15)
             || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom === 15)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -939,7 +939,7 @@
             || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 16)
             || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom === 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -957,7 +957,7 @@
             || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom === 17)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 17)
             || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom === 17)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -975,7 +975,7 @@
             || ((type == 'way' && tags['highway'] == 'trunk_link') && zoom === 18)
             || ((type == 'way' && tags['highway'] == 'motorway') && zoom === 18)
             || ((type == 'way' && tags['highway'] == 'motorway_link') && zoom === 18)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-position'] = 'line';
             s_default['text-color'] = '#404040';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -1158,7 +1158,7 @@
         }
 
         if (((type == 'node' && tags['amenity'] == 'place_of_worship') && zoom >= 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-color'] = '#623f00';
             s_default['font-family'] = 'DejaVu Serif Italic';
             s_default['font-size'] = '9';
@@ -1169,7 +1169,7 @@
         }
 
         if (((selector == 'area' && tags['amenity'] == 'place_of_worship') && zoom >= 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-color'] = '#623f00';
             s_default['font-family'] = 'DejaVu Serif Italic';
             s_default['font-size'] = '9';
@@ -1267,7 +1267,7 @@
 
         if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] !== 'subway') && zoom >= 9)) {
             s_default['icon-image'] = 'rw_stat_stanzii_2_blue.png';
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 7;
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Mono Book';
@@ -1284,7 +1284,7 @@
         }
 
         if (((type == 'node' && tags['railway'] == 'station' && tags['transport'] == 'subway') && zoom >= 12 && zoom <= 15)) {
-            s_label['text'] = tags['name'];
+            s_label['text'] = MapCSS.e_localize(tags, 'name');
             s_label['text-offset'] = 11;
             s_label['font-size'] = '9';
             s_label['font-family'] = 'DejaVu Sans Book';
@@ -1301,7 +1301,7 @@
         }
 
         if (((type == 'node' && tags['railway'] == 'subway_entrance' && ('name' in tags)) && zoom >= 16)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 11;
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1314,7 +1314,7 @@
 
         if (((type == 'node' && tags['aeroway'] == 'aerodrome') && zoom >= 10)) {
             s_default['icon-image'] = 'airport_world.png';
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 12;
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Condensed Bold';
@@ -1332,7 +1332,7 @@
 
         if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom === 3)) {
             s_default['text-offset'] = 4;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1345,7 +1345,7 @@
 
         if (((type == 'node' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes') && tags['population'] > '5000000') && zoom >= 4 && zoom <= 6)) {
             s_default['text-offset'] = 6;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1359,7 +1359,7 @@
         if (((type == 'node' && ('place' in tags) && tags['population'] < '100000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <= 5)) {
             s_default['icon-image'] = 'adm_4.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '7';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1372,7 +1372,7 @@
         if (((type == 'node' && ('place' in tags) && tags['population'] >= '100000' && tags['population'] <= '5000000' && ('capital' in tags) && tags['admin_level'] < '5') && zoom >= 4 && zoom <= 5)) {
             s_default['icon-image'] = 'adm_5.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1391,7 +1391,7 @@
             || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000' && ('admin_level' in tags)) && zoom === 6)) {
             s_default['icon-image'] = 'adm1_4_6.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1405,7 +1405,7 @@
             || ((type == 'node' && tags['place'] == 'town' && tags['population'] < '100000') && zoom === 7)) {
             s_default['icon-image'] = 'town_6.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1419,7 +1419,7 @@
             || ((type == 'node' && tags['place'] == 'city' && (!('population' in tags))) && zoom === 7)) {
             s_default['icon-image'] = 'town_6.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1432,7 +1432,7 @@
         if (((type == 'node' && tags['place'] == 'town') && zoom === 8)) {
             s_default['icon-image'] = 'town_6.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1446,7 +1446,7 @@
             || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000' && ('admin_level' in tags)) && zoom === 6)) {
             s_default['icon-image'] = 'adm1_5.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1460,7 +1460,7 @@
             || ((type == 'node' && tags['place'] == 'town' && tags['population'] >= '100000' && tags['population'] <= '1000000') && zoom === 7)) {
             s_default['icon-image'] = 'adm1_5.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1473,7 +1473,7 @@
         if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000') && zoom === 6)) {
             s_default['icon-image'] = 'adm1_6_test2.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1487,7 +1487,7 @@
         if (((type == 'node' && tags['place'] == 'city' && tags['population'] > '1000000' && tags['population'] < '5000000') && zoom >= 7 && zoom <= 8)) {
             s_default['icon-image'] = 'adm1_6_test2.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '11';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1501,7 +1501,7 @@
         if (((type == 'node' && tags['place'] == 'city' && tags['population'] >= '5000000') && zoom >= 7 && zoom <= 8)) {
             s_default['icon-image'] = 'adm_6.png';
             s_default['text-offset'] = 5;
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '12';
             s_default['font-family'] = 'DejaVu Sans Bold';
             s_default['text-halo-radius'] = 1;
@@ -1513,7 +1513,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '1' || tags['capital'] == 'true' || tags['capital'] == 'yes')) && zoom >= 9 && zoom <= 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = -20;
             s_default['font-size'] = '14';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -1526,7 +1526,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'city' && (tags['capital'] == '-1' || tags['capital'] == 'false' || tags['capital'] == 'no')) && zoom >= 9 && zoom <= 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = -20;
             s_default['font-size'] = '14';
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -1539,7 +1539,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'town') && zoom === 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '12';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1549,7 +1549,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'town') && zoom === 12)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '20';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1559,7 +1559,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'city') && zoom === 12)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '25';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1569,7 +1569,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'town') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '40';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1579,7 +1579,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'city') && zoom === 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '50';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1589,7 +1589,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'town') && zoom >= 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '80';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1599,7 +1599,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'city') && zoom >= 14)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '100';
             s_default['font-family'] = 'DejaVu Sans Book';
             s_default['text-color'] = '#101010';
@@ -1609,7 +1609,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'village') && zoom >= 9)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 1;
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1620,7 +1620,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'hamlet') && zoom >= 9)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 1;
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1632,7 +1632,7 @@
 
         if (((selector == 'area' && tags['landuse'] == 'nature_reserve') && zoom >= 9)
             || ((selector == 'area' && tags['leisure'] == 'park') && zoom >= 11)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 1;
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Serif Italic';
@@ -1645,7 +1645,7 @@
         if (((type == 'way' && tags['waterway'] == 'stream') && zoom >= 10)
             || ((type == 'way' && tags['waterway'] == 'river') && zoom >= 9)
             || ((type == 'way' && tags['waterway'] == 'canal') && zoom >= 13)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '9';
             s_default['font-family'] = 'DejaVu Sans Oblique';
             s_default['text-color'] = '#547bd1';
@@ -1655,7 +1655,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'continent') && zoom <= 3)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = -10;
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Sans ExtraLight';
@@ -1667,7 +1667,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'continent') && zoom >= 2 && zoom <= 3)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = -10;
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans ExtraLight';
@@ -1679,7 +1679,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'ocean') && zoom <= 6)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Oblique';
@@ -1691,7 +1691,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'ocean') && zoom >= 7)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '11';
             s_default['font-family'] = 'DejaVu Sans Oblique';
@@ -1703,7 +1703,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'sea') && zoom <= 6)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans Oblique';
@@ -1714,7 +1714,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'sea') && zoom >= 7)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Sans Oblique';
@@ -1726,7 +1726,7 @@
 
         if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '4500') && zoom >= 3 && zoom <= 4)) {
             s_default['icon-image'] = 'mountain_peak6.png';
-            s_default['text'] = tags['ele'];
+            s_default['text'] = MapCSS.e_localize(tags, 'ele');
             s_default['text-offset'] = 3;
             s_default['font-size'] = '7';
             s_default['font-family'] = 'DejaVu Sans Mono Book';
@@ -1738,7 +1738,7 @@
 
         if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '3500') && zoom >= 5 && zoom <= 6)) {
             s_default['icon-image'] = 'mountain_peak6.png';
-            s_default['text'] = tags['ele'];
+            s_default['text'] = MapCSS.e_localize(tags, 'ele');
             s_default['text-offset'] = 3;
             s_default['font-size'] = '7';
             s_default['font-family'] = 'DejaVu Sans Mono Book';
@@ -1750,7 +1750,7 @@
 
         if (((type == 'node' && tags['natural'] == 'peak' && tags['ele'] > '2500') && zoom >= 7 && zoom <= 12)) {
             s_default['icon-image'] = 'mountain_peak6.png';
-            s_default['text'] = tags['ele'];
+            s_default['text'] = MapCSS.e_localize(tags, 'ele');
             s_default['text-offset'] = 3;
             s_default['font-size'] = '7';
             s_default['font-family'] = 'DejaVu Sans Mono Book';
@@ -1762,7 +1762,7 @@
 
         if (((type == 'node' && tags['natural'] == 'peak') && zoom >= 12)) {
             s_default['icon-image'] = 'mountain_peak6.png';
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 3;
             s_default['font-size'] = '7';
             s_default['font-family'] = 'DejaVu Sans Mono Book';
@@ -1773,7 +1773,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'country') && zoom >= 2 && zoom <= 3)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '10';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1785,7 +1785,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'country') && zoom >= 4 && zoom <= 8)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '13';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1797,7 +1797,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'country') && zoom >= 8 && zoom <= 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 0;
             s_default['font-size'] = '16';
             s_default['font-family'] = 'DejaVu Sans Book';
@@ -1809,7 +1809,7 @@
         }
 
         if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '3') && zoom >= 3 && zoom <= 5)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = -5;
             s_default['font-size'] = '8';
             s_default['font-family'] = 'DejaVu Sans ExtraLight';
@@ -1821,7 +1821,7 @@
         }
 
         if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '4') && zoom >= 6 && zoom <= 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = 17;
             s_default['font-size'] = '14';
             s_default['font-family'] = 'DejaVu Sans ExtraLight';
@@ -1832,7 +1832,7 @@
         }
 
         if (((selector == 'area' && tags['boundary'] == 'administrative' && tags['admin_level'] == '6') && zoom >= 10)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['text-offset'] = -10;
             s_default['font-size'] = '12';
             s_default['font-family'] = 'DejaVu Sans ExtraLight';
@@ -1842,7 +1842,7 @@
         }
 
         if (((type == 'node' && tags['place'] == 'suburb') && zoom >= 12)) {
-            s_default['text'] = tags['name'];
+            s_default['text'] = MapCSS.e_localize(tags, 'name');
             s_default['font-size'] = '12';
             s_default['font-family'] = 'DejaVu Sans ExtraLight';
             s_default['text-color'] = '#7848a0';
@@ -1871,7 +1871,7 @@
         }
 
         if (((selector == 'area' && ('building' in tags)) && zoom >= 15 && zoom <= 16)) {
-            s_default['text'] = tags['addr:housenumber'];
+            s_default['text'] = MapCSS.e_localize(tags, 'addr:housenumber');
             s_default['text-halo-radius'] = 1;
             s_default['text-position'] = 'center';
             s_default['font-size'] = '7';
@@ -1880,7 +1880,7 @@
         }
 
         if (((selector == 'area' && ('building' in tags)) && zoom >= 17)) {
-            s_default['text'] = tags['addr:housenumber'];
+            s_default['text'] = MapCSS.e_localize(tags, 'addr:housenumber');
             s_default['text-halo-radius'] = 1;
             s_default['text-position'] = 'center';
             s_default['font-size'] = '8';
@@ -1889,23 +1889,23 @@
         }
 
         if (((type == 'node' && tags['highway'] == 'milestone' && ('pk' in tags)) && zoom >= 13)) {
-            s_default['text'] = tags['pk'];
+            s_default['text'] = MapCSS.e_localize(tags, 'pk');
             s_default['font-size'] = '7';
             s_default['text-halo-radius'] = 5;
             s_default['-x-mapnik-min-distance'] = '0';
         }
 
         if (Object.keys(s_default).length > 0) {
-            style['osmosnimki_default'] = s_default;
+            style['osmosnimki-maps_default'] = s_default;
         }
         if (Object.keys(s_centerline).length > 0) {
-            style['osmosnimki_centerline'] = s_centerline;
+            style['osmosnimki-maps_centerline'] = s_centerline;
         }
         if (Object.keys(s_ticks).length > 0) {
-            style['osmosnimki_ticks'] = s_ticks;
+            style['osmosnimki-maps_ticks'] = s_ticks;
         }
         if (Object.keys(s_label).length > 0) {
-            style['osmosnimki_label'] = s_label;
+            style['osmosnimki-maps_label'] = s_label;
         }
         return style;
     }

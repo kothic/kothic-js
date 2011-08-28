@@ -26,7 +26,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         this.kothic = new Kothic({
             buffered: options.buffered,
             styles: options.styles, 
-            additionalStyle: layer._additionalStyle
+            additionalStyle: layer._additionalStyle,
+            locales: ['be', 'ru', 'en']
         });
 
 		window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);

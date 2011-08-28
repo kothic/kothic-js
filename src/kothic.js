@@ -7,11 +7,13 @@ Kothic = K.Class.extend({
     options: {
         buffered: false,
         useCanvasProxy: false,
-        styles: []
+        styles: [],
+        locales: [],
     }, 
     
     initialize: function(options) {
         K.Utils.setOptions(this, options);
+        MapCSS.locales = this.options.locales;
     },
     
     render: function (canvasOrId, data, zoom, onRenderComplete) {

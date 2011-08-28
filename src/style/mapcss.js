@@ -8,6 +8,7 @@ var MapCSS = {
 	styles: {},
 	availableStyles: [],
 	images: {},
+    locales: [],
 
 	onError: function() {
 	},
@@ -106,6 +107,19 @@ var MapCSS = {
 	e_zmetric: function(arg) {
 		return MapCSS.e_metric(arg);
 	},
+    
+    e_localize: function(tags, text) {
+        var locales = MapCSS.locales, i, tag;
+        
+        for (i = 0; i < locales.length; i++) {
+            tag = text + ":" + locales[i];
+            if (tags[tag]) {
+                return tags[tag];
+            }
+        }
+        
+        return tags[text];
+    },
 
 	loadStyle: function(style, restyle, sprite_images, external_images) {
 		MapCSS.styles[style] = {
