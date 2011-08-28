@@ -18,6 +18,16 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		this._debugMessages = [];
 
 		var layer = this;
+        
+		if (!options.styles) {
+			options.styles = MapCSS.availableStyles;
+		}
+
+        this.kothic = new Kothic({
+            buffered: options.buffered,
+            styles: options.styles, 
+            additionalStyle: layer._additionalStyle
+        });
 
 		window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
 	},
@@ -25,7 +35,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 	_onKothicDataResponse: function(data, zoom, x, y) {
 		var key = [zoom, x, y].join('/'),
 			canvas = this._canvases[key],
-			buffered = this.options.buffered,
 			zoomOffset = this.options.zoomOffset,
 			layer = this;
 
@@ -38,15 +47,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
         this._invertYAxe(data)
 
-		if (!layer._styles) {
-			layer._styles = MapCSS.availableStyles;
-		}
-        
-		new Kothic({
-            buffered: buffered,
-            styles: layer._styles, 
-            additionalStyle: layer._additionalStyle
-        }).render(canvas, data, zoom + zoomOffset, onRenderComplete);
+		this.kothic.render(canvas, data, zoom + zoomOffset, onRenderComplete);
 		delete this._canvases[key];
 	},
 
@@ -121,10 +122,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             }
         }
     },
-
-	setStyles: function(styles) {
-		this._styles = styles;
-	},
 
 	setAdditionalStyle: function(fn) {
 		this._additionalStyle = fn;

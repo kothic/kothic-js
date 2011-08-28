@@ -71,8 +71,10 @@
 			maxZoom: 22
 		});
 
-		var kothic = new L.TileLayer.Kothic({minZoom: 8});
-        kothic.setStyles(['osmosnimki-maps', 'surface']);
+		var kothic = new L.TileLayer.Kothic({
+            minZoom: 8,
+            styles: ['osmosnimki-maps', 'surface']
+        });
 
 		var map = new L.Map('map', {
 			center: new L.LatLng(53.9, 27.55), // Minsk
