@@ -1896,20 +1896,19 @@
         }
 
         if (Object.keys(s_default).length > 0) {
-            style['osmosnimki-maps_default'] = s_default;
+            style['default'] = s_default;
         }
         if (Object.keys(s_centerline).length > 0) {
-            style['osmosnimki-maps_centerline'] = s_centerline;
+            style['centerline'] = s_centerline;
         }
         if (Object.keys(s_ticks).length > 0) {
-            style['osmosnimki-maps_ticks'] = s_ticks;
+            style['ticks'] = s_ticks;
         }
         if (Object.keys(s_label).length > 0) {
-            style['osmosnimki-maps_label'] = s_label;
+            style['label'] = s_label;
         }
         return style;
-    }
-    
+    }    
     var sprite_images = {
         'adm1_4_6.png': {width: 4, height: 4, offset: 0},
         'adm1_5.png': {width: 5, height: 5, offset: 4},

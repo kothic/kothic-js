@@ -2,15 +2,19 @@
 (function(MapCSS) {
     function restyle(style, tags, zoom, type, selector) {
         var s_default = {};
+        var s_overlay = {};
 
         if (((type == 'way' && tags['highway'] == 'primary' && (!('surface' in tags))))) {
-            s_default['color'] = '#f00';
-            s_default['width'] = 1;
-            s_default['z-index'] = 100;
+            s_overlay['color'] = '#f00';
+            s_overlay['width'] = 1;
+            s_overlay['z-index'] = 100;
         }
 
         if (Object.keys(s_default).length > 0) {
-            style['surface_default'] = s_default;
+            style['default'] = s_default;
+        }
+        if (Object.keys(s_overlay).length > 0) {
+            style['overlay'] = s_overlay;
         }
         return style;
     }
