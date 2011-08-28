@@ -6,6 +6,8 @@ dist/kothic-compact.js:
 	java -jar lib/closure-compiler/compiler.jar \
         --js debug/leaflet/leaflet.js \
         --js dist/kothic-leaflet.js \
+		--js src/core/utils.js \
+		--js src/core/class.js \
         --js src/kothic.js \
         --js src/canvas/canvasproxy.js \
         --js src/canvas/path.js \
@@ -28,6 +30,8 @@ dist/kothic-compact.js:
 
 dist/kothic.js:
 	java -jar lib/closure-compiler/compiler.jar \
+		--js src/core/utils.js \
+		--js src/core/class.js \
         --js src/kothic.js \
         --js src/canvas/canvasproxy.js \
         --js src/canvas/path.js \

@@ -1,5 +1,7 @@
 (function() {
 	var scripts = [
+		'core/utils.js',
+		'core/class.js',
 		'kothic.js',
 		'canvas/canvasproxy.js',
 		'canvas/path.js',
@@ -13,9 +15,9 @@
 		'style/style.js',
 		'utils/collisions.js',
 		'utils/geomops.js',
-		'utils/utils.js',
 		'utils/rtree.js',
-		'utils/tracer.js'
+		'utils/tracer.js',
+		'utils/utils.js'
 	];
 
 	function getSrcUrl() {

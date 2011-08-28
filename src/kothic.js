@@ -3,8 +3,7 @@
  * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
  * See http://github.com/kothic/kothic-js for more information.
  */
-//TODO: Remove extra L.Class and L.Util dependency
-Kothic = L.Class.extend({
+Kothic = K.Class.extend({
     options: {
         buffered: false,
         useCanvasProxy: false,
@@ -12,7 +11,7 @@ Kothic = L.Class.extend({
     }, 
     
     initialize: function(options) {
-        L.Util.setOptions(this, options);
+        K.Utils.setOptions(this, options);
     },
     
     render: function (canvasOrId, data, zoom, onRenderComplete) {

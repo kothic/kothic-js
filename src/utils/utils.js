@@ -47,15 +47,6 @@ Kothic.utils = {
 		return point;
 	},
 
-	extend: function (dest, source) {
-		for (var i in source) {
-			if (source.hasOwnProperty(i)) {
-				dest[i] = source[i];
-			}
-		}
-		return dest;
-	},
-    
     getOrderedKeys: function(dict) {
         var keys = [];
         for (var key in dict) {
@@ -66,6 +57,16 @@ Kothic.utils = {
         
         keys.sort();
         return keys;
-    }
+    },
+    
+	extend: function (dest, source) {
+		for (var i in source) {
+			if (source.hasOwnProperty(i)) {
+				dest[i] = source[i];
+			}
+		}
+		return dest;
+	}
+    
 };
 

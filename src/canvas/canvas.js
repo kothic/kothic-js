@@ -4,14 +4,14 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
  
-Kothic.Canvas = L.Class.extend({
+Kothic.Canvas = K.Class.extend({
     options: {
         buffered: false,
         useCanvasProxy: false
     },
     
     initialize: function (canvas, options) {
-        L.Util.setOptions(this, options);
+        K.Utils.setOptions(this, options);
         
         if (typeof canvas == 'string') {
             this.canvas = document.getElementById(canvas);

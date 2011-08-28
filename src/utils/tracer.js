@@ -4,7 +4,7 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
  
- Kothic.Debug = L.Class.extend({
+Kothic.Debug = K.Class.extend({
     initialize: function () {
         this.stats = {};
         this.events = [{
