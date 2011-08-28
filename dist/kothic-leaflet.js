@@ -23,13 +23,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 			options.styles = MapCSS.availableStyles;
 		}
 
-        this.kothic = new Kothic({
-            buffered: options.buffered,
-            styles: options.styles, 
-            additionalStyle: layer._additionalStyle,
-            locales: ['be', 'ru', 'en']
-        });
-
 		window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
 	},
 
@@ -48,6 +41,12 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
         this._invertYAxe(data)
 
+        this.kothic = new Kothic({
+            buffered: layer.options.buffered,
+            styles: layer.options.styles, 
+            additionalStyle: layer._additionalStyle,
+            locales: ['be', 'ru', 'en']
+        });
 		this.kothic.render(canvas, data, zoom + zoomOffset, onRenderComplete);
 		delete this._canvases[key];
 	},
