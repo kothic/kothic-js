@@ -94,5 +94,4 @@ Kothic.line = (function() {
 		renderCasing: renderCasing,
 		render: renderPolyline
 	};
-
 })();

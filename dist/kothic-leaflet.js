@@ -8,7 +8,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		unloadInvisibleTiles: true,
 		attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
 		async: true,
-		buffered: true
+		buffered: false
 	},
 
 	initialize: function(options) {

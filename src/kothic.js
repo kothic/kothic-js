@@ -8,7 +8,7 @@ Kothic = K.Class.extend({
         buffered: false,
         useCanvasProxy: false,
         styles: [],
-        locales: [],
+        locales: []
     }, 
     
     initialize: function(options) {
@@ -125,7 +125,7 @@ Kothic = K.Class.extend({
                     casings += 1;
                 }
             }
-            
+
             //Render line
             ctx.lineCap = "round";
             for (j = 0; j < featuresLen; j++) {
@@ -147,14 +147,14 @@ Kothic = K.Class.extend({
     _renderTextAndIcons: function (layerIds, layers, ctx, ws, hs) {
         //TODO: Move to the features detector
         var textOnCanvasAvailable = ctx.strokeText && ctx.fillText && ctx.measureText;
-        var icons = 0, labels = 0, shields = 0, j;
+        var icons = 0, labels = 0, shields = 0, j, style;
 
         for (var i = 0; i < layerIds.length; i++) {
             var features = layers[layerIds[i]], featuresLen = features.length;
 
             // render icons without text
             for (j = featuresLen - 1; j >= 0; j--) {
-                var style = features[j].style;
+                style = features[j].style;
                 if (("icon-image" in style) && !style["text"]) {
                     Kothic.texticons.render(ctx, features[j], this.collisionBuffer, ws, hs, false, true);
                     icons += 1;
@@ -163,7 +163,7 @@ Kothic = K.Class.extend({
 
             // render text on features without icons
             for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
-                var style = features[j].style;
+                style = features[j].style;
                 if (style["text"] && !("icon-image" in style)) {
                     Kothic.texticons.render(ctx, features[j], this.collisionBuffer, ws, hs, true, false);
                     labels += 1;
@@ -172,7 +172,7 @@ Kothic = K.Class.extend({
 
             // for features with both icon and text, render both or neither
             for (j = featuresLen - 1; j >= 0; j--) {
-                var style = features[j].style;
+                style = features[j].style;
                 if (("icon-image" in style) && style["text"]) {
                     Kothic.texticons.render(ctx, features[j], this.collisionBuffer, ws, hs, textOnCanvasAvailable, true);
                     icons += 1;
@@ -182,7 +182,7 @@ Kothic = K.Class.extend({
 
             // render shields with text
             for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
-                var style = features[j].style;
+                style = features[j].style;
                 if (style["shield-text"]) {
                     Kothic.shields.render(ctx, features[j], this.collisionBuffer, ws, hs);
                     shields += 1;
