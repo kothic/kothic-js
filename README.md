@@ -13,25 +13,34 @@ It was initially developed as a JavaScript port of [Kothic](http://wiki.openstre
 Include `kothic.js` from the `dist` directory on your page. Now you can call:
 
 ```javascript
-Kothic.render(
-	canvas, // canvas element (or its id) to render on
-	data, // JSON data to render
-	zoom, // zoom level
-	additionalStyle, // (optional) explained below
-	onRenderComplete, // (optional) callback to call when rendering is done
-	buffered // (optional) if true, result will appear only after all layers are rendered
-	);
-```
+var kothic = new Kothic({
+            buffered: false,  // (optional) if true, result will appear only after all layers are rendered
+            styles: ['osmosnimki-maps', 'surface'], // (optional) only specified styles will be rendered, if any
+            additionalStyle: additionalStyle//(optional) explained below,
+            locales: ['be', 'ru', 'en'] // (optional) map languages, see below
+        });
+
+`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used. 
 
 `additionalStyle` is a function of the following form (for example):
 
 ```javascript
-function(style, tags, zoom, type, selector) {
+function additionalStyle(style, tags, zoom, type, selector) {
 	if (tags.building == 'yes' && !tags['addr:housename']) {
 		style['default']['fill-color'] = 'red';
 	} 
 }
 ```
+
+kothic.render(
+	canvas, // canvas element (or its id) to render on
+	data, // JSON data to render
+	zoom, // zoom level
+	onRenderComplete, // (optional) callback to call when rendering is done
+	);
+```
+
+Note: you should new renderer instance for any tile you want to render since Kothic has unsolved concurrency issues. 
 
 ### Contributing to Kothic JS
 
