@@ -1,6 +1,6 @@
-all:    clean dist/kothic.js
+all:    clean dist/kothic.js dist/kothic-compact.js
 clean:
-	rm -f dist/kothic.js
+	rm -f dist/kothic.js dist/kothic-compact.js
 
 dist/kothic-compact.js:
 	java -jar lib/closure-compiler/compiler.jar \
@@ -13,7 +13,6 @@ dist/kothic-compact.js:
         --js src/canvas/path.js \
         --js src/renderer/line.js \
         --js src/renderer/polygon.js \
-        --js src/renderer/renderer.js \
         --js src/renderer/shields.js \
         --js src/renderer/text.js \
         --js src/renderer/texticons.js \
@@ -37,7 +36,6 @@ dist/kothic.js:
         --js src/canvas/path.js \
         --js src/renderer/line.js \
         --js src/renderer/polygon.js \
-        --js src/renderer/renderer.js \
         --js src/renderer/shields.js \
         --js src/renderer/text.js \
         --js src/renderer/texticons.js \
