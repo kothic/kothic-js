@@ -46,9 +46,12 @@ def escape_value(key, value, subpart):
     if isinstance(value, ast.Eval):
         return value.as_js(subpart)
     elif key in NUMERIC_PROPERTIES:
-        return value
+        if float(value) % 1 != 0.0:
+            return float(value)
+        else:
+            return int(value)
     elif key in DASH_PROPERTIES:
-        return "[%s]" % value
+        return "[%s]" % ', '.join(value.split(','))
     else:
         return "'%s'" % value
 
@@ -66,7 +69,7 @@ def rule_as_js(self):
     for action in self.actions:
         actions_js.append(action.as_js(selector.subpart))
 
-    return """\n        if (%s) %s""" % ("\n            || ".join(selectors_js), "".join(actions_js))
+    return """\n        if (%s) %s""" % (" || ".join(selectors_js), "".join(actions_js))
 
 def selector_as_js(self):
     criteria = " && ".join(map(lambda x: x.as_js(), self.criteria))
@@ -91,10 +94,10 @@ def condition_check_as_js(self):
         return "tags[%s] %s %s" % (k, CHECK_OPERATORS[self.sign], wrap_key(self.value))
 
 def condition_tag_as_js(self):
-    return "(%s in tags)" % (wrap_key(self.key))
+    return "(tags.hasOwnProperty(%s))" % (wrap_key(self.key))
 
 def condition_nottag_as_js(self):
-    return "(!(%s in tags))" % (wrap_key(self.key))
+    return "(!tags.hasOwnProperty(%s))" % (wrap_key(self.key))
 
 def action_as_js(self, subpart):
     if len(filter(lambda x: x, map(lambda x: isinstance(x, ast.StyleStatement), self.statements))) > 0:
@@ -209,7 +212,11 @@ def create_css_sprite(image_names, icons_path, sprite_filename):
 
 def image_as_js(image):
     return """
-        '%s': {width: %d, height: %d, offset: %d}""" % (
+        '%s': {
+            width: %d, 
+            height: %d, 
+            offset: %d
+        }""" % (
         image['name'],
         image['size'][0],
         image['size'][1],
@@ -273,10 +280,13 @@ if __name__ == "__main__":
     mapcss = parser.parse(content)
 
     mapcss_js = mapcss.as_js()
-    subparts_var = "\n".join(map(lambda subpart: "        var s_%s = {};" % subpart, subparts))
+    subparts_var = ", ".join(map(lambda subpart: "s_%s = {}" % subpart, subparts))
+    subparts_var = "        var %s;" % subparts_var
     subparts_fill = "\n".join(map(lambda subpart: "        if (!K.Utils.isEmpty(s_%s)) {\n            style['%s'] = s_%s;\n        }" % (subpart, subpart, subpart), subparts))
     js = """
-(function(MapCSS) {
+(function (MapCSS) {
+    'use strict';
+
     function restyle(style, tags, zoom, type, selector) {
 %s
 %s
@@ -298,9 +308,8 @@ if __name__ == "__main__":
     (sprite_images, external_images) = create_css_sprite(images, options.icons, sprite)
 
     js += """
-    var sprite_images = {%s};
-
-    var external_images = [%s];
+    var sprite_images = {%s
+    }, external_images = [%s];
 
     MapCSS.loadStyle('%s', restyle, sprite_images, external_images);
     MapCSS.preloadExternalImages('%s');
