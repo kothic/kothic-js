@@ -17,8 +17,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		this._canvases = {};
 		this._debugMessages = [];
 
-		var layer = this;
-        
 		if (!options.styles) {
 			options.styles = MapCSS.availableStyles;
 		}
