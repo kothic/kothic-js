@@ -4,7 +4,7 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
 
-Kothic.style = (function() {
+Kothic.style = (function () {
 	var styleCache = {}, lastId = 0;
 
 	return {
@@ -36,13 +36,13 @@ Kothic.style = (function() {
 
 			if (!styleCache[key]) {
 				//TODO: propagate type and selector
-				if (feature.type == 'Polygon' || feature.type == 'MultiPolygon') {
+				if (feature.type === 'Polygon' || feature.type === 'MultiPolygon') {
 					type = 'way';
 					selector = 'area';
-				} else if (feature.type == 'LineString' || feature.type == 'MultiLineString') {
+				} else if (feature.type === 'LineString' || feature.type === 'MultiLineString') {
 					type = 'way';
 					selector = 'line';
-				} else if (feature.type == 'Point' || feature.type == 'MultiPoint') {
+				} else if (feature.type === 'Point' || feature.type === 'MultiPoint') {
 					type = 'node';
 					selector = 'node';
 				}
@@ -75,8 +75,8 @@ Kothic.style = (function() {
 			}
 
 			styledFeatures.sort(
-				function (a,b){
-					return parseFloat(a.style["z-index"]) - parseFloat(b.style["z-index"] || 0)
+				function (a, b) {
+					return parseFloat(a.style["z-index"]) - parseFloat(b.style["z-index"] || 0);
 				}
 			);
 
@@ -92,10 +92,10 @@ Kothic.style = (function() {
 			name = name.toLowerCase();
 
 			var styles = [];
-			if (name.indexOf("italic") != -1 || name.indexOf("oblique") != -1) {
+			if (name.indexOf("italic") !== -1 || name.indexOf("oblique") !== -1) {
 				styles.push('italic');
 			}
-			if (name.indexOf("bold") != -1) {
+			if (name.indexOf("bold") !== -1) {
 				styles.push('bold');
 				//family += '"'+name.replace("bold", "")+'", ';
 				family += name.replace("bold", "") + ', ';
@@ -103,7 +103,7 @@ Kothic.style = (function() {
 
 			styles.push(size + 'px');
 
-			if (name.indexOf('serif') != -1) {
+			if (name.indexOf('serif') !== -1) {
 				family += 'Georgia, serif';
 			} else {
 				family += '"Helvetica Neue", Arial, Helvetica, sans-serif';
@@ -115,11 +115,12 @@ Kothic.style = (function() {
 		},
 
 		setStyles: function (ctx, styles) {
-			for (var i in styles) {
+            var i;
+			for (i in styles) {
 				if (styles.hasOwnProperty(i)) {
 					ctx[i] = styles[i];
 				}
 			}
 		}
 	};
-})();
+}());

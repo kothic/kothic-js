@@ -4,7 +4,7 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
 
-Kothic.polygon = (function() {
+Kothic.polygon = (function () {
 	return {
 		pathOpened: false,
 		render: function (ctx, feature, nextFeature, ws, hs, granularity) {
@@ -19,13 +19,13 @@ Kothic.polygon = (function() {
 			Kothic.path(ctx, feature, false, true, ws, hs, granularity);
 
 			if (nextFeature &&
-					(nextStyle['fill-color'] == style['fill-color']) &&
-					(nextStyle['fill-image'] == style['fill-image']) &&
-					(nextStyle['fill-opacity'] == style['fill-opacity'])) {
+					(nextStyle['fill-color'] === style['fill-color']) &&
+					(nextStyle['fill-image'] === style['fill-image']) &&
+					(nextStyle['fill-opacity'] === style['fill-opacity'])) {
 				return;
 			}
 
-			this.fill(ctx, style, function() {
+			this.fill(ctx, style, function () {
 				ctx.fill();
 			});
 
@@ -34,26 +34,26 @@ Kothic.polygon = (function() {
 	    fill: function (ctx, style, fillFn) {
 		    var opacity = style["fill-opacity"] || style.opacity, image;
 
-		    if (('fill-color' in style)) {
-		    	// first pass fills with solid color
-	    		Kothic.style.setStyles(ctx, {
-    						fillStyle: style["fill-color"] || "#000000",
-						    globalAlpha: opacity || 1
-				    	});
-			    fillFn();
+		    if (style.hasOwnProperty('fill-color')) {
+                // first pass fills with solid color
+                Kothic.style.setStyles(ctx, {
+                    fillStyle: style["fill-color"] || "#000000",
+                    globalAlpha: opacity || 1
+                });
+                fillFn();
 		    }
 
-		    if ('fill-image' in style) {
-			    // second pass fills with texture
-			    image = MapCSS.getImage(style['fill-image']);
-			    if (image) {
-		    		Kothic.style.setStyles(ctx, {
-    							fillStyle: ctx.createPattern(image, 'repeat'),
-	    						globalAlpha: opacity || 1
-				    		});
-			    	fillFn();
-		    	}
-	    	}
-    	}
-	};
-})();
+            if (style.hasOwnProperty('fill-image')) {
+                // second pass fills with texture
+                image = MapCSS.getImage(style['fill-image']);
+                if (image) {
+                    Kothic.style.setStyles(ctx, {
+                        fillStyle: ctx.createPattern(image, 'repeat'),
+                        globalAlpha: opacity || 1
+                    });
+                    fillFn();
+                }
+            }
+        }
+    };
+}());

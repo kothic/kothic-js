@@ -10,23 +10,25 @@ var MapCSS = {
 	images: {},
     locales: [],
 
-	onError: function() {
+	onError: function () {
 	},
 
-	onImagesLoad: function() {
+	onImagesLoad: function () {
 	},
 
-	e_min: function(/*...*/) {
+	e_min: function (/*...*/) {
 		return Math.min.apply(null, arguments);
 	},
 
-	e_max: function(/*...*/) {
+	e_max: function (/*...*/) {
 		return Math.max.apply(null, arguments);
 	},
 
-	e_any: function(/*...*/) {
-		for (var i = 0; i < arguments.length; i++) {
-			if (typeof(arguments[i]) != 'undefined' && arguments[i] !== '') {
+	e_any: function (/*...*/) {
+        var i;
+		
+        for (i = 0; i < arguments.length; i++) {
+			if (typeof(arguments[i]) !== 'undefined' && arguments[i] !== '') {
 				return arguments[i];
 			}
 		}
@@ -34,7 +36,7 @@ var MapCSS = {
 		return "";
 	},
 
-	e_num: function(arg) {
+	e_num: function (arg) {
 		if (!isNaN(parseFloat(arg))) {
 			return parseFloat(arg);
 		} else {
@@ -42,51 +44,51 @@ var MapCSS = {
 		}
 	},
 
-	e_str: function(arg) {
+	e_str: function (arg) {
 		return arg;
 	},
 
-	e_int: function(arg) {
+	e_int: function (arg) {
 		return parseInt(arg, 10);
 	},
 
-	e_tag: function(a, tag) {
-		if (tag in a && a[tag] !== null) {
+	e_tag: function (obj, tag) {
+		if (obj.hasOwnProperty(tag) && obj[tag] !== null) {
 			return a[tag];
 		} else {
 			return "";
 		}
 	},
 
-	e_prop: function(obj, tag) {
-		if (tag in obj && obj[tag] !== null) {
+	e_prop: function (obj, tag) {
+		if (obj.hasOwnProperty(tag) && obj[tag] !== null) {
 			return obj[tag];
 		} else {
 			return "";
 		}
 	},
 
-	e_sqrt: function(arg) {
+	e_sqrt: function (arg) {
 		return Math.sqrt(arg);
 	},
 
-	e_boolean: function(arg, if_exp, else_exp) {
-		if (typeof(if_exp) == 'undefined') {
+	e_boolean: function (arg, if_exp, else_exp) {
+		if (typeof(if_exp) === 'undefined') {
 			if_exp = 'true';
 		}
 
-		if (typeof(else_exp) == 'undefined') {
+		if (typeof(else_exp) === 'undefined') {
 			else_exp = 'false';
 		}
 
-		if (arg == '0' || arg == 'false' || arg === '') {
+		if (arg === '0' || arg === 'false' || arg === '') {
 			return else_exp;
 		} else {
 			return if_exp;
 		}
 	},
 
-	e_metric: function(arg) {
+	e_metric: function (arg) {
 		if (/\d\s*mm$/.test(arg)) {
 			return 1000 * parseInt(arg, 10);
 		} else if (/\d\s*cm$/.test(arg)) {
@@ -104,11 +106,11 @@ var MapCSS = {
 		}
 	},
 
-	e_zmetric: function(arg) {
+	e_zmetric: function (arg) {
 		return MapCSS.e_metric(arg);
 	},
     
-    e_localize: function(tags, text) {
+    e_localize: function (tags, text) {
         var locales = MapCSS.locales, i, tag;
         
         for (i = 0; i < locales.length; i++) {
@@ -121,7 +123,7 @@ var MapCSS = {
         return tags[text];
     },
 
-	loadStyle: function(style, restyle, sprite_images, external_images) {
+	loadStyle: function (style, restyle, sprite_images, external_images) {
 		MapCSS.styles[style] = {
 			restyle: restyle,
 			images: sprite_images,
@@ -138,19 +140,22 @@ var MapCSS = {
 	 * Call MapCSS.onImagesLoad callback if all sprite and external
 	 * images was loaded
 	 */
-	_onImagesLoad: function(style) {
+	_onImagesLoad: function (style) {
 		if (MapCSS.styles[style].external_images_loaded &&
 				MapCSS.styles[style].sprite_loaded) {
 			MapCSS.onImagesLoad();
 		}
 	},
 
-	preloadSpriteImage: function(style, url) {
-		var images = MapCSS.styles[style].images;
+	preloadSpriteImage: function (style, url) {
+		var images = MapCSS.styles[style].images, 
+            img = new Image();
+
 		delete MapCSS.styles[style].images;
-		var img = new Image();
-		img.onload = function() {
-			for (var image in images) {
+
+		img.onload = function () {
+            var image;
+			for (image in images) {
 				if (images.hasOwnProperty(image)) {
 					images[image].sprite = img;
 					MapCSS.images[image] = images[image];
@@ -159,46 +164,49 @@ var MapCSS = {
 			MapCSS.styles[style].sprite_loaded = true;
 			MapCSS._onImagesLoad(style);
 		};
-		img.onerror = function(e) {
+		img.onerror = function (e) {
 			MapCSS.onError(e);
 		};
 		img.src = url;
 	},
 
-	preloadExternalImages: function(style) {
+	preloadExternalImages: function (style) {
 		var external_images = MapCSS.styles[style].external_images;
 		delete MapCSS.styles[style].external_images;
 
-		var len = external_images.length, loaded = 0;
-		for (var i = 0; i < len; i++) {
-			(function(url) {
-				var img = new Image();
-				img.onload = function() {
-					loaded++;
-					MapCSS.images[url] = {
-						sprite: img,
-						height: img.height,
-						width: img.width,
-						offset: 0
-					};
-					if (loaded == len) {
-						MapCSS.styles[style].external_images_loaded = true;
-						MapCSS._onImagesLoad(style);
-					}
-				};
-				img.onerror = function() {
-					loaded++;
-					if (loaded == len) {
-						MapCSS.styles[style].external_images_loaded = true;
-						MapCSS._onImagesLoad(style);
-					}
-				};
-				img.src = url;
-			})(external_images[i]);
+		var len = external_images.length, loaded = 0, i;
+        
+        function loadImage(url) {
+            var img = new Image();
+            img.onload = function () {
+                loaded++;
+                MapCSS.images[url] = {
+                    sprite: img,
+                    height: img.height,
+                    width: img.width,
+                    offset: 0
+                };
+                if (loaded === len) {
+                    MapCSS.styles[style].external_images_loaded = true;
+                    MapCSS._onImagesLoad(style);
+                }
+            };
+            img.onerror = function () {
+                loaded++;
+                if (loaded === len) {
+                    MapCSS.styles[style].external_images_loaded = true;
+                    MapCSS._onImagesLoad(style);
+                }
+            };
+            img.src = url;
+        }
+        
+		for (i = 0; i < len; i++) {
+			loadImage(external_images[i]);
 		}
 	},
 
-	getImage: function(ref) {
+	getImage: function (ref) {
 		var img = MapCSS.images[ref];
 
 		if (img.sprite) {
@@ -216,8 +224,10 @@ var MapCSS = {
 		return img;
 	},
 
-	restyle: function(styleNames, objectStyle, tags, zoom, type, selector) {
-		for (var i = 0; i < styleNames.length; i++) {
+	restyle: function (styleNames, objectStyle, tags, zoom, type, selector) {
+        var i;
+        
+		for (i = 0; i < styleNames.length; i++) {
 			objectStyle = MapCSS.styles[styleNames[i]].restyle(objectStyle, tags, zoom, type, selector);
 		}
 

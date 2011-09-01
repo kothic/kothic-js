@@ -70,4 +70,4 @@ Kothic.geomops = (function() {
 			}
 		}
 	};
-})();
+}());

@@ -10,8 +10,8 @@ Kothic.utils = {
 	},
 
 	transformPoints: function (points, ws, hs) {
-		var transformed = [];
-		for (var i = 0, len = points.length; i < len; i++) {
+		var transformed = [], i;
+		for (i = 0, len = points.length; i < len; i++) {
 			transformed.push(this.transformPoint(points[i], ws, hs));
 		}
 		return transformed;
@@ -29,7 +29,7 @@ Kothic.utils = {
 			case 'LineString':
 				len = Kothic.geomops.getPolyLength(feature.coordinates);
 				point = Kothic.geomops.getAngleAndCoordsAtLength(feature.coordinates, len / 2, 0);
-				point = [point[1],point[2]];
+				point = [point[1], point[2]];
 				break;
 			case 'GeometryCollection':
 				//TODO: Disassemble geometry collection
@@ -47,9 +47,9 @@ Kothic.utils = {
 		return point;
 	},
 
-    getOrderedKeys: function(dict) {
-        var keys = [];
-        for (var key in dict) {
+    getOrderedKeys: function (dict) {
+        var keys = [], key;
+        for (key in dict) {
             if (dict.hasOwnProperty(key)) {
                 keys.push(key);
             }
@@ -60,13 +60,13 @@ Kothic.utils = {
     },
     
 	extend: function (dest, source) {
-		for (var i in source) {
-			if (source.hasOwnProperty(i)) {
-				dest[i] = source[i];
+        var key;
+		for (key in source) {
+			if (source.hasOwnProperty(key)) {
+				dest[key] = source[key];
 			}
 		}
 		return dest;
-	}
-    
+	}    
 };
 

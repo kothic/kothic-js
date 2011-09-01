@@ -13,13 +13,14 @@ Kothic.Canvas = K.Class.extend({
     initialize: function (canvas, options) {
         K.Utils.setOptions(this, options);
         
-        if (typeof canvas == 'string') {
+        if (typeof canvas === 'string') {
             this.canvas = document.getElementById(canvas);
         } else {
             this.canvas = canvas;
         }
         
-        this.width = canvas.width, this.height = canvas.height;
+        this.width = canvas.width;
+        this.height = canvas.height;
         
         //Create invisible canvas for double buffering
 		if (this.options.buffered) {

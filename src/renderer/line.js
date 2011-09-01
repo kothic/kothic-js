@@ -4,7 +4,7 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
 
-Kothic.line = (function() {
+Kothic.line = (function () {
 	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
 		var style = feature.style,
 				nextStyle = nextFeature && nextFeature.style;
@@ -18,21 +18,23 @@ Kothic.line = (function() {
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
 		if (nextFeature &&
-				(nextStyle.width == style.width) &&
-				(nextStyle['casing-width'] == style['casing-width']) &&
-				(nextStyle['casing-color'] == style['casing-color']) &&
-				((nextStyle['casing-dashes'] || nextStyle['dashes'] || false) == (style['casing-dashes'] || style['dashes'] || false)) &&
-				((nextStyle['casing-linecap'] || nextStyle['linecap'] || "butt") == (style['casing-linecap'] || style['linecap'] || "butt")) &&
-				((nextStyle['casing-linejoin'] || nextStyle['linejoin'] || "round") == (style['casing-linejoin'] || style['linejoin'] || "round")) &&
-				((nextStyle['casing-opacity'] || nextStyle['opacity']) == (style['opacity'] || style['casing-opacity']))) return;
+				(nextStyle.width === style.width) &&
+				(nextStyle['casing-width'] === style['casing-width']) &&
+				(nextStyle['casing-color'] === style['casing-color']) &&
+				((nextStyle['casing-dashes'] || nextStyle.dashes || false) === (style['casing-dashes'] || style.dashes || false)) &&
+				((nextStyle['casing-linecap'] || nextStyle.linecap || "butt") === (style['casing-linecap'] || style.linecap || "butt")) &&
+				((nextStyle['casing-linejoin'] || nextStyle.linejoin || "round") === (style['casing-linejoin'] || style.linejoin || "round")) &&
+				((nextStyle['casing-opacity'] || nextStyle.opacity) === (style.opacity || style['casing-opacity']))) {
+            return;
+        }
 
 		Kothic.style.setStyles(ctx, {
-					lineWidth: 2 * style["casing-width"] + ("width" in style ? style["width"] : 0),
-					strokeStyle: style["casing-color"] || "#000000",
-					lineCap: style["casing-linecap"] || style.linecap || "butt",
-					lineJoin: style["casing-linejoin"] || style.linejoin || "round",
-					globalAlpha: style["casing-opacity"] || 1
-				});
+            lineWidth: 2 * style["casing-width"] + (style.hasOwnProperty("width") ? style.width : 0),
+			strokeStyle: style["casing-color"] || "#000000",
+			lineCap: style["casing-linecap"] || style.linecap || "butt",
+			lineJoin: style["casing-linejoin"] || style.linejoin || "round",
+			globalAlpha: style["casing-opacity"] || 1
+        });
 
 		this.pathOpened = false;
 		ctx.stroke();
@@ -52,39 +54,42 @@ Kothic.line = (function() {
 		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
 
 		if (nextFeature &&
-				((nextStyle.width || 1) == (style.width || 1)) &&
-				((nextStyle.color || "#000000") == (style.color || "#000000")) &&
-				(nextStyle.linecap == style.linecap) &&
-				(nextStyle.linejoin == style.linejoin) &&
-				(nextStyle.image == style.image) &&
-				(nextStyle.opacity == style.opacity)) return;
+				((nextStyle.width || 1) === (style.width || 1)) &&
+				((nextStyle.color || "#000000") === (style.color || "#000000")) &&
+				(nextStyle.linecap === style.linecap) &&
+				(nextStyle.linejoin === style.linejoin) &&
+				(nextStyle.image === style.image) &&
+				(nextStyle.opacity === style.opacity)) {
+            return;
+        }
 
-		if (('color' in style) || !('image' in style)) {
+		if (style.hasOwnProperty('color') || !style.hasOwnProperty('image')) {
 			Kothic.style.setStyles(ctx, {
-						lineWidth: style.width || 1,
-						strokeStyle: style.color || '#000000',
-						lineCap: style.linecap || "round",
-						lineJoin: style.linejoin || "round",
-						globalAlpha: style.opacity || 1
-					});
+                lineWidth: style.width || 1,
+                strokeStyle: style.color || '#000000',
+                lineCap: style.linecap || "round",
+                lineJoin: style.linejoin || "round",
+                globalAlpha: style.opacity || 1
+            });
 			ctx.stroke();
 		}
 
 
-		if ('image' in style) {
+		if (style.hasOwnProperty('image')) {
 			// second pass fills with texture
-			var image = MapCSS.getImage(style['image']);
+			var image = MapCSS.getImage(style.image);
+            
 			if (image) {
 				Kothic.style.setStyles(ctx, {
-							strokeStyle: ctx.createPattern(image, 'repeat') || "#000000",
-							lineWidth: style.width || 1,
-							lineCap: style.linecap || "round",
-							lineJoin: style.linejoin || "round",
-							globalAlpha: style.opacity || 1
-						});
+                    strokeStyle: ctx.createPattern(image, 'repeat') || "#000000",
+                    lineWidth: style.width || 1,
+                    lineCap: style.linecap || "round",
+                    lineJoin: style.linejoin || "round",
+                    globalAlpha: style.opacity || 1
+                });
+                
 				ctx.stroke();
 			}
-
 		}
 		this.pathOpened = false;
 	}
@@ -94,4 +99,4 @@ Kothic.line = (function() {
 		renderCasing: renderCasing,
 		render: renderPolyline
 	};
-})();
+}());

@@ -4,7 +4,7 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
 
-Kothic.textOnPath = (function() {
+Kothic.textOnPath = (function () {
 
 	function getWidth(ctx, text) {
 		return ctx.measureText(text).width;
@@ -56,7 +56,7 @@ Kothic.textOnPath = (function() {
 		ctx.translate(-textCenter[0], -textCenter[1]);
 	}
 
-	return function(ctx, points, text, halo, collisions) {
+	return function (ctx, points, text, halo, collisions) {
 		//widthCache = {};
 
 		// simplify points?
@@ -65,7 +65,9 @@ Kothic.textOnPath = (function() {
 				textLen = text.length,
 				pathLen = Kothic.geomops.getPolyLength(points);
 
-		if (pathLen < textWidth) return;  // if label won't fit - don't try to
+		if (pathLen < textWidth) {
+            return;  // if label won't fit - don't try to
+        }
 
 		var letter,
 				widthUsed,
@@ -103,7 +105,9 @@ Kothic.textOnPath = (function() {
 					break;
 				}
 
-				if (!prevAngle) prevAngle = axy[0];
+				if (!prevAngle) {
+                    prevAngle = axy[0];
+                }
 
 				// if label collisions with another, restart it from here
 				if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > maxAngle) {

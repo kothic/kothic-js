@@ -4,7 +4,7 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
 
-Kothic.path = (function() {
+Kothic.path = (function () {
 	var dashPattern;
 
 	function setDashPattern(point, dashes) {
@@ -66,19 +66,18 @@ Kothic.path = (function() {
 	}
 
 	function isTileBoundary(p, size) {
-		return p[0] === 0 || p[0] == size || p[1] === 0 || p[1] == size;
+		return p[0] === 0 || p[0] === size || p[1] === 0 || p[1] === size;
 	}
 
-	return function(ctx, feature, dashes, fill, ws, hs, granularity) {
-		var type = feature.type,
-				coords = feature.coordinates;
+	return function (ctx, feature, dashes, fill, ws, hs, granularity) {
+		var type = feature.type, coords = feature.coordinates;
 
-		if (type == "Polygon") {
+		if (type === "Polygon") {
 			coords = [coords];
 			type = "MultiPolygon";
 		}
 
-		if (type == "LineString") {
+		if (type === "LineString") {
 			coords = [coords];
 			type = "MultiLineString";
 		}
@@ -90,9 +89,9 @@ Kothic.path = (function() {
 				prevPoint, point, screenPoint,
 				dx, dy, dist, pad = 50;
 
-		if (type == "MultiPolygon") {
+		if (type === "MultiPolygon") {
 			for (i = 0; i < len; i++) {
-				for (k = 0,len2 = coords[i].length; k < len2; k++) {
+				for (k = 0, len2 = coords[i].length; k < len2; k++) {
 					points = coords[i][k];
 					pointsLen = points.length;
 					prevPoint = points[0];
@@ -116,7 +115,7 @@ Kothic.path = (function() {
 			}
 		}
 
-		if (type == "MultiLineString") {
+		if (type === "MultiLineString") {
 			for (i = 0; i < len; i++) {
 				points = coords[i];
 				pointsLen = points.length;
@@ -126,12 +125,12 @@ Kothic.path = (function() {
 					screenPoint = Kothic.utils.transformPoint(point, ws, hs);
 
 					// continue path off the tile by some abount to fix path edges between tiles
-					if ((j === 0 || j == pointsLen - 1) && isTileBoundary(point, granularity)) {
+					if ((j === 0 || j === pointsLen - 1) && isTileBoundary(point, granularity)) {
 						prevPoint = points[j ? pointsLen - 2 : 1];
 
-						dx = point[0] - prevPoint[0],
-								dy = point[1] - prevPoint[1],
-								dist = Math.sqrt(dx * dx + dy * dy);
+						dx = point[0] - prevPoint[0];
+                        dy = point[1] - prevPoint[1];
+                        dist = Math.sqrt(dx * dx + dy * dy);
 
 						screenPoint = [screenPoint[0] + pad * dx / dist,
 							screenPoint[1] + pad * dy / dist];
