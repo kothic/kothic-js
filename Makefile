@@ -9,6 +9,7 @@ dist/kothic-compact.js:
 		--js src/core/utils.js \
 		--js src/core/class.js \
         --js src/kothic.js \
+        --js src/canvas/canvas.js \
         --js src/canvas/canvasproxy.js \
         --js src/canvas/path.js \
         --js src/renderer/line.js \
@@ -22,6 +23,7 @@ dist/kothic-compact.js:
         --js src/utils/geomops.js \
         --js src/utils/utils.js \
         --js src/utils/rtree.js \
+        --js src/utils/tracer.js \
         --manage_closure_dependencies \
         --js_output_file dist/kothic-compact.js \
         --compilation_level ADVANCED_OPTIMIZATIONS
@@ -29,9 +31,10 @@ dist/kothic-compact.js:
 
 dist/kothic.js:
 	java -jar lib/closure-compiler/compiler.jar \
-		--js src/core/utils.js \
-		--js src/core/class.js \
+        --js src/core/utils.js \
+        --js src/core/class.js \
         --js src/kothic.js \
+        --js src/canvas/canvas.js \
         --js src/canvas/canvasproxy.js \
         --js src/canvas/path.js \
         --js src/renderer/line.js \
@@ -45,8 +48,9 @@ dist/kothic.js:
         --js src/utils/geomops.js \
         --js src/utils/utils.js \
         --js src/utils/rtree.js \
+        --js src/utils/tracer.js \
         --manage_closure_dependencies \
-		--js_output_file dist/kothic.js
+        --js_output_file dist/kothic.js
 
 
 jslint:
