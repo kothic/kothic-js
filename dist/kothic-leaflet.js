@@ -17,11 +17,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		this._canvases = {};
 		this._debugMessages = [];
 
-		var layer = this;
-        
-		if (!options.styles) {
-			options.styles = MapCSS.availableStyles;
-		}
+		this.options.styles = options.styles || MapCSS.availableStyles;
 
 		window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
 	},
