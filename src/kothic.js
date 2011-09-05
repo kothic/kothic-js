@@ -27,6 +27,7 @@ Kothic = K.Class.extend({
             ws = width / granularity, hs = height / granularity, 
             ctx = canvas.ctx,
             styles = this.options.styles,
+            additionalStyle = this.options.additionalStyle,
             collisionBuffer = new Kothic.CollisionBuffer(height, width);
 
         var trace = new Kothic.Debug();
