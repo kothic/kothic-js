@@ -268,7 +268,7 @@ var MapCSS = {
         
         if (!this.cache.hasOwnProperty(key)) {
             this.debug.miss += 1;
-    		for (i = 0; i < styleNames.length; i++) {
+            for (i = 0; i < styleNames.length; i++) {
                 actions = MapCSS.styles[styleNames[i]].restyle(actions, tags, zoom, type, selector);
 		    }
             this.cache[key] = actions;
