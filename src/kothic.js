@@ -27,10 +27,8 @@ Kothic = K.Class.extend({
             ws = width / granularity, hs = height / granularity, 
             ctx = canvas.ctx,
             styles = this.options.styles,
-            additionalStyle = this.options.additionalStyle;
-                
-        this.collisionBuffer = new Kothic.CollisionBuffer(height, width);
-                
+            collisionBuffer = new Kothic.CollisionBuffer(height, width);
+
         var trace = new Kothic.Debug();
 
         //Setup layer styles
@@ -44,7 +42,7 @@ Kothic = K.Class.extend({
         var v = this;
 
 		var renderIconsAndText = function () {
-            v._renderTextAndIcons(layerIds, layers, ctx, ws, hs);
+            v._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
             trace.addEvent("labels rendered");
 
             canvas.completeRendering();
@@ -150,7 +148,7 @@ Kothic = K.Class.extend({
             
     },
     
-    _renderTextAndIcons: function (layerIds, layers, ctx, ws, hs) {
+    _renderTextAndIcons: function (layerIds, layers, ctx, ws, hs, collisionBuffer) {
         //TODO: Move to the features detector
         var textOnCanvasAvailable = ctx.strokeText && ctx.fillText && ctx.measureText;
         var icons = 0, labels = 0, shields = 0, j, style, i;
@@ -162,7 +160,7 @@ Kothic = K.Class.extend({
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (style.hasOwnProperty('icon-image') && !style.text) {
-                    Kothic.texticons.render(ctx, features[j], this.collisionBuffer, ws, hs, false, true);
+                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, false, true);
                     icons += 1;
                 }
             }
@@ -171,7 +169,7 @@ Kothic = K.Class.extend({
             for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
                 style = features[j].style;
                 if (!style.hasOwnProperty('icon-image') && style.text) {
-                    Kothic.texticons.render(ctx, features[j], this.collisionBuffer, ws, hs, true, false);
+                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, false);
                     labels += 1;
                 }
             }
@@ -180,7 +178,7 @@ Kothic = K.Class.extend({
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (style.hasOwnProperty('icon-image') && style.text) {
-                    Kothic.texticons.render(ctx, features[j], this.collisionBuffer, ws, hs, textOnCanvasAvailable, true);
+                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, textOnCanvasAvailable, true);
                     icons += 1;
                     labels += 1;
                 }
@@ -190,7 +188,7 @@ Kothic = K.Class.extend({
             for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
                 style = features[j].style;
                 if (style["shield-text"]) {
-                    Kothic.shields.render(ctx, features[j], this.collisionBuffer, ws, hs);
+                    Kothic.shields.render(ctx, features[j], collisionBuffer, ws, hs);
                     shields += 1;
                 }
             }
