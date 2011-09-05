@@ -5,7 +5,6 @@
  */
 
 Kothic.style = (function () {
-	var styleCache = {}, lastId = 0;
 
 	return {
 		defaultCanvasStyles: {
@@ -18,51 +17,29 @@ Kothic.style = (function () {
 			textBaseline: 'middle'
 		},
 
-		getStyle: function (feature, zoom, styleNames, additionalStyle) {
-			var id2 = 0;
-
-			if (additionalStyle) {
-				id2 = additionalStyle.kothicId = additionalStyle.kothicId || ++lastId;
+		getStyle: function (feature, zoom, styleNames) {
+            var type, selector;
+			if (feature.type === 'Polygon' || feature.type === 'MultiPolygon') {
+				type = 'way';
+				selector = 'area';
+			} else if (feature.type === 'LineString' || feature.type === 'MultiLineString') {
+				type = 'way';
+				selector = 'line';
+			} else if (feature.type === 'Point' || feature.type === 'MultiPoint') {
+				type = 'node';
+				selector = 'node';
 			}
-
-			var type, selector,
-					key = [id2,
-						JSON.stringify(feature.properties),
-						zoom, feature.type].join(':');
-
-			// TODO improve caching mechanism
-			// such caching is not as efficient as it might seem because of a lot of objects
-			// with the same style except text property
-
-			if (!styleCache[key]) {
-				//TODO: propagate type and selector
-				if (feature.type === 'Polygon' || feature.type === 'MultiPolygon') {
-					type = 'way';
-					selector = 'area';
-				} else if (feature.type === 'LineString' || feature.type === 'MultiLineString') {
-					type = 'way';
-					selector = 'line';
-				} else if (feature.type === 'Point' || feature.type === 'MultiPoint') {
-					type = 'node';
-					selector = 'node';
-				}
-				styleCache[key] = styleCache[key] || {};
-				styleCache[key] = MapCSS.restyle(styleNames, styleCache[key], feature.properties, zoom, type, selector);
-				if (additionalStyle) {
-					additionalStyle(styleCache[key], feature.properties, zoom, type, selector);
-				}
-			}
-
-			return styleCache[key];
+            
+            return MapCSS.restyle(styleNames, feature.properties, zoom, type, selector);
 		},
 
-		styleFeatures: function (features, zoom, styleNames, additionalStyle) {
+		styleFeatures: function (features, zoom, styleNames) {
 			var styledFeatures = [],
 					i, j, len, feature, style, restyledFeature;
 
 			for (i = 0, len = features.length; i < len; i++) {
 				feature = features[i];
-				style = this.getStyle(feature, zoom, styleNames, additionalStyle);
+				style = this.getStyle(feature, zoom, styleNames);
 
 				for (j in style) {
 					if (style.hasOwnProperty(j)) {

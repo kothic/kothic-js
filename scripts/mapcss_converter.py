@@ -34,6 +34,8 @@ NUMERIC_PROPERTIES = (
 
 images = set()
 subparts = set(['default'])
+presence_tags = set()
+value_tags = set()
 
 def wrap_key(key):
 	return "'%s'" % key
@@ -85,6 +87,7 @@ def selector_as_js(self):
         return "%s == %s" % (subject_property, wrap_key(self.subject))
 
 def condition_check_as_js(self):
+    value_tags.add(wrap_key(self.key))
     k = wrap_key(self.key)
     if self.value == 'yes' and self.sign == '=':
         return "(tags[%s] == '1' || tags[%s] == 'true' || tags[%s] == 'yes')" % (k, k, k)
@@ -94,9 +97,11 @@ def condition_check_as_js(self):
         return "tags[%s] %s %s" % (k, CHECK_OPERATORS[self.sign], wrap_key(self.value))
 
 def condition_tag_as_js(self):
+    presence_tags.add(wrap_key(self.key))
     return "(tags.hasOwnProperty(%s))" % (wrap_key(self.key))
 
 def condition_nottag_as_js(self):
+    presence_tags.add(wrap_key(self.key))
     return "(!tags.hasOwnProperty(%s))" % (wrap_key(self.key))
 
 def action_as_js(self, subpart):
@@ -114,6 +119,7 @@ def style_statement_as_js(self, subpart):
     val = escape_value(self.key, self.value, subpart)
     k = wrap_key(self.key)
     if self.key == 'text':
+        value_tags.add(val)
         return "            s_%s[%s] = MapCSS.e_localize(tags, %s);" % (subpart, k, val)
     else:
         if self.key in ('icon-image', 'fill-image'):
@@ -307,16 +313,21 @@ if __name__ == "__main__":
 
     (sprite_images, external_images) = create_css_sprite(images, options.icons, sprite)
 
+    #We don't need to check presence if we already check value
+    presence_tags -= value_tags
+
     js += """
     var sprite_images = {%s
-    }, external_images = [%s];
+    }, external_images = [%s], presence_tags = [%s], value_tags = [%s];
 
-    MapCSS.loadStyle('%s', restyle, sprite_images, external_images);
+    MapCSS.loadStyle('%s', restyle, sprite_images, external_images, presence_tags, value_tags);
     MapCSS.preloadExternalImages('%s');
 })(MapCSS);
     """ % (
             ",".join(map(image_as_js, sprite_images)),
             ", ".join(map(lambda i: "'%s'" % i, external_images)),
+            ", ".join(presence_tags),
+            ", ".join(value_tags),
             style_name,
             style_name)
 

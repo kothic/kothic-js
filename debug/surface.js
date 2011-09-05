@@ -1,10 +1,11 @@
 
-(function(MapCSS) {
-    function restyle(style, tags, zoom, type, selector) {
-        var s_default = {};
-        var s_overlay = {};
+(function (MapCSS) {
+    'use strict';
 
-        if (((type == 'way' && tags['highway'] == 'primary' && (!('surface' in tags))))) {
+    function restyle(style, tags, zoom, type, selector) {
+        var s_default = {}, s_overlay = {};
+
+        if (((type == 'way' && tags['highway'] == 'primary' && (!tags.hasOwnProperty('surface'))))) {
             s_overlay['color'] = '#f00';
             s_overlay['width'] = 1;
             s_overlay['z-index'] = 100;
@@ -19,11 +20,10 @@
         return style;
     }
     
-    var sprite_images = {};
+    var sprite_images = {
+    }, external_images = [], presence_tags = ['surface'], value_tags = ['highway'];
 
-    var external_images = [];
-
-    MapCSS.loadStyle('surface', restyle, sprite_images, external_images);
+    MapCSS.loadStyle('surface', restyle, sprite_images, external_images, presence_tags, value_tags);
     MapCSS.preloadExternalImages('surface');
 })(MapCSS);
     

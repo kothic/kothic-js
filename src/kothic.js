@@ -26,17 +26,18 @@ Kothic = K.Class.extend({
             granularity = data.granularity,
             ws = width / granularity, hs = height / granularity, 
             ctx = canvas.ctx,
-            styles = this.options.styles,
-            additionalStyle = this.options.additionalStyle;
-                
+            styles = this.options.styles;
+
         this.collisionBuffer = new Kothic.CollisionBuffer(height, width);
                 
         var trace = new Kothic.Debug();
 
         //Setup layer styles
-		var layers = this._populateLayers(data.features, zoom, styles, additionalStyle);
+		var layers = this._populateLayers(data.features, zoom, styles);
         var layerIds = Kothic.utils.getOrderedKeys(layers);
-        trace.addEvent("layers styled");
+        trace.addEvent("layers styled: " + MapCSS.debug.hit + "/" + MapCSS.debug.miss);
+        MapCSS.debug.miss = 0;
+        MapCSS.debug.hit = 0;
 
 		//Render the map
 		Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
@@ -69,10 +70,10 @@ Kothic = K.Class.extend({
     },
     
     // Private functions
-    _populateLayers: function (features, zoom, styles, additionalStyle) {
+    _populateLayers: function (features, zoom, styles) {
         var layers = {}, i, len;
         
-		var styledFeatures = Kothic.style.styleFeatures(features, zoom, styles, additionalStyle);
+		var styledFeatures = Kothic.style.styleFeatures(features, zoom, styles);
 
 		for (i = 0, len = styledFeatures.length; i < len; i++) {
 			var feature = styledFeatures[i],

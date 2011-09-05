@@ -40,7 +40,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         this.kothic = new Kothic({
             buffered: layer.options.buffered,
             styles: layer.options.styles, 
-            additionalStyle: layer._additionalStyle,
             locales: ['be', 'ru', 'en']
         });
 		this.kothic.render(canvas, data, zoom + zoomOffset, onRenderComplete);
@@ -84,27 +83,27 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 	},
     
     _invertYAxe: function(data) {
-        var type, coordinates, tileSize = data.granularity;
-        for (var i = 0; i < data.features.length; i++) {
-            var feature = data.features[i];
+        var type, coordinates, tileSize = data.granularity, i, j, k, l, feature;
+        for (i = 0; i < data.features.length; i++) {
+            feature = data.features[i];
             coordinates = feature.coordinates;
             type = data.features[i].type;
             if (type == 'Point') {
                 coordinates[1] = tileSize - coordinates[1];
             } else if (type == 'MultiPoint' || type == 'LineString') {
-                for (var j = 0; j < coordinates.length; j++) {
+                for (j = 0; j < coordinates.length; j++) {
                     coordinates[j][1] = tileSize - coordinates[j][1];
                 }
             } else if (type == 'MultiLineString' || type == 'Polygon') {
-                for (var k = 0; k < coordinates.length; k++) {
-                    for (var j = 0; j < coordinates[k].length; j++) {
+                for (k = 0; k < coordinates.length; k++) {
+                    for (j = 0; j < coordinates[k].length; j++) {
                         coordinates[k][j][1] = tileSize - coordinates[k][j][1];
                     }
                 }
             } else if (type == 'MultiPolygon') {
-                for (var l = 0; l < coordinates.length; l++) {
-                    for (var k = 0; k < coordinates[l].length; k++) {
-                        for (var j = 0; j < coordinates[l][k].length; j++) {
+                for (l = 0; l < coordinates.length; l++) {
+                    for (k = 0; k < coordinates[l].length; k++) {
+                        for (j = 0; j < coordinates[l][k].length; j++) {
                             coordinates[l][k][j][1] = tileSize - coordinates[l][k][j][1];
                         }
                     }
@@ -118,19 +117,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             }
         }
     },
-
-	setAdditionalStyle: function(fn) {
-		this._additionalStyle = fn;
-
-		// TODO implement layer.redraw() in Leaflet
-		this._map.getPanes().tilePane.empty = false;
-		if (this._map && this._map._container) {
-			this._reset();
-			this._update();
-		}
-	},
-
-
 
 	_loadScript: function(url) {
 		var script = document.createElement('script');
