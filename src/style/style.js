@@ -17,6 +17,31 @@ Kothic.style = (function () {
 			textBaseline: 'middle'
 		},
 
+        populateLayers: function (features, zoom, styles) {
+            var layers = {}, i, len;
+        
+    		var styledFeatures = Kothic.style.styleFeatures(features, zoom, styles);
+
+		    for (i = 0, len = styledFeatures.length; i < len; i++) {
+			    var feature = styledFeatures[i],
+				    	layerId = parseFloat(feature.properties.layer) || 0,
+					    layerStyle = feature.style["-x-mapnik-layer"];
+
+    			if (layerStyle === "top") {
+	    			layerId = 10000;
+		    	}
+    			if (layerStyle === "bottom") {
+	    			layerId = -10000;
+		    	}
+    			if (!layers.hasOwnProperty(layerId)) {
+	    			layers[layerId] = [];
+		    	}
+    			layers[layerId].push(feature);
+	    	}
+
+            return layers;
+        },
+    
 		getStyle: function (feature, zoom, styleNames) {
             var type, selector;
 			if (feature.type === 'Polygon' || feature.type === 'MultiPolygon') {
