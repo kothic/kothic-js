@@ -1,0 +1,33 @@
+body {
+	padding: 0;
+	margin: 0;
+}
+html, body, #map {
+	height: 100%;
+}
+#debug {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: rgba(255,255,255,0.7);
+	border: 1px solid #ddd;
+	padding: 10px;
+	z-index: 10000;
+	font: 12px/1.4 Verdana, sans-serif;
+    width: 160px;
+}
+#tileperf {
+	font: 10px/1 Verdana, sans-serif;
+}
+#tileperf table {
+	margin-top: 3px;
+}
+#mapnik {
+	margin-bottom: 10px;
+}
+table {
+	border-collapse: collapse;
+}
+table td {
+    padding-right: 10px;
+}

@@ -19,6 +19,13 @@ var MapCSS = {
 
 	onImagesLoad: function () {
 	},
+    
+    /**
+     * Incalidate styles cache
+     */
+    invalidateCache: function () {
+        this.cache = {};
+    },
 
 	e_min: function (/*...*/) {
 		return Math.min.apply(null, arguments);
@@ -129,6 +136,8 @@ var MapCSS = {
 
 	loadStyle: function (style, restyle, sprite_images, external_images, presence_tags, value_tags) {
         var i;
+        sprite_images = sprite_images || [];
+        external_images = external_images || [];
 
         if (presence_tags) {
             for (i = 0; i < presence_tags.length; i++) {
@@ -148,8 +157,8 @@ var MapCSS = {
 
 		MapCSS.styles[style] = {
 			restyle: restyle,
-			images: sprite_images || [],
-			external_images: external_images || [],
+			images: sprite_images,
+			external_images: external_images,
 			textures: {},
 			sprite_loaded: !sprite_images,
 			external_images_loaded: !external_images.length

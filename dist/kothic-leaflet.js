@@ -83,6 +83,30 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 		this._loadScript('http://osmosnimki.ru/vtile/' + key + '.js');        
 	},
     
+    enableStyle: function(name) {
+        if (MapCSS.availableStyles.indexOf(name) >= 0 && this.options.styles.indexOf(name) < 0) {
+            this.options.styles.push(name);
+            this.redraw();
+        }
+    },
+
+    disableStyle: function(name) {
+        if (this.options.styles.indexOf(name) >= 0) {
+            this.options.styles.remove(name);
+            this.redraw();
+        }
+    },
+
+    redraw: function() {
+        MapCSS.invalidateCache();
+		// TODO implement layer.redraw() in Leaflet
+		this._map.getPanes().tilePane.empty = false;
+		if (this._map && this._map._container) {
+			this._reset();
+			this._update();
+		}
+    },
+    
     _invertYAxe: function(data) {
         var type, coordinates, tileSize = data.granularity, i, j, k, l, feature;
         for (i = 0; i < data.features.length; i++) {

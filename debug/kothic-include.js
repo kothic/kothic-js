@@ -17,6 +17,7 @@
 		'utils/geomops.js',
 		'utils/rtree.js',
 		'utils/tracer.js',
+		'utils/array.js',
 		'utils/utils.js'
 	];
 

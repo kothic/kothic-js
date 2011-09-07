@@ -8,72 +8,43 @@
 
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
+    <!-- jQuery. It's not required for Kothic, but still useful for this example -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+
 	<!-- Leaflet -->
 	<script src="leaflet/leaflet.js"></script>
 
-	<!-- CanvasProxy -->
+	<!-- Include Kothic renderer sources -->
 	<script src="kothic-include.js"></script>
 
+	<!-- Include Kothic leaflet layer -->
 	<script src="../dist/kothic-leaflet.js"></script>
 
-	<!-- Kothic style -->
+	<!-- osmosnimki.ru style (Generated from MapCSS) -->
 	<script src="osmosnimki.js"></script>
 
-	<!-- Kothic style -->
+	<!-- surface overlay style (Generated from MapCSS) -->
 	<script src="surface.js"></script>
 
-	<style>
-		body {
-			padding: 0;
-			margin: 0;
-			}
-		html, body, #map {
-			height: 100%;
-			}
-		#debug {
-			position: absolute;
-			top: 0;
-			right: 0;
-			background: rgba(255,255,255,0.7);
-			border: 1px solid #ddd;
-			padding: 10px;
-			z-index: 10000;
-			font: 12px/1.4 Verdana, sans-serif;
-			width: 160px;
-			}
-		#tileperf {
-			font: 10px/1 Verdana, sans-serif;
-			}
-		#tileperf table {
-			margin-top: 3px;
-			}
-		#mapnik {
-			margin-bottom: 10px;
-			}
-		table {
-			border-collapse: collapse;
-			}
-		table td {
-			padding-right: 10px;
-			}
-	</style>
+    <link rel="stylesheet" type="text/css" href="css/debug.css">
 </head>
 <body>
 	<div id="map"></div>
 	<div id="debug">
 		<p>OpenStreetMap data rendered on the browser using <a href="http://github.com/kothic/kothic-js">Kothic JS</a></p>
-		<button id="mapnik" onclick="toggleMapnik()">Show Mapnik</button>
+		<button id="mapnik">Show Mapnik</button>
+		<button id="overlay">Show overlay</button>
 		<div id="tileperf">Rendering...</div>
 	</div>
 	<script type="text/javascript">
-		var mapnik = new L.TileLayer('http://tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
+		var mapnik = new L.TileLayer('http://{s}.tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
 			attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
 			maxZoom: 22
 		});
 
 		var kothic = new L.TileLayer.Kothic({
             minZoom: 8,
-            styles: ['osmosnimki-maps', 'surface']
+            styles: ['osmosnimki-maps']
         });
 
 		var map = new L.Map('map', {
@@ -92,21 +63,31 @@
 		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);
 		};
+        
 		MapCSS.preloadSpriteImage("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
 
-		var mapnikVisible = false,
-			button = document.getElementById('mapnik');
-
-		function toggleMapnik() {
+		var mapnikVisible = false, overlayVisible = false;
+        $("#mapnik").click(function () {
 			if (mapnikVisible) {
 				map.removeLayer(mapnik);
-				button.innerHTML = 'Show Mapnik';
+                $("#mapnik").text('Show Mapnik'); 
 			} else {
 				map.addLayer(mapnik);
-				button.innerHTML = 'Hide Mapnik';
-			}
+                $("#mapnik").text('Hide Mapnik'); 
+            }            
 			mapnikVisible = !mapnikVisible;
-		}
+        });
+
+        $("#overlay").click(function () {
+			if (overlayVisible) {
+                $("#overlay").text('Show overlay'); 
+                kothic.disableStyle('surface');
+			} else {
+                $("#overlay").text('Hide overlay'); 
+                kothic.enableStyle('surface');
+            }            
+			overlayVisible = !overlayVisible;
+        });
 	</script>
 </body>
 </html>
