@@ -16,10 +16,10 @@ html, body, #map {
 	font: 12px/1.4 Verdana, sans-serif;
     width: 160px;
 }
-#tileperf {
+#trace {
 	font: 10px/1 Verdana, sans-serif;
 }
-#tileperf table {
+#trace table {
 	margin-top: 3px;
 }
 #mapnik {
@@ -30,4 +30,12 @@ table {
 }
 table td {
     padding-right: 10px;
+}
+
+#trace .tileIndex {
+	font-weight: bold;
+}
+
+td.time {
+	text-align: right;
 }

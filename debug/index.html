@@ -34,7 +34,7 @@
 		<p>OpenStreetMap data rendered on the browser using <a href="http://github.com/kothic/kothic-js">Kothic JS</a></p>
 		<button id="mapnik">Show Mapnik</button>
 		<button id="overlay">Show overlay</button>
-		<div id="tileperf">Rendering...</div>
+		<div id="trace">Rendering...</div>
 	</div>
 	<script type="text/javascript">
 		var mapnik = new L.TileLayer('http://{s}.tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
@@ -55,10 +55,54 @@
 		kothic.on('load', function() {
 			var messages = kothic.getDebugMessages(),
 				len = messages.length,
-				message = messages.slice(Math.max(len - 4, 0), len).join('<br />');
+				messages = messages.slice(Math.max(len - 4, 0), len);
 
-			document.getElementById('tileperf').innerHTML = message;
+			showMessages(messages);
 		});
+
+		function showMessages(messages) {
+			$('#trace').empty();
+			$(messages).each(function(index, msg) {
+				$('<div>', {
+					class: 'tileIndex', 
+					text: msg.x + ":" + msg.y + ":" + msg.zoom
+				}).appendTo($('#trace'));
+
+				var stats = $('<table>', {
+					style: 'display: none'
+				}).appendTo($('#trace'));
+		        for (var k in msg.stats) {
+		            if (!msg.stats.hasOwnProperty(k)) {
+		                continue;
+		            }
+
+					$("<tr>").append($("<td>", {
+						'text': msg.stats[k]
+					})).append($("<td>", {
+						'text': k
+					})).appendTo(stats);
+		        }
+
+				var log = $('<table>').appendTo($('#trace')),
+					t0 = msg.events[0].timestamp,
+					t1 = msg.events[msg.events.length - 1].timestamp,
+					total = t1 - t0;
+		        for (var i = 1; i < msg.events.length; i++) {
+
+					$("<tr>").append($("<td>", {
+						class: 'time',
+						text: (msg.events[i].timestamp - t0) + " ms"
+					})).append($("<td>", {
+						text: msg.events[i].message
+					})).appendTo(log);
+
+					t0 = msg.events[i].timestamp;
+		        }
+
+		        log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
+			});
+			
+		}
 
 		MapCSS.onImagesLoad = function() {
 			map.addLayer(kothic);

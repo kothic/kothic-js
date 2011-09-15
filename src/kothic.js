@@ -35,7 +35,7 @@ Kothic = K.Class.extend({
         //Setup layer styles
 		var layers = Kothic.style.populateLayers(data.features, zoom, styles);
         var layerIds = Kothic.utils.getOrderedKeys(layers);
-        trace.addEvent("layers styled: " + MapCSS.debug.hit + "/" + MapCSS.debug.miss);
+        trace.addEvent("style (" + MapCSS.debug.hit + "/" + MapCSS.debug.miss + ")");
         MapCSS.debug.miss = 0;
         MapCSS.debug.hit = 0;
 
@@ -45,11 +45,11 @@ Kothic = K.Class.extend({
         var v = this;
 
 		var renderIconsAndText = function () {
-            v._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
-            trace.addEvent("labels rendered");
+            var stats = v._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
+            trace.addEvent("labels");
+            trace.setStats(stats);
 
             canvas.completeRendering();
-            trace.addEvent("buffer was copied");
 
 			onRenderComplete(trace);
 		};
@@ -59,7 +59,7 @@ Kothic = K.Class.extend({
 
             var stats = v._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
             
-            trace.addEvent("geometry rendered");
+            trace.addEvent("geometry");
             trace.setStats(stats);
             
 			setTimeout(renderIconsAndText, 0);
@@ -119,9 +119,9 @@ Kothic = K.Class.extend({
         }
         
         return {
-            'polygons rendered ': polygons, 
-            'lines rendered ': lines, 
-            'casings rendered ': casings
+            'polygons ': polygons, 
+            'lines ': lines, 
+            'casings ': casings
         };
             
     },
@@ -173,9 +173,9 @@ Kothic = K.Class.extend({
         }
 
         return {
-            'icons rendered ': icons, 
-            'labels rendered ': labels, 
-            'shields rendered ': shields
+            'icons ': icons, 
+            'labels ': labels, 
+            'shields ': shields
         };
     }
 });
