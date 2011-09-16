@@ -56,7 +56,7 @@ dist/kothic.js:
 
 jslint:
 	jslint --continue --maxerr 5000 \
-		distr/kothic-leaflet.js \
+		dist/kothic-leaflet.js \
 		src/core/utils.js \
                 src/kothic.js \
                 src/canvas/path.js \

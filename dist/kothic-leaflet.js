@@ -46,7 +46,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             layer.tileDrawn(canvas);
         }
 
-        this._invertYAxe(data)
+        this._invertYAxe(data);
 
         this.kothic.render(canvas, data, zoom + zoomOffset, onRenderComplete);
         delete this._canvases[key];
@@ -95,19 +95,19 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             feature = data.features[i];
             coordinates = feature.coordinates;
             type = data.features[i].type;
-            if (type == 'Point') {
+            if (type === 'Point') {
                 coordinates[1] = tileSize - coordinates[1];
-            } else if (type == 'MultiPoint' || type == 'LineString') {
+            } else if (type === 'MultiPoint' || type === 'LineString') {
                 for (j = 0; j < coordinates.length; j++) {
                     coordinates[j][1] = tileSize - coordinates[j][1];
                 }
-            } else if (type == 'MultiLineString' || type == 'Polygon') {
+            } else if (type === 'MultiLineString' || type === 'Polygon') {
                 for (k = 0; k < coordinates.length; k++) {
                     for (j = 0; j < coordinates[k].length; j++) {
                         coordinates[k][j][1] = tileSize - coordinates[k][j][1];
                     }
                 }
-            } else if (type == 'MultiPolygon') {
+            } else if (type === 'MultiPolygon') {
                 for (l = 0; l < coordinates.length; l++) {
                     for (k = 0; k < coordinates[l].length; k++) {
                         for (j = 0; j < coordinates[l][k].length; j++) {
@@ -116,10 +116,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
                     }
                 }
             } else {
-                window.console && window.console.log("Unexpected GeoJSON type: " + type);
+                throw "Unexpected GeoJSON type: " + type;
             }
             
-            if ('reprpoint' in feature) {
+            if (feature.hasOwnProperty('reprpoint')) {
                 feature.reprpoint[1] = tileSize - feature.reprpoint[1];
             }
         }
