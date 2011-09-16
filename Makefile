@@ -25,7 +25,6 @@ dist/kothic-compact.js:
         --js src/utils/utils.js \
         --js src/utils/rtree.js \
         --js src/utils/tracer.js \
-        --js src/utils/array.js \
         --manage_closure_dependencies \
         --js_output_file dist/kothic-compact.js \
         --compilation_level ADVANCED_OPTIMIZATIONS
@@ -51,7 +50,6 @@ dist/kothic.js:
         --js src/utils/utils.js \
         --js src/utils/rtree.js \
         --js src/utils/tracer.js \
-        --js src/utils/array.js \
         --manage_closure_dependencies \
         --js_output_file dist/kothic.js
 
@@ -60,19 +58,18 @@ jslint:
 	jslint --continue --maxerr 5000 \
 		distr/kothic-leaflet.js \
 		src/core/utils.js \
-        src/kothic.js \
-        src/canvas/path.js \
-        src/renderer/line.js \
-        src/renderer/polygon.js \
-        src/renderer/shields.js \
-        src/renderer/text.js \
-        src/renderer/texticons.js \
-        src/style/mapcss.js \
-        src/style/style.js \
-        src/utils/collisions.js \
-        src/utils/geomops.js \
-        src/utils/array.js \
-        src/utils/utils.js 
+                src/kothic.js \
+                src/canvas/path.js \
+                src/renderer/line.js \
+                src/renderer/polygon.js \
+                src/renderer/shields.js \
+                src/renderer/text.js \
+                src/renderer/texticons.js \
+                src/style/mapcss.js \
+                src/style/style.js \
+                src/utils/collisions.js \
+                src/utils/geomops.js \
+                src/utils/utils.js 
 #        src/canvas/canvasproxy.js 
 #        src/utils/rtree.js 
 #		src/core/class.js 

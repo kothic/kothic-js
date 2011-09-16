@@ -74,7 +74,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
     disableStyle: function(name) {
         if (this.options.styles.indexOf(name) >= 0) {
-            this.options.styles.remove(name);
+            Kothic.utils.remove_from_array(this.options.styles, name);
             this.redraw();
         }
     },
