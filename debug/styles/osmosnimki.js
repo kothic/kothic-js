@@ -1999,7 +1999,7 @@
         }
     }, external_images = [], presence_tags = ['shop'], value_tags = ['color', 'amenity', 'pk', 'building ', 'marking', 'service', 'addr:housenumber', 'population', 'leisure', 'waterway', 'aeroway', 'landuse', 'barrier', 'colour', 'railway', 'oneway', 'religion', 'tourism', 'admin_level', 'transport', 'name', 'building', 'place', 'residential', 'highway', 'ele', 'living_street', 'natural', 'boundary', 'capital'];
 
-    MapCSS.loadStyle('osmosnimki-maps', restyle, sprite_images, external_images, presence_tags, value_tags);
-    MapCSS.preloadExternalImages('osmosnimki-maps');
+    MapCSS.loadStyle('osmosnimki', restyle, sprite_images, external_images, presence_tags, value_tags);
+    MapCSS.preloadExternalImages('osmosnimki');
 })(MapCSS);
     

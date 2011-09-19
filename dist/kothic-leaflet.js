@@ -34,6 +34,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             zoomOffset = this.options.zoomOffset,
             layer = this;
 
+        if (!canvas) {
+            return;
+        }
+
         function onRenderComplete(debugInfo) {
             debugInfo.x = x;
             debugInfo.y = y;

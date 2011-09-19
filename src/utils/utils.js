@@ -70,11 +70,10 @@ Kothic.utils = {
 	},
 
 	remove_from_array: function(arr, elem) {
-     var index = arr.indexOf(elem);
-     if (index >= 0) {
-         arr.splice(index, 1);
-         delete arr[index];
-     }
+     	var index = arr.indexOf(elem);
+     	if (index >= 0) {
+        	arr.splice(index, 1);
+    	}
 	}	
 };
 

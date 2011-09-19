@@ -14,9 +14,10 @@ html, body, #map {
 	padding: 10px;
 	z-index: 10000;
 	font: 12px/1.4 Verdana, sans-serif;
-    width: 160px;
+    width: 170px;
 }
 #trace {
+	margin-top: 10px;
 	font: 10px/1 Verdana, sans-serif;
 }
 #trace table {

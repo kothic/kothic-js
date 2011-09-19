@@ -51,7 +51,7 @@ def escape_value(key, value, subpart):
         if float(value) % 1 != 0.0:
             return float(value)
         else:
-            return int(value)
+            return int(float(value))
     elif key in DASH_PROPERTIES:
         return "[%s]" % ', '.join(value.split(','))
     else:
@@ -81,6 +81,10 @@ def selector_as_js(self):
     else:
         subject_property = 'selector'
 
+    #TODO: something > something is not supported yet
+    if self.within_selector:    
+        return 'false'
+
     if self.criteria:
         return "(%s == %s && %s)" % (subject_property, wrap_key(self.subject), criteria)
     else:
@@ -103,9 +107,16 @@ def condition_tag_as_js(self):
 def condition_nottag_as_js(self):
     presence_tags.add(wrap_key(self.key))
     return "(!tags.hasOwnProperty(%s))" % (wrap_key(self.key))
+    
+def condition_pseudoclass_as_js(self):
+    #TODO: Not supported yet
+    return "true"
 
 def action_as_js(self, subpart):
     if len(filter(lambda x: x, map(lambda x: isinstance(x, ast.StyleStatement), self.statements))) > 0:
+        if subpart == '*':
+            subpart = 'everything'
+        subpart = re.sub("-", "_", subpart)
         if subpart != "default":
 			subparts.add(subpart)
 
@@ -236,6 +247,7 @@ ast.Selector.get_zoom = selector_get_zoom
 ast.ConditionCheck.as_js = condition_check_as_js
 ast.ConditionTag.as_js = condition_tag_as_js
 ast.ConditionNotTag.as_js = condition_nottag_as_js
+ast.ConditionPseudoclass.as_js = condition_pseudoclass_as_js
 ast.Action.as_js = action_as_js
 ast.StyleStatement.as_js = style_statement_as_js
 ast.TagStatement.as_js = tag_statement_as_js

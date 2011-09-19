@@ -20,11 +20,13 @@
 	<!-- Include Kothic leaflet layer -->
 	<script src="../dist/kothic-leaflet.js"></script>
 
-	<!-- osmosnimki.ru style (Generated from MapCSS) -->
-	<script src="osmosnimki.js"></script>
+	<!-- osm.org  style (Generated from MapCSS and Mapnik style) -->
+	<script src="styles/mapnik.js"></script>
+
+	<script src="styles/osmosnimki.js"></script>
 
 	<!-- surface overlay style (Generated from MapCSS) -->
-	<script src="surface.js"></script>
+	<script src="styles/surface.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/debug.css">
 </head>
@@ -32,8 +34,12 @@
 	<div id="map"></div>
 	<div id="debug">
 		<p>OpenStreetMap data rendered on the browser using <a href="http://github.com/kothic/kothic-js">Kothic JS</a></p>
-		<button id="mapnik">Show Mapnik</button>
-		<button id="overlay">Show overlay</button>
+		<select id="renderer">
+			<option value="osmosnimki" selected="selected">Osmosnimki (Kothic-JS)</option>
+			<option value="mapnik">OSM (Kothic-JS)</option>
+			<option value="tiles">Osmosnimki (Mapnik)</option>
+		</select>
+		<input type="checkbox" id="overlay" label="aaa">Surface overlay</input>
 		<div id="trace">Rendering...</div>
 	</div>
 	<script type="text/javascript">
@@ -44,7 +50,7 @@
 
 		var kothic = new L.TileLayer.Kothic({
             minZoom: 8,
-            styles: ['osmosnimki-maps']
+            styles: ['osmosnimki']
         });
 
 		var map = new L.Map('map', {
@@ -104,34 +110,44 @@
 			
 		}
 
+		var count = 0;
 		MapCSS.onImagesLoad = function() {
-			map.addLayer(kothic);
+			count += 1;
+			if (count >= 2) {
+				map.addLayer(kothic);
+			}
 		};
         
-		MapCSS.preloadSpriteImage("osmosnimki-maps", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
+		MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
+		MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
 
-		var mapnikVisible = false, overlayVisible = false;
-        $("#mapnik").click(function () {
-			if (mapnikVisible) {
-				map.removeLayer(mapnik);
-                $("#mapnik").text('Show Mapnik'); 
+		$("#renderer").change(function () {
+			switch($("#renderer").val()) {
+				case 'osmosnimki':
+					map.removeLayer(mapnik);
+					kothic.enableStyle('osmosnimki');
+					kothic.disableStyle('mapnik');
+					break;
+				case 'mapnik':
+					map.removeLayer(mapnik);
+					kothic.enableStyle('mapnik');
+					kothic.disableStyle('osmosnimki');
+					break;
+				case 'tiles':
+					//kothic.disableStyle('mapnik');
+					//kothic.disableStyle('osmosnimki');
+					map.addLayer(mapnik);
+					break;
+			}
+		});
+        $("#overlay").change(function () {
+			if ($("#overlay").attr('checked')) {
+				kothic.enableStyle('surface');
 			} else {
-				map.addLayer(mapnik);
-                $("#mapnik").text('Hide Mapnik'); 
-            }            
-			mapnikVisible = !mapnikVisible;
-        });
-
-        $("#overlay").click(function () {
-			if (overlayVisible) {
-                $("#overlay").text('Show overlay'); 
                 kothic.disableStyle('surface');
-			} else {
-                $("#overlay").text('Hide overlay'); 
-                kothic.enableStyle('surface');
             }            
-			overlayVisible = !overlayVisible;
         });
+        
 	</script>
 </body>
 </html>
