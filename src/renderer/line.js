@@ -64,12 +64,19 @@ Kothic.line = (function () {
         }
 
 		if (style.hasOwnProperty('color') || !style.hasOwnProperty('image')) {
+      var t_width = style.width || 1;
+      var t_linejoin = "round", t_linecap = "round";
+      if (t_width <= 2) {
+        t_linejoin = "miter";
+        t_linecap = "butt"
+      }
 			Kothic.style.setStyles(ctx, {
-                lineWidth: style.width || 1,
+                lineWidth: t_width,
                 strokeStyle: style.color || '#000000',
-                lineCap: style.linecap || "round",
-                lineJoin: style.linejoin || "round",
-                globalAlpha: style.opacity || 1
+                lineCap: style.linecap || t_linecap,
+                lineJoin: style.linejoin || t_linejoin,
+                globalAlpha: style.opacity || 1,
+                miterLimit: 4
             });
 			ctx.stroke();
 		}
