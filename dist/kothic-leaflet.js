@@ -65,8 +65,13 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             key = [(zoom - zoomOffset), tilePoint.x, tilePoint.y].join('/'),
             url = 'http://osmosnimki.ru/vtile/' + key + '.js';
 
-        this._canvases[key] = canvas;
-        this._scripts[key] = this._loadScript(url);
+        Kothic.Cache.get(tilePoint.x, tilePoint.y, zoom - zoomOffset, function(data) {
+            onKothicDataResponse(data, zoom - zoomOffset, tilePoint.x, tilePoint.y);
+        }, function(x, y, zoom) {
+            this._canvases[key] = canvas;
+            this._scripts[key] = this._loadScript(url);
+        });
+
     },
     
     enableStyle: function(name) {

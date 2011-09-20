@@ -3,6 +3,7 @@
 		'core/utils.js',
 		'core/class.js',
 		'kothic.js',
+		'browser/cache.js',
 		'canvas/canvasproxy.js',
 		'canvas/path.js',
 		'canvas/canvas.js',
