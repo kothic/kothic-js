@@ -39,7 +39,7 @@
 			<option value="mapnik">OSM (Kothic-JS)</option>
 			<option value="tiles">Osmosnimki (Mapnik)</option>
 		</select>
-		<input type="checkbox" id="overlay" label="aaa">Surface overlay</input>
+		<input type="checkbox" id="overlay">Surface overlay</input>
 		<div id="trace">Rendering...</div>
 	</div>
 	<script type="text/javascript">
@@ -60,17 +60,16 @@
 
 		kothic.on('load', function() {
 			var messages = kothic.getDebugMessages(),
-				len = messages.length,
-				messages = messages.slice(Math.max(len - 4, 0), len);
+				len = messages.length;
 
-			showMessages(messages);
+			showMessages(messages.slice(Math.max(len - 4, 0), len));
 		});
 
 		function showMessages(messages) {
 			$('#trace').empty();
 			$(messages).each(function(index, msg) {
 				$('<div>', {
-					class: 'tileIndex', 
+					'class': 'tileIndex',
 					text: msg.x + ":" + msg.y + ":" + msg.zoom
 				}).appendTo($('#trace'));
 
@@ -96,7 +95,7 @@
 		        for (var i = 1; i < msg.events.length; i++) {
 
 					$("<tr>").append($("<td>", {
-						class: 'time',
+						'class': 'time',
 						text: (msg.events[i].timestamp - t0) + " ms"
 					})).append($("<td>", {
 						text: msg.events[i].message

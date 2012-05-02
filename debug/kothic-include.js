@@ -31,6 +31,8 @@
 				}
 			}
 		}
+
+        return "";
 	}
 
 	var path = getSrcUrl();

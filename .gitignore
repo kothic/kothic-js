@@ -2,3 +2,5 @@
 parsetab.py
 styles/icons
 debug/styles/osmosnimki.png
+*.iml
+*.imi

@@ -14,25 +14,21 @@
 	<!-- osmosnimki.ru style (Generated from MapCSS) -->
 	<script src="styles/osmosnimki.js"></script>
 
-    <!-- jQuery. It's not required for Kothic, but still useful for this example -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-    
-    <script src="benchmark.js"></script>    
+    <script src="benchmark.js"></script>
 </head>
 <body>
     <script src="http://www.browserscope.org/ua?o=js"></script>     
 	<div class="controls">
-        <button id="runButton" disabled="true">Run!</button>
+        <button id="runButton" disabled="disabled">Run!</button>
         <div id="testStatus"></div>
 	</div>
     <div id="results">
     </div>
 	<canvas id="map" width="1000" height="1000"></canvas>
 	<script type="text/javascript">
-        var trials = 1000;
         var kothic = new Kothic({
             buffered: false,
-            styles: ['osmosnimki'],
+            styles: ['osmosnimki']
         });
         
 		MapCSS.onImagesLoad = function () {
@@ -83,13 +79,10 @@
             $('#results').text(String(bench));
             $('#testStatus').text();
             samples = 0;
-                            
-
         })
         .on('complete', function() {
             $('#runButton').attr("disabled", false);
         });
-        
         
         $('#runButton').click(function () {
             $('#runButton').attr("disabled", true);
