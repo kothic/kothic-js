@@ -43,12 +43,14 @@
 		<div id="trace">Rendering...</div>
 	</div>
 	<script type="text/javascript">
+        var tilesUrl = 'http://osmosnimki.ru/vtile/{z}/{x}/{y}.js';
+
 		var mapnik = new L.TileLayer('http://{s}.tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
 			attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
 			maxZoom: 22
 		});
 
-		var kothic = new L.TileLayer.Kothic({
+		var kothic = new L.TileLayer.Kothic(tilesUrl, {
             minZoom: 8,
             styles: ['osmosnimki']
         });
