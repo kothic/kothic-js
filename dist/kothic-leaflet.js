@@ -12,9 +12,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         styles: MapCSS.availableStyles
     },
 
-    initialize: function(options) {
+    initialize: function(url,options) {
         L.Util.setOptions(this, options);
 
+        this._url = url;
         this._canvases = {};
         this._scripts = {};
         this._debugMessages = [];
@@ -63,8 +64,9 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
     drawTile: function(canvas, tilePoint, zoom) {
         var zoomOffset = this.options.zoomOffset,
             key = [(zoom - zoomOffset), tilePoint.x, tilePoint.y].join('/'),
-            url = 'http://osmosnimki.ru/vtile/' + key + '.js';
-
+            url=this._url.replace('{x}',tilePoint.x).
+                    replace('{y}',tilePoint.y).
+                    replace('{z}',zoom-zoomOffset);
         this._canvases[key] = canvas;
         this._scripts[key] = this._loadScript(url);
     },
