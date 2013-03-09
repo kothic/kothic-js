@@ -9,19 +9,29 @@ Kothic.Canvas = K.Class.extend({
         buffered: false,
         useCanvasProxy: false
     },
-    
+
     initialize: function (canvas, options) {
         K.Utils.setOptions(this, options);
-        
+
         if (typeof canvas === 'string') {
             this.canvas = document.getElementById(canvas);
         } else {
             this.canvas = canvas;
         }
-        
-        this.width = canvas.width;
-        this.height = canvas.height;
-        
+
+        var devicePixelRatio = window.devicePixelRatio || 1;
+
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
+
+        if (devicePixelRatio != 1) {
+            canvas.style.width = this.canvas.width+"px";
+            canvas.style.height = this.canvas.height+"px";
+            canvas.width = this.canvas.width * devicePixelRatio;
+            canvas.height = this.canvas.height * devicePixelRatio;
+        }
+
+
         //Create invisible canvas for double buffering
 		if (this.options.buffered) {
             if (Kothic.Canvas.buffers.length > 0) {
@@ -30,14 +40,15 @@ Kothic.Canvas = K.Class.extend({
 			    this.buffer = document.createElement('canvas');
             }
 
-			this.buffer.width = canvas.width;
-			this.buffer.height = canvas.height;
+			this.buffer.width = this.canvas.width;
+			this.buffer.height = this.canvas.height;
 
 			this.ctx = this.buffer.getContext('2d');
 		} else {
             this.ctx = this.canvas.getContext('2d');
             
         }
+        this.ctx.scale(devicePixelRatio, devicePixelRatio);
         
         if (options.useCanvasProxy) {
             this.ctx = new CanvasProxy(this.ctx);
