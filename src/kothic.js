@@ -86,14 +86,26 @@ Kothic = K.Class.extend({
     
     _renderGeometryFeatures: function (layerIds, layers, ctx, ws, hs, granularity) {
         var polygons = 0, lines = 0, casings = 0, j, i;
-        
+
+        for (i = 0; i < layerIds.length; i++) {
+            var features = layers[layerIds[i]], featuresLen = features.length;
+            // Render background polygon
+            for (j = 0; j < featuresLen; j++) {
+                var style = features[j].style;
+                if (style["fill-position"] == 'background' && (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image'))) {
+                    Kothic.polygon.render(ctx, features[j], features[j + 1], ws, hs, granularity);
+                    polygons += 1;
+                }
+            }
+        }
+
         for (i = 0; i < layerIds.length; i++) {
             var features = layers[layerIds[i]], featuresLen = features.length;
 
             // Render polygon
             for (j = 0; j < featuresLen; j++) {
                 var style = features[j].style;
-                if (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image')) {
+                if ( style["fill-position"] != "background" && (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image'))) {
                     Kothic.polygon.render(ctx, features[j], features[j + 1], ws, hs, granularity);
                     polygons += 1;
                 }
