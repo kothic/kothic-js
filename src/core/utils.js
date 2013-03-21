@@ -33,6 +33,16 @@ K.Utils = {
             }
         }
 
-        return true;        
+        return true;
+    },
+    isStyleUseful: function (obj) {
+        var key;
+        var usefulKeys = {"width":"", "casing-width":"", "fill-color":"", "fill-image":"", "icon-image":"", "text":"", "extrude":"", "background-image":"", "background-color":"", "pattern-image":"", "shield-text":"", "symbol-shape":""};
+        for (key in obj) {
+            if (obj.hasOwnProperty(key) && usefulKeys.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
     }
 };
