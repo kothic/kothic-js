@@ -5,6 +5,11 @@ import os
 import re
 import Image
 
+import cairo
+import tempfile
+import StringIO
+import rsvg
+
 from mapcss_parser import MapCSSParser
 from mapcss_parser import ast
 
@@ -36,6 +41,32 @@ images = set()
 subparts = set(['default'])
 presence_tags = set()
 value_tags = set()
+
+def open_svg_as_image(fn):
+     tmpfd, tmppath = tempfile.mkstemp(".png")
+     tmpfile = os.fdopen(tmpfd,'w')
+
+     file = StringIO.StringIO()
+     
+     
+     svg = rsvg.Handle(file=fn)
+     
+     svgwidth = svg.get_property('width')
+     svgheight = svg.get_property('height')
+     svgsurface = cairo.SVGSurface(file, svgwidth, svgheight)
+     svgctx = cairo.Context(svgsurface)
+     #size = max(24, svgwidth, svgheight)
+     #svgctx.scale(size/float(svgwidth),height/float(svgheight))
+     svg.render_cairo(svgctx)
+
+     svgsurface.write_to_png(tmpfile)
+     tmpfile.close()
+     svgsurface.finish()
+
+     im = Image.open(tmppath)
+     os.remove(tmppath)
+     return im
+
 
 def wrap_key(key):
 	return "'%s'" % key
@@ -76,13 +107,15 @@ def rule_as_js(self):
 def selector_as_js(self):
     criteria = " && ".join(map(lambda x: x.as_js(), self.criteria))
 
+    if self.subject == 'line':
+        self.subject = 'way'
     if self.subject in ['node', 'way', 'relation', 'coastline']:
         subject_property = 'type'
     else:
         subject_property = 'selector'
 
     #TODO: something > something is not supported yet
-    if self.within_selector:    
+    if self.within_selector:
         return 'false'
 
     if self.criteria:
@@ -199,8 +232,12 @@ def create_css_sprite(image_names, icons_path, sprite_filename):
         if not os.path.isfile(fpath):
             external_images.append(fname)
             continue
+        
 
-        image = Image.open(fpath)
+        if '.svg' in fpath:
+            image = open_svg_as_image(fpath)
+        else:
+            image = Image.open(fpath)
         sprite_images.append({
             'name': fname,
             'size': image.size,
@@ -300,7 +337,7 @@ if __name__ == "__main__":
     mapcss_js = mapcss.as_js()
     subparts_var = ", ".join(map(lambda subpart: "s_%s = {}" % subpart, subparts))
     subparts_var = "        var %s;" % subparts_var
-    subparts_fill = "\n".join(map(lambda subpart: "        if (!K.Utils.isEmpty(s_%s)) {\n            style['%s'] = s_%s;\n        }" % (subpart, subpart, subpart), subparts))
+    subparts_fill = "\n".join(map(lambda subpart: "        if (!K.Utils.isStyleUseful(s_%s)) {\n            style['%s'] = {};\nfor (var attrname in s_everything) { style['%s'][attrname] = s_everything[attrname]; }\nfor (var attrname in s_%s) { style['%s'][attrname] = s_%s[attrname]; }\n        }" % (subpart, subpart, subpart, subpart, subpart, subpart), subparts))
     js = """
 (function (MapCSS) {
     'use strict';
