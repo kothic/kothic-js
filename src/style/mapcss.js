@@ -201,10 +201,11 @@ var MapCSS = {
 		img.src = url;
 	},
 
-	preloadExternalImages: function (style) {
+	preloadExternalImages: function (style, urlPrefix) {
 		var external_images = MapCSS.styles[style].external_images;
 		delete MapCSS.styles[style].external_images;
 
+        urlPrefix = urlPrefix || "";
 		var len = external_images.length, loaded = 0, i;
         
         function loadImage(url) {
@@ -233,14 +234,14 @@ var MapCSS = {
         }
         
 		for (i = 0; i < len; i++) {
-			loadImage(external_images[i]);
+			loadImage(urlPrefix + external_images[i]);
 		}
 	},
 
 	getImage: function (ref) {
 		var img = MapCSS.images[ref];
 
-		if (img.sprite) {
+		if (img && img.sprite) {
 			var canvas = document.createElement('canvas');
 			canvas.width = img.width;
 			canvas.height = img.height;
