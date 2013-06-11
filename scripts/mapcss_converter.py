@@ -53,10 +53,10 @@ def open_svg_as_image(fn):
      
      svgwidth = svg.get_property('width')
      svgheight = svg.get_property('height')
-     svgsurface = cairo.SVGSurface(file, svgwidth, svgheight)
+     svgsurface = cairo.SVGSurface(file, 2*svgwidth, 2*svgheight)
      svgctx = cairo.Context(svgsurface)
      #size = max(24, svgwidth, svgheight)
-     #svgctx.scale(size/float(svgwidth),height/float(svgheight))
+     svgctx.scale(2,2)
      svg.render_cairo(svgctx)
 
      svgsurface.write_to_png(tmpfile)
@@ -113,6 +113,12 @@ def selector_as_js(self):
         subject_property = 'type'
     else:
         subject_property = 'selector'
+    
+    if subject_property == 'selector' and self.subject == "*":
+			if self.criteria:
+				return criteria
+			else:
+				return "true"
 
     #TODO: something > something is not supported yet
     if self.within_selector:
@@ -232,7 +238,6 @@ def create_css_sprite(image_names, icons_path, sprite_filename):
         if not os.path.isfile(fpath):
             external_images.append(fname)
             continue
-        
 
         if '.svg' in fpath:
             image = open_svg_as_image(fpath)

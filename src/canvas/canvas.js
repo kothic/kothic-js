@@ -19,7 +19,7 @@ Kothic.Canvas = K.Class.extend({
             this.canvas = canvas;
         }
 
-        var devicePixelRatio = window.devicePixelRatio || 1;
+        var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
 
         this.width = this.canvas.width;
         this.height = this.canvas.height;
