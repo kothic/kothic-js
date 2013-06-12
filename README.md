@@ -1,4 +1,4 @@
-**Kothic JS** is a full-featured JavaScript map rendering engine using HTML5 Canvas. 
+**Kothic JS** is a full-featured JavaScript map rendering engine using HTML5 Canvas.
 It was initially developed as a JavaScript port of [Kothic](http://wiki.openstreetmap.org/wiki/Kothic) rendering engine written in Python.
 
 ### Features
@@ -13,32 +13,25 @@ It was initially developed as a JavaScript port of [Kothic](http://wiki.openstre
 Include `kothic.js` from the `dist` directory on your page. Now you can call:
 
 ```javascript
-var kothic = new Kothic({
-            buffered: false,  // (optional) if true, result will appear only after all layers are rendered
-            styles: ['osmosnimki-maps', 'surface'], // (optional) only specified styles will be rendered, if any
-            locales: ['be', 'ru', 'en'] // (optional) map languages, see below
-        });
-```
-
-`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used. 
-
-Tile rendering:
-
-```javascript
-kothic.render(
+Kothic.render(
 	canvas, // canvas element (or its id) to render on
 	data, // JSON data to render
 	zoom, // zoom level
-	onRenderComplete, // (optional) callback to call when rendering is done
-	);
+	{
+		onRenderComplete: callback, // (optional) callback to call when rendering is done
+    	styles: ['osmosnimki-maps', 'surface'], // (optional) only specified styles will be rendered, if any
+    	locales: ['be', 'ru', 'en'] // (optional) map languages, see below
+	});
 ```
 
-Note: you should new renderer instance for any tile you want to render since Kothic has unsolved concurrency issues. 
+`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used.
 
 ### Contributing to Kothic JS
 
-Kothic JS is licensed under a BSD license, and we'll be glad to accept your contributions! Please send your pull requests to one of the guys below.
+Kothic JS is licensed under a BSD license, and we'll be glad to accept your contributions!
 
 #### Core contributors:
 
-Darafei Praliaskouski ([@Komzpa](https://github.com/Komzpa)), Vladimir Agafonkin ([@mourner](https://github.com/mourner)), Maksim Gurtovenko ([@Miroff](https://github.com/Miroff))
+ * Darafei Praliaskouski ([@Komzpa](https://github.com/Komzpa))
+ * Vladimir Agafonkin ([@mourner](https://github.com/mourner), creator of [Leaflet](http://leafletjs.com))
+ * Maksim Gurtovenko ([@Miroff](https://github.com/Miroff))
