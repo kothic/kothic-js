@@ -1,7 +1,7 @@
 (function() {
 	var scripts = [
 		'kothic.js',
-		'canvas/path.js',
+		'renderer/path.js',
 		'renderer/line.js',
 		'renderer/polygon.js',
 		'renderer/shields.js',
