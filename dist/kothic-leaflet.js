@@ -41,21 +41,18 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
             document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
             delete layer._scripts[key];
-
-            layer.tileDrawn(canvas);
         }
 
         this._invertYAxe(data);
 
         var styles = this.options.styles;
 
-        L.Util.requestAnimFrame(function () {
-            Kothic.render(canvas, data, zoom + zoomOffset, {
-                styles: styles,
-                locales: ['be', 'ru', 'en'],
-                onRenderComplete: onRenderComplete
-            });
+        Kothic.render(canvas, data, zoom + zoomOffset, {
+            styles: styles,
+            locales: ['be', 'ru', 'en'],
+            onRenderComplete: onRenderComplete
         });
+        layer.tileDrawn(canvas);
 
         delete this._canvases[key];
     },

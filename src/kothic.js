@@ -41,13 +41,27 @@ var Kothic = {
         //Render the map
         Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
 
-        this._renderBackground(ctx, width, height, zoom, styles);
-        this._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
-        this._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
+        Kothic.getFrame(function () {
 
-        if (options && options.onRenderComplete) {
-            options.onRenderComplete();
-        }
+            Kothic._renderBackground(ctx, width, height, zoom, styles);
+            Kothic._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
+
+            Kothic.getFrame(function () {
+                Kothic._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
+
+                if (options && options.onRenderComplete) {
+                    options.onRenderComplete();
+                }
+            });
+        });
+
+    },
+
+    getFrame: function (fn) {
+        var reqFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                       window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+        reqFrame.call(window, fn);
     },
 
     _renderBackground: function (ctx, width, height, zoom, styles) {
