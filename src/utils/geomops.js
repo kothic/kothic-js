@@ -1,73 +1,67 @@
-/**
- * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
- * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
- * See http://github.com/kothic/kothic-js for more information.
- */
 
-Kothic.geomops = (function() {
-	return {
-		getPolyLength: function (points) {
-			var pointsLen = points.length,
-					c, pc, i,
-					dx, dy,
-					len = 0;
+Kothic.geomops = {
 
-			for (i = 1; i < pointsLen; i++) {
-				c = points[i];
-				pc = points[i - 1];
-				dx = pc[0] - c[0];
-				dy = pc[1] - c[1];
-				len += Math.sqrt(dx * dx + dy * dy);
-			}
-			return len;
-		},
+    getPolyLength: function (points) {
+        var pointsLen = points.length,
+                c, pc, i,
+                dx, dy,
+                len = 0;
 
-		getAngleAndCoordsAtLength: function (points, dist, width) {
-			var pointsLen = points.length,
-					dx, dy, x, y,
-					i, c, pc,
-					len = 0,
-					segLen = 0,
-					angle, partLen, sameseg = true,
-					gotxy = false;
+        for (i = 1; i < pointsLen; i++) {
+            c = points[i];
+            pc = points[i - 1];
+            dx = pc[0] - c[0];
+            dy = pc[1] - c[1];
+            len += Math.sqrt(dx * dx + dy * dy);
+        }
+        return len;
+    },
 
-			width = width || 0; // by default we think that a letter is 0 px wide
+    getAngleAndCoordsAtLength: function (points, dist, width) {
+        var pointsLen = points.length,
+            dx, dy, x, y,
+            i, c, pc,
+            len = 0,
+            segLen = 0,
+            angle, partLen, sameseg = true,
+            gotxy = false;
 
-			for (i = 1; i < pointsLen; i++) {
-				if (gotxy) {
-					sameseg = false;
-				}
+        width = width || 0; // by default we think that a letter is 0 px wide
 
-				c = points[i];
-				pc = points[i - 1];
+        for (i = 1; i < pointsLen; i++) {
+            if (gotxy) {
+                sameseg = false;
+            }
 
-				dx = c[0] - pc[0];
-				dy = c[1] - pc[1];
-				segLen = Math.sqrt(dx * dx + dy * dy);
+            c = points[i];
+            pc = points[i - 1];
 
-				if (!gotxy && len + segLen >= dist) {
-					partLen = dist - len;
-					x = pc[0] + dx * partLen / segLen;
-					y = pc[1] + dy * partLen / segLen;
+            dx = c[0] - pc[0];
+            dy = c[1] - pc[1];
+            segLen = Math.sqrt(dx * dx + dy * dy);
 
-					gotxy = true;
-				}
+            if (!gotxy && len + segLen >= dist) {
+                partLen = dist - len;
+                x = pc[0] + dx * partLen / segLen;
+                y = pc[1] + dy * partLen / segLen;
 
-				if (gotxy && len + segLen >= dist + width) {
-					partLen = dist + width - len;
-					dx = pc[0] + dx * partLen / segLen;
-					dy = pc[1] + dy * partLen / segLen;
-					angle = Math.atan2(dy - y, dx - x);
+                gotxy = true;
+            }
 
-					if (sameseg) {
-						return [angle, x, y, segLen - partLen];
-					} else {
-						return [angle, x, y, 0];
-					}
-				}
+            if (gotxy && len + segLen >= dist + width) {
+                partLen = dist + width - len;
+                dx = pc[0] + dx * partLen / segLen;
+                dy = pc[1] + dy * partLen / segLen;
+                angle = Math.atan2(dy - y, dx - x);
 
-				len += segLen;
-			}
-		}
-	};
-}());
+                if (sameseg) {
+                    return [angle, x, y, segLen - partLen];
+                } else {
+                    return [angle, x, y, 0];
+                }
+            }
+
+            len += segLen;
+        }
+    }
+};

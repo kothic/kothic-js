@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>A canvas Map of Minsk</title>
+	<title>Kothic debug page</title>
 
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
 	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" /><![endif]-->
@@ -108,7 +108,7 @@
 
 		        log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
 			});
-			
+
 		}
 
 		var count = 0;
@@ -118,7 +118,7 @@
 				map.addLayer(kothic);
 			}
 		};
-        
+
 		MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
 		MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
 
@@ -146,9 +146,9 @@
 				kothic.enableStyle('surface');
 			} else {
                 kothic.disableStyle('surface');
-            }            
+            }
         });
-        
+
 	</script>
 </body>
 </html>
