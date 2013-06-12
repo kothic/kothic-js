@@ -1,14 +1,14 @@
 
 Kothic.shields = {
     render: function (ctx, feature, collides, ws, hs) {
-        var style = feature.style, reprPoint = Kothic.utils.getReprPoint(feature),
+        var style = feature.style, reprPoint = Kothic.geom.getReprPoint(feature),
             point, img, len = 0, found = false, i, sgn;
 
         if (!reprPoint) {
             return;
         }
 
-        point = Kothic.utils.transformPoint(reprPoint, ws, hs);
+        point = Kothic.geom.transformPoint(reprPoint, ws, hs);
 
         if (style["shield-image"]) {
             img = MapCSS.getImage(style["icon-image"]);
@@ -33,21 +33,21 @@ Kothic.shields = {
                 collisionHeight = letterWidth * 1.8;
 
         if (feature.type === 'LineString') {
-            len = Kothic.geomops.getPolyLength(feature.coordinates);
+            len = Kothic.geom.getPolyLength(feature.coordinates);
 
             if (Math.max(collisionHeight / hs, collisionWidth / ws) > len) {
                 return;
             }
 
             for (i = 0, sgn = 1; i < len / 2; i += Math.max(len / 30, collisionHeight / ws), sgn *= -1) {
-                reprPoint = Kothic.geomops.getAngleAndCoordsAtLength(feature.coordinates, len / 2 + sgn * i, 0);
+                reprPoint = Kothic.geom.getAngleAndCoordsAtLength(feature.coordinates, len / 2 + sgn * i, 0);
                 if (!reprPoint) {
                     break;
                 }
 
                 reprPoint = [reprPoint[1], reprPoint[2]];
 
-                point = Kothic.utils.transformPoint(reprPoint, ws, hs);
+                point = Kothic.geom.transformPoint(reprPoint, ws, hs);
                 if (img && (style["allow-overlap"] !== "true") &&
                         collides.checkPointWH(point, img.width, img.height, feature.kothicId)) {
                     continue;

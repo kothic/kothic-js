@@ -58,7 +58,7 @@ Kothic.textOnPath = (function () {
 
         var textWidth = ctx.measureText(text).width,
                 textLen = text.length,
-                pathLen = Kothic.geomops.getPolyLength(points);
+                pathLen = Kothic.geom.getPolyLength(points);
 
         if (pathLen < textWidth) {
             return;  // if label won't fit - don't try to
@@ -87,7 +87,7 @@ Kothic.textOnPath = (function () {
             for (i = 0; i < textLen; i++) {
                 letter = text.charAt(i);
                 letterWidth = getWidth(ctx, letter);
-                axy = Kothic.geomops.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
+                axy = Kothic.geom.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
 
                 // if cannot fit letter - restart with next solution
                 if (widthUsed >= pathLen || !axy) {
@@ -124,7 +124,7 @@ Kothic.textOnPath = (function () {
                         flipCount = 0;
                         letter = text.charAt(i);
                         letterWidth = getWidth(ctx, letter);
-                        axy = Kothic.geomops.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
+                        axy = Kothic.geom.getAngleAndCoordsAtLength(points, widthUsed, letterWidth);
                         break;
                     }
                     if (letterWidth >= axy[3]) {

@@ -10,9 +10,8 @@
 		'style/mapcss.js',
 		'style/style.js',
 		'utils/collisions.js',
-		'utils/geomops.js',
-		'utils/rtree.js',
-		'utils/utils.js'
+		'utils/geom.js',
+		'utils/rtree.js'
 	];
 
 	function getSrcUrl() {
