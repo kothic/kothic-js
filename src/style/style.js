@@ -19,7 +19,7 @@ Kothic.style = (function () {
 
         populateLayers: function (features, zoom, styles) {
             var layers = {}, i, len;
-        
+
             var styledFeatures = Kothic.style.styleFeatures(features, zoom, styles);
 
             for (i = 0, len = styledFeatures.length; i < len; i++) {
@@ -41,7 +41,7 @@ Kothic.style = (function () {
 
             return layers;
         },
-    
+
         getStyle: function (feature, zoom, styleNames) {
             var type, selector;
             if (feature.type === 'Polygon' || feature.type === 'MultiPolygon') {
@@ -54,7 +54,7 @@ Kothic.style = (function () {
                 type = 'node';
                 selector = 'node';
             }
-            
+
             return MapCSS.restyle(styleNames, feature.properties, zoom, type, selector);
         },
 
@@ -68,7 +68,7 @@ Kothic.style = (function () {
 
                 for (j in style) {
                     if (style.hasOwnProperty(j)) {
-                        restyledFeature = Kothic.utils.extend({}, feature);
+                        restyledFeature = Kothic.extend({}, feature);
                         restyledFeature.kothicId = i + 1;
                         restyledFeature.style = style[j];
                         styledFeatures.push(restyledFeature);

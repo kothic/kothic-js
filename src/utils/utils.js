@@ -1,8 +1,3 @@
-/**
- * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
- * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
- * See http://github.com/kothic/kothic-js for more information.
- */
 
 Kothic.utils = {
 	transformPoint: function (point, ws, hs) {
@@ -45,35 +40,6 @@ Kothic.utils = {
 				return;
 		}
 		return point;
-	},
-
-    getOrderedKeys: function (dict) {
-        var keys = [], key;
-        for (key in dict) {
-            if (dict.hasOwnProperty(key)) {
-                keys.push(key);
-            }
-        }
-        
-        keys.sort();
-        return keys;
-    },
-    
-	extend: function (dest, source) {
-        var key;
-		for (key in source) {
-			if (source.hasOwnProperty(key)) {
-				dest[key] = source[key];
-			}
-		}
-		return dest;
-	},
-
-	remove_from_array: function(arr, elem) {
-     	var index = arr.indexOf(elem);
-     	if (index >= 0) {
-        	arr.splice(index, 1);
-    	}
-	}	
+	}
 };
 

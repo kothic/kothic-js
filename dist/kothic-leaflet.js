@@ -40,10 +40,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         }
 
         function onRenderComplete(debugInfo) {
-            debugInfo.x = x;
-            debugInfo.y = y;
-            debugInfo.zoom = zoom;
-            layer._debugMessages.push(debugInfo);
+            // debugInfo.x = x;
+            // debugInfo.y = y;
+            // debugInfo.zoom = zoom;
+            // layer._debugMessages.push(debugInfo);
 
             document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
             delete layer._scripts[key];
@@ -70,7 +70,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         this._canvases[key] = canvas;
         this._scripts[key] = this._loadScript(url);
     },
-    
+
     enableStyle: function(name) {
         if (MapCSS.availableStyles.indexOf(name) >= 0 && this.options.styles.indexOf(name) < 0) {
             this.options.styles.push(name);
@@ -94,7 +94,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             this._update();
         }
     },
-    
+
     _invertYAxe: function(data) {
         var type, coordinates, tileSize = data.granularity, i, j, k, l, feature;
         for (i = 0; i < data.features.length; i++) {
@@ -124,7 +124,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             } else {
                 throw "Unexpected GeoJSON type: " + type;
             }
-            
+
             if (feature.hasOwnProperty('reprpoint')) {
                 feature.reprpoint[1] = tileSize - feature.reprpoint[1];
             }

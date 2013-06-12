@@ -1,11 +1,7 @@
 (function() {
 	var scripts = [
-		'core/utils.js',
-		'core/class.js',
 		'kothic.js',
-		'canvas/canvasproxy.js',
 		'canvas/path.js',
-		'canvas/canvas.js',
 		'renderer/line.js',
 		'renderer/polygon.js',
 		'renderer/shields.js',
@@ -16,7 +12,6 @@
 		'utils/collisions.js',
 		'utils/geomops.js',
 		'utils/rtree.js',
-		'utils/tracer.js',
 		'utils/utils.js'
 	];
 
