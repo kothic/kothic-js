@@ -11,9 +11,9 @@ var Kothic = {
             canvas = document.getElementById(canvas);
         }
 
-        var styles = options && options.styles || [];
+        var styles = (options && options.styles) || [];
 
-        MapCSS.locales = options && options.locales || [];
+        MapCSS.locales = (options && options.locales) || [];
 
         var devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -21,8 +21,8 @@ var Kothic = {
             height = canvas.height;
 
         if (devicePixelRatio != 1) {
-            canvas.style.width = canvas.width + "px";
-            canvas.style.height = canvas.height + "px";
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
             canvas.width = canvas.width * devicePixelRatio;
             canvas.height = canvas.height * devicePixelRatio;
         }
@@ -30,42 +30,28 @@ var Kothic = {
         var ctx = canvas.getContext('2d');
         ctx.scale(devicePixelRatio, devicePixelRatio);
 
-		var granularity = data.granularity,
+        var granularity = data.granularity,
             ws = width / granularity, hs = height / granularity,
-            styles = this._styles,
             collisionBuffer = new Kothic.CollisionBuffer(height, width);
 
         //Setup layer styles
-		var layers = Kothic.style.populateLayers(data.features, zoom, styles);
+        var layers = Kothic.style.populateLayers(data.features, zoom, styles);
         var layerIds = Object.keys(layers).sort();
 
-		//Render the map
-		Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
+        //Render the map
+        Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
 
-        var v = this;
+        this._renderBackground(ctx, width, height, zoom, styles);
+        this._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
+        this._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
 
-		var renderIconsAndText = function () {
-            var stats = v._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
-
-			if (options && options.onRenderComplete) {
-                options.onRenderComplete();
-            }
-		};
-
-		var renderMap = function () {
-			v._renderBackground(ctx, width, height, zoom, styles);
-
-            var stats = v._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
-
-			setTimeout(renderIconsAndText, 0);
-		};
-
-
-		setTimeout(renderMap, 0);
+        if (options && options.onRenderComplete) {
+            options.onRenderComplete();
+        }
     },
 
     _renderBackground: function (ctx, width, height, zoom, styles) {
-		var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas"),
+        var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas"),
             style_names = Object.keys(style).sort(),
             i;
 
@@ -76,7 +62,7 @@ var Kothic = {
         for (i = 0; i < style_names.length; i++) {
             Kothic.polygon.fill(ctx, style[style_names[i]], fillRect);
         }
-	},
+    },
 
     _renderGeometryFeatures: function (layerIds, layers, ctx, ws, hs, granularity) {
         var j, i;

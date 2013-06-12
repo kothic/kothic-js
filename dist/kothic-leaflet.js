@@ -47,10 +47,14 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
         this._invertYAxe(data);
 
-        Kothic.render(canvas, data, zoom + zoomOffset, {
-            styles: this.options.styles,
-            locales: ['be', 'ru', 'en'],
-            onRenderComplete: onRenderComplete
+        var styles = this.options.styles;
+
+        L.Util.requestAnimFrame(function () {
+            Kothic.render(canvas, data, zoom + zoomOffset, {
+                styles: styles,
+                locales: ['be', 'ru', 'en'],
+                onRenderComplete: onRenderComplete
+            });
         });
 
         delete this._canvases[key];
