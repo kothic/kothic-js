@@ -21,12 +21,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         this._debugMessages = [];
 
         window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
-
-        this.kothic = new Kothic({
-            buffered: this.options.buffered,
-            styles: this.options.styles,
-            locales: ['be', 'ru', 'en']
-        });
     },
 
     _onKothicDataResponse: function(data, zoom, x, y) {
@@ -53,7 +47,12 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
         this._invertYAxe(data);
 
-        this.kothic.render(canvas, data, zoom + zoomOffset, onRenderComplete);
+        Kothic.render(canvas, data, zoom + zoomOffset, {
+            styles: this.options.styles,
+            locales: ['be', 'ru', 'en'],
+            onRenderComplete: onRenderComplete
+        });
+
         delete this._canvases[key];
     },
 

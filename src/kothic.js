@@ -4,32 +4,16 @@
  * See http://github.com/kothic/kothic-js for more information.
  */
 
-var Kothic = function (options) {
-    this._styles = options.styles || [];
-    MapCSS.locales = options.locales || [];
-};
+var Kothic = {
 
-Kothic.extend = function (dest) {
-    var sources = Array.prototype.slice.call(arguments, 1),
-        i, j, len, src;
-
-    for (j = 0, len = sources.length; j < len; j++) {
-        src = sources[j] || {};
-        for (i in src) {
-            if (src.hasOwnProperty(i)) {
-                dest[i] = src[i];
-            }
-        }
-    }
-    return dest;
-};
-
-Kothic.prototype = {
-
-    render: function (canvas, data, zoom, onRenderComplete) {
+    render: function (canvas, data, zoom, options) {
         if (typeof canvas === 'string') {
             canvas = document.getElementById(canvas);
         }
+
+        var styles = options && options.styles || [];
+
+        MapCSS.locales = options && options.locales || [];
 
         var devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -63,7 +47,9 @@ Kothic.prototype = {
 		var renderIconsAndText = function () {
             var stats = v._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
 
-			onRenderComplete();
+			if (options && options.onRenderComplete) {
+                options.onRenderComplete();
+            }
 		};
 
 		var renderMap = function () {
@@ -78,7 +64,6 @@ Kothic.prototype = {
 		setTimeout(renderMap, 0);
     },
 
-    // Private functions
     _renderBackground: function (ctx, width, height, zoom, styles) {
 		var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas"),
             style_names = Object.keys(style).sort(),

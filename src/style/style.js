@@ -60,7 +60,7 @@ Kothic.style = (function () {
 
         styleFeatures: function (features, zoom, styleNames) {
             var styledFeatures = [],
-                    i, j, len, feature, style, restyledFeature;
+                    i, j, len, feature, style, restyledFeature, k;
 
             for (i = 0, len = features.length; i < len; i++) {
                 feature = features[i];
@@ -68,7 +68,10 @@ Kothic.style = (function () {
 
                 for (j in style) {
                     if (style.hasOwnProperty(j)) {
-                        restyledFeature = Kothic.extend({}, feature);
+                        restyledFeature = {};
+                        for (k in feature) {
+                            restyledFeature[k] = feature[k];
+                        }
                         restyledFeature.kothicId = i + 1;
                         restyledFeature.style = style[j];
                         styledFeatures.push(restyledFeature);
