@@ -36,7 +36,7 @@ Kothic.line = {
         ctx.stroke();
     },
 
-    renderPolyline: function (ctx, feature, nextFeature, ws, hs, granularity) {
+    render: function (ctx, feature, nextFeature, ws, hs, granularity) {
         var style = feature.style,
                 nextStyle = nextFeature && nextFeature.style;
 
