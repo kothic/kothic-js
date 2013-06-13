@@ -2,7 +2,8 @@
 Kothic.texticons = {
 
     render: function (ctx, feature, collides, ws, hs, renderText, renderIcon) {
-        var style = feature.style, img, point;
+        var style = feature.style, img, point, w, h;
+
         if (renderIcon || (renderText && feature.type !== "LineString")) {
             var reprPoint = Kothic.geom.getReprPoint(feature);
             if (!reprPoint) {
@@ -13,11 +14,25 @@ Kothic.texticons = {
 
         if (renderIcon) {
             img = MapCSS.getImage(style["icon-image"]);
-            if (!img) {
-                return;
+            if (!img) { return; }
+
+            w = img.width;
+            h = img.height;
+
+            if (style["icon-width"] || style["icon-height"]){
+                if (style["icon-width"]) {
+                    w = style["icon-width"];
+                    h = img.height * w / img.width;
+                }
+                if (style["icon-height"]) {
+                    h = style["icon-height"];
+                    if (!style["icon-width"]) {
+                        w = img.width * h / img.height
+                    }
+                }
             }
             if ((style["allow-overlap"] !== "true") &&
-                    collides.checkPointWH(point, img.width, img.height, feature.kothicId)) {
+                    collides.checkPointWH(point, w, h, feature.kothicId)) {
                 return;
             }
         }
@@ -56,7 +71,7 @@ Kothic.texticons = {
                 }
                 ctx.fillText(text, point[0], point[1] + offset);
 
-                var padding = style["-x-mapnik-min-distance"] || 20;
+                var padding = style["-x-kot-min-distance"] || 20;
                 collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
 
             } else if (feature.type === 'LineString') {
@@ -68,11 +83,11 @@ Kothic.texticons = {
 
         if (renderIcon) {
             ctx.drawImage(img,
-                    Math.floor(point[0] - img.width / 2),
-                    Math.floor(point[1] - img.height / 2));
+                    Math.floor(point[0] - w / 2),
+                    Math.floor(point[1] - h / 2), w, h);
 
-            var padding2 = parseFloat(style["-x-mapnik-min-distance"]) || 0;
-            collides.addPointWH(point, img.width, img.height, padding2, feature.kothicId);
+            var padding2 = parseFloat(style["-x-kot-min-distance"]) || 0;
+            collides.addPointWH(point, w, h, padding2, feature.kothicId);
         }
     }
 };

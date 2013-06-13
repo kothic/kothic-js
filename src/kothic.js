@@ -15,7 +15,7 @@ var Kothic = {
 
         MapCSS.locales = (options && options.locales) || [];
 
-        var devicePixelRatio = window.devicePixelRatio || 1;
+        var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
 
         var width = canvas.width,
             height = canvas.height;
