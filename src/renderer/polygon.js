@@ -24,7 +24,7 @@ Kothic.polygon = {
         this.pathOpened = false;
     },
 
-    fill: function (ctx, style) {
+    fill: function (ctx, style, fillFn) {
         var opacity = style["fill-opacity"] || style.opacity, image;
 
         if (style.hasOwnProperty('fill-color')) {
@@ -33,7 +33,7 @@ Kothic.polygon = {
                 fillStyle: style["fill-color"] || "#000000",
                 globalAlpha: opacity || 1
             });
-            ctx.fill();
+            fillFn ? fillFn() : ctx.fill();
         }
 
         if (style.hasOwnProperty('fill-image')) {
@@ -44,7 +44,7 @@ Kothic.polygon = {
                     fillStyle: ctx.createPattern(image, 'repeat'),
                     globalAlpha: opacity || 1
                 });
-                ctx.fill();
+                fillFn ? fillFn() : ctx.fill();
             }
         }
     }

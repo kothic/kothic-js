@@ -16,16 +16,11 @@
 
 	<script type="text/javascript">
 
-        var start = performance.now();
-
         MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
         invertYAxe(tile_data);
 
         Kothic.render('map', tile_data, tile_zoom, {
-            styles: ['osmosnimki'],
-            onRenderComplete: function () {
-                console.log('Rendered in ' + (Math.round((performance.now() - start) * 100) / 100) + 'ms');
-            }
+            styles: ['osmosnimki']
         });
 
         function invertYAxe(data) {

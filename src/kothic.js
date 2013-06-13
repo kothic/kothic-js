@@ -7,6 +7,8 @@
 var Kothic = {
 
     render: function (canvas, data, zoom, options) {
+        console.time('styles');
+
         if (typeof canvas === 'string') {
             canvas = document.getElementById(canvas);
         }
@@ -36,24 +38,40 @@ var Kothic = {
 
         //Setup layer styles
         var layers = Kothic.style.populateLayers(data.features, zoom, styles);
-        var layerIds = Object.keys(layers).sort();
+        var layerIds = Kothic.getLayerIds(layers);
 
         //Render the map
         Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
 
-        //Kothic._renderBackground(ctx, width, height, zoom, styles);
+        console.timeEnd('styles');
+        console.time('geometry');
+
+        Kothic._renderBackground(ctx, width, height, zoom, styles);
 
         Kothic.renderAsync(
             Kothic._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity)
+            .concat([
+                function () {
+                    console.timeEnd('geometry');
+                    console.time('text/icons');
+                }
+            ])
             .concat(Kothic._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer))
             .concat([
                 function () {
                     if (options && options.onRenderComplete) {
                         options.onRenderComplete();
                     }
+                    console.timeEnd('text/icons');
                 }
             ])
         );
+    },
+
+    getLayerIds: function (layers) {
+        return Object.keys(layers).sort(function (a, b) {
+            return parseInt(a) - parseInt(b);
+        });
     },
 
     getFrame: function (fn) {
@@ -81,68 +99,109 @@ var Kothic = {
     },
 
     _renderBackground: function (ctx, width, height, zoom, styles) {
-        var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas"),
-            style_names = Object.keys(style).sort(),
-            i;
+        var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas");
 
         var fillRect = function () {
             ctx.fillRect(-1, -1, width + 1, height + 1);
         };
 
-        for (i = 0; i < style_names.length; i++) {
-            Kothic.polygon.fill(ctx, style[style_names[i]], fillRect);
+        for (var i in style) {
+            Kothic.polygon.fill(ctx, style[i], fillRect);
         }
     },
 
     _renderGeometryFeatures: function (layerIds, layers, ctx, ws, hs, granularity) {
-        var passes = [], i;
+        var passes = [],
+            layersToRender = {},
+            i, j, len, features, style, queue, bgQueue;
 
-        // render background polygons
-        passes.push(function () {
-            for (i = 0; i < layerIds.length; i++) {
-                var features = layers[layerIds[i]];
-                for (var j = 0, len = features.length; j < len; j++) {
-                    var style = features[j].style;
-                    if (style["fill-position"] == 'background' && (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image'))) {
-                        Kothic.polygon.render(ctx, features[j], features[j + 1], ws, hs, granularity);
+        // polygons
+        for (i = 0; i < layerIds.length; i++) {
+            features = layers[layerIds[i]];
+
+            bgQueue = layersToRender._bg = layersToRender._bg || {};
+            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
+            queue.id = layerIds[i];
+
+            for (j = 0, len = features.length; j < len; j++) {
+                style = features[j].style;
+
+                if ('fill-color' in style || 'fill-image' in style) {
+                    if (style["fill-position"] === 'background') {
+                        bgQueue.polygons = bgQueue.polygons || [];
+                        bgQueue.polygons.push(features[j]);
+                    } else {
+                        queue.polygons = queue.polygons || [];
+                        queue.polygons.push(features[j]);
                     }
                 }
             }
-        });
+        }
+
+        // casings
+        for (i = 0; i < layerIds.length; i++) {
+            features = layers[layerIds[i]];
+            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
+            queue.id = layerIds[i];
+
+            for (j = 0, len = features.length; j < len; j++) {
+
+                if ('casing-width' in features[j].style) {
+                    queue.casings = queue.casings || [];
+                    queue.casings.push(features[j]);
+                }
+            }
+        }
+
+        // lines
+        for (i = 0; i < layerIds.length; i++) {
+            features = layers[layerIds[i]];
+            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
+            queue.id = layerIds[i];
+
+            for (j = 0, len = features.length; j < len; j++) {
+
+                if ('width' in features[j].style) {
+                    queue.lines = queue.lines || [];
+                    queue.lines.push(features[j]);
+                }
+            }
+        }
+
+        layerIds = ['_bg'].concat(layerIds);
 
         for (i = 0; i < layerIds.length; i++) {
-            (function (features) {
-                if (!features.length) { return; }
+            (function (queue) {
+                var j, len;
 
-                passes.push(function () {
-                    // Render polygon
-                    for (var j = 0, len = features.length; j < len; j++) {
-                        var style = features[j].style;
-                        if ( style["fill-position"] != "background" && (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image'))) {
-                            Kothic.polygon.render(ctx, features[j], features[j + 1], ws, hs, granularity);
+                if (queue.polygons) {
+                    passes.push(function () {
+                        //ctx.clearRect(0, 0, 1000, 1000);
+                        for (j = 0, len = queue.polygons.length; j < len; j++) {
+                            Kothic.polygon.render(ctx, queue.polygons[j], queue.polygons[j + 1], ws, hs, granularity);
                         }
-                    }
-                });
+                    });
+                }
 
-                passes.push(function () {
-                    // Render line casing
-                    ctx.lineCap = "butt";
-                    for (var j = 0, len = features.length; j < len; j++) {
-                        if (features[j].style.hasOwnProperty("casing-width")) {
-                            Kothic.line.renderCasing(ctx, features[j], features[j + 1], ws, hs, granularity);
+                if (queue.casings || queue.lines) {
+                    passes.push(function () {
+                        //ctx.clearRect(0, 0, 1000, 1000);
+                        if (queue.casings) {
+                            ctx.lineCap = "butt";
+                            for (j = 0, len = queue.casings.length; j < len; j++) {
+                                Kothic.line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], ws, hs, granularity);
+                            }
                         }
-                    }
-
-                    //Render line
-                    ctx.lineCap = "round";
-                    for (var j = 0, len = features.length; j < len; j++) {
-                        if (features[j].style.width) {
-                            Kothic.line.render(ctx, features[j], features[j + 1], ws, hs, granularity);
+                        if (queue.lines) {
+                            ctx.lineCap = "round";
+                            for (j = 0, len = queue.lines.length; j < len; j++) {
+                                Kothic.line.render(ctx, queue.lines[j], queue.lines[j + 1], ws, hs, granularity);
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
-            })(layers[layerIds[i]]);
+            })(layersToRender[layerIds[i]]);
         }
 
         return passes;
