@@ -19,13 +19,12 @@ Kothic.polygon = {
             return;
         }
 
-        this.fill(ctx, style, function () {
-            ctx.fill();
-        });
+        this.fill(ctx, style);
 
         this.pathOpened = false;
     },
-    fill: function (ctx, style, fillFn) {
+
+    fill: function (ctx, style) {
         var opacity = style["fill-opacity"] || style.opacity, image;
 
         if (style.hasOwnProperty('fill-color')) {
@@ -34,7 +33,7 @@ Kothic.polygon = {
                 fillStyle: style["fill-color"] || "#000000",
                 globalAlpha: opacity || 1
             });
-            fillFn();
+            ctx.fill();
         }
 
         if (style.hasOwnProperty('fill-image')) {
@@ -45,7 +44,7 @@ Kothic.polygon = {
                     fillStyle: ctx.createPattern(image, 'repeat'),
                     globalAlpha: opacity || 1
                 });
-                fillFn();
+                ctx.fill();
             }
         }
     }
