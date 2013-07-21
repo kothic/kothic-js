@@ -22,6 +22,8 @@ Kothic.CollisionBuffer.prototype = {
         var result = this.buffer.search(b),
             i, len;
 
+        if (b[0] < 0 || b[1] < 0 || b[2] > this.width || b[3] > this.height) { return true; }
+
         for (i = 0, len = result.length; i < len; i++) {
             // if it's the same object (only different styles), don't detect collision
             if (id !== result[i][4]) {
