@@ -33,11 +33,12 @@ Kothic.textOnPath = (function () {
     }
 
     function addCollision(collisions, ctx, text, axy) {
-        var i, widthUsed = 0;
+        var i, widthUsed = 0, params = [];
         for (i = 0; i <= text.length; i++) {
-            collisions.addPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed));
+            params.push(getCollisionParams(ctx, text.charAt(i), axy, widthUsed));
             widthUsed += getWidth(ctx, text.charAt(i));
         }
+        collisions.addPoints(params);
     }
 
     function renderText(ctx, axy, halo) {

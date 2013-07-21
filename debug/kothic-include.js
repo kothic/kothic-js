@@ -11,7 +11,7 @@
 		'style/style.js',
 		'utils/collisions.js',
 		'utils/geom.js',
-		'utils/rtree.js'
+		'utils/rbush.js'
 	];
 
 	function getSrcUrl() {

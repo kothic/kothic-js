@@ -1,35 +1,34 @@
 
 Kothic.CollisionBuffer = function (height, width) {
-    this.buffer = new RTree();
+    this.buffer = rbush();
     this.height = height;
     this.width = width;
 };
 
 Kothic.CollisionBuffer.prototype = {
-    addBox: function (box) {
-        this.buffer.insert(new RTree.Rectangle(box[0], box[1], box[2], box[3]), box[4]);
+    addPointWH: function (point, w, h, d, id) {
+        this.buffer.insert(this.getBoxFromPoint(point, w, h, d, id));
     },
 
-    addPointWH: function (point, w, h, d, id) {
-        this.buffer.insert(this.getBoxFromPoint(point, w, h, d), id);
+    addPoints: function (params) {
+        var points = [];
+        for (var i = 0, len = params.length; i < len; i++) {
+            points.push(this.getBoxFromPoint.apply(this, params[i]));
+        }
+        this.buffer.load(points);
     },
 
     checkBox: function (b, id) {
-        if (this.height && !(b.x1 >= 0 && b.y1 >= 0 && b.y2 <= this.height && b.x2 <= this.width)) {
-            return true;
-        }
+        var result = this.buffer.search(b),
+            i, len;
 
-        var obj = [], objects = this.buffer.search(b, true, obj), i, len, c;
-
-        for (i = 0, len = obj.length, c; i < len; i++) {
-            c = obj[i];
-
+        for (i = 0, len = result.length; i < len; i++) {
             // if it's the same object (only different styles), don't detect collision
-            if (id !== c.leaf) {
+            if (id !== result[i][4]) {
                 return true;
             }
-
         }
+
         return false;
     },
 
@@ -38,9 +37,15 @@ Kothic.CollisionBuffer.prototype = {
     },
 
     getBoxFromPoint: function (point, w, h, d, id) {
-        return new RTree.Rectangle(point[0] - w / 2 - d,
-            point[1] - h / 2 - d,
-            w + 2 * d,
-            h + 2 * d);
+        var dx = w / 2 + d,
+            dy = h / 2 + d;
+
+        return [
+            point[0] - dx,
+            point[1] - dy,
+            point[0] + dx,
+            point[1] + dy,
+            id
+        ];
     }
 };
