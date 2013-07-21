@@ -73,11 +73,9 @@ Kothic.style = {
             }
         }
 
-        styledFeatures.sort(
-            function (a, b) {
-                return parseFloat(a.style["z-index"]) - parseFloat(b.style["z-index"] || 0);
-            }
-        );
+        styledFeatures.sort(function (a, b) {
+            return (a.style["z-index"] || 0) - (b.style["z-index"] || 0);
+        });
 
         return styledFeatures;
     },
