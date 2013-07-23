@@ -39,6 +39,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             // debugInfo.zoom = zoom;
             // layer._debugMessages.push(debugInfo);
 
+            layer.tileDrawn(canvas);
+
             document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
             delete layer._scripts[key];
         }
@@ -52,7 +54,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             locales: ['be', 'ru', 'en'],
             onRenderComplete: onRenderComplete
         });
-        layer.tileDrawn(canvas);
 
         delete this._canvases[key];
     },
