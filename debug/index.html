@@ -1,10 +1,9 @@
 <!doctype html>
 <html>
 <head>
-	<title>A canvas Map of Minsk</title>
+	<title>Kothic debug page</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
-	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" /><![endif]-->
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.css" />
 
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
@@ -12,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
 	<!-- Leaflet -->
-	<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.js"></script>
 
 	<!-- Include Kothic renderer sources -->
 	<script src="kothic-include.js"></script>
@@ -57,7 +56,8 @@
 
 		var map = new L.Map('map', {
 			center: new L.LatLng(53.9, 27.55), // Minsk
-			zoom: 12
+			zoom: 12,
+			fadeAnimation: false
 		});
 
 		kothic.on('load', function() {
@@ -108,7 +108,7 @@
 
 		        log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
 			});
-			
+
 		}
 
 		var count = 0;
@@ -118,7 +118,7 @@
 				map.addLayer(kothic);
 			}
 		};
-        
+
 		MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
 		MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
 
@@ -146,9 +146,9 @@
 				kothic.enableStyle('surface');
 			} else {
                 kothic.disableStyle('surface');
-            }            
+            }
         });
-        
+
 	</script>
 </body>
 </html>

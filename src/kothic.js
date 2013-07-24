@@ -1,166 +1,215 @@
-/**
- * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
- * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
- * See http://github.com/kothic/kothic-js for more information.
- */
-Kothic = K.Class.extend({
-    options: {
-        buffered: false,
-        useCanvasProxy: false,
-        styles: [],
-        locales: []
-    }, 
-    
-    initialize: function (options) {
-        K.Utils.setOptions(this, options);
-        MapCSS.locales = this.options.locales;
-    },
-    
-    render: function (canvasOrId, data, zoom, onRenderComplete) {
-        var canvas = new Kothic.Canvas(canvasOrId, {
-            buffererd: this.options.buffered,
-            useCanvasProxy: this.options.useCanvasProxy
-        });
-        
-		var width = canvas.width, height = canvas.height,
-            granularity = data.granularity,
-            ws = width / granularity, hs = height / granularity, 
-            ctx = canvas.ctx,
-            styles = this.options.styles,
-            additionalStyle = this.options.additionalStyle,
+/*
+ (c) 2013, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
+ Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
+ http://github.com/kothic/kothic-js
+*/
+
+var Kothic = {
+
+    render: function (canvas, data, zoom, options) {
+
+        if (typeof canvas === 'string') {
+            canvas = document.getElementById(canvas);
+        }
+
+        var styles = (options && options.styles) || [];
+
+        MapCSS.locales = (options && options.locales) || [];
+
+        var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
+
+        var width = canvas.width,
+            height = canvas.height;
+
+        if (devicePixelRatio !== 1) {
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            canvas.width = canvas.width * devicePixelRatio;
+            canvas.height = canvas.height * devicePixelRatio;
+        }
+
+        var ctx = canvas.getContext('2d');
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+
+        var granularity = data.granularity,
+            ws = width / granularity, hs = height / granularity,
             collisionBuffer = new Kothic.CollisionBuffer(height, width);
 
-        var trace = new Kothic.Debug();
+        console.time('styles');
 
-        //Setup layer styles
-		var layers = Kothic.style.populateLayers(data.features, zoom, styles);
-        var layerIds = Kothic.utils.getOrderedKeys(layers);
-        trace.addEvent("style (" + MapCSS.debug.hit + "/" + MapCSS.debug.miss + ")");
-        MapCSS.debug.miss = 0;
-        MapCSS.debug.hit = 0;
+        // setup layer styles
+        var layers = Kothic.style.populateLayers(data.features, zoom, styles),
+            layerIds = Kothic.getLayerIds(layers);
 
-		//Render the map
-		Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
+        // render the map
+        Kothic.style.setStyles(ctx, Kothic.style.defaultCanvasStyles);
 
-        var v = this;
+        console.timeEnd('styles');
 
-		var renderIconsAndText = function () {
-            var stats = v._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
-            trace.addEvent("labels");
-            trace.setStats(stats);
+        Kothic.getFrame(function () {
+            console.time('geometry');
 
-            canvas.completeRendering();
+            Kothic._renderBackground(ctx, width, height, zoom, styles);
+            Kothic._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
 
-			onRenderComplete(trace);
-		};
+            if (options && options.onRenderComplete) {
+                options.onRenderComplete();
+            }
 
-		var renderMap = function () {
-			v._renderBackground(ctx, width, height, zoom, styles);
+            console.timeEnd('geometry');
 
-            var stats = v._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
-            
-            trace.addEvent("geometry");
-            trace.setStats(stats);
-            
-			setTimeout(renderIconsAndText, 0);
-		};
+            Kothic.getFrame(function () {
+                console.time('text/icons');
+                Kothic._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
+                console.timeEnd('text/icons');
 
-
-		setTimeout(renderMap, 0);
+                //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
+            });
+        });
     },
-    
-    // Private functions
+
+    _renderCollisions: function (ctx, node) {
+        var i, len, a;
+        if (node.leaf) {
+            for (i = 0, len = node.children.length; i < len; i++) {
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 1;
+                a = node.children[i];
+                ctx.strokeRect(Math.round(a[0]), Math.round(a[1]), Math.round(a[2] - a[0]), Math.round(a[3] - a[1]));
+            }
+        } else {
+            for (i = 0, len = node.children.length; i < len; i++) {
+                this._renderCollisions(ctx, node.children[i]);
+            }
+        }
+    },
+
+    getLayerIds: function (layers) {
+        return Object.keys(layers).sort(function (a, b) {
+            return parseInt(a, 10) - parseInt(b, 10);
+        });
+    },
+
+    getFrame: function (fn) {
+        var reqFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                       window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+        reqFrame.call(window, fn);
+    },
+
     _renderBackground: function (ctx, width, height, zoom, styles) {
-		var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas"),
-            style_names = Kothic.utils.getOrderedKeys(style),
-            i;
-        
+        var style = MapCSS.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
+
         var fillRect = function () {
             ctx.fillRect(-1, -1, width + 1, height + 1);
         };
-        
-        for (i = 0; i < style_names.length; i++) {
-            Kothic.polygon.fill(ctx, style[style_names[i]], fillRect);
+
+        for (var i in style) {
+            Kothic.polygon.fill(ctx, style[i], fillRect);
         }
-	},
-    
-    _renderGeometryFeatures: function (layerIds, layers, ctx, ws, hs, granularity) {
-        var polygons = 0, lines = 0, casings = 0, j, i;
-
-        for (i = 0; i < layerIds.length; i++) {
-            var features = layers[layerIds[i]], featuresLen = features.length;
-            // Render background polygon
-            for (j = 0; j < featuresLen; j++) {
-                var style = features[j].style;
-                if (style["fill-position"] == 'background' && (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image'))) {
-                    Kothic.polygon.render(ctx, features[j], features[j + 1], ws, hs, granularity);
-                    polygons += 1;
-                }
-            }
-        }
-
-        for (i = 0; i < layerIds.length; i++) {
-            var features = layers[layerIds[i]], featuresLen = features.length;
-
-            // Render polygon
-            for (j = 0; j < featuresLen; j++) {
-                var style = features[j].style;
-                if ( style["fill-position"] != "background" && (style.hasOwnProperty('fill-color') || style.hasOwnProperty('fill-image'))) {
-                    Kothic.polygon.render(ctx, features[j], features[j + 1], ws, hs, granularity);
-                    polygons += 1;
-                }
-            }
-
-            // Render line casing
-            ctx.lineCap = "butt";
-            for (j = 0; j < featuresLen; j++) {
-                if (features[j].style.hasOwnProperty("casing-width")) {
-                    Kothic.line.renderCasing(ctx, features[j], features[j + 1], ws, hs, granularity);
-                    casings += 1;
-                }
-            }
-
-            //Render line
-            ctx.lineCap = "round";
-            for (j = 0; j < featuresLen; j++) {
-                if (features[j].style.width) {
-                    Kothic.line.render(ctx, features[j], features[j + 1], ws, hs, granularity);
-                    lines += 1;
-                }
-            }
-        }
-        
-        return {
-            'polygons ': polygons, 
-            'lines ': lines, 
-            'casings ': casings
-        };
-            
     },
-    
+
+    _renderGeometryFeatures: function (layerIds, layers, ctx, ws, hs, granularity) {
+        var layersToRender = {},
+            i, j, len, features, style, queue, bgQueue;
+
+        // polygons
+        for (i = 0; i < layerIds.length; i++) {
+            features = layers[layerIds[i]];
+
+            bgQueue = layersToRender._bg = layersToRender._bg || {};
+            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
+
+            for (j = 0, len = features.length; j < len; j++) {
+                style = features[j].style;
+
+                if ('fill-color' in style || 'fill-image' in style) {
+                    if (style['fill-position'] === 'background') {
+                        bgQueue.polygons = bgQueue.polygons || [];
+                        bgQueue.polygons.push(features[j]);
+                    } else {
+                        queue.polygons = queue.polygons || [];
+                        queue.polygons.push(features[j]);
+                    }
+                }
+            }
+        }
+
+        // casings
+        for (i = 0; i < layerIds.length; i++) {
+            features = layers[layerIds[i]];
+            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
+
+            for (j = 0, len = features.length; j < len; j++) {
+
+                if ('casing-width' in features[j].style) {
+                    queue.casings = queue.casings || [];
+                    queue.casings.push(features[j]);
+                }
+            }
+        }
+
+        // lines
+        for (i = 0; i < layerIds.length; i++) {
+            features = layers[layerIds[i]];
+            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
+
+            for (j = 0, len = features.length; j < len; j++) {
+
+                if ('width' in features[j].style) {
+                    queue.lines = queue.lines || [];
+                    queue.lines.push(features[j]);
+                }
+            }
+        }
+
+        layerIds = ['_bg'].concat(layerIds);
+
+        for (i = 0; i < layerIds.length; i++) {
+            queue = layersToRender[layerIds[i]];
+
+            if (queue.polygons) {
+                for (j = 0, len = queue.polygons.length; j < len; j++) {
+                    Kothic.polygon.render(ctx, queue.polygons[j], queue.polygons[j + 1], ws, hs, granularity);
+                }
+            }
+            if (queue.casings) {
+                ctx.lineCap = 'butt';
+                for (j = 0, len = queue.casings.length; j < len; j++) {
+                    Kothic.line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], ws, hs, granularity);
+                }
+            }
+            if (queue.lines) {
+                ctx.lineCap = 'round';
+                for (j = 0, len = queue.lines.length; j < len; j++) {
+                    Kothic.line.render(ctx, queue.lines[j], queue.lines[j + 1], ws, hs, granularity);
+                }
+            }
+        }
+    },
+
     _renderTextAndIcons: function (layerIds, layers, ctx, ws, hs, collisionBuffer) {
         //TODO: Move to the features detector
-        var textOnCanvasAvailable = ctx.strokeText && ctx.fillText && ctx.measureText;
-        var icons = 0, labels = 0, shields = 0, j, style, i;
+        var j, style, i,
+            passes = [];
 
         for (i = 0; i < layerIds.length; i++) {
-            var features = layers[layerIds[i]], featuresLen = features.length;
+            var features = layers[layerIds[i]],
+                featuresLen = features.length;
 
             // render icons without text
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (style.hasOwnProperty('icon-image') && !style.text) {
                     Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, false, true);
-                    icons += 1;
                 }
             }
 
             // render text on features without icons
-            for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
+            for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (!style.hasOwnProperty('icon-image') && style.text) {
                     Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, false);
-                    labels += 1;
                 }
             }
 
@@ -168,26 +217,19 @@ Kothic = K.Class.extend({
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (style.hasOwnProperty('icon-image') && style.text) {
-                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, textOnCanvasAvailable, true);
-                    icons += 1;
-                    labels += 1;
+                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, true);
                 }
             }
 
             // render shields with text
-            for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
+            for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
-                if (style["shield-text"]) {
+                if (style['shield-text']) {
                     Kothic.shields.render(ctx, features[j], collisionBuffer, ws, hs);
-                    shields += 1;
                 }
             }
         }
 
-        return {
-            'icons ': icons, 
-            'labels ': labels, 
-            'shields ': shields
-        };
+        return passes;
     }
-});
+};

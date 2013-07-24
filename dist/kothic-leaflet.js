@@ -6,7 +6,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         maxZoom: 22,
         updateWhenIdle: true,
         unloadInvisibleTiles: true,
-        attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
+        attribution: 'Map data &copy; 2013 <a href="http://osm.org/copyright">OpenStreetMap</a> contributors,' +
+                     ' Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
         async: true,
         buffered: false,
         styles: MapCSS.availableStyles
@@ -21,12 +22,6 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         this._debugMessages = [];
 
         window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
-
-        this.kothic = new Kothic({
-            buffered: this.options.buffered,
-            styles: this.options.styles,
-            locales: ['be', 'ru', 'en']
-        });
     },
 
     _onKothicDataResponse: function(data, zoom, x, y) {
@@ -39,21 +34,23 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             return;
         }
 
-        function onRenderComplete(debugInfo) {
-            debugInfo.x = x;
-            debugInfo.y = y;
-            debugInfo.zoom = zoom;
-            layer._debugMessages.push(debugInfo);
+        function onRenderComplete() {
+            layer.tileDrawn(canvas);
 
             document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
             delete layer._scripts[key];
-
-            layer.tileDrawn(canvas);
         }
 
         this._invertYAxe(data);
 
-        this.kothic.render(canvas, data, zoom + zoomOffset, onRenderComplete);
+        var styles = this.options.styles;
+
+        Kothic.render(canvas, data, zoom + zoomOffset, {
+            styles: styles,
+            locales: ['be', 'ru', 'en'],
+            onRenderComplete: onRenderComplete
+        });
+
         delete this._canvases[key];
     },
 
@@ -70,7 +67,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         this._canvases[key] = canvas;
         this._scripts[key] = this._loadScript(url);
     },
-    
+
     enableStyle: function(name) {
         if (MapCSS.availableStyles.indexOf(name) >= 0 && this.options.styles.indexOf(name) < 0) {
             this.options.styles.push(name);
@@ -80,7 +77,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
     disableStyle: function(name) {
         if (this.options.styles.indexOf(name) >= 0) {
-            Kothic.utils.remove_from_array(this.options.styles, name);
+            var i = this.options.styles.indexOf(name);
+            this.options.styles.splice(i, 1);
             this.redraw();
         }
     },
@@ -94,7 +92,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             this._update();
         }
     },
-    
+
     _invertYAxe: function(data) {
         var type, coordinates, tileSize = data.granularity, i, j, k, l, feature;
         for (i = 0; i < data.features.length; i++) {
@@ -124,7 +122,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             } else {
                 throw "Unexpected GeoJSON type: " + type;
             }
-            
+
             if (feature.hasOwnProperty('reprpoint')) {
                 feature.reprpoint[1] = tileSize - feature.reprpoint[1];
             }
