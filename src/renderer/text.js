@@ -20,26 +20,23 @@ Kothic.textOnPath = (function () {
         return [getTextCenter(axy, textWidth + 2 * (pxoffset || 0)), w, h, 0];
     }
 
-    function checkCollision(collisions, ctx, text, axy) {
-        var i, textWidth, widthUsed = 0;
+    function checkCollision(collisions, ctx, text, axy, letterWidth) {
+        var textWidth = getWidth(ctx, text);
 
-        for (i = 0; i < text.length; i++) {
-            textWidth = getWidth(ctx, text.charAt(i));
-
-            if (collisions.checkPointWH.apply(collisions, getCollisionParams(textWidth, axy, widthUsed))) {
+        for (var i = 0; i < textWidth; i += letterWidth) {
+            if (collisions.checkPointWH.apply(collisions, getCollisionParams(letterWidth, axy, i))) {
                 return true;
             }
-            widthUsed += textWidth;
         }
         return false;
     }
 
-    function addCollision(collisions, ctx, text, axy) {
-        var i, textWidth, widthUsed = 0, params = [];
-        for (i = 0; i < text.length; i++) {
-            textWidth = getWidth(ctx, text.charAt(i));
-            params.push(getCollisionParams(textWidth, axy, widthUsed));
-            widthUsed += textWidth;
+    function addCollision(collisions, ctx, text, axy, letterWidth) {
+        var textWidth = getWidth(ctx, text),
+            params = [];
+
+        for (var i = 0; i < textWidth; i += letterWidth) {
+            params.push(getCollisionParams(letterWidth, axy, i));
         }
         collisions.addPoints(params);
     }
@@ -67,6 +64,8 @@ Kothic.textOnPath = (function () {
         if (pathLen < textWidth) {
             return;  // if label won't fit - don't try to
         }
+
+        var avgLetterWidth = getWidth(ctx, 'a');
 
         var letter,
                 widthUsed,
@@ -109,7 +108,7 @@ Kothic.textOnPath = (function () {
                 }
 
                 // if label collisions with another, restart it from here
-                if (checkCollision(collisions, ctx, letter, axy) || Math.abs(prevAngle - axy[0]) > maxAngle) {
+                if (checkCollision(collisions, ctx, letter, axy, avgLetterWidth) || Math.abs(prevAngle - axy[0]) > maxAngle) {
                     widthUsed += letterWidth;
                     i = -1;
                     positions = [];
@@ -121,7 +120,7 @@ Kothic.textOnPath = (function () {
                     i++;
                     letter += text.charAt(i);
                     letterWidth = getWidth(ctx, letter);
-                    if (checkCollision(collisions, ctx, letter, axy)) {
+                    if (checkCollision(collisions, ctx, letter, axy, avgLetterWidth)) {
                         i = 0;
                         widthUsed += letterWidth;
                         positions = [];
@@ -184,7 +183,7 @@ Kothic.textOnPath = (function () {
         for (i = 0; i < posLen; i++) {
             axy = positions[i];
             renderText(ctx, axy);
-            addCollision(collisions, ctx, axy[4], axy);
+            addCollision(collisions, ctx, axy[4], axy, avgLetterWidth);
         }
     };
 }());
