@@ -62,8 +62,26 @@ var Kothic = {
                 console.time('text/icons');
                 Kothic._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
                 console.timeEnd('text/icons');
+
+                //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
             });
         });
+    },
+
+    _renderCollisions: function (ctx, node) {
+        var i, len, a;
+        if (node.leaf) {
+            for (i = 0, len = node.children.length; i < len; i++) {
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 1;
+                a = node.children[i];
+                ctx.strokeRect(Math.round(a[0]), Math.round(a[1]), Math.round(a[2] - a[0]), Math.round(a[3] - a[1]));
+            }
+        } else {
+            for (i = 0, len = node.children.length; i < len; i++) {
+                this._renderCollisions(ctx, node.children[i]);
+            }
+        }
     },
 
     getLayerIds: function (layers) {
