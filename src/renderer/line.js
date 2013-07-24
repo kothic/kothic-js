@@ -5,22 +5,19 @@ Kothic.line = {
         var style = feature.style,
             nextStyle = nextFeature && nextFeature.style;
 
-        var dashes = style["casing-dashes"] || style.dashes || false;
-
         if (!this.pathOpened) {
             this.pathOpened = true;
             ctx.beginPath();
         }
-        Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
+
+        Kothic.path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
-                (nextStyle.width === style.width) &&
-                (nextStyle['casing-width'] === style['casing-width']) &&
-                (nextStyle['casing-color'] === style['casing-color']) &&
-                ((nextStyle['casing-dashes'] || nextStyle.dashes || false) === (style['casing-dashes'] || style.dashes || false)) &&
-                ((nextStyle['casing-linecap'] || nextStyle.linecap || "butt") === (style['casing-linecap'] || style.linecap || "butt")) &&
-                ((nextStyle['casing-linejoin'] || nextStyle.linejoin || "round") === (style['casing-linejoin'] || style.linejoin || "round")) &&
-                ((nextStyle['casing-opacity'] || nextStyle.opacity) === (style.opacity || style['casing-opacity']))) {
+                nextStyle.width === style.width &&
+                nextStyle['casing-width'] === style['casing-width'] &&
+                nextStyle['casing-color'] === style['casing-color'] &&
+                nextStyle['casing-dashes'] === style['casing-dashes'] &&
+                nextStyle['casing-opacity'] === style['casing-opacity']) {
             return;
         }
 
@@ -32,33 +29,30 @@ Kothic.line = {
             globalAlpha: style["casing-opacity"] || 1
         });
 
-        this.pathOpened = false;
         ctx.stroke();
+        this.pathOpened = false;
     },
 
     render: function (ctx, feature, nextFeature, ws, hs, granularity) {
         var style = feature.style,
-                nextStyle = nextFeature && nextFeature.style;
-
-        var dashes = style.dashes;
+            nextStyle = nextFeature && nextFeature.style;
 
         if (!this.pathOpened) {
             this.pathOpened = true;
             ctx.beginPath();
         }
-        Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
+
+        Kothic.path(ctx, feature, style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
-                ((nextStyle.width || 1) === (style.width || 1)) &&
-                ((nextStyle.color || "#000000") === (style.color || "#000000")) &&
-                (nextStyle.linecap === style.linecap) &&
-                (nextStyle.linejoin === style.linejoin) &&
-                (nextStyle.image === style.image) &&
-                (nextStyle.opacity === style.opacity)) {
+                nextStyle.width === style.width &&
+                nextStyle.color === style.color &&
+                nextStyle.image === style.image &&
+                nextStyle.opacity === style.opacity) {
             return;
         }
 
-        if (style.hasOwnProperty('color') || !style.hasOwnProperty('image')) {
+        if ('color' in style || !('image' in style)) {
             var t_width = style.width || 1;
             var t_linejoin = "round", t_linecap = "round";
             if (t_width <= 2) {
@@ -77,7 +71,7 @@ Kothic.line = {
         }
 
 
-        if (style.hasOwnProperty('image')) {
+        if ('image' in style) {
             // second pass fills with texture
             var image = MapCSS.getImage(style.image);
 
