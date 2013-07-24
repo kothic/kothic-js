@@ -191,7 +191,6 @@ var Kothic = {
 
     _renderTextAndIcons: function (layerIds, layers, ctx, ws, hs, collisionBuffer) {
         //TODO: Move to the features detector
-        var textOnCanvasAvailable = ctx.strokeText && ctx.fillText && ctx.measureText;
         var j, style, i,
             passes = [];
 
@@ -208,7 +207,7 @@ var Kothic = {
             }
 
             // render text on features without icons
-            for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
+            for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (!style.hasOwnProperty('icon-image') && style.text) {
                     Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, false);
@@ -219,12 +218,12 @@ var Kothic = {
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (style.hasOwnProperty('icon-image') && style.text) {
-                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, textOnCanvasAvailable, true);
+                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, true);
                 }
             }
 
             // render shields with text
-            for (j = featuresLen - 1; textOnCanvasAvailable && j >= 0; j--) {
+            for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
                 if (style["shield-text"]) {
                     Kothic.shields.render(ctx, features[j], collisionBuffer, ws, hs);
