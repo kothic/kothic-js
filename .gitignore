@@ -1,6 +1,2 @@
-*.pyc
-parsetab.py
-styles/icons
-debug/styles/osmosnimki.png
-*.iml
-*.imi
+dist/kothic*.js
+node_modules

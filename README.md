@@ -8,9 +8,21 @@ It was initially developed as a JavaScript port of [Kothic](http://wiki.openstre
  * rendering from lightweight GeoJSON-like tiles (see [Tiles Format](https://github.com/kothic/kothic-js/wiki/Tiles-format))
  * easy integration with [Leaflet](http://leaflet.cloudmade.com) (interactive maps library)
 
+### Building Kothic
+
+Install Node.js, then run:
+
+```
+npm install
+npm install -g grunt-cli
+grunt
+```
+
+Minified Kothic source will be generated in the `dist` folder.
+
 ### Basic usage
 
-Include `kothic.js` from the `dist` directory on your page. Now you can call:
+Include `kothic.js` from the `dist` folder on your page. Now you can call:
 
 ```javascript
 Kothic.render(

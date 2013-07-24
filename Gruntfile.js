@@ -43,10 +43,36 @@ module.exports = function (grunt) {
             all: {
                 src: ['Gruntfile.js', 'src/**/*.js', 'dist/kothic-leaflet.js', '!src/utils/rbush.js']
             }
-        }
+        },
+
+        concat: {
+            options: {
+                separator: ';'
+            },
+            dist: {
+                src: ['src/**/*.js'],
+                dest: 'dist/kothic.js'
+            }
+        },
+
+        uglify: {
+            options: {
+                banner: '/*\n (c) 2011-2013, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko\n' +
+                        ' Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.\n' +
+                        ' Built on <%= grunt.template.today("dd-mm-yyyy") %> |' +
+                        ' https://github.com/kothic/kothic-js\n*/\n'
+            },
+            dist: {
+                files: {
+                    'dist/kothic.min.js': ['<%= concat.dist.dest %>']
+                }
+            }
+        },
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
 };
