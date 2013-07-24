@@ -12,24 +12,18 @@ Kothic.style = {
     },
 
     populateLayers: function (features, zoom, styles) {
-        var layers = {}, i, len;
+        var layers = {},
+            i, len, feature, layerId, layerStyle;
 
         var styledFeatures = Kothic.style.styleFeatures(features, zoom, styles);
 
         for (i = 0, len = styledFeatures.length; i < len; i++) {
-            var feature = styledFeatures[i],
-                    layerId = parseFloat(feature.properties.layer) || 0,
-                    layerStyle = feature.style["-x-mapnik-layer"];
+            feature = styledFeatures[i];
+            layerStyle = feature.style["-x-mapnik-layer"];
+            layerId = !layerStyle ? feature.properties.layer || 0 :
+                layerStyle === 'top' ? 10000 : -10000;
 
-            if (layerStyle === "top") {
-                layerId = 10000;
-            }
-            if (layerStyle === "bottom") {
-                layerId = -10000;
-            }
-            if (!layers.hasOwnProperty(layerId)) {
-                layers[layerId] = [];
-            }
+            layers[layerId] = layers[layerId] || [];
             layers[layerId].push(feature);
         }
 
@@ -37,14 +31,15 @@ Kothic.style = {
     },
 
     getStyle: function (feature, zoom, styleNames) {
-        var type, selector;
-        if (feature.type === 'Polygon' || feature.type === 'MultiPolygon') {
-            type = 'way';
-            selector = 'area';
-        } else if (feature.type === 'LineString' || feature.type === 'MultiLineString') {
+        var shape = feature.type,
+            type, selector;
+        if (shape === 'LineString' || shape === 'MultiLineString') {
             type = 'way';
             selector = 'line';
-        } else if (feature.type === 'Point' || feature.type === 'MultiPoint') {
+        } else if (shape === 'Polygon' || shape === 'MultiPolygon') {
+            type = 'way';
+            selector = 'area';
+        } else if (shape === 'Point' || shape === 'MultiPoint') {
             type = 'node';
             selector = 'node';
         }
@@ -73,7 +68,7 @@ Kothic.style = {
                 restyledFeature.kothicId = i + 1;
                 restyledFeature.style = style[j];
                 restyledFeature.zIndex = style[j]["z-index"] || 0;
-                restyledFeature.sortKey = (style[j]['fill-color'] || '') + (style[j]['color'] + '');
+                restyledFeature.sortKey = (style[j]['fill-color'] || '') + (style[j]['color'] || '');
                 styledFeatures.push(restyledFeature);
             }
         }
