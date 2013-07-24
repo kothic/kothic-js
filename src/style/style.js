@@ -61,20 +61,27 @@ Kothic.style = {
             style = this.getStyle(feature, zoom, styleNames);
 
             for (j in style) {
-                if (style.hasOwnProperty(j)) {
+                if (j === 'default') {
+                    restyledFeature = feature;
+                } else {
                     restyledFeature = {};
                     for (k in feature) {
                         restyledFeature[k] = feature[k];
                     }
-                    restyledFeature.kothicId = i + 1;
-                    restyledFeature.style = style[j];
-                    styledFeatures.push(restyledFeature);
                 }
+
+                restyledFeature.kothicId = i + 1;
+                restyledFeature.style = style[j];
+                restyledFeature.zIndex = style[j]["z-index"] || 0;
+                restyledFeature.sortKey = (style[j]['fill-color'] || '') + (style[j]['color'] + '');
+                styledFeatures.push(restyledFeature);
             }
         }
 
         styledFeatures.sort(function (a, b) {
-            return (a.style["z-index"] || 0) - (b.style["z-index"] || 0);
+            return a.zIndex !== b.zIndex ? a.zIndex - b.zIndex :
+                   a.sortKey < b.sortKey ? -1 :
+                   a.sortKey > b.sortKey ? 1 : 0;
         });
 
         return styledFeatures;
