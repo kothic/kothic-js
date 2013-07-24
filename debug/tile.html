@@ -16,12 +16,15 @@
 
 	<script type="text/javascript">
 
-        MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
         invertYAxe(tile_data);
 
-        Kothic.render('map', tile_data, tile_zoom, {
-            styles: ['osmosnimki']
-        });
+        MapCSS.onImagesLoad = function () {
+            Kothic.render('map', tile_data, tile_zoom, {
+                styles: ['osmosnimki']
+            });
+        };
+
+        MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
 
         function invertYAxe(data) {
             var type, coordinates, tileSize = data.granularity, i, j, k, l, feature;
