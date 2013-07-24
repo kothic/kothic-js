@@ -5,7 +5,7 @@ Kothic.geom = {
     },
 
     transformPoints: function (points, ws, hs) {
-        var transformed = [], i;
+        var transformed = [], i, len;
         for (i = 0, len = points.length; i < len; i++) {
             transformed.push(this.transformPoint(points[i], ws, hs));
         }
@@ -15,29 +15,29 @@ Kothic.geom = {
     getReprPoint: function (feature) {
         var point, len;
         switch (feature.type) {
-            case 'Point':
-                point = feature.coordinates;
-                break;
-            case 'Polygon':
-                point = feature.reprpoint;
-                break;
-            case 'LineString':
-                len = Kothic.geom.getPolyLength(feature.coordinates);
-                point = Kothic.geom.getAngleAndCoordsAtLength(feature.coordinates, len / 2, 0);
-                point = [point[1], point[2]];
-                break;
-            case 'GeometryCollection':
-                //TODO: Disassemble geometry collection
-                return;
-            case 'MultiPoint':
-                //TODO: Disassemble multi point
-                return;
-            case 'MultiPolygon':
-                point = feature.reprpoint;
-                break;
-            case 'MultiLineString':
-                //TODO: Disassemble geometry collection
-                return;
+        case 'Point':
+            point = feature.coordinates;
+            break;
+        case 'Polygon':
+            point = feature.reprpoint;
+            break;
+        case 'LineString':
+            len = Kothic.geom.getPolyLength(feature.coordinates);
+            point = Kothic.geom.getAngleAndCoordsAtLength(feature.coordinates, len / 2, 0);
+            point = [point[1], point[2]];
+            break;
+        case 'GeometryCollection':
+            //TODO: Disassemble geometry collection
+            return;
+        case 'MultiPoint':
+            //TODO: Disassemble multi point
+            return;
+        case 'MultiPolygon':
+            point = feature.reprpoint;
+            break;
+        case 'MultiLineString':
+            //TODO: Disassemble geometry collection
+            return;
         }
         return point;
     },

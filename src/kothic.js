@@ -21,9 +21,9 @@ var Kothic = {
         var width = canvas.width,
             height = canvas.height;
 
-        if (devicePixelRatio != 1) {
-            canvas.style.width = width + "px";
-            canvas.style.height = height + "px";
+        if (devicePixelRatio !== 1) {
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
             canvas.width = canvas.width * devicePixelRatio;
             canvas.height = canvas.height * devicePixelRatio;
         }
@@ -86,7 +86,7 @@ var Kothic = {
 
     getLayerIds: function (layers) {
         return Object.keys(layers).sort(function (a, b) {
-            return parseInt(a) - parseInt(b);
+            return parseInt(a, 10) - parseInt(b, 10);
         });
     },
 
@@ -98,7 +98,7 @@ var Kothic = {
     },
 
     _renderBackground: function (ctx, width, height, zoom, styles) {
-        var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas");
+        var style = MapCSS.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
 
         var fillRect = function () {
             ctx.fillRect(-1, -1, width + 1, height + 1);
@@ -124,7 +124,7 @@ var Kothic = {
                 style = features[j].style;
 
                 if ('fill-color' in style || 'fill-image' in style) {
-                    if (style["fill-position"] === 'background') {
+                    if (style['fill-position'] === 'background') {
                         bgQueue.polygons = bgQueue.polygons || [];
                         bgQueue.polygons.push(features[j]);
                     } else {
@@ -166,8 +166,7 @@ var Kothic = {
         layerIds = ['_bg'].concat(layerIds);
 
         for (i = 0; i < layerIds.length; i++) {
-            var j, len,
-                queue = layersToRender[layerIds[i]];
+            queue = layersToRender[layerIds[i]];
 
             if (queue.polygons) {
                 for (j = 0, len = queue.polygons.length; j < len; j++) {
@@ -175,13 +174,13 @@ var Kothic = {
                 }
             }
             if (queue.casings) {
-                ctx.lineCap = "butt";
+                ctx.lineCap = 'butt';
                 for (j = 0, len = queue.casings.length; j < len; j++) {
                     Kothic.line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], ws, hs, granularity);
                 }
             }
             if (queue.lines) {
-                ctx.lineCap = "round";
+                ctx.lineCap = 'round';
                 for (j = 0, len = queue.lines.length; j < len; j++) {
                     Kothic.line.render(ctx, queue.lines[j], queue.lines[j + 1], ws, hs, granularity);
                 }
@@ -225,7 +224,7 @@ var Kothic = {
             // render shields with text
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
-                if (style["shield-text"]) {
+                if (style['shield-text']) {
                     Kothic.shields.render(ctx, features[j], collisionBuffer, ws, hs);
                 }
             }

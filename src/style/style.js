@@ -2,11 +2,11 @@
 Kothic.style = {
 
     defaultCanvasStyles: {
-        strokeStyle: "rgba(0,0,0,0.5)",
-        fillStyle: "rgba(0,0,0,0.5)",
+        strokeStyle: 'rgba(0,0,0,0.5)',
+        fillStyle: 'rgba(0,0,0,0.5)',
         lineWidth: 1,
-        lineCap: "round",
-        lineJoin: "round",
+        lineCap: 'round',
+        lineJoin: 'round',
         textAlign: 'center',
         textBaseline: 'middle'
     },
@@ -19,7 +19,7 @@ Kothic.style = {
 
         for (i = 0, len = styledFeatures.length; i < len; i++) {
             feature = styledFeatures[i];
-            layerStyle = feature.style["-x-mapnik-layer"];
+            layerStyle = feature.style['-x-mapnik-layer'];
             layerId = !layerStyle ? feature.properties.layer || 0 :
                 layerStyle === 'top' ? 10000 : -10000;
 
@@ -67,8 +67,8 @@ Kothic.style = {
 
                 restyledFeature.kothicId = i + 1;
                 restyledFeature.style = style[j];
-                restyledFeature.zIndex = style[j]["z-index"] || 0;
-                restyledFeature.sortKey = (style[j]['fill-color'] || '') + (style[j]['color'] || '');
+                restyledFeature.zIndex = style[j]['z-index'] || 0;
+                restyledFeature.sortKey = (style[j]['fill-color'] || '') + (style[j].color || '');
                 styledFeatures.push(restyledFeature);
             }
         }
@@ -91,13 +91,13 @@ Kothic.style = {
         name = name.toLowerCase();
 
         var styles = [];
-        if (name.indexOf("italic") !== -1 || name.indexOf("oblique") !== -1) {
+        if (name.indexOf('italic') !== -1 || name.indexOf('oblique') !== -1) {
             styles.push('italic');
         }
-        if (name.indexOf("bold") !== -1) {
+        if (name.indexOf('bold') !== -1) {
             styles.push('bold');
-            //family += '"'+name.replace("bold", "")+'", ';
-            family += name.replace("bold", "") + ', ';
+            //family += '''+name.replace('bold', '')+'', ';
+            family += name.replace('bold', '') + ', ';
         }
 
         styles.push(size + 'px');

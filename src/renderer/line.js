@@ -53,11 +53,13 @@ Kothic.line = {
         }
 
         if ('color' in style || !('image' in style)) {
-            var t_width = style.width || 1;
-            var t_linejoin = "round", t_linecap = "round";
+            var t_width = style.width || 1,
+                t_linejoin = "round",
+                t_linecap = "round";
+
             if (t_width <= 2) {
                 t_linejoin = "miter";
-                t_linecap = "butt"
+                t_linecap = "butt";
             }
             Kothic.style.setStyles(ctx, {
                 lineWidth: t_width,

@@ -39,14 +39,14 @@ var MapCSS = {
             }
         }
 
-        return "";
+        return '';
     },
 
     e_num: function (arg) {
         if (!isNaN(parseFloat(arg))) {
             return parseFloat(arg);
         } else {
-            return "";
+            return '';
         }
     },
 
@@ -60,9 +60,9 @@ var MapCSS = {
 
     e_tag: function (obj, tag) {
         if (obj.hasOwnProperty(tag) && obj[tag] !== null) {
-            return a[tag];
+            return tag;
         } else {
-            return "";
+            return '';
         }
     },
 
@@ -70,7 +70,7 @@ var MapCSS = {
         if (obj.hasOwnProperty(tag) && obj[tag] !== null) {
             return obj[tag];
         } else {
-            return "";
+            return '';
         }
     },
 
@@ -120,7 +120,7 @@ var MapCSS = {
         var locales = MapCSS.locales, i, tag;
 
         for (i = 0; i < locales.length; i++) {
-            tag = text + ":" + locales[i];
+            tag = text + ':' + locales[i];
             if (tags[tag]) {
                 return tags[tag];
             }
@@ -200,7 +200,7 @@ var MapCSS = {
         var external_images = MapCSS.styles[style].external_images;
         delete MapCSS.styles[style].external_images;
 
-        urlPrefix = urlPrefix || "";
+        urlPrefix = urlPrefix || '';
         var len = external_images.length, loaded = 0, i;
 
         function loadImage(url) {
@@ -241,7 +241,7 @@ var MapCSS = {
             canvas.width = img.width;
             canvas.height = img.height;
 
-            canvas.getContext("2d").drawImage(img.sprite,
+            canvas.getContext('2d').drawImage(img.sprite,
                     0, img.offset, img.width, img.height,
                     0, 0, img.width, img.height);
 
@@ -261,11 +261,11 @@ var MapCSS = {
 
         for (i = 0; i < this.value_tags.length; i++) {
             if (tags.hasOwnProperty(this.value_tags[i])) {
-                keys.push(this.value_tags[i] + ":" + tags[this.value_tags[i]]);
+                keys.push(this.value_tags[i] + ':' + tags[this.value_tags[i]]);
             }
         }
 
-        return [zoom, type, selector, keys.join(":")].join(":");
+        return [zoom, type, selector, keys.join(':')].join(':');
     },
 
     restyle: function (styleNames, tags, zoom, type, selector) {

@@ -6,7 +6,8 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         maxZoom: 22,
         updateWhenIdle: true,
         unloadInvisibleTiles: true,
-        attribution: 'Map data &copy; 2011 OpenStreetMap contributors, Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
+        attribution: 'Map data &copy; 2013 <a href="http://osm.org/copyright">OpenStreetMap</a> contributors,' +
+                     ' Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
         async: true,
         buffered: false,
         styles: MapCSS.availableStyles
@@ -33,12 +34,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             return;
         }
 
-        function onRenderComplete(debugInfo) {
-            // debugInfo.x = x;
-            // debugInfo.y = y;
-            // debugInfo.zoom = zoom;
-            // layer._debugMessages.push(debugInfo);
-
+        function onRenderComplete() {
             layer.tileDrawn(canvas);
 
             document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);

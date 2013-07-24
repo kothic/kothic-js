@@ -32,7 +32,11 @@ Kothic.polygon = {
                 fillStyle: style["fill-color"] || "#000000",
                 globalAlpha: opacity || 1
             });
-            fillFn ? fillFn() : ctx.fill();
+            if (fillFn) {
+                fillFn();
+            } else {
+                ctx.fill();
+            }
         }
 
         if (style.hasOwnProperty('fill-image')) {
@@ -43,7 +47,11 @@ Kothic.polygon = {
                     fillStyle: ctx.createPattern(image, 'repeat'),
                     globalAlpha: opacity || 1
                 });
-                fillFn ? fillFn() : ctx.fill();
+                if (fillFn) {
+                    fillFn();
+                } else {
+                    ctx.fill();
+                }
             }
         }
     }

@@ -1,0 +1,11 @@
+{
+  "name": "kothic-js",
+  "version": "0.2.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0"
+  },
+  "scripts": {
+    "prepublish": "grunt"
+  }
+}
