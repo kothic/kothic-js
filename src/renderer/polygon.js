@@ -1,9 +1,8 @@
 
 Kothic.polygon = {
-    pathOpened: false,
     render: function (ctx, feature, nextFeature, ws, hs, granularity) {
         var style = feature.style,
-                nextStyle = nextFeature && nextFeature.style;
+            nextStyle = nextFeature && nextFeature.style;
 
         if (!this.pathOpened) {
             this.pathOpened = true;
