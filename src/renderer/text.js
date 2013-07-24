@@ -10,40 +10,43 @@ Kothic.textOnPath = (function () {
             axy[2] + 0.5 * Math.sin(axy[0]) * textWidth];
     }
 
-    function getCollisionParams(ctx, text, axy, pxoffset) {
-        pxoffset = pxoffset || 0;
-        var textWidth = getWidth(ctx, text),
-                textHeight = getWidth(ctx, text.charAt(0)) * 1.5,
-                angle = axy[0],
-                w = Math.abs(Math.cos(angle) * textWidth) + Math.abs(Math.sin(angle) * textHeight),
-                h = Math.abs(Math.sin(angle) * textWidth) + Math.abs(Math.cos(angle) * textHeight);
+    function getCollisionParams(textWidth, axy, pxoffset) {
+        var textHeight = textWidth * 1.5,
+            cos = Math.abs(Math.cos(axy[0])),
+            sin = Math.abs(Math.sin(axy[0])),
+            w = cos * textWidth + sin * textHeight,
+            h = sin * textWidth + cos * textHeight;
 
-        return [getTextCenter(axy, textWidth + 2 * pxoffset), w, h, 0];
+        return [getTextCenter(axy, textWidth + 2 * (pxoffset || 0)), w, h, 0];
     }
 
     function checkCollision(collisions, ctx, text, axy) {
-        var i, widthUsed = 0;
-        for (i = 0; i <= text.length; i++) {
-            if (collisions.checkPointWH.apply(collisions, getCollisionParams(ctx, text.charAt(i), axy, widthUsed))) {
+        var i, textWidth, widthUsed = 0;
+
+        for (i = 0; i < text.length; i++) {
+            textWidth = getWidth(ctx, text.charAt(i));
+
+            if (collisions.checkPointWH.apply(collisions, getCollisionParams(textWidth, axy, widthUsed))) {
                 return true;
             }
-            widthUsed += getWidth(ctx, text.charAt(i));
+            widthUsed += textWidth;
         }
         return false;
     }
 
     function addCollision(collisions, ctx, text, axy) {
-        var i, widthUsed = 0, params = [];
-        for (i = 0; i <= text.length; i++) {
-            params.push(getCollisionParams(ctx, text.charAt(i), axy, widthUsed));
-            widthUsed += getWidth(ctx, text.charAt(i));
+        var i, textWidth, widthUsed = 0, params = [];
+        for (i = 0; i < text.length; i++) {
+            textWidth = getWidth(ctx, text.charAt(i));
+            params.push(getCollisionParams(textWidth, axy, widthUsed));
+            widthUsed += textWidth;
         }
         collisions.addPoints(params);
     }
 
     function renderText(ctx, axy, halo) {
         var text = axy[4],
-                textCenter = getTextCenter(axy, getWidth(ctx, text));
+            textCenter = getTextCenter(axy, getWidth(ctx, text));
 
         ctx.translate(textCenter[0], textCenter[1]);
         ctx.rotate(axy[0]);
