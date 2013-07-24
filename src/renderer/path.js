@@ -19,16 +19,12 @@ Kothic.path = (function () {
         }
     }
 
-    function lineTo(ctx, point) {
-        ctx.lineTo(point[0], point[1]);
-    }
-
     function dashTo(ctx, point) {
         var pt = dashPattern,
-                dx = point[0] - pt.x,
-                dy = point[1] - pt.y,
-                dist = Math.sqrt(dx * dx + dy * dy),
-                x, more, t;
+            dx = point[0] - pt.x,
+            dy = point[1] - pt.y,
+            dist = Math.sqrt(dx * dx + dy * dy),
+            x, more, t;
 
         ctx.save();
         ctx.translate(pt.x, pt.y);
@@ -65,7 +61,8 @@ Kothic.path = (function () {
     }
 
     return function (ctx, feature, dashes, fill, ws, hs, granularity) {
-        var type = feature.type, coords = feature.coordinates;
+        var type = feature.type,
+            coords = feature.coordinates;
 
         if (type === "Polygon") {
             coords = [coords];
@@ -78,11 +75,11 @@ Kothic.path = (function () {
         }
 
         var i, j, k,
-                points,
-                len = coords.length,
-                len2, pointsLen,
-                prevPoint, point, screenPoint,
-                dx, dy, dist, pad = 50;
+            points,
+            len = coords.length,
+            len2, pointsLen,
+            prevPoint, point, screenPoint,
+            dx, dy, dist, pad = 50;
 
         if (type === "MultiPolygon") {
             for (i = 0; i < len; i++) {
@@ -100,7 +97,7 @@ Kothic.path = (function () {
                                 isTileBoundary(prevPoint, granularity))) {
                             moveTo(ctx, screenPoint, dashes);
                         } else if (fill || !dashes) {
-                            lineTo(ctx, screenPoint);
+                            ctx.lineTo(screenPoint[0], screenPoint[1]);
                         } else {
                             dashTo(ctx, screenPoint);
                         }
@@ -127,8 +124,8 @@ Kothic.path = (function () {
                         dy = point[1] - prevPoint[1];
                         dist = Math.sqrt(dx * dx + dy * dy);
 
-                        screenPoint = [screenPoint[0] + pad * dx / dist,
-                            screenPoint[1] + pad * dy / dist];
+                        screenPoint[0] = screenPoint[0] + pad * dx / dist;
+                        screenPoint[1] = screenPoint[1] + pad * dy / dist;
                     }
 
                     if (j === 0) {
@@ -136,7 +133,7 @@ Kothic.path = (function () {
                     } else if (dashes) {
                         dashTo(ctx, screenPoint);
                     } else {
-                        lineTo(ctx, screenPoint);
+                        ctx.lineTo(screenPoint[0], screenPoint[1]);
                     }
                 }
             }

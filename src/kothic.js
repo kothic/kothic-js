@@ -79,23 +79,6 @@ var Kothic = {
         reqFrame.call(window, fn);
     },
 
-    renderAsync: function (fns) {
-        var len = fns.length;
-
-        var handler = function () {
-            fns[len - 1]();
-        }
-        for (var i = fns.length - 2; i >= 0; i--) {
-            (function (i, prevHandler) {
-                handler = function () {
-                    fns[i]();
-                    Kothic.getFrame(prevHandler);
-                }
-            })(i, handler);
-        }
-        Kothic.getFrame(handler);
-    },
-
     _renderBackground: function (ctx, width, height, zoom, styles) {
         var style = MapCSS.restyle(styles, {}, {}, zoom, "canvas", "canvas");
 
@@ -118,7 +101,6 @@ var Kothic = {
 
             bgQueue = layersToRender._bg = layersToRender._bg || {};
             queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
-            queue.id = layerIds[i];
 
             for (j = 0, len = features.length; j < len; j++) {
                 style = features[j].style;
@@ -139,7 +121,6 @@ var Kothic = {
         for (i = 0; i < layerIds.length; i++) {
             features = layers[layerIds[i]];
             queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
-            queue.id = layerIds[i];
 
             for (j = 0, len = features.length; j < len; j++) {
 
@@ -154,7 +135,6 @@ var Kothic = {
         for (i = 0; i < layerIds.length; i++) {
             features = layers[layerIds[i]];
             queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
-            queue.id = layerIds[i];
 
             for (j = 0, len = features.length; j < len; j++) {
 
