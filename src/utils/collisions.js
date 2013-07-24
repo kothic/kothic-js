@@ -1,53 +1,53 @@
-/**
- * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
- * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
- * See http://github.com/kothic/kothic-js for more information.
- */
 
-(function (Kothic) {
-	Kothic.CollisionBuffer = function (height, width) {
-		this.buffer = new RTree();
-		this.height = height;
-		this.width = width;
-	};
+Kothic.CollisionBuffer = function (height, width) {
+    this.buffer = rbush();
+    this.height = height;
+    this.width = width;
+};
 
-	Kothic.CollisionBuffer.prototype = {
-		addBox: function (box) {
-			this.buffer.insert(new RTree.Rectangle(box[0], box[1], box[2], box[3]), box[4]);
-		},
+Kothic.CollisionBuffer.prototype = {
+    addPointWH: function (point, w, h, d, id) {
+        this.buffer.insert(this.getBoxFromPoint(point, w, h, d, id));
+    },
 
-		addPointWH: function (point, w, h, d, id) {
-			this.buffer.insert(this.getBoxFromPoint(point, w, h, d), id);
-		},
+    addPoints: function (params) {
+        var points = [];
+        for (var i = 0, len = params.length; i < len; i++) {
+            points.push(this.getBoxFromPoint.apply(this, params[i]));
+        }
+        this.buffer.load(points);
+    },
 
-		checkBox: function (b, id) {
-			if (this.height && !(b.x1 >= 0 && b.y1 >= 0 && b.y2 <= this.height && b.x2 <= this.width)) {
-				return true;
-			}
-			
-            var obj = [], objects = this.buffer.search(b, true, obj), i, len, c;
-			
-            for (i = 0, len = obj.length, c; i < len; i++) {
-				c = obj[i];
+    checkBox: function (b, id) {
+        var result = this.buffer.search(b),
+            i, len;
 
-				// if it's the same object (only different styles), don't detect collision
-				if (id !== c.leaf) { 
-                    return true;
-                }
-				
-			}
-			return false;
-		},
+        if (b[0] < 0 || b[1] < 0 || b[2] > this.width || b[3] > this.height) { return true; }
 
-		checkPointWH: function (point, w, h, id) {
-			return this.checkBox(this.getBoxFromPoint(point, w, h, 0), id);
-		},
+        for (i = 0, len = result.length; i < len; i++) {
+            // if it's the same object (only different styles), don't detect collision
+            if (id !== result[i][4]) {
+                return true;
+            }
+        }
 
-		getBoxFromPoint: function (point, w, h, d, id) {
-			return new RTree.Rectangle(point[0] - w / 2 - d,
-				point[1] - h / 2 - d,
-                w + 2 * d,
-                h + 2 * d);
-		}
-	};
-}(Kothic));
+        return false;
+    },
+
+    checkPointWH: function (point, w, h, id) {
+        return this.checkBox(this.getBoxFromPoint(point, w, h, 0), id);
+    },
+
+    getBoxFromPoint: function (point, w, h, d, id) {
+        var dx = w / 2 + d,
+            dy = h / 2 + d;
+
+        return [
+            point[0] - dx,
+            point[1] - dy,
+            point[0] + dx,
+            point[1] + dy,
+            id
+        ];
+    }
+};

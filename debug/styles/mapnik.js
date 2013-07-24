@@ -6194,124 +6194,124 @@
         }
 
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '1') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '2') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '3') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '4') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '5') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '6') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '7') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'motorway' && tags['length'] == '8') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '1') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '2') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '3') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '4') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '5') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '6') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '7') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'trunk' && tags['length'] == '8') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '1') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '2') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '3') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '4') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '5') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '6') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '7') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'primary' && tags['length'] == '8') && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '1' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '2' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '3' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '4' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '5' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '6' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '7' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'secondary' && tags['length'] == '8' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 12)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '1' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '2' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '3' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '4' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '5' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '6' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '7' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'tertiary' && tags['length'] == '8' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 13)) {
-    
+
     }
         if (((type == 'way' && tags['highway'] == 'unclassified' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 15) || ((type == 'way' && tags['highway'] == 'residential' && (!tags.hasOwnProperty('bridge?'))) && zoom >= 15)) {
             s_default['font-family'] = 'DejaVu Sans Bold';
@@ -7084,763 +7084,763 @@
             s_default['width'] = 2.5;
         }
 
-        if (!K.Utils.isEmpty(s_roads_casing)) {
+        if (Object.keys(s_roads_casing).length) {
             style['roads_casing'] = s_roads_casing;
         }
-        if (!K.Utils.isEmpty(s_over6)) {
+        if (Object.keys(s_over6).length) {
             style['over6'] = s_over6;
         }
-        if (!K.Utils.isEmpty(s_over5)) {
+        if (Object.keys(s_over5).length) {
             style['over5'] = s_over5;
         }
-        if (!K.Utils.isEmpty(s_over4)) {
+        if (Object.keys(s_over4).length) {
             style['over4'] = s_over4;
         }
-        if (!K.Utils.isEmpty(s_over3)) {
+        if (Object.keys(s_over3).length) {
             style['over3'] = s_over3;
         }
-        if (!K.Utils.isEmpty(s_over2)) {
+        if (Object.keys(s_over2).length) {
             style['over2'] = s_over2;
         }
-        if (!K.Utils.isEmpty(s_over1)) {
+        if (Object.keys(s_over1).length) {
             style['over1'] = s_over1;
         }
-        if (!K.Utils.isEmpty(s_under1)) {
+        if (Object.keys(s_under1).length) {
             style['under1'] = s_under1;
         }
-        if (!K.Utils.isEmpty(s_under2)) {
+        if (Object.keys(s_under2).length) {
             style['under2'] = s_under2;
         }
-        if (!K.Utils.isEmpty(s_ele)) {
+        if (Object.keys(s_ele).length) {
             style['ele'] = s_ele;
         }
-        if (!K.Utils.isEmpty(s_access)) {
+        if (Object.keys(s_access).length) {
             style['access'] = s_access;
         }
-        if (!K.Utils.isEmpty(s_everything)) {
+        if (Object.keys(s_everything).length) {
             style['everything'] = s_everything;
         }
-        if (!K.Utils.isEmpty(s_bridge_casing2)) {
+        if (Object.keys(s_bridge_casing2).length) {
             style['bridge_casing2'] = s_bridge_casing2;
         }
-        if (!K.Utils.isEmpty(s_oneway_over2)) {
+        if (Object.keys(s_oneway_over2).length) {
             style['oneway_over2'] = s_oneway_over2;
         }
-        if (!K.Utils.isEmpty(s_oneway_over3)) {
+        if (Object.keys(s_oneway_over3).length) {
             style['oneway_over3'] = s_oneway_over3;
         }
-        if (!K.Utils.isEmpty(s_bridge_casing1)) {
+        if (Object.keys(s_bridge_casing1).length) {
             style['bridge_casing1'] = s_bridge_casing1;
         }
-        if (!K.Utils.isEmpty(s_oneway_over1)) {
+        if (Object.keys(s_oneway_over1).length) {
             style['oneway_over1'] = s_oneway_over1;
         }
-        if (!K.Utils.isEmpty(s_tram_under2)) {
+        if (Object.keys(s_tram_under2).length) {
             style['tram_under2'] = s_tram_under2;
         }
-        if (!K.Utils.isEmpty(s_casing1)) {
+        if (Object.keys(s_casing1).length) {
             style['casing1'] = s_casing1;
         }
-        if (!K.Utils.isEmpty(s_casing2)) {
+        if (Object.keys(s_casing2).length) {
             style['casing2'] = s_casing2;
         }
-        if (!K.Utils.isEmpty(s_default)) {
+        if (Object.keys(s_default).length) {
             style['default'] = s_default;
         }
-        if (!K.Utils.isEmpty(s_water_lines_casing)) {
+        if (Object.keys(s_water_lines_casing).length) {
             style['water_lines_casing'] = s_water_lines_casing;
         }
-        if (!K.Utils.isEmpty(s_tram_under3)) {
+        if (Object.keys(s_tram_under3).length) {
             style['tram_under3'] = s_tram_under3;
         }
-        if (!K.Utils.isEmpty(s_tram)) {
+        if (Object.keys(s_tram).length) {
             style['tram'] = s_tram;
         }
-        if (!K.Utils.isEmpty(s_oneway)) {
+        if (Object.keys(s_oneway).length) {
             style['oneway'] = s_oneway;
         }
         return style;
     }
-    
+
     var sprite_images = {
         'symbols/aerodrome.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 0
         },
         'symbols/airport.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 16
         },
         'symbols/allotments.png': {
-            width: 30, 
-            height: 6, 
+            width: 30,
+            height: 6,
             offset: 32
         },
         'symbols/alpinehut.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 38
         },
         'symbols/amenity_court.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 54
         },
         'symbols/amenity_prison.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 74
         },
         'symbols/atm2.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 94
         },
         'symbols/bandb.p.20.png': {
-            width: 20, 
-            height: 12, 
+            width: 20,
+            height: 12,
             offset: 110
         },
         'symbols/bank2.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 122
         },
         'symbols/bar.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 138
         },
         'symbols/beach.png': {
-            width: 10, 
-            height: 10, 
+            width: 10,
+            height: 10,
             offset: 158
         },
         'symbols/biergarten.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 168
         },
         'symbols/bollard.png': {
-            width: 3, 
-            height: 3, 
+            width: 3,
+            height: 3,
             offset: 184
         },
         'symbols/bus_station.n.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 187
         },
         'symbols/bus_stop.p.12.png': {
-            width: 12, 
-            height: 12, 
+            width: 12,
+            height: 12,
             offset: 203
         },
         'symbols/bus_stop_small.png': {
-            width: 6, 
-            height: 6, 
+            width: 6,
+            height: 6,
             offset: 215
         },
         'symbols/cafe.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 221
         },
         'symbols/camping.n.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 237
         },
         'symbols/car_share.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 253
         },
         'symbols/caravan_park.p.24.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 269
         },
         'symbols/cemetery_jewish.18.png': {
-            width: 18, 
-            height: 18, 
+            width: 18,
+            height: 18,
             offset: 293
         },
         'symbols/chalet.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 311
         },
         'symbols/christian3.p.14.png': {
-            width: 14, 
-            height: 14, 
+            width: 14,
+            height: 14,
             offset: 327
         },
         'symbols/cinema.p.24.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 341
         },
         'symbols/communications.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 365
         },
         'symbols/danger.png': {
-            width: 30, 
-            height: 30, 
+            width: 30,
+            height: 30,
             offset: 385
         },
         'symbols/department_store.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 415
         },
         'symbols/embassy.png': {
-            width: 12, 
-            height: 12, 
+            width: 12,
+            height: 12,
             offset: 431
         },
         'symbols/fast_food.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 443
         },
         'symbols/firestation.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 459
         },
         'symbols/florist.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 475
         },
         'symbols/food_drinkingtap.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 491
         },
         'symbols/forest.png': {
-            width: 21, 
-            height: 24, 
+            width: 21,
+            height: 24,
             offset: 511
         },
         'symbols/fuel.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 535
         },
         'symbols/gate2.png': {
-            width: 7, 
-            height: 5, 
+            width: 7,
+            height: 5,
             offset: 551
         },
         'symbols/glacier.png': {
-            width: 40, 
-            height: 32, 
+            width: 40,
+            height: 32,
             offset: 556
         },
         'symbols/glacier2.png': {
-            width: 70, 
-            height: 56, 
+            width: 70,
+            height: 56,
             offset: 588
         },
         'symbols/grave_yard.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 644
         },
         'symbols/grave_yard_generic.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 660
         },
         'symbols/guest_house.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 676
         },
         'symbols/halt.png': {
-            width: 4, 
-            height: 4, 
+            width: 4,
+            height: 4,
             offset: 692
         },
         'symbols/helipad.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 696
         },
         'symbols/hospital.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 712
         },
         'symbols/hostel.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 728
         },
         'symbols/hotel2.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 748
         },
         'symbols/information.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 768
         },
         'symbols/islamic3.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 784
         },
         'symbols/jewish3.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 800
         },
         'symbols/level_crossing.png': {
-            width: 7, 
-            height: 7, 
+            width: 7,
+            height: 7,
             offset: 816
         },
         'symbols/level_crossing2.png': {
-            width: 11, 
-            height: 11, 
+            width: 11,
+            height: 11,
             offset: 823
         },
         'symbols/library.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 834
         },
         'symbols/liftgate.png': {
-            width: 7, 
-            height: 5, 
+            width: 7,
+            height: 5,
             offset: 854
         },
         'symbols/lighthouse.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 859
         },
         'symbols/lock_gate.png': {
-            width: 9, 
-            height: 9, 
+            width: 9,
+            height: 9,
             offset: 879
         },
         'symbols/marsh.png': {
-            width: 30, 
-            height: 30, 
+            width: 30,
+            height: 30,
             offset: 888
         },
         'symbols/military_red_hz2.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 918
         },
         'symbols/mini_round.png': {
-            width: 9, 
-            height: 9, 
+            width: 9,
+            height: 9,
             offset: 942
         },
         'symbols/motel.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 951
         },
         'symbols/mud.png': {
-            width: 10, 
-            height: 10, 
+            width: 10,
+            height: 10,
             offset: 971
         },
         'symbols/museum.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 981
         },
         'symbols/nature_reserve5.png': {
-            width: 21, 
-            height: 24, 
+            width: 21,
+            height: 24,
             offset: 997
         },
         'symbols/nature_reserve6.png': {
-            width: 42, 
-            height: 48, 
+            width: 42,
+            height: 48,
             offset: 1021
         },
         'symbols/orchard.png': {
-            width: 10, 
-            height: 10, 
+            width: 10,
+            height: 10,
             offset: 1069
         },
         'symbols/parking.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1079
         },
         'symbols/parking_private.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1095
         },
         'symbols/peak.png': {
-            width: 8, 
-            height: 8, 
+            width: 8,
+            height: 8,
             offset: 1111
         },
         'symbols/pharmacy.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1119
         },
         'symbols/picnic.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1135
         },
         'symbols/place_of_worship3.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1151
         },
         'symbols/playground.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1167
         },
         'symbols/poi_cave.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1187
         },
         'symbols/police.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1203
         },
         'symbols/post_box.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1219
         },
         'symbols/post_office.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1235
         },
         'symbols/power_pole.png': {
-            width: 3, 
-            height: 3, 
+            width: 3,
+            height: 3,
             offset: 1251
         },
         'symbols/power_tower.png': {
-            width: 7, 
-            height: 7, 
+            width: 7,
+            height: 7,
             offset: 1254
         },
         'symbols/power_tower_3x3.png': {
-            width: 3, 
-            height: 3, 
+            width: 3,
+            height: 3,
             offset: 1261
         },
         'symbols/power_tower_5x5.png': {
-            width: 5, 
-            height: 5, 
+            width: 5,
+            height: 5,
             offset: 1264
         },
         'symbols/power_wind.png': {
-            width: 16, 
-            height: 26, 
+            width: 16,
+            height: 26,
             offset: 1269
         },
         'symbols/pub.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1295
         },
         'symbols/quarry2.png': {
-            width: 30, 
-            height: 30, 
+            width: 30,
+            height: 30,
             offset: 1311
         },
         'symbols/recycling.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1341
         },
         'symbols/rental_bicycle.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1357
         },
         'symbols/restaurant.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1377
         },
         'symbols/scrub.png': {
-            width: 30, 
-            height: 30, 
+            width: 30,
+            height: 30,
             offset: 1393
         },
         'symbols/shelter2.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1423
         },
         'symbols/shop_bakery.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1439
         },
         'symbols/shop_butcher.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1455
         },
         'symbols/shop_clothes.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1471
         },
         'symbols/shop_convenience.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1487
         },
         'symbols/shop_diy.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1503
         },
         'symbols/shop_hairdresser.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1519
         },
         'symbols/shop_supermarket.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1535
         },
         'symbols/shopping_bicycle.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1551
         },
         'symbols/shopping_car.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1567
         },
         'symbols/shopping_car_repair.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1583
         },
         'symbols/sikh3.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1599
         },
         'symbols/sosphone.png': {
-            width: 16, 
-            height: 14, 
+            width: 16,
+            height: 14,
             offset: 1615
         },
         'symbols/spring.png': {
-            width: 5, 
-            height: 7, 
+            width: 5,
+            height: 7,
             offset: 1629
         },
         'symbols/station.png': {
-            width: 9, 
-            height: 9, 
+            width: 9,
+            height: 9,
             offset: 1636
         },
         'symbols/station_disused.png': {
-            width: 6, 
-            height: 6, 
+            width: 6,
+            height: 6,
             offset: 1645
         },
         'symbols/station_small.png': {
-            width: 6, 
-            height: 6, 
+            width: 6,
+            height: 6,
             offset: 1651
         },
         'symbols/telephone.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1657
         },
         'symbols/theatre.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1673
         },
         'symbols/toilets.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1693
         },
         'symbols/tourist_archaeological2.glow.16.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 1713
         },
         'symbols/tourist_memorial.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1737
         },
         'symbols/tower_water.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1757
         },
         'symbols/traffic_light.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1777
         },
         'symbols/transport_ford.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1793
         },
         'symbols/transport_slipway.p.20.png': {
-            width: 20, 
-            height: 20, 
+            width: 20,
+            height: 20,
             offset: 1809
         },
         'symbols/tree.png': {
-            width: 3, 
-            height: 3, 
+            width: 3,
+            height: 3,
             offset: 1829
         },
         'symbols/tree2.png': {
-            width: 5, 
-            height: 5, 
+            width: 5,
+            height: 5,
             offset: 1832
         },
         'symbols/turning_circle-livs-fill.14.png': {
-            width: 14, 
-            height: 14, 
+            width: 14,
+            height: 14,
             offset: 1837
         },
         'symbols/turning_circle-livs-fill.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1851
         },
         'symbols/turning_circle-livs-fill.22.png': {
-            width: 22, 
-            height: 22, 
+            width: 22,
+            height: 22,
             offset: 1867
         },
         'symbols/turning_circle-tert-casing.18.png': {
-            width: 18, 
-            height: 18, 
+            width: 18,
+            height: 18,
             offset: 1889
         },
         'symbols/turning_circle-tert-casing.24.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 1907
         },
         'symbols/turning_circle-tert-fill.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1931
         },
         'symbols/turning_circle-tert-fill.22.png': {
-            width: 22, 
-            height: 22, 
+            width: 22,
+            height: 22,
             offset: 1947
         },
         'symbols/turning_circle-uncl-casing.14.png': {
-            width: 14, 
-            height: 14, 
+            width: 14,
+            height: 14,
             offset: 1969
         },
         'symbols/turning_circle-uncl-casing.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 1983
         },
         'symbols/turning_circle-uncl-casing.18.png': {
-            width: 18, 
-            height: 18, 
+            width: 18,
+            height: 18,
             offset: 1999
         },
         'symbols/turning_circle-uncl-casing.24.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 2017
         },
         'symbols/turning_circle-uncl-fill.12.png': {
-            width: 12, 
-            height: 12, 
+            width: 12,
+            height: 12,
             offset: 2041
         },
         'symbols/turning_circle-uncl-fill.14.png': {
-            width: 14, 
-            height: 14, 
+            width: 14,
+            height: 14,
             offset: 2053
         },
         'symbols/turning_circle-uncl-fill.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 2067
         },
         'symbols/turning_circle-uncl-fill.18.png': {
-            width: 18, 
-            height: 18, 
+            width: 18,
+            height: 18,
             offset: 2083
         },
         'symbols/turning_circle-uncl-fill.22.png': {
-            width: 22, 
-            height: 22, 
+            width: 22,
+            height: 22,
             offset: 2101
         },
         'symbols/turning_circle-uncl-fill.24.png': {
-            width: 24, 
-            height: 24, 
+            width: 24,
+            height: 24,
             offset: 2123
         },
         'symbols/view_point.p.16.png': {
-            width: 16, 
-            height: 16, 
+            width: 16,
+            height: 16,
             offset: 2147
         },
         'symbols/vineyard.png': {
-            width: 29, 
-            height: 29, 
+            width: 29,
+            height: 29,
             offset: 2163
         },
         'symbols/volcano.png': {
-            width: 9, 
-            height: 8, 
+            width: 9,
+            height: 8,
             offset: 2192
         },
         'symbols/walking.n.12.png': {
-            width: 12, 
-            height: 12, 
+            width: 12,
+            height: 12,
             offset: 2200
         },
         'symbols/windmill.png': {
-            width: 10, 
-            height: 15, 
+            width: 10,
+            height: 15,
             offset: 2212
         },
         'symbols/zoo.png': {
-            width: 21, 
-            height: 24, 
+            width: 21,
+            height: 24,
             offset: 2227
         }
     }, external_images = [], presence_tags = ['bridge?', 'oneway?', 'captial?', 'addr:interpolation', 'tunnel?'], value_tags = ['ref', 'amenity', 'building', 'tunnel', 'power', 'access', 'service', 'point', 'shop', 'addr:housenumber', 'leisure', 'waterway', 'lock', 'aeroway', 'power_source', 'foot', 'landuse', 'barrier', 'construction', 'bicycle', 'railway', 'route', 'oneway', 'religion', 'tourism', 'natural', 'admin_level', 'horse', 'name', 'tracktype', 'place', 'bridge', 'highway', 'length', 'military', 'disused', 'ele', 'way_area', 'man_made', 'historic', 'boundary', 'aerialway'];
@@ -7848,4 +7848,4 @@
     MapCSS.loadStyle('mapnik', restyle, sprite_images, external_images, presence_tags, value_tags);
     MapCSS.preloadExternalImages('mapnik');
 })(MapCSS);
-    
+

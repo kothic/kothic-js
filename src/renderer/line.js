@@ -1,76 +1,67 @@
-/**
- * @preserve Copyright (c) 2011, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
- * Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
- * See http://github.com/kothic/kothic-js for more information.
- */
 
-Kothic.line = (function () {
-	function renderCasing(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style,
-				nextStyle = nextFeature && nextFeature.style;
+Kothic.line = {
 
-		var dashes = style["casing-dashes"] || style.dashes || false;
+    renderCasing: function (ctx, feature, nextFeature, ws, hs, granularity) {
+        var style = feature.style,
+            nextStyle = nextFeature && nextFeature.style;
 
-		if (!this.pathOpened) {
-			this.pathOpened = true;
-			ctx.beginPath();
-		}
-		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
+        if (!this.pathOpened) {
+            this.pathOpened = true;
+            ctx.beginPath();
+        }
 
-		if (nextFeature &&
-				(nextStyle.width === style.width) &&
-				(nextStyle['casing-width'] === style['casing-width']) &&
-				(nextStyle['casing-color'] === style['casing-color']) &&
-				((nextStyle['casing-dashes'] || nextStyle.dashes || false) === (style['casing-dashes'] || style.dashes || false)) &&
-				((nextStyle['casing-linecap'] || nextStyle.linecap || "butt") === (style['casing-linecap'] || style.linecap || "butt")) &&
-				((nextStyle['casing-linejoin'] || nextStyle.linejoin || "round") === (style['casing-linejoin'] || style.linejoin || "round")) &&
-				((nextStyle['casing-opacity'] || nextStyle.opacity) === (style.opacity || style['casing-opacity']))) {
+        Kothic.path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
+
+        if (nextFeature &&
+                nextStyle.width === style.width &&
+                nextStyle['casing-width'] === style['casing-width'] &&
+                nextStyle['casing-color'] === style['casing-color'] &&
+                nextStyle['casing-dashes'] === style['casing-dashes'] &&
+                nextStyle['casing-opacity'] === style['casing-opacity']) {
             return;
         }
 
-		Kothic.style.setStyles(ctx, {
+        Kothic.style.setStyles(ctx, {
             lineWidth: 2 * style["casing-width"] + (style.hasOwnProperty("width") ? style.width : 0),
-			strokeStyle: style["casing-color"] || "#000000",
-			lineCap: style["casing-linecap"] || style.linecap || "butt",
-			lineJoin: style["casing-linejoin"] || style.linejoin || "round",
-			globalAlpha: style["casing-opacity"] || 1
+            strokeStyle: style["casing-color"] || "#000000",
+            lineCap: style["casing-linecap"] || style.linecap || "butt",
+            lineJoin: style["casing-linejoin"] || style.linejoin || "round",
+            globalAlpha: style["casing-opacity"] || 1
         });
 
-		this.pathOpened = false;
-		ctx.stroke();
+        ctx.stroke();
+        this.pathOpened = false;
+    },
 
-	}
+    render: function (ctx, feature, nextFeature, ws, hs, granularity) {
+        var style = feature.style,
+            nextStyle = nextFeature && nextFeature.style;
 
-	function renderPolyline(ctx, feature, nextFeature, ws, hs, granularity) {
-		var style = feature.style,
-				nextStyle = nextFeature && nextFeature.style;
+        if (!this.pathOpened) {
+            this.pathOpened = true;
+            ctx.beginPath();
+        }
 
-		var dashes = style.dashes;
+        Kothic.path(ctx, feature, style.dashes, false, ws, hs, granularity);
 
-		if (!this.pathOpened) {
-			this.pathOpened = true;
-			ctx.beginPath();
-		}
-		Kothic.path(ctx, feature, dashes, false, ws, hs, granularity);
-
-		if (nextFeature &&
-				((nextStyle.width || 1) === (style.width || 1)) &&
-				((nextStyle.color || "#000000") === (style.color || "#000000")) &&
-				(nextStyle.linecap === style.linecap) &&
-				(nextStyle.linejoin === style.linejoin) &&
-				(nextStyle.image === style.image) &&
-				(nextStyle.opacity === style.opacity)) {
+        if (nextFeature &&
+                nextStyle.width === style.width &&
+                nextStyle.color === style.color &&
+                nextStyle.image === style.image &&
+                nextStyle.opacity === style.opacity) {
             return;
         }
 
-		if (style.hasOwnProperty('color') || !style.hasOwnProperty('image')) {
-      var t_width = style.width || 1;
-      var t_linejoin = "round", t_linecap = "round";
-      if (t_width <= 2) {
-        t_linejoin = "miter";
-        t_linecap = "butt"
-      }
-			Kothic.style.setStyles(ctx, {
+        if ('color' in style || !('image' in style)) {
+            var t_width = style.width || 1,
+                t_linejoin = "round",
+                t_linecap = "round";
+
+            if (t_width <= 2) {
+                t_linejoin = "miter";
+                t_linecap = "butt";
+            }
+            Kothic.style.setStyles(ctx, {
                 lineWidth: t_width,
                 strokeStyle: style.color || '#000000',
                 lineCap: style.linecap || t_linecap,
@@ -78,32 +69,28 @@ Kothic.line = (function () {
                 globalAlpha: style.opacity || 1,
                 miterLimit: 4
             });
-			ctx.stroke();
-		}
+            ctx.stroke();
+        }
 
 
-		if (style.hasOwnProperty('image')) {
-			// second pass fills with texture
-			var image = MapCSS.getImage(style.image);
-            
-			if (image) {
-				Kothic.style.setStyles(ctx, {
+        if ('image' in style) {
+            // second pass fills with texture
+            var image = MapCSS.getImage(style.image);
+
+            if (image) {
+                Kothic.style.setStyles(ctx, {
                     strokeStyle: ctx.createPattern(image, 'repeat') || "#000000",
                     lineWidth: style.width || 1,
                     lineCap: style.linecap || "round",
                     lineJoin: style.linejoin || "round",
                     globalAlpha: style.opacity || 1
                 });
-                
-				ctx.stroke();
-			}
-		}
-		this.pathOpened = false;
-	}
 
-	return {
-		pathOpened: false,
-		renderCasing: renderCasing,
-		render: renderPolyline
-	};
-}());
+                ctx.stroke();
+            }
+        }
+        this.pathOpened = false;
+    },
+
+    pathOpened: false
+};
