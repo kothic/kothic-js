@@ -1,6 +1,8 @@
 **Kothic JS** is a full-featured JavaScript map rendering engine using HTML5 Canvas.
 It was initially developed as a JavaScript port of [Kothic](http://wiki.openstreetmap.org/wiki/Kothic) rendering engine written in Python.
 
+Check out the demo: http://kothic.org/
+
 ### Features
 
  * Rendering [OpenStreetMap](http://openstreetmap.org) data visually on par with [Mapnik](http://mapnik.org)
