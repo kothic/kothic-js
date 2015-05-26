@@ -129,6 +129,15 @@ var MapCSS = {
         return tags[text];
     },
 
+    e_join: function () {
+        var tagString = "";
+
+        for (var i = 1; i < arguments.length; i++)
+            tagString = tagString.concat(arguments[0]).concat(arguments[i]);
+
+        return tagString.substr(arguments[0].length);
+    },
+
     loadStyle: function (style, restyle, sprite_images, external_images, presence_tags, value_tags) {
         var i;
         sprite_images = sprite_images || [];
