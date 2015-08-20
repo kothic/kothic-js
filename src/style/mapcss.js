@@ -138,6 +138,43 @@ var MapCSS = {
         return tagString.substr(arguments[0].length);
     },
 
+    e_split: function (sep, text) {
+        return text.split(sep);
+    },
+
+    e_get: function(arr, index) {
+        if (Object.prototype.toString.call(arr) !== '[object Array]')
+            return "";
+
+        if (!/^[0-9]+$/.test(index) || index >= arr.length())
+            return "";
+
+        return arr[index];
+    },
+
+    e_set: function(arr, index, text) {
+        if (Object.prototype.toString.call(arr) !== '[object Array]')
+            return [];
+
+        if (!/^[0-9]+$/.test(index))
+            return [];
+
+        arr[index] = text;
+
+        return arr;
+    },
+
+    e_count: function(arr) {
+        if (Object.prototype.toString.call(arr) !== '[object Array]')
+            return 0;
+
+        return arr.length();
+    },
+
+    e_list: function() {
+        return arguments;
+    },
+
     loadStyle: function (style, restyle, sprite_images, external_images, presence_tags, value_tags) {
         var i;
         sprite_images = sprite_images || [];
