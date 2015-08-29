@@ -130,12 +130,16 @@ var MapCSS = {
     },
 
     e_join: function () {
-        var tagString = "";
+        if (arguments.length === 2 && Object.prototype.toString.call(arguments[1]) === '[object Array]') {
+            return arguments[1].join(arguments[0]);
+        } else {
+            var tagString = "";
 
-        for (var i = 1; i < arguments.length; i++)
-            tagString = tagString.concat(arguments[0]).concat(arguments[i]);
+            for (var i = 1; i < arguments.length; i++)
+                tagString = tagString.concat(arguments[0]).concat(arguments[i]);
 
-        return tagString.substr(arguments[0].length);
+            return tagString.substr(arguments[0].length);
+        }
     },
 
     e_split: function (sep, text) {
@@ -173,6 +177,40 @@ var MapCSS = {
 
     e_list: function() {
         return arguments;
+    },
+
+    e_append: function(lst, v) {
+        if (Object.prototype.toString.call(lst) !== '[object Array]')
+            return [];
+
+        lst.push(v);
+
+        return lst;
+    },
+
+    e_contains: function(lst, v) {
+        if (Object.prototype.toString.call(lst) !== '[object Array]')
+            return false;
+
+        return (lst.indexOf(v) >= 0);
+    },
+
+    e_sort: function(lst) {
+        if (Object.prototype.toString.call(lst) !== '[object Array]')
+            return [];
+
+        lst.sort();
+
+        return lst;
+    },
+
+    e_reverse: function(lst) {
+        if (Object.prototype.toString.call(lst) !== '[object Array]')
+            return [];
+
+        lst.reverse();
+
+        return lst;
     },
 
     loadStyle: function (style, restyle, sprite_images, external_images, presence_tags, value_tags) {
