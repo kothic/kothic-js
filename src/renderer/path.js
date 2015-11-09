@@ -116,7 +116,6 @@ Kothic.path = (function () {
 
                 for (j = 0; j < pointsLen; j++) {
                     point = points[j];
-                    screenPoint = Kothic.geom.transformPoint(point, ws, hs);
 
                     // continue path off the tile by some abount to fix path edges between tiles
                     if ((j === 0 || j === pointsLen - 1) && isTileBoundary(point, granularity)) {
@@ -138,9 +137,10 @@ Kothic.path = (function () {
                         if (k < 0 || k >= pointsLen)
                             break;
 
-                        screenPoint[0] = screenPoint[0] + pad * dx / dist;
-                        screenPoint[1] = screenPoint[1] + pad * dy / dist;
+                        point[0] = point[0] + pad * dx / dist;
+                        point[1] = point[1] + pad * dy / dist;
                     }
+                    screenPoint = Kothic.geom.transformPoint(point, ws, hs);
 
                     if (j === 0) {
                         moveTo(ctx, screenPoint, dashes);
