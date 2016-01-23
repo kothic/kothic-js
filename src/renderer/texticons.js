@@ -37,13 +37,13 @@ Kothic.texticons = {
             }
         }
 
-        if (renderText) {
+        var text = String(style.text).trim();
+
+        if (renderText && text) {
             Kothic.style.setStyles(ctx, {
                 lineWidth: style['text-halo-radius'] * 2,
                 font: Kothic.style.getFontString(style['font-family'], style['font-size'], style)
             });
-
-            var text = String(style.text);
 
             var halo = (style.hasOwnProperty('text-halo-radius'));
 
