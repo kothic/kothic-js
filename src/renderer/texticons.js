@@ -43,12 +43,7 @@ Kothic.texticons = {
                 font: Kothic.style.getFontString(style['font-family'], style['font-size'])
             });
 
-            var text = String(style.text),
-                    textWidth = ctx.measureText(text).width,
-                    letterWidth = textWidth / text.length,
-                    collisionWidth = textWidth,
-                    collisionHeight = letterWidth * 2.5,
-                    offset = style['text-offset'] || 0;
+            var text = String(style.text);
 
             var halo = (style.hasOwnProperty('text-halo-radius'));
 
@@ -61,6 +56,12 @@ Kothic.texticons = {
             });
 
             if (feature.type === 'Polygon' || feature.type === 'Point') {
+                var textWidth = ctx.measureText(text).width,
+                        letterWidth = textWidth / text.length,
+                        collisionWidth = textWidth,
+                        collisionHeight = letterWidth * 2.5,
+                        offset = style['text-offset'] || 0;
+
                 if ((style['text-allow-overlap'] !== 'true') &&
                         collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
                     return;
