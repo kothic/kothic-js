@@ -19,7 +19,7 @@ Kothic.shields = {
         }
 
         Kothic.style.setStyles(ctx, {
-            font: Kothic.style.getFontString(style["shield-font-family"] || style["font-family"], style["shield-font-size"] || style["font-size"]),
+            font: Kothic.style.getFontString(style["shield-font-family"] || style["font-family"], style["shield-font-size"] || style["font-size"], style),
             fillStyle: style["shield-text-color"] || "#000000",
             globalAlpha: style["shield-text-opacity"] || style.opacity || 1,
             textAlign: 'center',

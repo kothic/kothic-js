@@ -82,7 +82,7 @@ Kothic.style = {
         return styledFeatures;
     },
 
-    getFontString: function (name, size) {
+    getFontString: function (name, size, st) {
         name = name || '';
         size = size || 9;
 
@@ -91,13 +91,14 @@ Kothic.style = {
         name = name.toLowerCase();
 
         var styles = [];
-        if (name.indexOf('italic') !== -1 || name.indexOf('oblique') !== -1) {
+        if (st['font-style'] == 'italic') {
             styles.push('italic');
         }
-        if (name.indexOf('bold') !== -1) {
+        if (st['font-variant'] == 'small-caps') {
+            styles.push('small-caps');
+        }
+        if (st['font-weight'] == 'bold') {
             styles.push('bold');
-            //family += '''+name.replace('bold', '')+'', ';
-            family += name.replace('bold', '') + ', ';
         }
 
         styles.push(size + 'px');
@@ -108,7 +109,6 @@ Kothic.style = {
             family += '"Helvetica Neue", Arial, Helvetica, sans-serif';
         }
         styles.push(family);
-
 
         return styles.join(' ');
     },
