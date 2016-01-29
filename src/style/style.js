@@ -91,14 +91,14 @@ Kothic.style = {
         name = name.toLowerCase();
 
         var styles = [];
-        if (st['font-style'] == 'italic' || st['font-style'] == 'oblique') {
+        if (st['font-style'] === 'italic' || st['font-style'] === 'oblique') {
             styles.push(st['font-style']);
         }
-        if (st['font-variant'] == 'small-caps') {
-            styles.push('small-caps');
+        if (st['font-variant'] === 'small-caps') {
+            styles.push(st['font-variant']);
         }
-        if (st['font-weight'] == 'bold') {
-            styles.push('bold');
+        if (st['font-weight'] === 'bold') {
+            styles.push(st['font-weight']);
         }
 
         styles.push(size + 'px');
