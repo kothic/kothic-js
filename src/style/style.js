@@ -91,8 +91,8 @@ Kothic.style = {
         name = name.toLowerCase();
 
         var styles = [];
-        if (st['font-style'] == 'italic') {
-            styles.push('italic');
+        if (st['font-style'] == 'italic' || st['font-style'] == 'oblique') {
+            styles.push(st['font-style']);
         }
         if (st['font-variant'] == 'small-caps') {
             styles.push('small-caps');
