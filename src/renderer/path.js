@@ -114,7 +114,7 @@ Kothic.path = (function () {
                 for (j = 0; j < pointsLen; j++) {
                     point = points[j];
 
-                    // continue path off the tile by some abount to fix path edges between tiles
+                    // continue path off the tile by some amount to fix path edges between tiles
                     if ((j === 0 || j === pointsLen - 1) && isTileBoundary(point, granularity)) {
                         k = j;
                         do {
