@@ -56,8 +56,39 @@ Kothic.path = (function () {
         ctx.restore();
     }
 
+    // check if the point is on the tile boundary
+    // returns bitmask of affected tile boundaries
     function isTileBoundary(p, size) {
-        return p[0] === 0 || p[0] === size || p[1] === 0 || p[1] === size;
+        var r = 0;
+        if (p[0] === 0)
+            r |= 1;
+        else if (p[0] === size)
+            r |= 2;
+        if (p[1] === 0)
+            r |= 4;
+        else if (p[1] === size)
+            r |= 8;
+        return r;
+    }
+
+    /* check if 2 points are both on the same tile boundary
+     *
+     * If points of the object are on the same tile boundary it is assumed
+     * that the object is cut here and would originally continue beyond the
+     * tile borders.
+     *
+     * This does not catch the case where the object is indeed exactly
+     * on the tile boundaries, but this case can't properly be detected here.
+     */
+    function checkSameBoundary(p, q, size) {
+        var bp = isTileBoundary(p, size);
+        if (!bp)
+            return 0;
+        var bq = isTileBoundary(q, size);
+        if (!bq)
+            return 0;
+
+        return (bp & bq);
     }
 
     return function (ctx, feature, dashes, fill, ws, hs, granularity) {
@@ -91,8 +122,7 @@ Kothic.path = (function () {
                         screenPoint = Kothic.geom.transformPoint(point, ws, hs);
 
                         if (j === 0 || (!fill &&
-                                isTileBoundary(point, granularity) &&
-                                isTileBoundary(prevPoint, granularity))) {
+                                checkSameBoundary(point, prevPoint, granularity))) {
                             moveTo(ctx, screenPoint, dashes);
                         } else if (fill || !dashes) {
                             ctx.lineTo(screenPoint[0], screenPoint[1]);
