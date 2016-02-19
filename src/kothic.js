@@ -113,7 +113,6 @@ var Kothic = {
         var layersToRender = {},
             i, j, len, features, style, queue, bgQueue;
 
-        // polygons
         for (i = 0; i < layerIds.length; i++) {
             features = layers[layerIds[i]];
 
@@ -132,31 +131,13 @@ var Kothic = {
                         queue.polygons.push(features[j]);
                     }
                 }
-            }
-        }
 
-        // casings
-        for (i = 0; i < layerIds.length; i++) {
-            features = layers[layerIds[i]];
-            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
-
-            for (j = 0, len = features.length; j < len; j++) {
-
-                if ('casing-width' in features[j].style) {
+                if ('casing-width' in style) {
                     queue.casings = queue.casings || [];
                     queue.casings.push(features[j]);
                 }
-            }
-        }
 
-        // lines
-        for (i = 0; i < layerIds.length; i++) {
-            features = layers[layerIds[i]];
-            queue = layersToRender[layerIds[i]] = layersToRender[layerIds[i]] || {};
-
-            for (j = 0, len = features.length; j < len; j++) {
-
-                if ('width' in features[j].style) {
+                if ('width' in style) {
                     queue.lines = queue.lines || [];
                     queue.lines.push(features[j]);
                 }
