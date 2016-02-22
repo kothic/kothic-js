@@ -1,5 +1,5 @@
 
-thic.path = (function () {
+Kothic.path = (function () {
     var dashPattern;
 
     function setDashPattern(point, dashes) {
@@ -85,7 +85,7 @@ thic.path = (function () {
                         screenPoint = Kothic.geom.transformPoint(point, ws, hs);
 
                         if (j === 0 || (!fill &&
-                            checkSameBoundary(point, prevPoint, granularity))) {
+                                checkSameBoundary(point, prevPoint, granularity))) {
                             moveTo(ctx, screenPoint, dashes);
                         } else if (fill) {
                             ctx.setLineDash([]);
