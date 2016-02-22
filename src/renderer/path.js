@@ -1,5 +1,5 @@
 
-Kothic.path = (function () {
+thic.path = (function () {
     var dashPattern;
 
     function setDashPattern(point, dashes) {
@@ -17,43 +17,6 @@ Kothic.path = (function () {
         if (dashes) {
             setDashPattern(point, dashes);
         }
-    }
-
-    function dashTo(ctx, point) {
-        var pt = dashPattern,
-            dx = point[0] - pt.x,
-            dy = point[1] - pt.y,
-            dist = Math.sqrt(dx * dx + dy * dy),
-            x, more, t;
-
-        ctx.save();
-        ctx.translate(pt.x, pt.y);
-        ctx.rotate(Math.atan2(dy, dx));
-        ctx.moveTo(0, 0);
-
-        x = 0;
-        do {
-            t = pt.pattern[pt.seg];
-            x += t - pt.phs;
-            more = x < dist;
-
-            if (!more) {
-                pt.phs = t - (x - dist);
-                x = dist;
-            }
-
-            ctx[pt.seg % 2 ? 'moveTo' : 'lineTo'](x, 0);
-
-            if (more) {
-                pt.phs = 0;
-                pt.seg = ++pt.seg % pt.pattern.length;
-            }
-        } while (more);
-
-        pt.x = point[0];
-        pt.y = point[1];
-
-        ctx.restore();
     }
 
     // check if the point is on the tile boundary
@@ -122,12 +85,15 @@ Kothic.path = (function () {
                         screenPoint = Kothic.geom.transformPoint(point, ws, hs);
 
                         if (j === 0 || (!fill &&
-                                checkSameBoundary(point, prevPoint, granularity))) {
+                            checkSameBoundary(point, prevPoint, granularity))) {
                             moveTo(ctx, screenPoint, dashes);
-                        } else if (fill || !dashes) {
+                        } else if (fill) {
+                            ctx.setLineDash([]);
                             ctx.lineTo(screenPoint[0], screenPoint[1]);
                         } else {
-                            dashTo(ctx, screenPoint);
+                            if (dashes)
+                                ctx.setLineDash(dashPattern.pattern);
+                            ctx.lineTo(screenPoint[0], screenPoint[1]);
                         }
                         prevPoint = point;
                     }
@@ -172,8 +138,10 @@ Kothic.path = (function () {
                     if (j === 0) {
                         moveTo(ctx, screenPoint, dashes);
                     } else if (dashes) {
-                        dashTo(ctx, screenPoint);
+                        ctx.setLineDash(dashPattern.pattern);
+                        ctx.lineTo(screenPoint[0], screenPoint[1]);
                     } else {
+                        ctx.setLineDash([]);
                         ctx.lineTo(screenPoint[0], screenPoint[1]);
                     }
                 }
