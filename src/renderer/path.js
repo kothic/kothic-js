@@ -1,5 +1,4 @@
-
-thic.path = (function () {
+Kothic.path = (function () {
     var dashPattern;
 
     function setDashPattern(point, dashes) {
