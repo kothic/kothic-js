@@ -28,11 +28,8 @@ Kothic.path = (function () {
         var bp = isTileBoundary(p, size);
         if (!bp)
             return 0;
-        var bq = isTileBoundary(q, size);
-        if (!bq)
-            return 0;
 
-        return (bp & bq);
+        return (bp & isTileBoundary(q, size));
     }
 
     return function (ctx, feature, dashes, fill, ws, hs, granularity) {
