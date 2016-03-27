@@ -70,10 +70,11 @@ Kothic.shields = {
                 fillStyle: style["shield-casing-color"] || "#000000",
                 globalAlpha: style["shield-casing-opacity"] || style.opacity || 1
             });
-            ctx.fillRect(point[0] - collisionWidth / 2 - style["shield-casing-width"] - (style["shield-frame-width"] || 0),
-                    point[1] - collisionHeight / 2 - style["shield-casing-width"] - (style["shield-frame-width"] || 0),
-                    collisionWidth + 2 * style["shield-casing-width"] + 2 * (style["shield-frame-width"] || 0),
-                    collisionHeight + 2 * style["shield-casing-width"] + 2 * (style["shield-frame-width"] || 0));
+            var p = style["shield-casing-width"] + (style["shield-frame-width"] || 0);
+            ctx.fillRect(point[0] - collisionWidth / 2 - p,
+                    point[1] - collisionHeight / 2 - p,
+                    collisionWidth + 2 * p,
+                    collisionHeight + 2 * p);
         }
 
         if (style["shield-frame-width"]) {
