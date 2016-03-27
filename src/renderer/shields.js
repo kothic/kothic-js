@@ -70,10 +70,10 @@ Kothic.shields = {
                 fillStyle: style["shield-casing-color"] || "#000000",
                 globalAlpha: style["shield-casing-opacity"] || style.opacity || 1
             });
-            ctx.fillRect(point[0] - collisionWidth / 2 - (style["shield-casing-width"] || 0) - (style["shield-frame-width"] || 0),
-                    point[1] - collisionHeight / 2 - (style["shield-casing-width"] || 0) - (style["shield-frame-width"] || 0),
-                    collisionWidth + 2 * (style["shield-casing-width"] || 0) + 2 * (style["shield-frame-width"] || 0),
-                    collisionHeight + 2 * (style["shield-casing-width"] || 0) + 2 * (style["shield-frame-width"] || 0));
+            ctx.fillRect(point[0] - collisionWidth / 2 - style["shield-casing-width"] - (style["shield-frame-width"] || 0),
+                    point[1] - collisionHeight / 2 - style["shield-casing-width"] - (style["shield-frame-width"] || 0),
+                    collisionWidth + 2 * style["shield-casing-width"] + 2 * (style["shield-frame-width"] || 0),
+                    collisionHeight + 2 * style["shield-casing-width"] + 2 * (style["shield-frame-width"] || 0));
         }
 
         if (style["shield-frame-width"]) {
@@ -81,10 +81,10 @@ Kothic.shields = {
                 fillStyle: style["shield-frame-color"] || "#000000",
                 globalAlpha: style["shield-frame-opacity"] || style.opacity || 1
             });
-            ctx.fillRect(point[0] - collisionWidth / 2 - (style["shield-frame-width"] || 0),
-                    point[1] - collisionHeight / 2 - (style["shield-frame-width"] || 0),
-                    collisionWidth + 2 * (style["shield-frame-width"] || 0),
-                    collisionHeight + 2 * (style["shield-frame-width"] || 0));
+            ctx.fillRect(point[0] - collisionWidth / 2 - style["shield-frame-width"],
+                    point[1] - collisionHeight / 2 - style["shield-frame-width"],
+                    collisionWidth + 2 * style["shield-frame-width"],
+                    collisionHeight + 2 * style["shield-frame-width"]);
         }
 
         if (style["shield-color"]) {
