@@ -1,15 +1,19 @@
+var geom = require('../utils/geom');
+var setStyles = require('../style/style').setStyles;
+var getFontString = require('../style/style').getFontString;
+var textOnPath = require("./text").textOnPath;
 
-Kothic.texticons = {
+module.exports = {
 
     render: function (ctx, feature, collides, ws, hs, renderText, renderIcon) {
         var style = feature.style, img, point, w, h;
 
         if (renderIcon || (renderText && feature.type !== 'LineString')) {
-            var reprPoint = Kothic.geom.getReprPoint(feature);
+            var reprPoint = geom.getReprPoint(feature);
             if (!reprPoint) {
                 return;
             }
-            point = Kothic.geom.transformPoint(reprPoint, ws, hs);
+            point = geom.transformPoint(reprPoint, ws, hs);
         }
 
         if (renderIcon) {
@@ -40,14 +44,14 @@ Kothic.texticons = {
         var text = String(style.text).trim();
 
         if (renderText && text) {
-            Kothic.style.setStyles(ctx, {
+            setStyles(ctx, {
                 lineWidth: style['text-halo-radius'] * 2,
-                font: Kothic.style.getFontString(style['font-family'], style['font-size'], style)
+                font: getFontString(style['font-family'], style['font-size'], style)
             });
 
             var halo = (style.hasOwnProperty('text-halo-radius'));
 
-            Kothic.style.setStyles(ctx, {
+            setStyles(ctx, {
                 fillStyle: style['text-color'] || '#000000',
                 strokeStyle: style['text-halo-color'] || '#ffffff',
                 globalAlpha: style['text-opacity'] || style.opacity || 1,
@@ -84,8 +88,8 @@ Kothic.texticons = {
 
             } else if (feature.type === 'LineString') {
 
-                var points = Kothic.geom.transformPoints(feature.coordinates, ws, hs);
-                Kothic.textOnPath(ctx, points, text, halo, collides);
+                var points = geom.transformPoints(feature.coordinates, ws, hs);
+                textOnPath(ctx, points, text, halo, collides);
             }
         }
 

@@ -9,5 +9,8 @@
   },
   "scripts": {
     "prepublish": "grunt"
+  },
+  "dependencies": {
+    "rbush": "^2.0.1"
   }
 }

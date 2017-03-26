@@ -1,7 +1,6 @@
+var MapCSS = require('./mapcss');
 
-Kothic.style = {
-
-    defaultCanvasStyles: {
+exports.defaultCanvasStyles = {
         strokeStyle: 'rgba(0,0,0,0.5)',
         fillStyle: 'rgba(0,0,0,0.5)',
         lineWidth: 1,
@@ -9,13 +8,13 @@ Kothic.style = {
         lineJoin: 'round',
         textAlign: 'center',
         textBaseline: 'middle'
-    },
+}
 
-    populateLayers: function (features, zoom, styles) {
+exports.populateLayers = function(features, zoom, styles) {
         var layers = {},
             i, len, feature, layerId, layerStyle;
 
-        var styledFeatures = Kothic.style.styleFeatures(features, zoom, styles);
+        var styledFeatures = exports.styleFeatures(features, zoom, styles);
 
         for (i = 0, len = styledFeatures.length; i < len; i++) {
             feature = styledFeatures[i];
@@ -28,9 +27,9 @@ Kothic.style = {
         }
 
         return layers;
-    },
+}
 
-    getStyle: function (feature, zoom, styleNames) {
+exports.getStyle = function(feature, zoom, styleNames) {
         var shape = feature.type,
             type, selector;
         if (shape === 'LineString' || shape === 'MultiLineString') {
@@ -45,9 +44,9 @@ Kothic.style = {
         }
 
         return MapCSS.restyle(styleNames, feature.properties, zoom, type, selector);
-    },
+}
 
-    styleFeatures: function (features, zoom, styleNames) {
+exports.styleFeatures = function(features, zoom, styleNames) {
         var styledFeatures = [],
             i, j, len, feature, style, restyledFeature, k;
 
@@ -80,9 +79,9 @@ Kothic.style = {
         });
 
         return styledFeatures;
-    },
+};
 
-    getFontString: function (name, size, st) {
+exports.getFontString = function(name, size, st) {
         name = name || '';
         size = size || 9;
 
@@ -111,14 +110,13 @@ Kothic.style = {
         styles.push(family);
 
         return styles.join(' ');
-    },
+};
 
-    setStyles: function (ctx, styles) {
+exports.setStyles = function(ctx, styles) {
         var i;
         for (i in styles) {
             if (styles.hasOwnProperty(i)) {
                 ctx[i] = styles[i];
             }
         }
-    }
-};
+}

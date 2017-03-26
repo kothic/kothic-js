@@ -1,11 +1,12 @@
+var rbush = require('rbush');
 
-Kothic.CollisionBuffer = function (height, width) {
+CollisionBuffer = function (height, width) {
     this.buffer = rbush();
     this.height = height;
     this.width = width;
 };
 
-Kothic.CollisionBuffer.prototype = {
+CollisionBuffer.prototype = {
     addPointWH: function (point, w, h, d, id) {
         this.buffer.insert(this.getBoxFromPoint(point, w, h, d, id));
     },
@@ -51,3 +52,5 @@ Kothic.CollisionBuffer.prototype = {
         ];
     }
 };
+
+module.exports = CollisionBuffer;

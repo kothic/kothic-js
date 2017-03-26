@@ -368,3 +368,5 @@ var MapCSS = {
         return actions;
     }
 };
+
+module.exports = MapCSS;

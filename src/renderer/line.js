@@ -1,6 +1,8 @@
+var path = require('./path');
+var setStyles = require('../style/style').setStyles;
+var MapCSS = require('../style/mapcss');
 
-Kothic.line = {
-
+module.exports = {
     renderCasing: function (ctx, feature, nextFeature, ws, hs, granularity) {
         var style = feature.style,
             nextStyle = nextFeature && nextFeature.style;
@@ -10,7 +12,7 @@ Kothic.line = {
             ctx.beginPath();
         }
 
-        Kothic.path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
+        path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
                 nextStyle.width === style.width &&
@@ -21,7 +23,7 @@ Kothic.line = {
             return;
         }
 
-        Kothic.style.setStyles(ctx, {
+        setStyles(ctx, {
             lineWidth: 2 * style["casing-width"] + (style.hasOwnProperty("width") ? style.width : 0),
             strokeStyle: style["casing-color"] || "#000000",
             lineCap: style["casing-linecap"] || style.linecap || "butt",
@@ -42,7 +44,7 @@ Kothic.line = {
             ctx.beginPath();
         }
 
-        Kothic.path(ctx, feature, style.dashes, false, ws, hs, granularity);
+        path(ctx, feature, style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
                 nextStyle.width === style.width &&
@@ -61,7 +63,8 @@ Kothic.line = {
                 t_linejoin = "miter";
                 t_linecap = "butt";
             }
-            Kothic.style.setStyles(ctx, {
+
+            setStyles(ctx, {
                 lineWidth: t_width,
                 strokeStyle: style.color || '#000000',
                 lineCap: style.linecap || t_linecap,
@@ -78,7 +81,7 @@ Kothic.line = {
             var image = MapCSS.getImage(style.image);
 
             if (image) {
-                Kothic.style.setStyles(ctx, {
+                setStyles(ctx, {
                     strokeStyle: ctx.createPattern(image, 'repeat') || "#000000",
                     lineWidth: style.width || 1,
                     lineCap: style.linecap || "round",

@@ -1,7 +1,10 @@
-
-Kothic.path = (function () {
-    // check if the point is on the tile boundary
-    // returns bitmask of affected tile boundaries
+var geom = require('../utils/geom');
+    // check if the point [in XY coordinates] is on tile's edge
+    // returns 4-bits bitmask of affected tile boundaries:
+    //   bit 0 - left
+    //   bit 1 - right
+    //   bit 2 - top
+    //   bit 3 - bottom
     function isTileBoundary(p, size) {
         var r = 0;
         if (p[0] === 0)
@@ -32,7 +35,7 @@ Kothic.path = (function () {
         return (bp & isTileBoundary(q, size));
     }
 
-    return function (ctx, feature, dashes, fill, ws, hs, granularity) {
+    module.exports = function (ctx, feature, dashes, fill, ws, hs, granularity) {
         var type = feature.type,
             coords = feature.coordinates;
 
@@ -111,7 +114,7 @@ Kothic.path = (function () {
                         point[0] = point[0] + pad * dx / dist;
                         point[1] = point[1] + pad * dy / dist;
                     }
-                    screenPoint = Kothic.geom.transformPoint(point, ws, hs);
+                    screenPoint = geom.transformPoint(point, ws, hs);
 
                     if (j === 0) {
                         ctx.moveTo(screenPoint[0], screenPoint[1]);
@@ -126,4 +129,3 @@ Kothic.path = (function () {
             }
         }
     };
-}());
