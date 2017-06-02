@@ -1,32 +1,36 @@
 var MapCSS = require('./mapcss');
 
 exports.defaultCanvasStyles = {
-        strokeStyle: 'rgba(0,0,0,0.5)',
-        fillStyle: 'rgba(0,0,0,0.5)',
-        lineWidth: 1,
-        lineCap: 'round',
-        lineJoin: 'round',
-        textAlign: 'center',
-        textBaseline: 'middle'
-}
+  strokeStyle: 'rgba(0,0,0,0.5)',
+  fillStyle: 'rgba(0,0,0,0.5)',
+  lineWidth: 1,
+  lineCap: 'round',
+  lineJoin: 'round',
+  textAlign: 'center',
+  textBaseline: 'middle'
+};
 
+/**
+ ** Takes set of features and create list of rendering layers based on
+ ** provided set of styles and current zoom 
+ **/
 exports.populateLayers = function(features, zoom, styles) {
-        var layers = {},
-            i, len, feature, layerId, layerStyle;
+  var layers = {},
+      i, len, feature, layerId, layerStyle;
 
-        var styledFeatures = exports.styleFeatures(features, zoom, styles);
+  var styledFeatures = exports.styleFeatures(features, zoom, styles);
 
-        for (i = 0, len = styledFeatures.length; i < len; i++) {
-            feature = styledFeatures[i];
-            layerStyle = feature.style['-x-mapnik-layer'];
-            layerId = !layerStyle ? feature.properties.layer || 0 :
-                layerStyle === 'top' ? 10000 : -10000;
+  for (i = 0, len = styledFeatures.length; i < len; i++) {
+    feature = styledFeatures[i];
+    layerStyle = feature.style['-x-mapnik-layer'];
+    layerId = !layerStyle ? feature.properties.layer || 0 :
+        layerStyle === 'top' ? 10000 : -10000;
 
-            layers[layerId] = layers[layerId] || [];
-            layers[layerId].push(feature);
-        }
+    layers[layerId] = layers[layerId] || [];
+    layers[layerId].push(feature);
+  }
 
-        return layers;
+  return layers;
 }
 
 exports.getStyle = function(feature, zoom, styleNames) {
