@@ -37,8 +37,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         function onRenderComplete() {
             layer.tileDrawn(canvas);
 
-            document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
-            delete layer._scripts[key];
+            if (layer._scripts[key]) {
+                document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
+                delete layer._scripts[key];
+            }
         }
 
         this._invertYAxe(data);
@@ -60,12 +62,16 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
     drawTile: function(canvas, tilePoint, zoom) {
         var zoomOffset = this.options.zoomOffset,
-            key = [(zoom - zoomOffset), tilePoint.x, tilePoint.y].join('/'),
+            rzoom = zoom - zoomOffset,
+            key = [rzoom, tilePoint.x, tilePoint.y].join('/'),
             url=this._url.replace('{x}',tilePoint.x).
                     replace('{y}',tilePoint.y).
-                    replace('{z}',zoom-zoomOffset);
+                    replace('{z}',rzoom);
         this._canvases[key] = canvas;
-        this._scripts[key] = this._loadScript(url);
+        if (url.endsWith('.json'))
+            this._loadJSON(url, rzoom, tilePoint.x, tilePoint.y);
+        else
+            this._scripts[key] = this._loadScript(url);
     },
 
     enableStyle: function(name) {
@@ -135,5 +141,20 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         script.charset = 'utf-8';
         document.getElementsByTagName('head')[0].appendChild(script);
         return script;
+    },
+
+    _loadJSON: function(url, zoom, x, y) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                if (xhr.status == 200) {
+                    window.onKothicDataResponse(JSON.parse(xhr.responseText), zoom, x, y);
+                } else {
+                    console.debug("failed:", url, xhr.status);
+                }
+            }
+        }
+        xhr.open("GET", url, true);
+        xhr.send(null);
     }
 });

@@ -28,11 +28,8 @@ Kothic.path = (function () {
         var bp = isTileBoundary(p, size);
         if (!bp)
             return 0;
-        var bq = isTileBoundary(q, size);
-        if (!bq)
-            return 0;
 
-        return (bp & bq);
+        return (bp & isTileBoundary(q, size));
     }
 
     return function (ctx, feature, dashes, fill, ws, hs, granularity) {
@@ -71,8 +68,7 @@ Kothic.path = (function () {
                                 ctx.setLineDash(dashes);
                             else
                                 ctx.setLineDash([]);
-                        }
-                        else if (!fill && checkSameBoundary(point, prevPoint, granularity)) {
+                        } else if (!fill && checkSameBoundary(point, prevPoint, granularity)) {
                             ctx.moveTo(screenPoint[0], screenPoint[1]);
                         } else {
                             ctx.lineTo(screenPoint[0], screenPoint[1]);
