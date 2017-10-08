@@ -7,7 +7,6 @@
 var Kothic = {
 
     render: function (canvas, data, zoom, options) {
-
         if (typeof canvas === 'string') {
             canvas = document.getElementById(canvas);
         }
