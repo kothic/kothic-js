@@ -1,12 +1,12 @@
-L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
+L.TileLayer.Kothic = L.GridLayer.extend({
     options: {
-        tileSize: 256 * 4,
-        zoomOffset: 2,
+        tileSize: 256,
+        zoomOffset: 0,
         minZoom: 2,
         maxZoom: 22,
         updateWhenIdle: true,
         unloadInvisibleTiles: true,
-        attribution: 'Map data &copy; 2013 <a href="http://osm.org/copyright">OpenStreetMap</a> contributors,' +
+        attribution: 'Map data &copy; 2019 <a href="http://osm.org/copyright">OpenStreetMap</a> contributors,' +
                      ' Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
         async: true,
         buffered: false,
@@ -18,29 +18,23 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
 
         this._url = url;
         this._canvases = {};
-        this._scripts = {};
         this._debugMessages = [];
 
         window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
     },
 
-    _onKothicDataResponse: function(data, zoom, x, y) {
+    _onKothicDataResponse: function(data, zoom, x, y, done) {
+        var error;
         var key = [zoom, x, y].join('/'),
             canvas = this._canvases[key],
-            zoomOffset = this.options.zoomOffset,
-            layer = this;
+            zoomOffset = this.options.zoomOffset;
 
         if (!canvas) {
             return;
         }
 
         function onRenderComplete() {
-            layer.tileDrawn(canvas);
-
-            if (layer._scripts[key]) {
-                document.getElementsByTagName('head')[0].removeChild(layer._scripts[key]);
-                delete layer._scripts[key];
-            }
+            done(error, canvas);
         }
 
         this._invertYAxe(data);
@@ -60,7 +54,38 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         return this._debugMessages;
     },
 
-    drawTile: function(canvas, tilePoint, zoom) {
+    createTile: function(tilePoint, done) {
+        // create a <canvas> element for drawing
+        var tile = L.DomUtil.create('canvas', 'leaflet-tile');
+        // setup tile width and height according to the options
+        var size = this.getTileSize();
+        tile.width = size.x;
+        tile.height = size.y;
+
+        tile._layer  = this;
+        tile.onerror = this._tileOnError;
+
+        var tileUrl = this._getTileUrl(tilePoint);
+        this.fire('tileloadstart', {
+            tile: tile,
+            url: tileUrl
+        });
+
+        // Fall back to standard behaviour
+        tile.onload = this._tileOnLoad;
+        tile.src = tileUrl;
+        this.drawTile(tile, tilePoint, tilePoint.z, done);
+
+        return tile;
+    },
+
+    _getTileUrl: function(tilePoint) {
+        return this._url.replace('{x}',tilePoint.x).
+        replace('{y}',tilePoint.y).
+        replace('{z}',tilePoint.z);
+    },
+
+    drawTile: function(canvas, tilePoint, zoom, done) {
         var zoomOffset = this.options.zoomOffset,
             rzoom = zoom - zoomOffset,
             key = [rzoom, tilePoint.x, tilePoint.y].join('/'),
@@ -68,10 +93,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
                     replace('{y}',tilePoint.y).
                     replace('{z}',rzoom);
         this._canvases[key] = canvas;
-        if (url.endsWith('.json'))
-            this._loadJSON(url, rzoom, tilePoint.x, tilePoint.y);
-        else
-            this._scripts[key] = this._loadScript(url);
+        this._loadJSON(url, rzoom, tilePoint.x, tilePoint.y, done);
     },
 
     enableStyle: function(name) {
@@ -90,11 +112,10 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
     },
 
     redraw: function() {
-        MapCSS.invalidateCache();
         // TODO implement layer.redraw() in Leaflet
-        this._map.getPanes().tilePane.empty = false;
         if (this._map && this._map._container) {
-            this._reset();
+            MapCSS.invalidateCache();
+            this._invalidateAll();
             this._update();
         }
     },
@@ -105,6 +126,7 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
             feature = data.features[i];
             coordinates = feature.coordinates;
             type = data.features[i].type;
+
             if (type === 'Point') {
                 coordinates[1] = tileSize - coordinates[1];
             } else if (type === 'MultiPoint' || type === 'LineString') {
@@ -135,25 +157,17 @@ L.TileLayer.Kothic = L.TileLayer.Canvas.extend({
         }
     },
 
-    _loadScript: function(url) {
-        var script = document.createElement('script');
-        script.src = url;
-        script.charset = 'utf-8';
-        document.getElementsByTagName('head')[0].appendChild(script);
-        return script;
-    },
-
-    _loadJSON: function(url, zoom, x, y) {
+    _loadJSON: function(url, zoom, x, y, done) {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                if (xhr.status == 200) {
-                    window.onKothicDataResponse(JSON.parse(xhr.responseText), zoom, x, y);
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    window.onKothicDataResponse(JSON.parse(xhr.responseText), zoom, x, y, done);
                 } else {
                     console.debug("failed:", url, xhr.status);
                 }
             }
-        }
+        };
         xhr.open("GET", url, true);
         xhr.send(null);
     }

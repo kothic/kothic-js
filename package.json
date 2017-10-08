@@ -1,8 +1,8 @@
 {
   "name": "kothic-js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "devDependencies": {
-    "grunt": "~0.4.1",
+    "grunt": "^1.0.4",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-uglify": "~0.2.2"

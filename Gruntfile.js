@@ -7,8 +7,8 @@ module.exports = function (grunt) {
             options: {
                 strict: false,
 
-                bitwise: true,
-                curly: true,
+                bitwise: false,
+                curly: false,
                 eqeqeq: true,
                 immed: true,
                 latedef: true,
@@ -17,7 +17,7 @@ module.exports = function (grunt) {
                 noempty: true,
                 nonew: true,
                 sub: true,
-                undef: true,
+                undef: false,
                 unused: true,
 
                 globals: {
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
 
         uglify: {
             options: {
-                banner: '/*\n (c) 2011-2013, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko\n' +
+                banner: '/*\n (c) 2011-2019, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko, Stephan Brandt\n' +
                         ' Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.\n' +
                         ' Built on <%= grunt.template.today("dd-mm-yyyy") %> |' +
                         ' https://github.com/kothic/kothic-js\n*/\n'

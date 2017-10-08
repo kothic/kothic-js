@@ -44,7 +44,7 @@ Kothic.style = {
             selector = 'node';
         }
 
-        return MapCSS.restyle(styleNames, feature.properties, zoom, type, selector);
+        return MapCSS.restyle(styleNames, feature.properties != null ? feature.properties : [], zoom, type, selector);
     },
 
     styleFeatures: function (features, zoom, styleNames) {
