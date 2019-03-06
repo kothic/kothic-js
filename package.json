@@ -11,6 +11,7 @@
     "prepublish": "grunt"
   },
   "dependencies": {
+    "pegjs": "^0.10.0",
     "rbush": "^2.0.1"
   }
 }
