@@ -34,13 +34,13 @@ exports.isOnTileBoundary = function(p, tile_width, tile_height) {
  * on the tile boundaries, but this case can't properly be detected here.
  */
 exports.checkSameBoundary = function(p, q, tile_width, tile_height) {
-  var bp = isOnTileBoundary(p, tile_width, tile_height);
+  var bp = exports.isOnTileBoundary(p, tile_width, tile_height);
 
   if (!bp) {
     return false;
   }
 
-  return (bp & isOnTileBoundary(q, tile_width, tile_height));
+  return (bp & exports.isOnTileBoundary(q, tile_width, tile_height));
 }
 
 
@@ -55,7 +55,7 @@ exports.transformPoint = function (point, ws, hs) {
 exports.transformPoints = function (points, ws, hs) {
   var transformed = [], i, len;
   for (i = 0, len = points.length; i < len; i++) {
-    transformed.push(this.transformPoint(points[i], ws, hs));
+    transformed.push(exports.transformPoint(points[i], ws, hs));
   }
   return transformed;
 };

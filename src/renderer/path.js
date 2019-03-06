@@ -76,7 +76,7 @@ module.exports = function(ctx, feature, dashes, fill, ws, hs, tile_width, tile_h
         point = points[j];
 
         // continue path off the tile by some amount to fix path edges between tiles
-        if ((j === 0 || j === pointsLen - 1) && geom.isTileBoundary(point, tile_width, tile_height)) {
+        if ((j === 0 || j === pointsLen - 1) && geom.isOnTileBoundary(point, tile_width, tile_height)) {
           k = j;
           do {
             k = j ? k - 1 : k + 1;
@@ -113,7 +113,7 @@ module.exports = function(ctx, feature, dashes, fill, ws, hs, tile_width, tile_h
           }
         } else {
           ctx.lineTo(screenPoint[0], screenPoint[1]);
-        }      
+        }
       }
     }
   }
