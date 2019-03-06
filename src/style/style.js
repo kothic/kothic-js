@@ -12,7 +12,7 @@ exports.defaultCanvasStyles = {
 
 /**
  ** Takes set of features and create list of rendering layers based on
- ** provided set of styles and current zoom 
+ ** provided set of styles and current zoom
  **/
 exports.populateLayers = function(features, zoom, styles) {
   var layers = {},
@@ -34,7 +34,7 @@ exports.populateLayers = function(features, zoom, styles) {
 }
 
 exports.getStyle = function(feature, zoom, styleNames) {
-        var shape = feature.type,
+        var shape = feature.geometry.type,
             type, selector;
         if (shape === 'LineString' || shape === 'MultiLineString') {
             type = 'way';

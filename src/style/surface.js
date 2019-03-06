@@ -4,25 +4,24 @@ var MapCSS = require('./mapcss');
 
     function restyle(style, tags, zoom, type, selector) {
         var s_default = {}, s_overlay = {};
-
         if (type == 'way') {
             s_overlay['color'] = '#f00';
             s_overlay['width'] = 1;
             s_overlay['z-index'] = 100;
         }
 
-        if (type == 'polygon') {
-            s_overlay['color'] = '#0f0';
-            s_overlay['width'] = 1;
-            s_overlay['z-index'] = 100;
-        }
-
-        if (type == 'node') {
-            s_overlay['color'] = '#0f0';
-            s_overlay['width'] = 1;
-            s_overlay['z-index'] = 100;
-        }
-
+        // if (type == 'polygon') {
+        //     s_overlay['color'] = '#0f0';
+        //     s_overlay['width'] = 1;
+        //     s_overlay['z-index'] = 100;
+        // }
+        //
+        // if (type == 'node') {
+        //     s_overlay['color'] = '#0f0';
+        //     s_overlay['width'] = 1;
+        //     s_overlay['z-index'] = 100;
+        // }
+        //
         if (Object.keys(s_default).length) {
             style['default'] = s_default;
         }

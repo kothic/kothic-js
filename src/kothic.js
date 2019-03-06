@@ -43,7 +43,7 @@ Kothic.prototype.setOptions = function(options) {
     }
 };
 
-Kothic.prototype.render = function (canvas, data, zoom, callback) {
+Kothic.prototype.render = function (canvas, data, zoom, bbox, callback) {
     // if (typeof canvas === 'string') {
     //     //TODO: Avoid document
     //     canvas = document.getElementById(canvas);
@@ -54,26 +54,41 @@ Kothic.prototype.render = function (canvas, data, zoom, callback) {
 //    MapCSS.locales = (options && options.locales) || [];
 
 //TODO: Consider moving this logic outside
-    var devicePixelRatio = 1; //Math.max(this.devicePixelRatio || 1, 2);
+//    var devicePixelRatio = 1; //Math.max(this.devicePixelRatio || 1, 2);
 
     var width = canvas.width,
     height = canvas.height;
 
-    if (devicePixelRatio !== 1) {
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        canvas.width = canvas.width * devicePixelRatio;
-        canvas.height = canvas.height * devicePixelRatio;
-    }
+    // if (devicePixelRatio !== 1) {
+    //     canvas.style.width = width + 'px';
+    //     canvas.style.height = height + 'px';
+    //     canvas.width = canvas.width * devicePixelRatio;
+    //     canvas.height = canvas.height * devicePixelRatio;
+    // }
 
     var ctx = canvas.getContext('2d');
-    ctx.scale(devicePixelRatio, devicePixelRatio);
+//    ctx.scale(devicePixelRatio, devicePixelRatio);
 
-    var granularity = data.granularity,
-        ws = width / granularity, hs = height / granularity,
-        collisionBuffer = new CollisionBuffer(height, width);
+    // var granularity = data.granularity,
+    //     ws = width / granularity, hs = height / granularity;
+    var collisionBuffer = new CollisionBuffer(height, width);
 
+    const hscale = width / (bbox[2] - bbox[0]);
+    const vscale = height / (bbox[3] - bbox[1]);
+    function project(point) {
+      const p = [
+        (point[0] - bbox[0]) * hscale,
+        (point[1] - bbox[1]) * vscale
+      ]
+
+      // console.log(p);
+      // exit;
+      //
+      return p;
+    }
     console.time('styles');
+
+
 
     // setup layer styles
     var layers = style.populateLayers(data.features, zoom, this.styles),
@@ -89,7 +104,7 @@ Kothic.prototype.render = function (canvas, data, zoom, callback) {
         console.time('geometry');
 
         renderBackground(ctx, width, height, zoom, self.styles);
-        renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
+        renderGeometryFeatures(layerIds, layers, ctx, project, width, height);
 
         console.timeEnd('geometry');
 
@@ -99,7 +114,7 @@ Kothic.prototype.render = function (canvas, data, zoom, callback) {
 
         self.getFrame(function () {
             console.time('text/icons');
-            renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
+            renderTextAndIcons(layerIds, layers, ctx, project, collisionBuffer);
             console.timeEnd('text/icons');
 
             //TODO: Uncomment and add option
@@ -151,7 +166,7 @@ function renderBackground(ctx, width, height, zoom, styles) {
     }
 }
 
-function renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity) {
+function renderGeometryFeatures(layerIds, layers, ctx, projectPointFunction, tile_width, tile_height) {
     var layersToRender = {},
         i, j, len, features, style, queue, bgQueue;
 
@@ -195,21 +210,21 @@ function renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity) {
 
         if (queue.polygons) {
             for (j = 0, len = queue.polygons.length; j < len; j++) {
-                Kothic.polygon.render(ctx, queue.polygons[j], queue.polygons[j + 1], ws, hs, granularity);
+                Kothic.polygon.render(ctx, queue.polygons[j], queue.polygons[j + 1], projectPointFunction, tile_width, tile_height);
             }
         }
 
         if (queue.casings) {
             ctx.lineCap = 'butt';
             for (j = 0, len = queue.casings.length; j < len; j++) {
-                line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], ws, hs, granularity);
+                line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], projectPointFunction, tile_width, tile_height);
             }
         }
 
         if (queue.lines) {
             ctx.lineCap = 'round';
             for (j = 0, len = queue.lines.length; j < len; j++) {
-                line.render(ctx, queue.lines[j], queue.lines[j + 1], ws, hs, granularity);
+                line.render(ctx, queue.lines[j], queue.lines[j + 1], projectPointFunction, tile_width, tile_height);
             }
         }
     }

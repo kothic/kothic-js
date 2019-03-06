@@ -3,7 +3,7 @@ var setStyles = require('../style/style').setStyles;
 var MapCSS = require('../style/mapcss');
 
 module.exports = {
-    renderCasing: function (ctx, feature, nextFeature, ws, hs, granularity) {
+    renderCasing: function (ctx, feature, nextFeature, projectPointFunction, tile_width, tile_height) {
         var style = feature.style,
             nextStyle = nextFeature && nextFeature.style;
 
@@ -12,7 +12,7 @@ module.exports = {
             ctx.beginPath();
         }
 
-        path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
+        path(ctx, feature.geometry, style["casing-dashes"] || style.dashes, false, projectPointFunction, tile_width, tile_height);
 
         if (nextFeature &&
                 nextStyle.width === style.width &&
@@ -35,7 +35,7 @@ module.exports = {
         this.pathOpened = false;
     },
 
-    render: function (ctx, feature, nextFeature, ws, hs, granularity) {
+    render: function (ctx, feature, nextFeature, projectPointFunction, tile_width, tile_height) {
         var style = feature.style,
             nextStyle = nextFeature && nextFeature.style;
 
@@ -44,7 +44,7 @@ module.exports = {
             ctx.beginPath();
         }
 
-        path(ctx, feature, style.dashes, false, ws, hs, granularity);
+        path(ctx, feature.geometry, style.dashes, false, projectPointFunction, tile_width, tile_height);
 
         if (nextFeature &&
                 nextStyle.width === style.width &&

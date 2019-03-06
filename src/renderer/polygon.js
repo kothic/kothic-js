@@ -3,7 +3,7 @@ var setStyles = require('../style/style').setStyles;
 var MapCSS = require('../style/mapcss');
 
 module.exports = {
-    render: function (ctx, feature, nextFeature, ws, hs, granularity) {
+    render: function (ctx, feature, nextFeature, projectPointFunction, tile_width, tile_height) {
         var style = feature.style,
             nextStyle = nextFeature && nextFeature.style;
 
@@ -12,7 +12,7 @@ module.exports = {
             ctx.beginPath();
         }
 
-        path(ctx, feature, false, true, ws, hs, granularity);
+        path(ctx, feature.geometry, false, true, projectPointFunction, tile_width, tile_height);
 
         if (nextFeature &&
                 (nextStyle['fill-color'] === style['fill-color']) &&

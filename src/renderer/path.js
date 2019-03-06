@@ -5,9 +5,9 @@ var geom = require('../utils/geom');
  **/
 
 //TODO: split configuration and call
-module.exports = function(ctx, feature, dashes, fill, ws, hs, tile_width, tile_height) {
-  var type = feature.type,
-  coords = feature.coordinates;
+module.exports = function(ctx, geometry, dashes, fill, projectPointFunction, tile_width, tile_height) {
+  var type = geometry.type,
+  coords = geometry.coordinates;
 
   //Convert single feature to a mult-type to make rendering easier
   if (type === "Polygon") {
@@ -39,7 +39,7 @@ module.exports = function(ctx, feature, dashes, fill, ws, hs, tile_width, tile_h
           //Close the ring from last to first point
           point = points[j] || points[0];
 
-          screenPoint = geom.transformPoint(point, ws, hs);
+          screenPoint = projectPointFunction(point);
           //Start drawing from first point
           if (j === 0) {
             ctx.moveTo(screenPoint[0], screenPoint[1]);
@@ -102,7 +102,7 @@ module.exports = function(ctx, feature, dashes, fill, ws, hs, tile_width, tile_h
           point[1] = point[1] + pad * dy / dist;
         }
 
-        screenPoint = geom.transformPoint(point, ws, hs);
+        screenPoint = projectPointFunction(point);
 
         if (j === 0) {
           ctx.moveTo(screenPoint[0], screenPoint[1]);
