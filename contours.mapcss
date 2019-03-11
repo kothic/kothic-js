@@ -1,0 +1,14 @@
+/*
+way[ele][ele % 1000] {
+  color: brown;
+  width: 3;
+}
+way[ele][ele % 100] {
+  color: brown;
+  width: 2;
+}
+*/
+way[ele] {
+  color: brown;
+  width: 1;
+}

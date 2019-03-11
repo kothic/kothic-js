@@ -185,4 +185,3 @@ module.exports.textOnPath = function (ctx, points, text, halo, collisions) {
             addCollision(collisions, ctx, axy[4], axy, avgLetterWidth);
         }
     };
-}());

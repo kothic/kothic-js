@@ -1,6 +1,6 @@
 var geom = require('../utils/geom');
-var setStyles = require('../style/style').setStyles;
-var getFontString = require('../style/style').getFontString;
+var setStyles = require('../utils/style').applyStyle;
+var getFontString = require('../utils/style').composeFontDeclaration;
 var textOnPath = require("./text").textOnPath;
 
 module.exports = {

@@ -1,4 +1,4 @@
-var rbush = require('rbush');
+const rbush = require('rbush');
 
 CollisionBuffer = function (height, width) {
     this.buffer = rbush();

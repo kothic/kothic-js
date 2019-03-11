@@ -1,6 +1,6 @@
 var path = require('./path');
-var setStyles = require('../style/style').setStyles;
-var getFontString = require('../style/style').getFontString;
+var setStyles = require('../utils/style').applyStyle;
+var getFontString = require('../utils/style').composeFontDeclaration;
 var MapCSS = require('../style/mapcss');
 var geom = require('../utils/geom');
 

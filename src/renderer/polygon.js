@@ -1,5 +1,5 @@
 var path = require('./path');
-var setStyles = require('../style/style').setStyles;
+var setStyles = require('../utils/style').applyStyle;
 var MapCSS = require('../style/mapcss');
 
 module.exports = {
