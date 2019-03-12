@@ -8,7 +8,7 @@ module.exports = {
     render: function (ctx, feature, collides, ws, hs, renderText, renderIcon) {
         var style = feature.style, img, point, w, h;
 
-        if (renderIcon || (renderText && feature.type !== 'LineString')) {
+        if (renderIcon || (renderText && feature.geometry.type !== 'LineString')) {
             var reprPoint = geom.getReprPoint(feature);
             if (!reprPoint) {
                 return;
@@ -66,7 +66,7 @@ module.exports = {
             else if (style['text-transform'] === 'capitalize')
                 text = text.replace(/(^|\s)\S/g, function(ch) { return ch.toUpperCase(); });
 
-            if (feature.type === 'Polygon' || feature.type === 'Point') {
+            if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'Point') {
                 var textWidth = ctx.measureText(text).width,
                         letterWidth = textWidth / text.length,
                         collisionWidth = textWidth,
@@ -86,9 +86,8 @@ module.exports = {
                 var padding = style['-x-kot-min-distance'] || 20;
                 collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
 
-            } else if (feature.type === 'LineString') {
-
-                var points = geom.transformPoints(feature.coordinates, ws, hs);
+            } else if (feature.geometry.type === 'LineString') {
+                var points = geom.transformPoints(feature.geometry.coordinates, ws, hs);
                 textOnPath(ctx, points, text, halo, collides);
             }
         }

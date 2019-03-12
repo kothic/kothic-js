@@ -38,23 +38,23 @@ function renderGeometryFeatures(layers, ctx, projectPointFunction, tile_width, t
   }
 }
 
-function renderTextAndIcons(layers, layers, ctx, ws, hs, collisionBuffer) {
+function renderTextAndIcons(layers, ctx, ws, hs, collisionBuffer) {
   for (var i = 1; i < layers.length; i++) {
     const queue = layers[i];
 
-    for (var j = 0; j < queue.icons.length; i++) {
+    for (var j = 0; j < queue.icons.length; j++) {
       texticons.render(ctx, queue.icons[j], collisionBuffer, ws, hs, false, true);
     }
 
-    for (var j = 0; j < queue.labels.length; i++) {
+    for (var j = 0; j < queue.labels.length; j++) {
       texticons.render(ctx, queue.labels[j], collisionBuffer, ws, hs, true, false);
     }
 
-    for (var j = 0; j < queue.label_icons.length; i++) {
+    for (var j = 0; j < queue.label_icons.length; j++) {
       texticons.render(ctx, queue.label_icons[j], collisionBuffer, ws, hs, true, true);
     }
 
-    for (var j = 0; j < queue.shields.length; i++) {
+    for (var j = 0; j < queue.shields.length; j++) {
       shields.render(ctx, queue.shields[j], collisionBuffer, ws, hs);
     }
   }
