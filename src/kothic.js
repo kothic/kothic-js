@@ -73,7 +73,7 @@ Kothic.prototype.setOptions = function(options) {
   }
 };
 
-Kothic.prototype.render = function (canvas, data, zoom, bbox, callback) {
+Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
     // if (typeof canvas === 'string') {
     //     //TODO: Avoid document
     //     canvas = document.getElementById(canvas);
@@ -103,6 +103,8 @@ Kothic.prototype.render = function (canvas, data, zoom, bbox, callback) {
     //     ws = width / granularity, hs = height / granularity;
     var collisionBuffer = new CollisionBuffer(height, width);
 
+
+    const bbox = geojson.bbox;
     const hscale = width / (bbox[2] - bbox[0]);
     const vscale = height / (bbox[3] - bbox[1]);
     function project(point) {
@@ -115,7 +117,7 @@ Kothic.prototype.render = function (canvas, data, zoom, bbox, callback) {
 
     // setup layer styles
     // Layer is an array of objects, already sorted
-    const layers = this.styleManager.createLayers(data.features, zoom);
+    const layers = this.styleManager.createLayers(geojson.features, zoom);
 
     // render the map
     canvasContext.applyDefaults(ctx);

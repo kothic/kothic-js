@@ -160,6 +160,19 @@ describe("MapCSS matchers", () => {
     });
   });
 
+  describe("Class matcher", () => {
+    it("single class", () => {
+      expect(matchers.matchClasses([{class: 'minor_road', not: false}], ['minor_road'])).to.be.true;
+      expect(matchers.matchClasses([{class: 'minor_road', not: true}], ['minor_road'])).to.be.false;
+      expect(matchers.matchClasses([{class: 'minor_road', not: false}], [])).to.be.false;
+    });
+
+    it("multiple classes", () => {
+      expect(matchers.matchClasses([{class: 'minor_road', not: false}, {class: 'unpaved', not: false}], ['minor_road', 'unpaved'])).to.be.true;
+      expect(matchers.matchClasses([{class: 'minor_road', not: false}, {class: 'unpaved', not: false}], ['minor_road'])).to.be.false;
+    });
+  });
+
   describe("Multiple attributes matcher", () => {
     it("multiple attributes", () => {
       expect(matchers.matchAttributes([{

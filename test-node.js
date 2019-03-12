@@ -4,7 +4,8 @@ const { createCanvas, loadImage } = require('canvas')
 
 // var style = require('./src/style/surface');
 
-const geojson = JSON.parse(fs.readFileSync('./N52E083.json'));
+const geojson = JSON.parse(fs.readFileSync('./N42E074-merc.json'));
+geojson.bbox = [8237642.32, 5160979.44, 8348961.81, 5311971.85];
 
 const canvas = createCanvas(1000, 1000)
 
@@ -16,10 +17,8 @@ var kothic = new Kothic({
   getFrame: (callback) => callback()
 });
 
-bbox = [83, 52, 84, 53];
-
 console.time("rendering")
-kothic.render(canvas, geojson, 13, bbox, function() {
+kothic.render(canvas, geojson, 13, function() {
   console.timeEnd("rendering")
   console.time("saving")
   const stream = canvas.createPNGStream();

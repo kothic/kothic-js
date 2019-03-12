@@ -1,5 +1,51 @@
 'use strict';
 
+function matchSelector(selector, tags, classes, zoom, type) {
+  if (!matchFeatureType(selector.type, type)) {
+    return false;
+  }
+
+  if (!matchZoom(selector.zoom, zoom)) {
+    return false;
+  }
+
+  if (!matchAttributes(selector.attributes, tags)) {
+    return false;
+  }
+
+  if (!matchClasses(selector.classes, classes)) {
+    return false;
+  }
+
+  return true;
+}
+
+
+/**
+ ** Has side effects for performance reasons (argumant if modified)
+ **/
+function appendSupportedTags(supportedTags, attributes) {
+  for (var i = 0; i < attributes.length; i++) {
+    const attr = attributes[i];
+
+    switch (attr.type) {
+      case 'presence':
+      case 'absence':
+        if (!(attr.key in supportedTags) && supportedTags[attr.key] != 'kv') {
+          supportedTags[attr.key] = 'k';
+        }
+        break;
+      case 'cmp':
+      case 'regexp':
+        if (!(attr.key in supportedTags)) {
+          supportedTags[attr.key] = 'kv';
+        }
+        break;
+    }
+  }
+}
+
+
 /**
  ** range:Object = {type: 'z', begin: int, end: int}
  ** zoom:int
@@ -51,6 +97,32 @@ function matchAttributes(attributes, tags) {
   }
 
   return true;
+}
+
+/**
+ ** Classes are concatenated by AND statement
+ ** selectorClasses:[{class:String, not:Boolean}]
+ ** classes:[String]
+ **/
+function matchClasses(selectorClasses, classes) {
+  for (var i = 0; i < selectorClasses.length; i++) {
+    const selClass = selectorClasses[i];
+    if (!matchClass(selClass, classes)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function matchClass(selectorClass, classes) {
+  for (var i = 0; i < classes.length; i++) {
+    const cls = classes[i];
+    if (selectorClass.class == cls) {
+      return !selectorClass.not;
+    }
+  }
+  return false;
 }
 
 /**
@@ -118,5 +190,8 @@ module.exports = {
   matchZoom: matchZoom,
   matchFeatureType: matchFeatureType,
   matchAttributes: matchAttributes,
-  matchAttribute: matchAttribute
+  matchAttribute: matchAttribute,
+  matchClasses: matchClasses,
+  matchSelector: matchSelector,
+  appendSupportedTags: appendSupportedTags
 }
