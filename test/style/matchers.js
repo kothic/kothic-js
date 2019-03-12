@@ -171,6 +171,11 @@ describe("MapCSS matchers", () => {
       expect(matchers.matchClasses([{class: 'minor_road', not: false}, {class: 'unpaved', not: false}], ['minor_road', 'unpaved'])).to.be.true;
       expect(matchers.matchClasses([{class: 'minor_road', not: false}, {class: 'unpaved', not: false}], ['minor_road'])).to.be.false;
     });
+
+    it("no classes", () => {
+      expect(matchers.matchClasses(null, ['minor_road', 'unpaved'])).to.be.true;
+      expect(matchers.matchClasses([], ['minor_road', 'unpaved'])).to.be.true;
+    });
   });
 
   describe("Multiple attributes matcher", () => {
@@ -185,6 +190,57 @@ describe("MapCSS matchers", () => {
         value: '0.7'
       }], {ford: 'yes', depth: '0.5'})).to.be.true;
       expect(matchers.matchAttributes([{type: 'presence', key: 'ford'}], {depth: '0.5'})).to.be.false;
+    });
+
+    it("no attributes", () => {
+      expect(matchers.matchAttributes(null, {ford: 'yes'})).to.be.true;
+      expect(matchers.matchAttributes([], {ford: 'yes'})).to.be.true;
+    });
+  });
+
+  describe("Known tags", () => {
+    it("selector attributes", () => {
+      const tags = {}
+      matchers.appendKnownTags(tags, [
+        {type: 'cmp', key: 'ele', op: '=', value: '1000'},
+        {type: 'regexp', key: 'ele', value: '\\d+'},
+        {type: 'presence', key: 'ele'},
+        {type: 'absence', key: 'ele'}
+      ]);
+      expect(tags).to.have.property('ele', 'kv');
+    });
+
+    it("selector priority", () => {
+      const tags = {}
+      matchers.appendKnownTags(tags, [
+        {type: 'presence', key: 'ele'},
+        {type: 'cmp', key: 'ele', op: '=', value: '1000'},
+        {type: 'absence', key: 'surface'}
+      ]);
+      expect(tags).to.have.property('ele', 'kv');
+      expect(tags).to.have.property('surface', 'k');
+    });
+  });
+
+  describe("Match selector", () => {
+    it("positive case", () => {
+      expect(matchers.matchSelector({type: 'node'}, {ele: 1000}, [], 10, 'Point')).to.be.true;
+    });
+
+    it("missed type", () => {
+      expect(matchers.matchSelector({type: 'node'}, {ele: 1000}, [], 10, 'LineString')).to.be.false;
+    });
+
+    it("missed zoom", () => {
+      expect(matchers.matchSelector({type: 'node', zoom: {type: 'z', begin: 6, end: 9}}, {ele: 1000}, [], 10, 'Point')).to.be.false;
+    });
+
+    it("missed class", () => {
+      expect(matchers.matchSelector({type: 'node', classes: [{class: 'minor_road', not: false}]}, {ele: 1000}, [], 10, 'Point')).to.be.false;
+    });
+
+    it("missed attributes", () => {
+      expect(matchers.matchSelector({type: 'node', attributes: [{type: 'absence', key: 'ele'}]}, {ele: 1000}, [], 10, 'Point')).to.be.false;
     });
   });
 });

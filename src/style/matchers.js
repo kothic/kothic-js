@@ -23,23 +23,23 @@ function matchSelector(selector, tags, classes, zoom, type) {
 
 /**
  ** Has side effects for performance reasons (argumant if modified)
+ ** knownTags:{tag: 'k'|'kv'}
+ ** attributes:[{type, key, value}]
  **/
-function appendSupportedTags(supportedTags, attributes) {
+function appendKnownTags(knownTags, attributes) {
   for (var i = 0; i < attributes.length; i++) {
     const attr = attributes[i];
-
     switch (attr.type) {
       case 'presence':
       case 'absence':
-        if (!(attr.key in supportedTags) && supportedTags[attr.key] != 'kv') {
-          supportedTags[attr.key] = 'k';
+        if (knownTags[attr.key] != 'kv') {
+          knownTags[attr.key] = 'k';
         }
         break;
       case 'cmp':
       case 'regexp':
-        if (!(attr.key in supportedTags)) {
-          supportedTags[attr.key] = 'kv';
-        }
+        //'kv' should override 'k'
+        knownTags[attr.key] = 'kv';
         break;
     }
   }
@@ -90,6 +90,10 @@ function matchFeatureType(selectorType, type) {
 }
 
 function matchAttributes(attributes, tags) {
+  if (!attributes) {
+    return true;
+  }
+
   for (var i = 0; i < attributes.length; i++) {
     if (!matchAttribute(attributes[i], tags)) {
       return false;
@@ -105,6 +109,10 @@ function matchAttributes(attributes, tags) {
  ** classes:[String]
  **/
 function matchClasses(selectorClasses, classes) {
+  if (!selectorClasses) {
+    return true;
+  }
+
   for (var i = 0; i < selectorClasses.length; i++) {
     const selClass = selectorClasses[i];
     if (!matchClass(selClass, classes)) {
@@ -193,5 +201,5 @@ module.exports = {
   matchAttribute: matchAttribute,
   matchClasses: matchClasses,
   matchSelector: matchSelector,
-  appendSupportedTags: appendSupportedTags
+  appendKnownTags: appendKnownTags
 }

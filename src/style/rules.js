@@ -3,13 +3,25 @@
 const matchers = require("./matchers");
 
 function listSupportedTags(rules) {
-  var result = [];
+  var tags = {};
   for (var i = 0; i < rules.length; i++) {
     const rule = rules[i];
 
     for (var j = 0; j < rule.selectors.length; j++) {
       const selector = rule.selectors[j];
-      matchers.appendSupportedTags(result, selector.attributes);
+      matchers.appendSupportedTags(tags, selector.attributes);
+    }
+
+    for (var j = 0; j < rule.actions.length; j++) {
+      const actions = rule.actions[j];
+
+      for (var k = 0; k < actions.length; k++) {
+        const action = actions[k];
+        //Support text: tagname instruction
+        if (action.type == 'kv' && action.k == 'text') {
+          tags[action.v.v] = 'kv';
+        }
+      }
     }
   }
 
