@@ -27,6 +27,10 @@ function matchSelector(selector, tags, classes, zoom, type) {
  ** attributes:[{type, key, value}]
  **/
 function appendKnownTags(knownTags, attributes) {
+  if (!attributes) {
+    return;
+  }
+  
   for (var i = 0; i < attributes.length; i++) {
     const attr = attributes[i];
     switch (attr.type) {

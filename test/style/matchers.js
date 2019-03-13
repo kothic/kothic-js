@@ -199,6 +199,12 @@ describe("MapCSS matchers", () => {
   });
 
   describe("Known tags", () => {
+    it("no attributes", () => {
+      const tags = {}
+      matchers.appendKnownTags(tags, null);
+      expect(tags).to.be.empty;
+    });
+
     it("selector attributes", () => {
       const tags = {}
       matchers.appendKnownTags(tags, [

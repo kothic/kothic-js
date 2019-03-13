@@ -3,7 +3,7 @@
 const rules = require("./rules");
 
 function MapCSS(ast, options={}) {
-  this.supportedTags = rules.listSupportedTags(ast);
+  this.knownTags = rules.listKnownTags(ast);
 
   this.rules = ast;
 
@@ -18,8 +18,8 @@ MapCSS.prototype.createCacheKey = function(tags, zoom, type, selector) {
   var keys = [];
   for (var k in tags) {
     //Test only tags, mentioned in CSS selectors
-    if (k in this.supportedTags) {
-      if (this.supportedTags[k] === 'kv') {
+    if (k in this.knownTags) {
+      if (this.knownTags[k] === 'kv') {
         //Tag key and values are checked in MapCSS
         keys.push(k + ":" + tags[k]);
       } else {

@@ -2,14 +2,14 @@
 
 const matchers = require("./matchers");
 
-function listSupportedTags(rules) {
+function listKnownTags(rules) {
   var tags = {};
   for (var i = 0; i < rules.length; i++) {
     const rule = rules[i];
 
     for (var j = 0; j < rule.selectors.length; j++) {
       const selector = rule.selectors[j];
-      matchers.appendSupportedTags(tags, selector.attributes);
+      matchers.appendKnownTags(tags, selector.attributes);
     }
 
     for (var j = 0; j < rule.actions.length; j++) {
@@ -18,14 +18,15 @@ function listSupportedTags(rules) {
       for (var k = 0; k < actions.length; k++) {
         const action = actions[k];
         //Support text: tagname instruction
-        if (action.type == 'kv' && action.k == 'text') {
+        console.log(action);
+        if (action.action == 'kv' && action.k == 'text') {
           tags[action.v.v] = 'kv';
         }
       }
     }
   }
 
-  return result;
+  return tags;
 }
 
 function apply(rules, tags, classes, zoom, type) {
@@ -108,6 +109,6 @@ function unwindActions(blocks, tags, classes) {
 }
 
 module.exports = {
-  listSupportedTags: listSupportedTags,
+  listKnownTags: listKnownTags,
   apply: apply,
 }
