@@ -1,9 +1,10 @@
 'use strict';
 
 const expect = require("chai").expect;
-
-const rules = require("../../src/style/rules");
 const mapcss = require("mapcss");
+var rewire = require("rewire");
+
+const rules = rewire("../../src/style/rules");
 
 describe("Known Tags", () => {
   it("empty rules", () => {
