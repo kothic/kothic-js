@@ -4,7 +4,7 @@ const { createCanvas, loadImage } = require('canvas')
 
 // var style = require('./src/style/surface');
 
-const geojson = JSON.parse(fs.readFileSync('./N42E074-merc.json'));
+const geojson = JSON.parse(fs.readFileSync('./N52E083.json'));
 geojson.bbox = [8237642.32, 5160979.44, 8348961.81, 5311971.85];
 
 const canvas = createCanvas(1000, 1000)

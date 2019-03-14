@@ -1,66 +1,53 @@
-e_min: function (/*...*/) {
+'use strict';
+
+const EVAL_FUNCTIONS = {
+  min: function (/*...*/) {
     return Math.min.apply(null, arguments);
-},
+  },
 
-e_max: function (/*...*/) {
+  max: function (/*...*/) {
     return Math.max.apply(null, arguments);
-},
+  },
 
-e_any: function (/*...*/) {
-    var i;
-
-    for (i = 0; i < arguments.length; i++) {
-        if (typeof(arguments[i]) !== 'undefined' && arguments[i] !== '') {
-            return arguments[i];
-        }
+  any: function (/*...*/) {
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof(arguments[i]) !== 'undefined' && arguments[i] !== '') {
+        return arguments[i];
+      }
     }
 
     return '';
-},
+  },
 
-e_num: function (arg) {
-    if (!isNaN(parseFloat(arg))) {
-        return parseFloat(arg);
-    } else {
-        return '';
-    }
-},
+  num: function (arg) {
+    const n = parseFloat(arg);
+    return isNaN(n) ? '' : n;
+  },
 
-e_str: function (arg) {
-    return arg;
-},
+  str: function (arg) {
+    return '' + arg;
+  },
 
-e_int: function (arg) {
-    return parseInt(arg, 10);
-},
+  int: function (arg) {
+    const n = parseInt(arg, 10);
+    return isNaN(n) ? 0 : n;
+  },
 
-e_tag: function (obj, tag) {
-    if (obj.hasOwnProperty(tag) && obj[tag] !== null) {
-        return tag;
-    } else {
-        return '';
-    }
-},
+  tag: function (tags, arg) {
+    return arg in tags ? tags[arg] : '';
+  },
 
-e_prop: function (obj, tag) {
-    if (obj.hasOwnProperty(tag) && obj[tag] !== null) {
-        return obj[tag];
-    } else {
-        return '';
-    }
-},
-
-e_sqrt: function (arg) {
+  sqrt: function (arg) {
     return Math.sqrt(arg);
-},
+  },
 
-e_boolean: function (arg, if_exp, else_exp) {
+  cond: function (arg, if_exp, else_exp) {
     if (typeof(if_exp) === 'undefined') {
-        if_exp = 'true';
+      if_exp = 'true';
     }
 
     if (typeof(else_exp) === 'undefined') {
-        else_exp = 'false';
+      else_exp = 'false';
     }
 
     if (arg === '0' || arg === 'false' || arg === '') {
@@ -68,123 +55,188 @@ e_boolean: function (arg, if_exp, else_exp) {
     } else {
         return if_exp;
     }
-},
+  },
 
-e_metric: function (arg) {
+  metric: function (arg) {
     if (/\d\s*mm$/.test(arg)) {
-        return 1000 * parseInt(arg, 10);
+      return 1000 * parseInt(arg, 10);
     } else if (/\d\s*cm$/.test(arg)) {
-        return 100 * parseInt(arg, 10);
+      return 100 * parseInt(arg, 10);
     } else if (/\d\s*dm$/.test(arg)) {
-        return 10 * parseInt(arg, 10);
+      return 10 * parseInt(arg, 10);
     } else if (/\d\s*km$/.test(arg)) {
-        return 0.001 * parseInt(arg, 10);
+      return 0.001 * parseInt(arg, 10);
     } else if (/\d\s*in$/.test(arg)) {
-        return 0.0254 * parseInt(arg, 10);
+      return 0.0254 * parseInt(arg, 10);
     } else if (/\d\s*ft$/.test(arg)) {
-        return 0.3048 * parseInt(arg, 10);
+      return 0.3048 * parseInt(arg, 10);
     } else {
-        return parseInt(arg, 10);
+      return parseInt(arg, 10);
     }
-},
+  },
 
-e_zmetric: function (arg) {
-    return MapCSS.e_metric(arg);
-},
+  // localize: function (tags, text) {
+  //   var locales = MapCSS.locales, i, tag;
+  //
+  //   for (i = 0; i < locales.length; i++) {
+  //       tag = text + ':' + locales[i];
+  //       if (tags[tag]) {
+  //           return tags[tag];
+  //       }
+  //   }
+  //
+  //   return tags[text];
+  // },
 
-e_localize: function (tags, text) {
-    var locales = MapCSS.locales, i, tag;
-
-    for (i = 0; i < locales.length; i++) {
-        tag = text + ':' + locales[i];
-        if (tags[tag]) {
-            return tags[tag];
-        }
-    }
-
-    return tags[text];
-},
-
-e_join: function () {
+  join: function () {
     if (arguments.length === 2 && Object.prototype.toString.call(arguments[1]) === '[object Array]') {
-        return arguments[1].join(arguments[0]);
-    } else {
-        var tagString = "";
-
-        for (var i = 1; i < arguments.length; i++)
-            tagString = tagString.concat(arguments[0]).concat(arguments[i]);
-
-        return tagString.substr(arguments[0].length);
+      return arguments[1].join(arguments[0]);
     }
-},
+    var tagString = "";
 
-e_split: function (sep, text) {
+    for (var i = 1; i < arguments.length; i++) {
+      tagString = tagString.concat(arguments[0]).concat(arguments[i]);
+    }
+
+    return tagString.substr(arguments[0].length);
+  },
+
+  split: function (sep, text) {
     return text.split(sep);
-},
+  },
 
-e_get: function(arr, index) {
-    if (Object.prototype.toString.call(arr) !== '[object Array]')
-        return "";
+  get: function(arr, index) {
+    if (Object.prototype.toString.call(arr) !== '[object Array]') {
+      return "";
+    }
 
-    if (!/^[0-9]+$/.test(index) || index >= arr.length())
-        return "";
+    if (!/^[0-9]+$/.test(index) || index >= arr.length()) {
+      return "";
+    }
 
     return arr[index];
-},
+  },
 
-e_set: function(arr, index, text) {
-    if (Object.prototype.toString.call(arr) !== '[object Array]')
-        return [];
+  set: function(arr, index, text) {
+    if (Object.prototype.toString.call(arr) !== '[object Array]') {
+      return [];
+    }
 
-    if (!/^[0-9]+$/.test(index))
-        return [];
+    if (!/^[0-9]+$/.test(index)) {
+      return [];
+    }
 
     arr[index] = text;
 
     return arr;
-},
+  },
 
-e_count: function(arr) {
-    if (Object.prototype.toString.call(arr) !== '[object Array]')
-        return 0;
+  count: function(arr) {
+    if (Object.prototype.toString.call(arr) !== '[object Array]') {
+      return 0;
+    }
 
     return arr.length();
-},
+  },
 
-e_list: function() {
+  list: function() {
     return arguments;
-},
+  },
 
-e_append: function(lst, v) {
-    if (Object.prototype.toString.call(lst) !== '[object Array]')
-        return [];
+  append: function(lst, v) {
+    if (Object.prototype.toString.call(lst) !== '[object Array]') {
+      return [];
+    }
 
     lst.push(v);
 
     return lst;
-},
+  },
 
-e_contains: function(lst, v) {
-    if (Object.prototype.toString.call(lst) !== '[object Array]')
-        return false;
+  contains: function(lst, v) {
+    if (Object.prototype.toString.call(lst) !== '[object Array]') {
+      return false;
+    }
 
     return (lst.indexOf(v) >= 0);
-},
+  },
 
-e_sort: function(lst) {
-    if (Object.prototype.toString.call(lst) !== '[object Array]')
-        return [];
+  sort: function(lst) {
+    if (Object.prototype.toString.call(lst) !== '[object Array]') {
+      return [];
+    }
 
     lst.sort();
 
     return lst;
-},
+  },
 
-e_reverse: function(lst) {
-    if (Object.prototype.toString.call(lst) !== '[object Array]')
-        return [];
+  reverse: function(lst) {
+    if (Object.prototype.toString.call(lst) !== '[object Array]') {
+      return [];
+    }
 
     lst.reverse();
 
     return lst;
-},
+  },
+};
+
+function evalBinaryOp(left, op, right) {
+  switch (op) {
+    case '+':
+      return left + right;
+    case '-':
+      return left - right;
+    case '*':
+      return left * right;
+    case '/':
+      return left / right;
+    default:
+      throw "Unexpected binary opertator in eval " + JSON.stringify(op);
+  }
+}
+
+function evalFunc(func, args) {
+  if (!func in EVAL_FUNCTIONS) {
+    throw "Unexpected function in eval " + JSON.stringify(func);
+  }
+
+  return EVAL_FUNCTIONS[func].call(args);
+}
+
+function evalExpr(expr, tags) {
+  switch (expr.type) {
+    case "binary_op":
+      return evalBinaryOp(evalExpr(expr.left), expr.op, evalExpr(expr.right));
+    case "function":
+      return evalFun(expr.func, expr.args.map(evalExpr));
+    case "string":
+    case "number":
+      return expr.value;
+    default:
+      throw "Unexpected eval type " + JSON.stringify(expr);
+  }
+}
+
+function appendKnownTags(tags, expr) {
+  switch (expr.type) {
+    case "binary_op":
+      appendKnownTags(tags, expr.left);
+      appendKnownTags(tags, expr.right);
+      break;
+    case "function":
+      //TODO: Implement extracting tag function argument
+      break;
+    case "string":
+    case "number":
+      break;
+    default:
+      throw "Unexpected eval type " + JSON.stringify(expr);
+  }
+}
+
+module.exports = {
+  evalExpr: evalExpr,
+  appendKnownTags: appendKnownTags
+};
