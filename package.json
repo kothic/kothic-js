@@ -3,21 +3,15 @@
   "version": "0.2.0",
   "devDependencies": {
     "chai": "^4.0.0",
-    "mocha": "^3.4.2",
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-uglify": "~0.2.2"
+    "mocha": "^6.0.2",
+    "rewire": "^4.0.1"
   },
   "scripts": {
-    "prepublish": "grunt",
     "test": "./node_modules/.bin/mocha -u bdd --recursive"
   },
   "dependencies": {
     "canvas": "^2.3.1",
     "nearley": "^2.16.0",
-    "pegjs": "^0.10.0",
-    "rbush": "^2.0.1",
-    "rewire": "^4.0.1"
+    "rbush": "^2.0.1"
   }
 }

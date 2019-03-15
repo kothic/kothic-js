@@ -205,7 +205,7 @@ function evalFunc(func, args) {
   return EVAL_FUNCTIONS[func].call(args);
 }
 
-function evalExpr(expr, tags) {
+function evalExpr(expr, tags={}, actions={}) {
   switch (expr.type) {
     case "binary_op":
       return evalBinaryOp(evalExpr(expr.left), expr.op, evalExpr(expr.right));
