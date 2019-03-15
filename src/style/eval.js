@@ -210,7 +210,7 @@ function evalExpr(expr, tags={}, actions={}) {
     case "binary_op":
       return evalBinaryOp(evalExpr(expr.left), expr.op, evalExpr(expr.right));
     case "function":
-      return evalFun(expr.func, expr.args.map(evalExpr));
+      return evalFunc(expr.func, expr.args.map(evalExpr));
     case "string":
     case "number":
       return expr.value;
@@ -220,14 +220,16 @@ function evalExpr(expr, tags={}, actions={}) {
 }
 
 function appendKnownTags(tags, expr) {
+  console.log(JSON.stringify(expr));
   switch (expr.type) {
     case "binary_op":
       appendKnownTags(tags, expr.left);
       appendKnownTags(tags, expr.right);
       break;
     case "function":
-      if (expr.func == "tag" && expr.args.length == 1 && expr.args[0].type == "string") {
-        tags[expr.args[0].value] = 'kv';
+      if (expr.func == "tag" && expr.args.length == 1) {
+        const tag = evalExpr(expr.args[0], {}, {});
+        tags[tag] = 'kv';
       }
       break;
     case "string":

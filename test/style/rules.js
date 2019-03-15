@@ -21,7 +21,7 @@ describe("Known Tags", () => {
     expect(rules.listKnownTags(ast)).to.have.property('ele', 'kv')
   });
 
-  it("tag in eval", () => {
+  it("tag() in eval", () => {
     const ast = mapcss.parse('way {text: eval(tag("ele"));}');
     expect(rules.listKnownTags(ast)).to.have.property('ele', 'kv')
   });

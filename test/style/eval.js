@@ -33,5 +33,11 @@ describe("Eval", () => {
       evaluate.appendKnownTags(tags, evalExpr('tag("name")'));
       expect(tags).to.have.property('name', 'kv');
     });
+
+    it("tag() function argument evaluation", () => {
+      const tags = {};
+      evaluate.appendKnownTags(tags, evalExpr('tag(concat("name", ":ru"))'));
+      expect(tags).to.have.property('name', 'kv');
+    });
   });
 });
