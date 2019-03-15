@@ -226,7 +226,9 @@ function appendKnownTags(tags, expr) {
       appendKnownTags(tags, expr.right);
       break;
     case "function":
-      //TODO: Implement extracting tag function argument
+      if (expr.func == "tag" && expr.args.length == 1 && expr.args[0].type == "string") {
+        tags[expr.args[0].value] = 'kv';
+      }
       break;
     case "string":
     case "number":
