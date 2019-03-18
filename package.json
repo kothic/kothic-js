@@ -7,7 +7,8 @@
     "rewire": "^4.0.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha -u bdd --recursive"
+    "test": "./node_modules/.bin/mocha -u bdd --recursive",
+    "test-cov": "nyc --reporter=lcov --reporter=text --reporter=html ./node_modules/.bin/mocha -u bdd --recursive"
   },
   "dependencies": {
     "canvas": "^2.3.1",
