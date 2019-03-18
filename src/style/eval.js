@@ -198,11 +198,11 @@ function evalBinaryOp(left, op, right) {
 }
 
 function evalFunc(func, args) {
-  if (!func in EVAL_FUNCTIONS) {
+  if (!(func in EVAL_FUNCTIONS)) {
     throw "Unexpected function in eval " + JSON.stringify(func);
   }
 
-  return EVAL_FUNCTIONS[func].call(args);
+  return EVAL_FUNCTIONS[func].apply(this, args);
 }
 
 function evalExpr(expr, tags={}, actions={}) {
@@ -220,7 +220,6 @@ function evalExpr(expr, tags={}, actions={}) {
 }
 
 function appendKnownTags(tags, expr) {
-  console.log(JSON.stringify(expr));
   switch (expr.type) {
     case "binary_op":
       appendKnownTags(tags, expr.left);
