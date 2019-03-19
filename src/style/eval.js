@@ -21,7 +21,7 @@ const EVAL_FUNCTIONS = {
 
   num: function (arg) {
     const n = parseFloat(arg);
-    return isNaN(n) ? '' : n;
+    return isNaN(n) ? 0 : n;
   },
 
   str: function (arg) {
@@ -33,60 +33,34 @@ const EVAL_FUNCTIONS = {
     return isNaN(n) ? 0 : n;
   },
 
-  tag: function (tags, arg) {
-    return arg in tags ? tags[arg] : '';
-  },
-
   sqrt: function (arg) {
     return Math.sqrt(arg);
   },
 
-  cond: function (arg, if_exp, else_exp) {
-    if (typeof(if_exp) === 'undefined') {
-      if_exp = 'true';
-    }
+  cond: function (arg, trueExpr, falseExpr) {
+    trueExpr = trueExpr || true;
+    falseExpr = falseExpr || false;
 
-    if (typeof(else_exp) === 'undefined') {
-      else_exp = 'false';
-    }
-
-    if (arg === '0' || arg === 'false' || arg === '') {
-        return else_exp;
-    } else {
-        return if_exp;
-    }
+    return arg ? trueExpr : falseExpr;
   },
 
   metric: function (arg) {
     if (/\d\s*mm$/.test(arg)) {
-      return 1000 * parseInt(arg, 10);
+      return 0.001 * parseFloat(arg);
     } else if (/\d\s*cm$/.test(arg)) {
-      return 100 * parseInt(arg, 10);
+      return 0.01 * parseFloat(arg);
     } else if (/\d\s*dm$/.test(arg)) {
-      return 10 * parseInt(arg, 10);
+      return 0.1 * parseFloat(arg);
     } else if (/\d\s*km$/.test(arg)) {
-      return 0.001 * parseInt(arg, 10);
-    } else if (/\d\s*in$/.test(arg)) {
-      return 0.0254 * parseInt(arg, 10);
-    } else if (/\d\s*ft$/.test(arg)) {
-      return 0.3048 * parseInt(arg, 10);
+      return 1000 * parseFloat(arg);
+    } else if (/\d\s*(in|")$/.test(arg)) {
+      return 0.0254 * parseFloat(arg);
+    } else if (/\d\s*(ft|')$/.test(arg)) {
+      return 0.3048 * parseFloat(arg);
     } else {
-      return parseInt(arg, 10);
+      return parseFloat(arg);
     }
   },
-
-  // localize: function (tags, text) {
-  //   var locales = MapCSS.locales, i, tag;
-  //
-  //   for (i = 0; i < locales.length; i++) {
-  //       tag = text + ':' + locales[i];
-  //       if (tags[tag]) {
-  //           return tags[tag];
-  //       }
-  //   }
-  //
-  //   return tags[text];
-  // },
 
   join: function () {
     if (arguments.length === 2 && Object.prototype.toString.call(arguments[1]) === '[object Array]') {
@@ -110,7 +84,7 @@ const EVAL_FUNCTIONS = {
       return "";
     }
 
-    if (!/^[0-9]+$/.test(index) || index >= arr.length()) {
+    if (!/^[0-9]+$/.test(index) || index >= arr.length) {
       return "";
     }
 
@@ -119,11 +93,11 @@ const EVAL_FUNCTIONS = {
 
   set: function(arr, index, text) {
     if (Object.prototype.toString.call(arr) !== '[object Array]') {
-      return [];
+      return arr;
     }
 
     if (!/^[0-9]+$/.test(index)) {
-      return [];
+      return arr;
     }
 
     arr[index] = text;
@@ -136,11 +110,11 @@ const EVAL_FUNCTIONS = {
       return 0;
     }
 
-    return arr.length();
+    return arr.length;
   },
 
   list: function() {
-    return arguments;
+    return Array.from(arguments);
   },
 
   append: function(lst, v) {
@@ -176,9 +150,7 @@ const EVAL_FUNCTIONS = {
       return [];
     }
 
-    lst.reverse();
-
-    return lst;
+    return lst.reverse();
   },
 };
 
@@ -193,29 +165,54 @@ function evalBinaryOp(left, op, right) {
     case '/':
       return left / right;
     default:
-      throw "Unexpected binary opertator in eval " + JSON.stringify(op);
+      throw new TypeError("Unexpected binary opertator in eval " + JSON.stringify(op));
   }
 }
 
-function evalFunc(func, args) {
-  if (!(func in EVAL_FUNCTIONS)) {
-    throw "Unexpected function in eval " + JSON.stringify(func);
-  }
+function evalFunc(func, args, tags, actions, locales) {
+  switch (func) {
+    case 'tag':
+      if (args.length != 1) {
+        throw new Error("tag() function allows only one argument");
+      }
+      return args[0] in tags ? tags[args[0]] : '';
+    case 'prop':
+      if (args.length != 1) {
+        throw new Error("prop() function allows only one argument");
+      }
+      return args[0] in actions ? actions[args[0]] : '';
+    case 'localize':
+      if (args.length != 1) {
+        throw new Error("localize() function allows only one argument");
+      }
+      const field = args[0];
+      for (var i = 0; i < locales.length; i++) {
+        const tag = field + ':' + locales[i];
+        if (tag in tags) {
+          return tags[tag];
+        }
+      }
 
-  return EVAL_FUNCTIONS[func].apply(this, args);
+      return field in tags ? tags[field] : '';
+    default:
+      if (!(func in EVAL_FUNCTIONS)) {
+        throw new Error("Unexpected function in eval " + JSON.stringify(func));
+      }
+      return EVAL_FUNCTIONS[func].apply(this, args);
+  }
 }
 
-function evalExpr(expr, tags={}, actions={}) {
+function evalExpr(expr, tags={}, actions={}, locales=[]) {
   switch (expr.type) {
     case "binary_op":
-      return evalBinaryOp(evalExpr(expr.left), expr.op, evalExpr(expr.right));
+      return evalBinaryOp(evalExpr(expr.left, tags, actions, locales), expr.op, evalExpr(expr.right, tags, actions, locales));
     case "function":
-      return evalFunc(expr.func, expr.args.map(evalExpr));
+      return evalFunc(expr.func, expr.args.map((x) => evalExpr(x, tags, actions)), tags, actions, locales);
     case "string":
     case "number":
       return expr.value;
     default:
-      throw "Unexpected eval type " + JSON.stringify(expr);
+      throw new TypeError("Unexpected expression type " + JSON.stringify(expr));
   }
 }
 
@@ -226,7 +223,7 @@ function appendKnownTags(tags, expr) {
       appendKnownTags(tags, expr.right);
       break;
     case "function":
-      if (expr.func == "tag" && expr.args.length == 1) {
+      if (expr.func == "tag" && expr.args && expr.args.length == 1) {
         const tag = evalExpr(expr.args[0], {}, {});
         tags[tag] = 'kv';
       }
@@ -235,7 +232,7 @@ function appendKnownTags(tags, expr) {
     case "number":
       break;
     default:
-      throw "Unexpected eval type " + JSON.stringify(expr);
+      throw new TypeError("Unexpected eval type " + JSON.stringify(expr));
   }
 }
 
