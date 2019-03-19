@@ -65,7 +65,7 @@ function applyRule(rule, tags, classes, zoom, type) {
     if (matchers.matchSelector(selector, tags, classes, zoom, type)) {
       const actions = {
         rule: rule,
-        actions: unwindActions(blocks, tags, classes)
+        actions: unwindActions(blocks, tags, properties, locales, classes)
       }
       result.push(actions);
       if ('exit' in actions) {
@@ -77,7 +77,7 @@ function applyRule(rule, tags, classes, zoom, type) {
   return result;
 }
 
-function unwindActions(actions, tags, classes) {
+function unwindActions(actions, tags, properties, locales, classes) {
   const result = {};
 
   for (var i = 0; i < actions.length; i++) {
@@ -85,7 +85,7 @@ function unwindActions(actions, tags, classes) {
 
     switch (action.action) {
       case 'kv':
-        result[action.k] = unwindValue(action.v, tags);
+        result[action.k] = unwindValue(action.v, tags, properties, locales);
         break;
       case 'set_class':
         if (!classes.includes(action.v.class)) {
@@ -93,7 +93,7 @@ function unwindActions(actions, tags, classes) {
         }
         break;
       case 'set_tag':
-        tags[action.k] = unwindValue(action.v, tags);
+        tags[action.k] = unwindValue(action.v, tags, properties, locales);
         break;
       case 'exit':
         result['exit'] = true;
@@ -105,14 +105,14 @@ function unwindActions(actions, tags, classes) {
   return result;
 }
 
-function unwindValue(value, tags) {
+function unwindValue(value, tags, properties, locales) {
   switch (value.type) {
     case 'string':
       return value.v;
     case 'csscolor':
       return formatCssColor(value.v);
     case 'eval':
-      return evalProcessor.evalExpr(value.v, tags);
+      return evalProcessor.evalExpr(value.v, tags, properties, locales);
     default:
       throw "Value type is not supproted: " + JSON.stringify(action);
   }
