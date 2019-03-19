@@ -9,13 +9,6 @@ way[ele][ele % 100] {
 }
 */
 line[ele] {
-  text: ele;
-  text-color: green;
-}
-
-way[ele=100],
-way[ele=200],
-way[ele=300] {
-  color: red;
-  width: 3;
+  color: green;
+  width: 1;
 }

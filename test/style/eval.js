@@ -77,21 +77,34 @@ describe("Eval", () => {
       expect(tags).to.have.property('name', 'kv');
     });
 
+    it("localize() function", () => {
+      const tags = {};
+      evaluate.appendKnownTags(tags, expr('localize("name")'), ['cn']);
+      expect(tags).to.have.property('name', 'kv');
+      expect(tags).to.have.property('name:cn', 'kv');
+    });
+
     it("tag() function argument evaluation", () => {
       const tags = {};
       evaluate.appendKnownTags(tags, expr('tag(join("", "name", ":ru"))'));
       expect(tags).to.have.property('name:ru', 'kv');
     });
 
-    it("no tag() in expression", () => {
+    it("no arguments of tag()", () => {
       const tags = {};
       evaluate.appendKnownTags(tags, expr('tag()'));
       expect(tags).to.be.empty;
     });
 
-    it("no arguments of tag()", () => {
+    it("no tag() in expression", () => {
       const tags = {};
-      evaluate.appendKnownTags(tags, expr('"2" + 2'));
+      evaluate.appendKnownTags(tags, expr('"2" + str(2)'));
+      expect(tags).to.be.empty;
+    });
+
+    it("no arguments of localize()", () => {
+      const tags = {};
+      evaluate.appendKnownTags(tags, expr('localize()'));
       expect(tags).to.be.empty;
     });
 

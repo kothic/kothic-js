@@ -3,7 +3,7 @@
 const matchers = require("./matchers");
 const evalProcessor = require("./eval");
 
-function listKnownTags(rules) {
+function listKnownTags(rules, locales) {
   var tags = {};
   for (var i = 0; i < rules.length; i++) {
     const rule = rules[i];
@@ -22,7 +22,7 @@ function listKnownTags(rules) {
         tags[value.v] = 'kv';
       } else if (value.type === "eval") {
         //Support tag() function in eval
-        evalProcessor.appendKnownTags(tags, value.v);
+        evalProcessor.appendKnownTags(tags, value.v, locales);
       }
     }
   }
@@ -30,20 +30,21 @@ function listKnownTags(rules) {
   return tags;
 }
 
-function apply(rules, tags, classes, zoom, type) {
+function apply(rules, tags, classes, zoom, type, locales) {
   const layers = {};
 
   for (var i = 0; i < rules.length; i++) {
     const rule = rules[i];
 
-    const ruleLayers = applyRule(rule, tags, classes, zoom, type);
+    const ruleLayers = applyRule(rule, tags, classes, zoom, type, locales);
     var exit = false;
-    for (var j = 0; j < ruleLayers.length; j++) {
-      const ruleLayer = ruleLayers[j];
-      layers[ruleLayer.key] = layers[ruleLayer.key] || {};
-      //Override result of previous rules
-      Object.assign(layers[ruleLayer.key], ruleLayer.actions);
-      exit = exit || 'exit' in ruleLayer;
+    for (var layer in ruleLayers) {
+      layers[layer] = layers[layer] || {};
+      if ('exit' in ruleLayers[layer]) {
+        exit = true;
+        delete ruleLayers[layer]['exit'];
+      }
+      Object.assign(layers[layer], ruleLayers[layer]);
     }
 
     if (exit) {
@@ -54,21 +55,25 @@ function apply(rules, tags, classes, zoom, type) {
   return layers;
 }
 
-function applyRule(rule, tags, classes, zoom, type) {
+/**
+ ** return {layer, {prop, value}};
+ **/
+function applyRule(rule, tags, classes, zoom, type, locales) {
   const selectors = rule.selectors;
-  const blocks = rule.actions;
-  const result = [];
+  const actions = rule.actions;
+  const result = {};
 
   for (var i = 0; i < selectors.length; i++) {
     const selector = selectors[i];
-    const layer = selector.layer || 'default';
     if (matchers.matchSelector(selector, tags, classes, zoom, type)) {
-      const actions = {
-        rule: rule,
-        actions: unwindActions(blocks, tags, properties, locales, classes)
-      }
-      result.push(actions);
-      if ('exit' in actions) {
+      const layer = selector.layer || 'default';
+      const properties = result[layer] || {}
+      const props = unwindActions(actions, tags, properties, locales, classes);
+
+      result[layer] = Object.assign(properties, props);
+      //result[layer] = properties;
+
+      if ('exit' in properties) {
         break;
       }
     }
@@ -99,7 +104,7 @@ function unwindActions(actions, tags, properties, locales, classes) {
         result['exit'] = true;
         return result;
       default:
-        throw "Action type is not supproted: " + JSON.stringify(action);
+        throw new TypeError("Action type is not supproted: " + JSON.stringify(action));
     }
   }
   return result;
@@ -114,37 +119,23 @@ function unwindValue(value, tags, properties, locales) {
     case 'eval':
       return evalProcessor.evalExpr(value.v, tags, properties, locales);
     default:
-      throw "Value type is not supproted: " + JSON.stringify(action);
+      throw new TypeError("Value type is not supproted: " + JSON.stringify(value));
   }
 }
 
 function formatCssColor(color) {
   if ('r' in color && 'g' in color && 'b' in color && 'a' in color) {
     return "rgba(" + color.r + ", " + color.g + ", " + color.b + ", " + color.a + ")";
-  }
-  if ('h' in color && 's' in color && 'l' in color && 'a' in color) {
+  } else if ('r' in color && 'g' in color && 'b' in color) {
+    return "rgb(" + color.r + ", " + color.g + ", " + color.b + ")";
+  } else if ('h' in color && 's' in color && 'l' in color && 'a' in color) {
     return "hsla(" + color.h + ", " + color.s + ", " + color.l + ", " + color.a + ")";
-  }
-  if ('h' in color && 's' in color && 'l' in color) {
+  } else if ('h' in color && 's' in color && 'l' in color) {
     return "hsl(" + color.h + ", " + color.s + ", " + color.l + ")";
   }
 
-  if ('r' in color && 'g' in color && 'b' in color) {
-    var r = color.r.toString(16);
-    var g = color.g.toString(16);
-    var b = color.b.toString(16);
 
-    r = r.length == 1 ? '0' + r : r;
-    g = g.length == 1 ? '0' + g : g;
-    b = b.length == 1 ? '0' + b : b;
-
-    if (r[0] == r[1] && g[0] == g[1] && b[0] == b[1]) {
-      return "#" + r[0] + g[0] + b[0];
-    }
-    return "#" + r + g + b;
-  }
-
-  throw "Unexpected color type " + JSON.stringify(color);
+  throw new TypeError("Unexpected color space " + JSON.stringify(color));
 }
 
 module.exports = {

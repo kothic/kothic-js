@@ -216,16 +216,25 @@ function evalExpr(expr, tags={}, actions={}, locales=[]) {
   }
 }
 
-function appendKnownTags(tags, expr) {
+function appendKnownTags(tags, expr, locales) {
   switch (expr.type) {
     case "binary_op":
       appendKnownTags(tags, expr.left);
       appendKnownTags(tags, expr.right);
       break;
     case "function":
-      if (expr.func == "tag" && expr.args && expr.args.length == 1) {
-        const tag = evalExpr(expr.args[0], {}, {});
-        tags[tag] = 'kv';
+      if (expr.func === "tag") {
+        if (expr.args && expr.args.length == 1) {
+          const tag = evalExpr(expr.args[0], {}, {});
+          tags[tag] = 'kv';
+        }
+      } else if (expr.func === "localize") {
+        if (expr.args && expr.args.length == 1) {
+          const tag = evalExpr(expr.args[0], {}, {});
+          tags[tag] = 'kv';
+          locales.map((locale) => tag + ":" + locale)
+            .forEach((k) => tags[k] = 'kv');
+        }
       }
       break;
     case "string":

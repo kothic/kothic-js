@@ -1,10 +1,7 @@
 'use strict';
 
-const MapCSS = require('./mapcss');
-
-function StyleManager(ast, locales) {
-  this.mapcss = new MapCSS(ast);
-  this.locales = locales;
+function StyleManager(mapcss) {
+  this.mapcss = mapcss;
 }
 
 // Reorder featues into the natural rendering order
@@ -84,17 +81,6 @@ function reorderLayersToRender(layers) {
   return result;
 }
 
-/**
- ** returns [key: [actions]}]
- **/
-StyleManager.prototype.applyRules = function(tags, zoom, type) {
-  const layers = this.mapcss.apply(tags, zoom, type);
-
-  //TODO: Post-process actions here
-
-  return layers;
-}
-
 //Returns [{id: -1000, features: []}, {id: 0, features: []}]
 //TODO Refactor: reduce number of for cycles
 StyleManager.prototype.createLayers = function(features, zoom) {
@@ -103,7 +89,7 @@ StyleManager.prototype.createLayers = function(features, zoom) {
   for (var i = 0; i < features.length; i++) {
     const feature = features[i];
 
-    const layers = this.applyRules(feature.properties, zoom, feature.geometry.type);
+    const layers = this.mapcss.apply(feature.properties, zoom, feature.geometry.type);;
 
     for (var key in layers) {
       const actions = layers[key];
@@ -145,79 +131,8 @@ StyleManager.prototype.createLayers = function(features, zoom) {
 
     result.push({id: id, features: layer});
   }
+
   return reorderLayersToRender(result);
 }
 
 module.exports = StyleManager;
-// function styleFeatures(features, zoom, styleNames) {
-//   var styledFeatures = [];
-//
-//   for (var i = 0, len = features.length; i < len; i++) {
-//     const feature = features[i];
-//     const style = getStyle(feature, zoom, styleNames);
-//
-//     for (var key in style) {
-//       const restyledFeature = key === 'default' ? feature : Object.assign({}, feature);
-//       const actions = style[key];
-//
-//       restyledFeature.kothicId = i + 1;
-//       restyledFeature.style = actions;
-//       restyledFeature.zIndex = actions['z-index'] || 0;
-//       restyledFeature.sortKey = (actions['fill-color'] || '') + (actions.color || '');
-//       styledFeatures.push(restyledFeature);
-//     }
-//   }
-//
-//   styledFeatures.sort(function (a, b) {
-//       return a.zIndex !== b.zIndex ? a.zIndex - b.zIndex :
-//           a.sortKey < b.sortKey ? -1 :
-//           a.sortKey > b.sortKey ? 1 : 0;
-//   });
-//
-//   return styledFeatures;
-// }
-
-/**
- **
- **/
-// function getStyle(feature, zoom, styleNames) {
-//   const shape = feature.geometry.type;
-//
-//   var type, selector;
-//   if (shape === 'LineString' || shape === 'MultiLineString') {
-//     type = 'way';
-//     selector = 'line';
-//   } else if (shape === 'Polygon' || shape === 'MultiPolygon') {
-//     type = 'way';
-//     selector = 'area';
-//   } else if (shape === 'Point' || shape === 'MultiPoint') {
-//     type = 'node';
-//     selector = 'node';
-//   }
-//
-//   return MapCSS.restyle(styleNames, feature.properties, zoom, type, selector);
-// }
-
-
-
-/**
- ** Takes set of features and create list of rendering layers based on
- ** provided set of styles and current zoom
-//  **/
-// exports.createLayers = function(features, zoom, styles) {
-//   const layers = {};
-//
-//   var styledFeatures = styleFeatures(features, zoom, styles);
-//
-//   for (var i = 0, len = styledFeatures.length; i < len; i++) {
-//     const feature = styledFeatures[i];
-//     const layerStyle = feature.style['-x-mapnik-layer'];
-//     const layerId = !layerStyle ? feature.properties.layer || 0 :
-//         layerStyle === 'top' ? 10000 : -10000;
-//
-//     layers[layerId] = layers[layerId] || [];
-//     layers[layerId].push(feature);
-//   }
-//
-//   return layers;
-// }

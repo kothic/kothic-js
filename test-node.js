@@ -1,21 +1,26 @@
 var Kothic = require("./src/kothic");
 var fs = require('fs');
+
+var MapCSS = require("./src/style/mapcss");
+
 const { createCanvas, loadImage } = require('canvas')
-
-// var style = require('./src/style/surface');
-
-const geojson = JSON.parse(fs.readFileSync('./N52E083.json'));
-geojson.bbox = [83, 52, 84, 53];
 
 const canvas = createCanvas(1000, 1000)
 
 const css = fs.readFileSync("./contours.mapcss").toString();
 
-var kothic = new Kothic({
-  css: css,
+const mapcss = new MapCSS(css, {
+  cache: {},
+  locales: []
+});
+
+var kothic = new Kothic(mapcss, {
   //Synchronous mode for testing reasons
   getFrame: (callback) => callback()
 });
+
+const geojson = JSON.parse(fs.readFileSync('./N42E074.json'));
+geojson.bbox = [74, 42, 75, 43];
 
 console.time("rendering")
 kothic.render(canvas, geojson, 13, function() {
