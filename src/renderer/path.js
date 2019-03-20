@@ -7,7 +7,7 @@ var geom = require('../utils/geom');
 //TODO: split configuration and call
 module.exports = function(ctx, geometry, dashes, fill, projectPointFunction, tile_width, tile_height) {
   var type = geometry.type,
-  coords = geometry.coordinates;
+    coords = geometry.coordinates;
 
   //Convert single feature to a mult-type to make rendering easier
   if (type === "Polygon") {
@@ -19,11 +19,11 @@ module.exports = function(ctx, geometry, dashes, fill, projectPointFunction, til
   }
 
   var i, j, k,
-      points,
-      len = coords.length,
-      len2, pointsLen,
-      prevPoint, point, screenPoint,
-      dx, dy, dist;
+    points,
+    len = coords.length,
+    len2, pointsLen,
+    prevPoint, point, screenPoint,
+    dx, dy, dist;
 
   if (type === "MultiPolygon") {
     //Iterate by Polygons in MultiPolygon
@@ -64,7 +64,7 @@ module.exports = function(ctx, geometry, dashes, fill, projectPointFunction, til
   } else if (type === "MultiLineString") {
     //TODO: Those constants MUST be configured un upper design level
     var pad = 50, // how many pixels to draw out of the tile to avoid path edges when lines crosses tile borders
-        skip = 2; // do not draw line segments shorter than this
+      skip = 2; // do not draw line segments shorter than this
 
     //Iterate by lines in MultiLineString
     for (i = 0; i < len; i++) {

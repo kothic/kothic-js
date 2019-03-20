@@ -48,7 +48,7 @@ Kothic.prototype.setOptions = function(options) {
       }
     } else {
       this.getFrame = function(callback) {
-          setTimeout(callback, 0);
+        setTimeout(callback, 0);
       }
     }
   }

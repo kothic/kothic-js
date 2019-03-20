@@ -69,12 +69,12 @@ describe("Rules", () => {
   describe("apply()", () => {
     it("Default layer", () => {
       expect(rules.apply(expr("node {} way { color: red; }"), {}, [], 10, 'LineString', []))
-          .to.have.deep.property('default', {color: 'red'})
+        .to.have.deep.property('default', {color: 'red'})
     });
 
     it("Custom layer", () => {
       expect(rules.apply(expr("way::outline { color: red; }"), {}, [], 10, 'LineString', []))
-          .to.have.deep.property('outline', {color: 'red'})
+        .to.have.deep.property('outline', {color: 'red'})
     });
 
     it("Multiple layers layer", () => {

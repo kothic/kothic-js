@@ -73,8 +73,8 @@ function reorderLayersToRender(layers) {
   }
 
   const result = [queues['_bg']];
-  for (var i = 0; i < layers.length; i++) {
-    const layer = layers[i];
+  for (var k = 0; k < layers.length; k++) {
+    const layer = layers[k];
     result.push(queues[layer.id]);
   }
 
@@ -89,7 +89,7 @@ StyleManager.prototype.createLayers = function(features, zoom) {
   for (var i = 0; i < features.length; i++) {
     const feature = features[i];
 
-    const layers = this.mapcss.apply(feature.properties, zoom, feature.geometry.type);;
+    const layers = this.mapcss.apply(feature.properties, zoom, feature.geometry.type);
 
     for (var key in layers) {
       const actions = layers[key];
@@ -105,14 +105,14 @@ StyleManager.prototype.createLayers = function(features, zoom) {
   }
 
   visibleFeatures.sort(function (a, b) {
-      return a.zIndex !== b.zIndex ? a.zIndex - b.zIndex :
-          a.sortKey < b.sortKey ? -1 :
-          a.sortKey > b.sortKey ? 1 : 0;
+    return a.zIndex !== b.zIndex ? a.zIndex - b.zIndex :
+      a.sortKey < b.sortKey ? -1 :
+        a.sortKey > b.sortKey ? 1 : 0;
   });
 
   const layers = {};
-  for (var i = 0, len = visibleFeatures.length; i < len; i++) {
-    const feature = visibleFeatures[i];
+  for (var j = 0, len = visibleFeatures.length; j < len; j++) {
+    const feature = visibleFeatures[j];
     const layerStyle = feature.style['-x-mapnik-layer'];
     const layerId = !layerStyle ? feature.properties.layer || 0 : layerStyle === 'top' ? 10000 : -10000;
 
@@ -125,8 +125,8 @@ StyleManager.prototype.createLayers = function(features, zoom) {
   });
 
   const result = [];
-  for (var i = 0; i < ids.length; i++) {
-    const id = ids[i];
+  for (var k = 0; k < ids.length; k++) {
+    const id = ids[k];
     const layer = layers[id];
 
     result.push({id: id, features: layer});

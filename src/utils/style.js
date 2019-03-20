@@ -19,7 +19,7 @@ const defaultCanvasStyle = {
  **/
 exports.composeFontDeclaration = function(name='', size=9, style) {
   var family = name ? name + ', ' : '';
-  var name = name.toLowerCase();
+  name = name.toLowerCase();
 
   var parts = [];
   if (style['font-style'] === 'italic' || style['font-style'] === 'oblique') {

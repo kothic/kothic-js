@@ -33,8 +33,8 @@ describe("MapCSS matchers", () => {
       expect(matchers.matchZoom(null, 6)).to.be.true;
     });
 
-    it("unzexpected zoom type '|s10000-25000'", () => {
-      expect(matchers.matchZoom({type: 's', begin: 10000, end: 25000}, 6)).to.be.false;
+    it("unexpected zoom type '|s10000-25000'", () => {
+      expect(() => matchers.matchZoom({type: 's', begin: 10000, end: 25000}, 6)).to.throw(Error, /not supported/);
     });
   });
 
@@ -85,7 +85,7 @@ describe("MapCSS matchers", () => {
     });
 
     it("unexpected feature type", () => {
-      expect(matchers.matchFeatureType('canvas', 'Feature')).to.be.false;
+      expect(() => matchers.matchFeatureType('canvas', 'Feature')).to.throw(TypeError, /not supported/);
     });
   });
 
@@ -156,7 +156,7 @@ describe("MapCSS matchers", () => {
     });
 
     it("unexpected attribute type 'foo'", () => {
-      expect(matchers.matchAttribute({type: 'foo', key: 'ele', op: '%', value: '1000'}, {ele: '1000'})).to.be.false;
+      expect(() => matchers.matchAttribute({type: 'foo', key: 'ele', op: '%', value: '1000'}, {ele: '1000'})).to.throw(Error, /not supported/)
     });
   });
 

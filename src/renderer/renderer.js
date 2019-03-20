@@ -6,15 +6,15 @@ var shields = require("./shields");
 function renderBackground(layers, ctx, width, height, zoom) {
 
   //TODO: StyleManager should create background as a layer instead of messing with styles manually
-    // var style = this.styleManager.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
-    //
-    // var fillRect = function () {
-    //     ctx.fillRect(-1, -1, width + 1, height + 1);
-    // };
-    //
-    // for (var i in style) {
-    //     polygon.fill(ctx, style[i], fillRect);
-    // }
+  // var style = this.styleManager.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
+  //
+  // var fillRect = function () {
+  //     ctx.fillRect(-1, -1, width + 1, height + 1);
+  // };
+  //
+  // for (var i in style) {
+  //     polygon.fill(ctx, style[i], fillRect);
+  // }
 }
 
 function renderGeometryFeatures(layers, ctx, projectPointFunction, tile_width, tile_height) {
@@ -30,7 +30,7 @@ function renderGeometryFeatures(layers, ctx, projectPointFunction, tile_width, t
       line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], projectPointFunction, tile_width, tile_height);
     }
 
-    //TODO: Move to renderCasing
+    //TODO: Move to render
     ctx.lineCap = 'round';
     for (var j = 0, len = queue.lines.length; j < len; j++) {
       line.render(ctx, queue.lines[j], queue.lines[j + 1], projectPointFunction, tile_width, tile_height);
@@ -61,18 +61,18 @@ function renderTextAndIcons(layers, ctx, ws, hs, collisionBuffer) {
 }
 
 function renderCollisions(ctx, node) {
-    if (node.leaf) {
-        for (var i = 0, len = node.children.length; i < len; i++) {
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 1;
-            const a = node.children[i];
-            ctx.strokeRect(Math.round(a[0]), Math.round(a[1]), Math.round(a[2] - a[0]), Math.round(a[3] - a[1]));
-        }
-    } else {
-        for (var i = 0, len = node.children.length; i < len; i++) {
-            renderCollisions(ctx, node.children[i]);
-        }
+  if (node.leaf) {
+    for (var i = 0, len = node.children.length; i < len; i++) {
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 1;
+      const a = node.children[i];
+      ctx.strokeRect(Math.round(a[0]), Math.round(a[1]), Math.round(a[2] - a[0]), Math.round(a[3] - a[1]));
     }
+  } else {
+    for (var i = 0, len = node.children.length; i < len; i++) {
+      renderCollisions(ctx, node.children[i]);
+    }
+  }
 }
 
 module.exports = {

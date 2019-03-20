@@ -156,92 +156,92 @@ const EVAL_FUNCTIONS = {
 
 function evalBinaryOp(left, op, right) {
   switch (op) {
-    case '+':
-      return left + right;
-    case '-':
-      return left - right;
-    case '*':
-      return left * right;
-    case '/':
-      return left / right;
-    default:
-      throw new TypeError("Unexpected binary opertator in eval " + JSON.stringify(op));
+  case '+':
+    return left + right;
+  case '-':
+    return left - right;
+  case '*':
+    return left * right;
+  case '/':
+    return left / right;
+  default:
+    throw new TypeError("Unexpected binary opertator in eval " + JSON.stringify(op));
   }
 }
 
 function evalFunc(func, args, tags, actions, locales) {
   switch (func) {
-    case 'tag':
-      if (args.length != 1) {
-        throw new Error("tag() function allows only one argument");
-      }
-      return args[0] in tags ? tags[args[0]] : '';
-    case 'prop':
-      if (args.length != 1) {
-        throw new Error("prop() function allows only one argument");
-      }
-      return args[0] in actions ? actions[args[0]] : '';
-    case 'localize':
-      if (args.length != 1) {
-        throw new Error("localize() function allows only one argument");
-      }
-      const field = args[0];
-      for (var i = 0; i < locales.length; i++) {
-        const tag = field + ':' + locales[i];
-        if (tag in tags) {
-          return tags[tag];
-        }
-      }
+  case 'tag':
+    if (args.length != 1) {
+      throw new Error("tag() function allows only one argument");
+    }
+    return args[0] in tags ? tags[args[0]] : '';
+  case 'prop':
+    if (args.length != 1) {
+      throw new Error("prop() function allows only one argument");
+    }
+    return args[0] in actions ? actions[args[0]] : '';
+  case 'localize':
+    if (args.length != 1) {
+      throw new Error("localize() function allows only one argument");
+    }
 
-      return field in tags ? tags[field] : '';
-    default:
-      if (!(func in EVAL_FUNCTIONS)) {
-        throw new Error("Unexpected function in eval " + JSON.stringify(func));
+    for (var i = 0; i < locales.length; i++) {
+      const tag = args[0] + ':' + locales[i];
+      if (tag in tags) {
+        return tags[tag];
       }
-      return EVAL_FUNCTIONS[func].apply(this, args);
+    }
+
+    return args[0] in tags ? tags[args[0]] : '';
+  default:
+    if (!(func in EVAL_FUNCTIONS)) {
+      throw new Error("Unexpected function in eval " + JSON.stringify(func));
+    }
+    return EVAL_FUNCTIONS[func].apply(this, args);
   }
 }
 
 function evalExpr(expr, tags={}, actions={}, locales=[]) {
   switch (expr.type) {
-    case "binary_op":
-      return evalBinaryOp(evalExpr(expr.left, tags, actions, locales), expr.op, evalExpr(expr.right, tags, actions, locales));
-    case "function":
-      return evalFunc(expr.func, expr.args.map((x) => evalExpr(x, tags, actions)), tags, actions, locales);
-    case "string":
-    case "number":
-      return expr.value;
-    default:
-      throw new TypeError("Unexpected expression type " + JSON.stringify(expr));
+  case "binary_op":
+    return evalBinaryOp(evalExpr(expr.left, tags, actions, locales), expr.op, evalExpr(expr.right, tags, actions, locales));
+  case "function":
+    return evalFunc(expr.func, expr.args.map((x) => evalExpr(x, tags, actions)), tags, actions, locales);
+  case "string":
+  case "number":
+    return expr.value;
+  default:
+    throw new TypeError("Unexpected expression type " + JSON.stringify(expr));
   }
 }
 
 function appendKnownTags(tags, expr, locales) {
   switch (expr.type) {
-    case "binary_op":
-      appendKnownTags(tags, expr.left);
-      appendKnownTags(tags, expr.right);
-      break;
-    case "function":
-      if (expr.func === "tag") {
-        if (expr.args && expr.args.length == 1) {
-          const tag = evalExpr(expr.args[0], {}, {});
-          tags[tag] = 'kv';
-        }
-      } else if (expr.func === "localize") {
-        if (expr.args && expr.args.length == 1) {
-          const tag = evalExpr(expr.args[0], {}, {});
-          tags[tag] = 'kv';
-          locales.map((locale) => tag + ":" + locale)
-            .forEach((k) => tags[k] = 'kv');
-        }
+  case "binary_op":
+    appendKnownTags(tags, expr.left);
+    appendKnownTags(tags, expr.right);
+    break;
+  case "function":
+    if (expr.func === "tag") {
+      if (expr.args && expr.args.length == 1) {
+        const tag = evalExpr(expr.args[0], {}, {});
+        tags[tag] = 'kv';
       }
-      break;
-    case "string":
-    case "number":
-      break;
-    default:
-      throw new TypeError("Unexpected eval type " + JSON.stringify(expr));
+    } else if (expr.func === "localize") {
+      if (expr.args && expr.args.length == 1) {
+        const tag = evalExpr(expr.args[0], {}, {});
+        tags[tag] = 'kv';
+        locales.map((locale) => tag + ":" + locale)
+          .forEach((k) => tags[k] = 'kv');
+      }
+    }
+    break;
+  case "string":
+  case "number":
+    break;
+  default:
+    throw new TypeError("Unexpected eval type " + JSON.stringify(expr));
   }
 }
 

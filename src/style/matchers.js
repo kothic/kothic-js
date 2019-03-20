@@ -1,7 +1,7 @@
 'use strict';
 
-function matchSelector(selector, tags, classes, zoom, type) {
-  if (!matchFeatureType(selector.type, type)) {
+function matchSelector(selector, tags, classes, zoom, featureType) {
+  if (!matchFeatureType(selector.type, featureType)) {
     return false;
   }
 
@@ -30,21 +30,21 @@ function appendKnownTags(knownTags, attributes) {
   if (!attributes) {
     return;
   }
-  
+
   for (var i = 0; i < attributes.length; i++) {
     const attr = attributes[i];
     switch (attr.type) {
-      case 'presence':
-      case 'absence':
-        if (knownTags[attr.key] != 'kv') {
-          knownTags[attr.key] = 'k';
-        }
-        break;
-      case 'cmp':
-      case 'regexp':
-        //'kv' should override 'k'
-        knownTags[attr.key] = 'kv';
-        break;
+    case 'presence':
+    case 'absence':
+      if (knownTags[attr.key] != 'kv') {
+        knownTags[attr.key] = 'k';
+      }
+      break;
+    case 'cmp':
+    case 'regexp':
+      //'kv' should override 'k'
+      knownTags[attr.key] = 'kv';
+      break;
     }
   }
 }
@@ -60,36 +60,34 @@ function matchZoom(range, zoom) {
   }
 
   if (range.type !== 'z') {
-    console.warn("Zoom selector '" + range.type + "' is not supported");
-    return false;
+    throw new Error("Zoom selector '" + range.type + "' is not supported");
   }
 
   return zoom >= (range.begin || 0) && zoom <= (range.end || 9000);
 }
 
 /**
- ** selectorType:String = "node", "way", "relation", "line", "area", "canvas", "*"
- ** type:String = "Point", "MultiPoint", "Polygon", "MultiPolygon", "LineString", "MultiLineString"
+ ** @param selectorType {string} — "node", "way", "relation", "line", "area", "canvas", "*"
+ ** @param featureType {string} — "Point", "MultiPoint", "Polygon", "MultiPolygon", "LineString", "MultiLineString"
  **/
-function matchFeatureType(selectorType, type) {
+function matchFeatureType(selectorType, featureType) {
   if (selectorType === '*') {
     return true;
   }
 
-  switch (type) {
-    case 'LineString':
-    case 'MultiLineString':
-      return selectorType === 'way' || selectorType === 'line';
-    case 'Polygon':
-    case 'MultiPolygon':
-      return selectorType === 'way' || selectorType === 'area';
-    case 'Point':
-    case 'MultiPoint':
-      return selectorType === 'node';
-    default:
-      //Note: Canvas and Relation are virtual features and cannot be supported at this level
-      console.warn("Selector type is not supported: " + type);
-      return false;
+  switch (featureType) {
+  case 'LineString':
+  case 'MultiLineString':
+    return selectorType === 'way' || selectorType === 'line';
+  case 'Polygon':
+  case 'MultiPolygon':
+    return selectorType === 'way' || selectorType === 'area';
+  case 'Point':
+  case 'MultiPoint':
+    return selectorType === 'node';
+  default:
+    //Note: Canvas and Relation are virtual features and cannot be supported at this level
+    throw new TypeError("Feature type is not supported: " + featureType);
   }
 }
 
@@ -149,20 +147,20 @@ function compare(op, expect, value) {
   const exp = parseFloat(expect);
 
   switch (op) {
-    case '=':
-      return isNaN(val) || isNaN(exp) ? expect == value : val == exp;
-    case '!=':
-      return isNaN(val) || isNaN(exp) ? expect != value : val != exp;
-    case '<':
-      return val < exp;
-    case '<=':
-      return val <= exp;
-    case '>':
-      return val > exp;
-    case '>=':
-      return val >= exp;
-    default:
-      return false;
+  case '=':
+    return isNaN(val) || isNaN(exp) ? expect == value : val == exp;
+  case '!=':
+    return isNaN(val) || isNaN(exp) ? expect != value : val != exp;
+  case '<':
+    return val < exp;
+  case '<=':
+    return val <= exp;
+  case '>':
+    return val > exp;
+  case '>=':
+    return val >= exp;
+  default:
+    return false;
   }
 }
 
@@ -184,17 +182,16 @@ function regexp(regexp, flags, value) {
  **/
 function matchAttribute(attr, tags) {
   switch (attr.type) {
-    case 'presence':
-      return attr.key in tags;
-    case 'absence':
-      return !(attr.key in tags);
-    case 'cmp':
-      return attr.key in tags && compare(attr.op, attr.value, tags[attr.key]);
-    case 'regexp':
-      return attr.key in tags && regexp(attr.value.regexp, attr.value.flags, tags[attr.key]);
-    default:
-      console.warn("Attribute type is not supported: " + attr.type);
-      return false;
+  case 'presence':
+    return attr.key in tags;
+  case 'absence':
+    return !(attr.key in tags);
+  case 'cmp':
+    return attr.key in tags && compare(attr.op, attr.value, tags[attr.key]);
+  case 'regexp':
+    return attr.key in tags && regexp(attr.value.regexp, attr.value.flags, tags[attr.key]);
+  default:
+    throw new Error("Attribute type is not supported: " + attr.type);
   }
 }
 
