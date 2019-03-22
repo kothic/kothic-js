@@ -16,7 +16,7 @@ module.exports = {
     point = geom.transformPoint(reprPoint, ws, hs);
 
     if (style["shield-image"]) {
-      img = MapCSS.getImage(style["icon-image"]);
+      img = MapCSS.getImage(style["shield-image"]);
 
       if (!img) {
         return;
@@ -26,7 +26,7 @@ module.exports = {
     setStyles(ctx, {
       font: getFontString(style["shield-font-family"] || style["font-family"], style["shield-font-size"] || style["font-size"], style),
       fillStyle: style["shield-text-color"] || "#000000",
-      globalAlpha: style["shield-text-opacity"] || style.opacity || 1,
+      globalAlpha: style["shield-text-opacity"] || style['opacity'] || 1,
       textAlign: 'center',
       textBaseline: 'middle'
     });
@@ -73,7 +73,7 @@ module.exports = {
     if (style["shield-casing-width"]) {
       setStyles(ctx, {
         fillStyle: style["shield-casing-color"] || "#000000",
-        globalAlpha: style["shield-casing-opacity"] || style.opacity || 1
+        globalAlpha: style["shield-casing-opacity"] || style['opacity'] || 1
       });
       var p = style["shield-casing-width"] + (style["shield-frame-width"] || 0);
       ctx.fillRect(point[0] - collisionWidth / 2 - p,
@@ -85,7 +85,7 @@ module.exports = {
     if (style["shield-frame-width"]) {
       setStyles(ctx, {
         fillStyle: style["shield-frame-color"] || "#000000",
-        globalAlpha: style["shield-frame-opacity"] || style.opacity || 1
+        globalAlpha: style["shield-frame-opacity"] || style['opacity'] || 1
       });
       ctx.fillRect(point[0] - collisionWidth / 2 - style["shield-frame-width"],
         point[1] - collisionHeight / 2 - style["shield-frame-width"],
@@ -96,7 +96,7 @@ module.exports = {
     if (style["shield-color"]) {
       setStyles(ctx, {
         fillStyle: style["shield-color"] || "#000000",
-        globalAlpha: style["shield-opacity"] || style.opacity || 1
+        globalAlpha: style["shield-opacity"] || style['opacity'] || 1
       });
       ctx.fillRect(point[0] - collisionWidth / 2,
         point[1] - collisionHeight / 2,
@@ -111,7 +111,7 @@ module.exports = {
     }
     setStyles(ctx, {
       fillStyle: style["shield-text-color"] || "#000000",
-      globalAlpha: style["shield-text-opacity"] || style.opacity || 1
+      globalAlpha: style["shield-text-opacity"] || style['opacity'] || 1
     });
 
     ctx.fillText(text, point[0], Math.ceil(point[1]));

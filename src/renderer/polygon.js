@@ -27,7 +27,7 @@ module.exports = {
   },
 
   fill: function (ctx, style, fillFn) {
-    var opacity = style["fill-opacity"] || style.opacity, image;
+    var opacity = style["fill-opacity"] || style['opacity'], image;
 
     if (style.hasOwnProperty('fill-color')) {
       // first pass fills with solid color

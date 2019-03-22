@@ -53,7 +53,7 @@ module.exports = {
       setStyles(ctx, {
         fillStyle: style['text-color'] || '#000000',
         strokeStyle: style['text-halo-color'] || '#ffffff',
-        globalAlpha: style['text-opacity'] || style.opacity || 1,
+        globalAlpha: style['text-opacity'] || style['opacity'] || 1,
         textAlign: 'center',
         textBaseline: 'middle'
       });

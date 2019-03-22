@@ -3,12 +3,14 @@
   "version": "0.2.0",
   "devDependencies": {
     "chai": "^4.0.0",
+    "chai-subset": "^1.6.0",
     "mocha": "^6.0.2",
+    "nyc": "^13.3.0",
     "rewire": "^4.0.1"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha -u bdd --recursive",
-    "test-cov": "nyc --reporter=lcov --reporter=text --reporter=html ./node_modules/.bin/mocha -u bdd --recursive"
+    "test-cov": "./node_modules/nyc/bin/nyc.js --reporter=lcov --reporter=text --reporter=html ./node_modules/.bin/mocha -u bdd --recursive"
   },
   "dependencies": {
     "canvas": "^2.3.1",

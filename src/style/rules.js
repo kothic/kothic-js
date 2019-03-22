@@ -104,6 +104,7 @@ function unwindActions(actions, tags, properties, locales, classes) {
 
     switch (action.action) {
     case 'kv':
+      //TODO: set proper value type and popogate default values
       if (action.k === 'text' && action.v.type === 'string') {
         result[action.k] = action.v.v in tags ? tags[action.v.v] : '';
       } else {
