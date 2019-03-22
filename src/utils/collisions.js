@@ -1,3 +1,4 @@
+'use strict';
 const rbush = require('rbush');
 
 const CollisionBuffer = function (height, width) {

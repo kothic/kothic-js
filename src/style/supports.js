@@ -97,7 +97,11 @@ module.exports = [
       }, {
         "action": "allow-overlap",
         "type": "boolean"
-      },
+      }, {
+        "action": "-x-kothic-padding",
+        "type": "number",
+        "default": 20
+      }
     ],
     "priority": 40
   }, {

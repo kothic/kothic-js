@@ -6,8 +6,6 @@
 
 'use strict';
 
-var CollisionBuffer = require("./utils/collisions");
-const canvasContext = require("./utils/style");
 var StyleManager = require("./style/style-manager");
 var renderer = require("./renderer/renderer");
 
@@ -78,8 +76,6 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
   // var granularity = data.granularity,
   //     ws = width / granularity, hs = height / granularity;
 
-  var collisionBuffer = new CollisionBuffer(height, width);
-
   const bbox = geojson.bbox;
   const hscale = width / (bbox[2] - bbox[0]);
   const vscale = height / (bbox[3] - bbox[1]);
@@ -96,33 +92,9 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
   // Layer is an array of objects, already sorted
   const layers = this.styleManager.createLayers(geojson.features, zoom);
 
-  // render the map
-  canvasContext.applyDefaults(ctx);
-
   console.timeEnd('styles');
-  const self = this;
-  this.getFrame(function () {
-    console.time('geometry');
 
-    renderer.renderBackground(layers, ctx, width, height, zoom);
-    renderer.renderGeometryFeatures(layers, ctx, project, width, height);
-
-    console.timeEnd('geometry');
-
-    self.getFrame(function () {
-      console.time('text/icons');
-      renderer.renderTextAndIcons(layers, ctx, project, collisionBuffer);
-      console.timeEnd('text/icons');
-
-      if (callback && typeof(callback) === 'function') {
-        callback();
-      }
-
-      if (self.debug) {
-        renderer.renderCollisions(ctx, collisionBuffer.buffer.data);
-      }
-    });
-  });
+  renderer.render(layers, ctx, width, height, project, this.getFrame, callback);
 };
 
 module.exports = Kothic;

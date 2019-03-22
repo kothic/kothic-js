@@ -3,16 +3,20 @@ var setStyles = require('../utils/style').applyStyle;
 var MapCSS = require('../style/mapcss');
 
 module.exports = {
-  renderCasing: function (ctx, feature, nextFeature, projectPointFunction, tile_width, tile_height) {
-    var style = feature.style,
-      nextStyle = nextFeature && nextFeature.style;
+  renderCasing: function (ctx, feature, nextFeature, context) {
+    const projectPointFunction = context.projectPointFunction;
+    const tileWidth = context.tileWidth;
+    const tileHeight = context.tileHeight;
+
+    var style = feature.actions,
+      nextStyle = nextFeature && nextFeature.actions;
 
     if (!this.pathOpened) {
       this.pathOpened = true;
       ctx.beginPath();
     }
 
-    path(ctx, feature.geometry, style["casing-dashes"] || style.dashes, false, projectPointFunction, tile_width, tile_height);
+    path(ctx, feature.geometry, style["casing-dashes"] || style.dashes, false, projectPointFunction, tileWidth, tileHeight);
 
     if (nextFeature &&
                 nextStyle.width === style.width &&
@@ -35,16 +39,20 @@ module.exports = {
     this.pathOpened = false;
   },
 
-  render: function (ctx, feature, nextFeature, projectPointFunction, tile_width, tile_height) {
-    var style = feature.style,
-      nextStyle = nextFeature && nextFeature.style;
+  render: function (ctx, feature, nextFeature, context) {
+    const projectPointFunction = context.projectPointFunction;
+    const tileWidth = context.tileWidth;
+    const tileHeight = context.tileHeight;
+
+    var style = feature.actions,
+      nextStyle = nextFeature && nextFeature.actions;
 
     if (!this.pathOpened) {
       this.pathOpened = true;
       ctx.beginPath();
     }
 
-    path(ctx, feature.geometry, style['dashes'], false, projectPointFunction, tile_width, tile_height);
+    path(ctx, feature.geometry, style['dashes'], false, projectPointFunction, tileWidth, tileHeight);
 
     if (nextFeature &&
                 nextStyle['width'] === style['width'] &&

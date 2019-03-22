@@ -1,7 +1,24 @@
-var line = require("./line");
-var polygon = require("./polygon");
-var texticons = require("./texticons");
-var shields = require("./shields");
+'use strict';
+
+const CollisionBuffer = require("../utils/collisions");
+const canvasContext = require("../utils/style");
+const flow = require("../utils/flow");
+
+const line = require("./line");
+const polygon = require("./polygon");
+const text = require("./text");
+const shield = require("./shield");
+const icon = require("./icon");
+
+const renders = {
+  casing: line.renderCasing,
+  line: line.render,
+  polygon: polygon.render,
+  text: text.render,
+  icon: icon.render,
+  shield: shield.render
+}
+
 
 function renderBackground(layers, ctx, width, height, zoom) {
 
@@ -15,49 +32,6 @@ function renderBackground(layers, ctx, width, height, zoom) {
   // for (var i in style) {
   //     polygon.fill(ctx, style[i], fillRect);
   // }
-}
-
-function renderGeometryFeatures(layers, ctx, projectPointFunction, tile_width, tile_height) {
-  for (var i = 1; i < layers.length; i++) {
-    const queue = layers[i];
-    for (var j = 0, len = queue.polygons.length; j < len; j++) {
-      polygon.render(ctx, queue.polygons[j], queue.polygons[j + 1], projectPointFunction, tile_width, tile_height);
-    }
-
-    //TODO: Move to renderCasing
-    ctx.lineCap = 'butt';
-    for (var j = 0, len = queue.casings.length; j < len; j++) {
-      line.renderCasing(ctx, queue.casings[j], queue.casings[j + 1], projectPointFunction, tile_width, tile_height);
-    }
-
-    //TODO: Move to render
-    ctx.lineCap = 'round';
-    for (var j = 0, len = queue.lines.length; j < len; j++) {
-      line.render(ctx, queue.lines[j], queue.lines[j + 1], projectPointFunction, tile_width, tile_height);
-    }
-  }
-}
-
-function renderTextAndIcons(layers, ctx, projectPointFunction, collisionBuffer) {
-  for (var i = 1; i < layers.length; i++) {
-    const queue = layers[i];
-
-    for (var j = 0; j < queue.icons.length; j++) {
-      texticons.render(ctx, queue.icons[j], collisionBuffer, projectPointFunction, false, true);
-    }
-
-    for (var j = 0; j < queue.labels.length; j++) {
-      texticons.render(ctx, queue.labels[j], collisionBuffer, projectPointFunction, true, false);
-    }
-
-    for (var j = 0; j < queue.label_icons.length; j++) {
-      texticons.render(ctx, queue.label_icons[j], collisionBuffer, projectPointFunction, true, true);
-    }
-
-    for (var j = 0; j < queue.shields.length; j++) {
-      shields.render(ctx, queue.shields[j], collisionBuffer, projectPointFunction);
-    }
-  }
 }
 
 function renderCollisions(ctx, node) {
@@ -75,9 +49,42 @@ function renderCollisions(ctx, node) {
   }
 }
 
+function render(layers, ctx, tileWidth, tileHeight, projectPointFunction, getFrame, callback) {
+  var collisionBuffer = new CollisionBuffer(tileHeight, tileWidth);
+  // render the map
+  canvasContext.applyDefaults(ctx);
+
+  const context = {
+    collisionBuffer: collisionBuffer,
+    gallery: {getImage: () => {throw new "Implement gallery"}},
+    tileWidth: tileWidth,
+    tileHeight: tileHeight,
+    projectPointFunction: projectPointFunction
+  }
+
+  const funcs = layers.map((layer) => ((next) => {
+    const features = layer.features;
+
+    console.time(layer.render);
+
+    const render = renders[layer.render];
+    for (var j = 0, len = features.length; j < len; j++) {
+      render(ctx, features[j], features[j + 1], context);
+    }
+
+    console.timeEnd(layer.render);
+
+    next();
+  }));
+
+  flow.series(funcs, getFrame, () => {
+    // if (self.debug) {
+    //   renderCollisions(ctx, collisionBuffer.buffer.data);
+    // }
+    callback();
+  });
+}
+
 module.exports = {
-  renderBackground: renderBackground,
-  renderGeometryFeatures: renderGeometryFeatures,
-  renderTextAndIcons: renderTextAndIcons,
-  renderCollisions: renderCollisions
+  render: render
 }

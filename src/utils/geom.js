@@ -61,7 +61,7 @@ exports.transformPoints = function (points, ws, hs) {
 };
 
 // get a single point representing geometry feature (e.g. centroid)
-exports.getReprPoint = function (feature) {
+exports.getReprPoint = function (feature, projectPointFunction) {
   switch (feature.type) {
   case 'Point':
     point = feature.coordinates;
@@ -93,7 +93,7 @@ exports.getReprPoint = function (feature) {
     //TODO: Disassemble geometry collection
     return;
   }
-  return point;
+  return projectPointFunction(point);
 };
 
 // Calculate length of line
