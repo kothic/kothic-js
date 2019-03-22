@@ -61,6 +61,7 @@ MapCSS.prototype.createCacheKey = function(tags, zoom, featureType) {
  **/
 MapCSS.prototype.apply = function(tags, zoom, featureType) {
   var key;
+
   if (this.cache) {
     key = this.createCacheKey(tags, zoom, featureType);
 

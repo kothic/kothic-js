@@ -139,8 +139,8 @@ exports.getAngleAndCoordsAtLength = function (points, dist, width) {
       gotxy = true;
     }
 
-    if (gotxy && len + segLen >= dist + width) {
-      var partLen = dist + width - len;
+    if (gotxy && length + segLen >= dist + width) {
+      var partLen = dist + width - length;
 
       dx = pc[0] + dx * partLen / segLen;
       dy = pc[1] + dy * partLen / segLen;

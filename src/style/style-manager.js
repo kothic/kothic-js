@@ -86,6 +86,7 @@ function reorderLayersToRender(layers) {
 StyleManager.prototype.createLayers = function(features, zoom) {
   const visibleFeatures = [];
 
+
   for (var i = 0; i < features.length; i++) {
     const feature = features[i];
 

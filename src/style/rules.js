@@ -104,7 +104,11 @@ function unwindActions(actions, tags, properties, locales, classes) {
 
     switch (action.action) {
     case 'kv':
-      result[action.k] = unwindValue(action.v, tags, properties, locales);
+      if (action.k === 'text' && action.v.type === 'string') {
+        result[action.k] = action.v.v in tags ? tags[action.v.v] : '';
+      } else {
+        result[action.k] = unwindValue(action.v, tags, properties, locales);
+      }
       break;
     case 'set_class':
       if (!classes.includes(action.v.class)) {

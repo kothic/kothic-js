@@ -19,16 +19,18 @@ var kothic = new Kothic(mapcss, {
   getFrame: (callback) => callback()
 });
 
-const geojson = JSON.parse(fs.readFileSync('./N42E074.json'));
-geojson.bbox = [74, 42, 75, 43];
+console.time("Loading GeoJSON");
+const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N52E086.json'));
+geojson.bbox = [86, 52, 86.1, 52.1];
+console.timeEnd("Loading GeoJSON");
 
-console.time("rendering")
+console.time("Rendering")
 kothic.render(canvas, geojson, 13, function() {
-  console.timeEnd("rendering")
-  console.time("saving")
+  console.timeEnd("Rendering")
+  console.time("Saving PNG")
   const stream = canvas.createPNGStream();
   const file = fs.createWriteStream("./test.png");
 
   stream.pipe(file);
-  stream.on('end', () => console.timeEnd("saving"))
+  stream.on('end', () => console.timeEnd("Saving PNG"))
 });

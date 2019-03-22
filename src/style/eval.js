@@ -164,6 +164,8 @@ function evalBinaryOp(left, op, right) {
     return left * right;
   case '/':
     return left / right;
+  case '%':
+    return left % right;
   default:
     throw new TypeError("Unexpected binary opertator in eval " + JSON.stringify(op));
   }
@@ -217,6 +219,7 @@ function evalExpr(expr, tags={}, actions={}, locales=[]) {
 }
 
 function appendKnownTags(tags, expr, locales) {
+
   switch (expr.type) {
   case "binary_op":
     appendKnownTags(tags, expr.left);
@@ -235,6 +238,8 @@ function appendKnownTags(tags, expr, locales) {
         locales.map((locale) => tag + ":" + locale)
           .forEach((k) => tags[k] = 'kv');
       }
+    } else {
+      expr.args.forEach((arg) => appendKnownTags(tags, arg, locales));
     }
     break;
   case "string":

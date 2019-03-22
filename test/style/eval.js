@@ -68,12 +68,21 @@ describe("Eval", () => {
     it("/", () => {
       expect(evaluate.evalExpr(expr("2 / 3"))).to.be.equal(2.0/3);
     });
+    it("%", () => {
+      expect(evaluate.evalExpr(expr("5 % 3"))).to.be.equal(2);
+    });
   });
 
   describe("Known tags", () => {
     it("tag() function", () => {
       const tags = {};
       evaluate.appendKnownTags(tags, expr('tag("name")'));
+      expect(tags).to.have.property('name', 'kv');
+    });
+
+    it("nested tag() function", () => {
+      const tags = {};
+      evaluate.appendKnownTags(tags, expr('cond(tag("name"))'));
       expect(tags).to.have.property('name', 'kv');
     });
 

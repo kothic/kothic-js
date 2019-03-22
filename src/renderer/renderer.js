@@ -38,24 +38,24 @@ function renderGeometryFeatures(layers, ctx, projectPointFunction, tile_width, t
   }
 }
 
-function renderTextAndIcons(layers, ctx, ws, hs, collisionBuffer) {
+function renderTextAndIcons(layers, ctx, projectPointFunction, collisionBuffer) {
   for (var i = 1; i < layers.length; i++) {
     const queue = layers[i];
 
     for (var j = 0; j < queue.icons.length; j++) {
-      texticons.render(ctx, queue.icons[j], collisionBuffer, ws, hs, false, true);
+      texticons.render(ctx, queue.icons[j], collisionBuffer, projectPointFunction, false, true);
     }
 
     for (var j = 0; j < queue.labels.length; j++) {
-      texticons.render(ctx, queue.labels[j], collisionBuffer, ws, hs, true, false);
+      texticons.render(ctx, queue.labels[j], collisionBuffer, projectPointFunction, true, false);
     }
 
     for (var j = 0; j < queue.label_icons.length; j++) {
-      texticons.render(ctx, queue.label_icons[j], collisionBuffer, ws, hs, true, true);
+      texticons.render(ctx, queue.label_icons[j], collisionBuffer, projectPointFunction, true, true);
     }
 
     for (var j = 0; j < queue.shields.length; j++) {
-      shields.render(ctx, queue.shields[j], collisionBuffer, ws, hs);
+      shields.render(ctx, queue.shields[j], collisionBuffer, projectPointFunction);
     }
   }
 }

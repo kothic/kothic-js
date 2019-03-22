@@ -1,14 +1,20 @@
-/*
-way[ele][ele % 1000] {
-  color: brown;
-  width: 3;
+line[ele] {
+  set ele1000 = eval(num(tag("ele")) % 1000);
+  set ele100 = eval(num(tag("ele")) % 100);
 }
-way[ele][ele % 100] {
+line[ele] {
   color: brown;
+}
+
+line[ele] {
+  width: 1;
+}
+line[ele][ele100 = 0] {
+  text: "ele";
+  font-size: 15;
+  text-color: brown;
   width: 2;
 }
-*/
-line[ele] {
-  color: green;
-  width: 1;
+line[ele][ele1000 = 0] {
+  width: 3;
 }

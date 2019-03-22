@@ -5,7 +5,7 @@ var textOnPath = require("./text").textOnPath;
 
 module.exports = {
 
-  render: function (ctx, feature, collides, ws, hs, renderText, renderIcon) {
+  render: function (ctx, feature, collides, projectPointFunction, renderText, renderIcon) {
     var style = feature.style, img, point, w, h;
 
     if (renderIcon || (renderText && feature.geometry.type !== 'LineString')) {
@@ -13,7 +13,7 @@ module.exports = {
       if (!reprPoint) {
         return;
       }
-      point = geom.transformPoint(reprPoint, ws, hs);
+      point = projectPointFunction(reprPoint);
     }
 
     if (renderIcon) {
@@ -42,7 +42,6 @@ module.exports = {
     }
 
     var text = String(style.text).trim();
-
     if (renderText && text) {
       setStyles(ctx, {
         lineWidth: style['text-halo-radius'] * 2,
@@ -87,7 +86,7 @@ module.exports = {
         collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
 
       } else if (feature.geometry.type === 'LineString') {
-        var points = geom.transformPoints(feature.geometry.coordinates, ws, hs);
+        var points = feature.geometry.coordinates.map(projectPointFunction);
         textOnPath(ctx, points, text, halo, collides);
       }
     }
