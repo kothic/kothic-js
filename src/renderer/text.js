@@ -12,10 +12,10 @@ function renderText(ctx, feature, nextFeature, context) {
 
   const text = String(actions.text).trim();
 
-  const hasHalo = !!actions.hasOwnProperty('text-halo-radius');
+  const hasHalo = 'text-halo-radius' in actions;
 
   style.applyStyle(ctx, {
-    lineWidth: actions['text-halo-radius'] * 2,
+    lineWidth: actions['text-halo-radius'] || 0,
     font: style.composeFontDeclaration(actions['font-family'], actions['font-size'], actions),
     fillStyle: actions['text-color'] || '#000000',
     strokeStyle: actions['text-halo-color'] || '#ffffff',

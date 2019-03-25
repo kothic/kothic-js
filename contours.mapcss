@@ -14,6 +14,8 @@ line[ele][ele100 = 0] {
   font-size: 15;
   text-color: brown;
   width: 2;
+  text-halo-color: rgba(0, 0, 0, 0);
+  text-halo-radius: 5;
 }
 line[ele][ele1000 = 0] {
   width: 3;

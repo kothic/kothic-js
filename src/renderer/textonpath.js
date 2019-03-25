@@ -49,12 +49,12 @@ function renderText(ctx, axy, halo) {
   ctx.translate(textCenter[0], textCenter[1]);
   ctx.rotate(axy[0]);
 
-  const metrics = ctx.measureText(text);
-  const width = metrics.width * 1.0;
-  const height = (metrics.emHeightAscent + metrics.emHeightDescent) * 1.0;
-  ctx.clearRect(-width / 2, -height / 2, width, height);
+  if (halo) {
+    ctx.strokeText(text, 0, 0);
+  } else {
+    ctx.fillText(text, 0, 0);
+  }
 
-  ctx[halo ? 'strokeText' : 'fillText'](text, 0, 0);
   ctx.rotate(-axy[0]);
   ctx.translate(-textCenter[0], -textCenter[1]);
 }
@@ -186,14 +186,13 @@ module.exports.textOnPath = function (ctx, points, text, halo, collisions) {
   } //while
 
   var posLen = positions.length;
-
   for (i = 0; halo && (i < posLen); i++) {
     renderText(ctx, positions[i], true);
   }
 
   for (i = 0; i < posLen; i++) {
     axy = positions[i];
-    renderText(ctx, axy);
+    renderText(ctx, axy, false);
     addCollision(collisions, ctx, axy[4], axy, avgLetterWidth);
   }
 };
