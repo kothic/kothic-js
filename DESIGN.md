@@ -4,6 +4,10 @@ KothicJS use GeoJSON[1] as an internal data model.
 bbox property is required
 Number of external dependencies is as minimal as possible
 
+== Layers rendering order
+TODO: Describe how the layers are sorted for rendering
+
+
 1. What coordinate system is used for a tiles
 2. How and when we do peproject to a screen coordinates
 

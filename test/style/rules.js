@@ -87,6 +87,16 @@ describe("Rules", () => {
       const res = rules.apply(expr("way {color: #fff; width: 1;} way { color: red; }"), {}, [], 10, 'LineString', []);
       expect(res).to.have.deep.property('default', {color: 'red', width: '1'});
     });
+
+    it("Text tag", () => {
+      const res = rules.apply(expr('node {text: "name";}'), {name: "Arlington"}, [], 10, 'Point', []);
+      expect(res).to.have.deep.property('default', {text: 'Arlington'});
+    });
+
+    it("Text tag empty value", () => {
+      const res = rules.apply(expr('node {text: "name";}'), {}, [], 10, 'Point', []);
+      expect(res).to.have.deep.property('default', {text: ''});
+    });
   });
 
   describe("Set statements", () => {
