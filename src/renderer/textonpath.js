@@ -1,4 +1,6 @@
-var geom = require('../utils/geom');
+const geom = require('../utils/geom');
+
+const simplify = require("../utils/simplify.js");
 
 function getWidth(ctx, text) {
   return ctx.measureText(text).width;
@@ -46,6 +48,12 @@ function renderText(ctx, axy, halo) {
 
   ctx.translate(textCenter[0], textCenter[1]);
   ctx.rotate(axy[0]);
+
+  const metrics = ctx.measureText(text);
+  const width = metrics.width * 1.0;
+  const height = (metrics.emHeightAscent + metrics.emHeightDescent) * 1.0;
+  ctx.clearRect(-width / 2, -height / 2, width, height);
+
   ctx[halo ? 'strokeText' : 'fillText'](text, 0, 0);
   ctx.rotate(-axy[0]);
   ctx.translate(-textCenter[0], -textCenter[1]);
@@ -54,17 +62,21 @@ function renderText(ctx, axy, halo) {
 module.exports.textOnPath = function (ctx, points, text, halo, collisions) {
   //widthCache = {};
 
-  // simplify points?
+  const avgLetterWidth = getWidth(ctx, 'a');
+  // simplify points
+  // console.log(points)
+  //
+  points = simplify(points, avgLetterWidth / 2, false);
+  // console.log(points)
+  // exit;
 
-  var textWidth = ctx.measureText(text).width,
-    textLen = text.length,
-    pathLen = geom.getPolyLength(points);
+  const textWidth = ctx.measureText(text).width;
+  const textLen = text.length;
+  const pathLen = geom.getPolyLength(points);
 
   if (pathLen < textWidth) {
     return;  // if label won't fit - don't try to
   }
-
-  var avgLetterWidth = getWidth(ctx, 'a');
 
   var letter,
     widthUsed,

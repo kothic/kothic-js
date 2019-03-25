@@ -1,7 +1,7 @@
-var Kothic = require("./src/kothic");
-var fs = require('fs');
+const Kothic = require("./src/kothic");
+const fs = require('fs');
 
-var MapCSS = require("./src/style/mapcss");
+const MapCSS = require("./src/style/mapcss");
 
 const { createCanvas, loadImage } = require('canvas')
 
