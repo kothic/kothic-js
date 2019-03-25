@@ -28,7 +28,7 @@ module.exports = {
     }
 
     setStyles(ctx, {
-      lineWidth: 2 * style["casing-width"] + (style.hasOwnProperty("width") ? style.width : 0),
+      lineWidth: 2 * style["casing-width"] + (style.hasOwnProperty("width") ? style['width'] : 0),
       strokeStyle: style["casing-color"] || "#000000",
       lineCap: style["casing-linecap"] || style['linecap'] || "butt",
       lineJoin: style["casing-linejoin"] || style['linejoin'] || "round",

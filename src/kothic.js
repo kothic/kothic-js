@@ -71,6 +71,9 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
   // }
 
   var ctx = canvas.getContext('2d');
+
+  //TODO: move to options node-canvas specific setting
+  ctx.textDrawingMode = 'glyph';
   // ctx.scale(devicePixelRatio, devicePixelRatio);
 
   // var granularity = data.granularity,

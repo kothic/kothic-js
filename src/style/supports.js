@@ -1,14 +1,16 @@
 module.exports = [
   {
     "name": "casing",
+    "featureTypes": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    "checkActions": ((actions) => !!actions["casing-width"]),
     "actions": [
       {
         "action": "casing-width",
-        "required": true,
+        "default": 1,
         "type": "number"
       }, {
         "action": "casing-color",
-        "default": "#000000",
+        "default": "rgb(0, 0, 0)",
         "type": "color"
       }, {
         "action": "casing-dashes",
@@ -30,6 +32,7 @@ module.exports = [
     "priority": 20
   }, {
     "name": "polygon",
+    "featureTypes": ["Polygon", "MultiPolygon"],
     "actions": [
       {
         "action": "fill-color",
@@ -50,6 +53,7 @@ module.exports = [
   },
   {
     "name": "line",
+    "featureTypes": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
     "actions": [
       {
         "action": "width",
@@ -83,6 +87,7 @@ module.exports = [
     "priority": 30
   }, {
     "name": "icon",
+    "featureTypes": ["Point", "MultiPoint", "Polygon", "MultiPolygon"],
     "actions": [
       {
         "action": "icon-image",
@@ -106,6 +111,7 @@ module.exports = [
     "priority": 40
   }, {
     "name": "text",
+    "featureTypes": ["Point", "MultiPoint", "Polygon", "MultiPolygon"],
     "actions": [
       {
         "action": "text",
@@ -150,6 +156,7 @@ module.exports = [
     "priority": 50
   }, {
     "name": "shield",
+    "featureTypes": ["LineString", "MultiLineString"],
     "actions": [
       {
         "action": "shield-image",

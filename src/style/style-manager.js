@@ -85,8 +85,15 @@ function StyleManager(mapcss) {
 //   return result;
 // }
 
-function createRenders(actions) {
+function createRenders(featureType, actions) {
   const renders = {};
+
+  supports.forEach((render) => {
+    if (!render.featureTypes.includes(featureType)) {
+      return;
+    }
+
+  });
 
   // Line
   if ('width' in actions) {
@@ -123,7 +130,7 @@ StyleManager.prototype.createFeatureRenders = function(feature, kothicId, zoom) 
   const layers = {};
 
   for (var k in featureActions) {
-    const renders = createRenders(featureActions[k]);
+    const renders = createRenders(feature.geometry.type, featureActions[k]);
     for (var render in renders) {
       const actions = renders[render];
       const zIndex = parseInt(actions['z-index']) || 0;
