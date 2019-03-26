@@ -1,10 +1,37 @@
 module.exports = [
   {
-    "name": "casing",
-    "featureTypes": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
-    "checkActions": ((actions) => !!actions["casing-width"]),
+    "name": "polygon",
+    "featureTypes": ["Polygon", "MultiPolygon"],
+    "requiredActions": ["fill-color", "fill-image"],
     "actions": [
       {
+        "action": "z-index",
+        "default": 0,
+        "type": "number"
+      }, {
+        "action": "fill-color",
+        "default": "rgb(0, 0, 0)",
+        "type": "color"
+      }, {
+        "action": "fill-image",
+        "type": "uri"
+      }, {
+        "action": "fill-opacity",
+        "type": "number",
+        "default": 1
+      },
+    ],
+    "priority": 10
+  }, {
+    "name": "casing",
+    "featureTypes": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    "requiredActions": ["casing-width"],
+    "actions": [
+      {
+        "action": "z-index",
+        "default": 0,
+        "type": "number"
+      }, {
         "action": "casing-width",
         "default": 1,
         "type": "number"
@@ -28,45 +55,28 @@ module.exports = [
         "default": "round",
         "type": "string"
       },
+
     ],
     "priority": 20
   }, {
-    "name": "polygon",
-    "featureTypes": ["Polygon", "MultiPolygon"],
-    "actions": [
-      {
-        "action": "fill-color",
-        "default": "#000000",
-        "type": "color",
-        "required": true,
-      }, {
-        "action": "fill-image",
-        "type": "uri",
-        "required": true,
-      }, {
-        "action": "fill-opacity",
-        "type": "number",
-        "default": 1
-      },
-    ],
-    "priority": 10
-  },
-  {
     "name": "line",
     "featureTypes": ["LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+    "requiredActions": ["width", "image"],
     "actions": [
       {
+        "action": "z-index",
+        "default": 0,
+        "type": "number"
+      }, {
         "action": "width",
-        "type": "number",
-        "required": true
+        "type": "number"
       }, {
         "action": "image",
-        "type": "uri",
-        "required": true
+        "type": "uri"
       }, {
         "action": "color",
         "type": "color",
-        "default": "#000000"
+        "default": "rgb(0, 0, 0)"
       }, {
         "action": "dashes",
         "type": "string"
@@ -88,8 +98,13 @@ module.exports = [
   }, {
     "name": "icon",
     "featureTypes": ["Point", "MultiPoint", "Polygon", "MultiPolygon"],
+    "requiredActions": ["icon-image"],
     "actions": [
       {
+        "action": "z-index",
+        "default": 0,
+        "type": "number"
+      }, {
         "action": "icon-image",
         "type": "uri",
         "required": true
@@ -111,12 +126,16 @@ module.exports = [
     "priority": 40
   }, {
     "name": "text",
-    "featureTypes": ["Point", "MultiPoint", "Polygon", "MultiPolygon"],
+    "featureTypes": ["LineString", "MultiLineString", "Point", "MultiPoint", "Polygon", "MultiPolygon"],
+    "requiredActions": ["text"],
     "actions": [
       {
+        "action": "z-index",
+        "default": 0,
+        "type": "number"
+      }, {
         "action": "text",
-        "type": "string",
-        "required": true
+        "type": "string"
       }, {
         "action": "text-color",
         "type": "color",
@@ -157,11 +176,15 @@ module.exports = [
   }, {
     "name": "shield",
     "featureTypes": ["LineString", "MultiLineString"],
+    "requiredActions": ["shield-image", "shield-text"],
     "actions": [
       {
+        "action": "z-index",
+        "default": 0,
+        "type": "number"
+      }, {
         "action": "shield-image",
-        "type": "uri",
-        "required": true
+        "type": "uri"
       }, {
         "action": "shield-text",
         "type": "string"
