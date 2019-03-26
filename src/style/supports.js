@@ -36,6 +36,10 @@ module.exports = [
         "default": 1,
         "type": "number"
       }, {
+        "action": "width",
+        "default": 0,
+        "type": "number"
+      }, {
         "action": "casing-color",
         "default": "rgb(0, 0, 0)",
         "type": "color"
@@ -52,6 +56,14 @@ module.exports = [
         "type": "string"
       }, {
         "action": "casing-linejoin",
+        "default": "round",
+        "type": "string"
+      }, {
+        "action": "linecap",
+        "default": "butt",
+        "type": "string"
+      }, {
+        "action": "linejoin",
         "default": "round",
         "type": "string"
       },
@@ -86,12 +98,10 @@ module.exports = [
         "default": 1
       }, {
         "action": "linecap",
-        "type": "string",
-        "default": "butt"
+        "type": "string"
       }, {
         "action": "linejoin",
-        "type": "string",
-        "default": "round"
+        "type": "string"
       },
     ],
     "priority": 30
