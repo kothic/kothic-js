@@ -14,10 +14,9 @@ module.exports = {
 
     path(ctx, feature.geometry, false, true, projectPointFunction, tile_width, tile_height);
 
-    if (nextFeature &&
-                (nextStyle['fill-color'] === style['fill-color']) &&
-                (nextStyle['fill-image'] === style['fill-image']) &&
-                (nextStyle['fill-opacity'] === style['fill-opacity'])) {
+    if (context.groupFeaturesByActions &&
+        nextFeature &&
+        nextFeature.key === feature.key) {
       return;
     }
 

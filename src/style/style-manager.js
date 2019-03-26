@@ -2,8 +2,15 @@
 
 const supports = require("./supports");
 
-function StyleManager(mapcss) {
+/**
+ ** Available options:
+ ** groupFeaturesByActions {boolean} fort features by performed actions.
+ **     This optimization significately improves performance in browser Canvas implementations but slows down node-canvas
+ **/
+function StyleManager(mapcss, options) {
   this.mapcss = mapcss;
+
+  this.groupFeaturesByActions = (options && options.groupFeaturesByActions) || false;
 }
 
 function checkActions(actions, requiredActions) {
@@ -55,12 +62,19 @@ StyleManager.prototype.createFeatureRenders = function(feature, kothicId, zoom) 
       const actions = renders[render];
       const zIndex = parseInt(actions['z-index']) || 0;
       const majorZIndex = parseInt(actions['major-z-index']);
+      delete actions['z-index'];
+      delete actions['major-z-index'];
 
       const restyledFeature = {
         kothicId: kothicId,
         geometry: feature.geometry,
         actions: actions,
       };
+
+      if (this.groupFeaturesByActions) {
+        restyledFeature['key'] = JSON.stringify(actions);
+      }
+
       const layer = [zIndex, majorZIndex, layerName, render].join(',');
 
       layers[layer] = restyledFeature;
@@ -129,7 +143,11 @@ StyleManager.prototype.createLayers = function(features, zoom) {
     .sort(compareLayers)
     .forEach(([zIndex, majorZIndex, layerName, render]) => {
       const features = layers[[zIndex, majorZIndex, layerName, render].join(',')];
-      //TODO Sort features by color to reduce context switching
+
+      if (this.groupFeaturesByActions) {
+        features.sort((a, b) => a.key.localeCompare(b.key));
+      }
+
       result.push({
           render: render,
           zIndex: parseInt(zIndex),

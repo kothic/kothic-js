@@ -16,12 +16,13 @@ const mapcss = new MapCSS(css, {
 
 var kothic = new Kothic(mapcss, {
   //Synchronous mode for testing reasons
-  getFrame: (callback) => callback()
+  getFrame: (callback) => callback(),
+  browserOptimizations: false
 });
 
 console.time("Loading GeoJSON");
-const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N52E086.json'));
-geojson.bbox = [86, 52, 86.1, 52.1];
+const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N50E086.json'));
+geojson.bbox = [86, 50, 87, 51];
 console.timeEnd("Loading GeoJSON");
 
 console.time("Rendering")

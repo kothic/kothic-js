@@ -19,9 +19,14 @@ const renders = {
   shield: shield.render
 }
 
+function Renderer(options) {
+  this.groupFeaturesByActions = options.groupFeaturesByActions || false;
+  this.debug = options.debug || false;
+  this.projectPointFunction = options.projectPointFunction;
+  this.getFrame = options.getFrame;
+}
 
-function renderBackground(layers, ctx, width, height, zoom) {
-
+Renderer.prototype.renderBackground = function(layers, ctx, width, height, zoom) {
   //TODO: StyleManager should create background as a layer instead of messing with styles manually
   // var style = this.styleManager.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
   //
@@ -49,7 +54,9 @@ function renderCollisions(ctx, node) {
   }
 }
 
-function render(layers, ctx, tileWidth, tileHeight, projectPointFunction, getFrame, callback) {
+Renderer.prototype.render = function(layers, ctx, tileWidth, tileHeight, projectPointFunction, callback) {
+  const self = this;
+
   var collisionBuffer = new CollisionBuffer(tileHeight, tileWidth);
   // render the map
   canvasContext.applyDefaults(ctx);
@@ -59,32 +66,33 @@ function render(layers, ctx, tileWidth, tileHeight, projectPointFunction, getFra
     gallery: {getImage: () => {throw new "Implement gallery"}},
     tileWidth: tileWidth,
     tileHeight: tileHeight,
-    projectPointFunction: projectPointFunction
+    projectPointFunction: projectPointFunction,
+    groupFeaturesByActions: self.groupFeaturesByActions
   }
 
   const funcs = layers.map((layer) => ((next) => {
     const features = layer.features;
 
+    //TODO: Emit event
     console.time(layer.render);
 
-    const render = renders[layer.render];
+    const renderFn = renders[layer.render];
     for (var j = 0, len = features.length; j < len; j++) {
-      render(ctx, features[j], features[j + 1], context);
+      renderFn(ctx, features[j], features[j + 1], context);
     }
 
+    //TODO: Emit event
     console.timeEnd(layer.render);
 
     next();
   }));
 
-  flow.series(funcs, getFrame, () => {
-    // if (self.debug) {
-    //   renderCollisions(ctx, collisionBuffer.buffer.data);
-    // }
+  flow.series(funcs, self.getFrame, () => {
+    if (self.debug) {
+      renderCollisions(ctx, collisionBuffer.buffer.data);
+    }
     callback();
   });
 }
 
-module.exports = {
-  render: render
-}
+module.exports = Renderer;

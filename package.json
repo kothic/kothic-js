@@ -13,6 +13,7 @@
     "test-cov": "./node_modules/nyc/bin/nyc.js --reporter=lcov --reporter=text --reporter=html ./node_modules/.bin/mocha -u bdd --recursive"
   },
   "dependencies": {
+    "benchmark": "^2.1.4",
     "canvas": "^2.3.1",
     "nearley": "^2.16.0",
     "rbush": "^2.0.1"

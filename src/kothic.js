@@ -7,18 +7,25 @@
 'use strict';
 
 var StyleManager = require("./style/style-manager");
-var renderer = require("./renderer/renderer");
-
-function Kothic(styler, options) {
-  this.styleManager = new StyleManager(styler);
-  this.setOptions(options);
-}
+var Renderer = require("./renderer/renderer");
 
 /**
  ** Available options:
  ** getFrame:Function — Function, will be called prior the heavy operations
- ** debug:Boolean — render debug information
+ ** debug {boolean} — render debug information
+ ** browserOptimizations {boolean} — enable set of optimizations for HTML5 Canvas implementation
  **/
+function Kothic(styler, options) {
+  this.setOptions(options);
+
+  this.styleManager = new StyleManager(styler, {groupFeaturesByActions: this.browserOptimizations});
+  this.renderer = new Renderer({
+    groupFeaturesByActions: this.browserOptimizations,
+    debug: this.debug,
+    getFrame: this.getFrame
+  });
+}
+
 Kothic.prototype.setOptions = function(options) {
   // if (options && typeof options.devicePixelRatio !== 'undefined') {
   //     this.devicePixelRatio = options.devicePixelRatio;
@@ -49,6 +56,12 @@ Kothic.prototype.setOptions = function(options) {
         setTimeout(callback, 0);
       }
     }
+  }
+
+  if (options && typeof options.browserOptimizations !== 'undefined') {
+    this.browserOptimizations = !!options.browserOptimizations;
+  } else {
+    this.browserOptimizations = false;
   }
 };
 
@@ -97,7 +110,7 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
 
   console.timeEnd('styles');
 
-  renderer.render(layers, ctx, width, height, project, this.getFrame, callback);
+  this.renderer.render(layers, ctx, width, height, project, callback);
 };
 
 module.exports = Kothic;

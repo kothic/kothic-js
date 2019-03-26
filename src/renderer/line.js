@@ -21,13 +21,9 @@ module.exports = {
 
     path(ctx, feature.geometry, dashes, false, projectPointFunction, tileWidth, tileHeight);
 
-    if (nextActions &&
-        nextActions['width'] === actions['width'] &&
-        nextActions['casing-width'] === actions['casing-width'] &&
-        nextActions['casing-color'] === actions['casing-color'] &&
-        nextActions['casing-dashes'] === actions['casing-dashes'] &&
-        nextActions['casing-opacity'] === actions['casing-opacity']
-    ) {
+    if (context.groupFeaturesByActions &&
+        nextFeature &&
+        nextFeature.key === feature.key) {
       return;
     }
 
@@ -61,11 +57,9 @@ module.exports = {
 
     path(ctx, feature.geometry, actions['dashes'], false, projectPointFunction, tileWidth, tileHeight);
 
-    if (nextFeature &&
-                nextActions['width'] === actions['width'] &&
-                nextActions['color'] === actions['color'] &&
-                nextActions['image'] === actions['image'] &&
-                nextActions['opacity'] === actions['opacity']) {
+    if (context.groupFeaturesByActions &&
+        nextFeature &&
+        nextFeature.key === feature.key) {
       return;
     }
 
