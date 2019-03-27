@@ -16,6 +16,7 @@ line[ele][ele100 = 0] {
   width: 2;
   text-halo-color: rgba(0, 0, 0, 0);
   text-halo-radius: 5;
+  -x-kothic-padding: 50;
 }
 line[ele][ele1000 = 0] {
   width: 3;

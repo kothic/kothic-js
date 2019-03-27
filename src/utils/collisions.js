@@ -7,51 +7,49 @@ const CollisionBuffer = function (height, width) {
   this.width = width;
 };
 
+function getBoxFromPoint(point, width, height, padding, id) {
+  const dx = width / 2 + padding;
+  const dy = height / 2 + padding;
+
+  return {
+    minX: point[0] - dx,
+    minY: point[1] - dy,
+    maxX: point[0] + dx,
+    maxY: point[1] + dy,
+    id: id
+  };
+}
+
 CollisionBuffer.prototype = {
-  addPointWH: function (point, w, h, d, id) {
-    this.buffer.insert(this.getBoxFromPoint(point, w, h, d, id));
+  addPointWH: function (point, width, height, padding, id) {
+    this.buffer.insert(getBoxFromPoint(point, width, height, padding, id));
   },
 
   addPoints: function (params) {
-    var points = [];
-    for (var i = 0, len = params.length; i < len; i++) {
-      points.push(this.getBoxFromPoint.apply(this, params[i]));
-    }
+    const points = params.map((args) => getBoxFromPoint.apply(null, args));
     this.buffer.load(points);
   },
 
-  checkBox: function (b, id) {
-    var result = this.buffer.search(b),
-      i, len;
+  checkPointWH: function (point, width, height, id) {
+    const box = getBoxFromPoint(point, width, height, 0);
 
-    if (b[0] < 0 || b[1] < 0 || b[2] > this.width || b[3] > this.height) { return true; }
+    //Always show collision outside the CollisionBuffer
+    //TODO: Why do we need this???
+    if (box.minX < 0 || box.minY < 0 || box.maxX > this.width || box.maxY > this.height) {
+      return true;
+    }
 
-    for (i = 0, len = result.length; i < len; i++) {
-      // if it's the same object (only different styles), don't detect collision
-      if (id !== result[i][4]) {
+    const result = this.buffer.search(box);
+
+    for (var i = 0, len = result.length; i < len; i++) {
+      // Object with same ID doesn't induce a collision, but different ids does
+      if (id !== result[i].id) {
         return true;
       }
     }
 
     return false;
   },
-
-  checkPointWH: function (point, w, h, id) {
-    return this.checkBox(this.getBoxFromPoint(point, w, h, 0), id);
-  },
-
-  getBoxFromPoint: function (point, w, h, d, id) {
-    var dx = w / 2 + d,
-      dy = h / 2 + d;
-
-    return [
-      point[0] - dx,
-      point[1] - dy,
-      point[0] + dx,
-      point[1] + dy,
-      id
-    ];
-  }
 };
 
 module.exports = CollisionBuffer;

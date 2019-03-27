@@ -40,17 +40,12 @@ Renderer.prototype.renderBackground = function(layers, ctx, width, height, zoom)
 }
 
 function renderCollisions(ctx, node) {
+  ctx.strokeStyle = 'red';
+  ctx.lineWidth = 1;
   if (node.leaf) {
-    for (var i = 0, len = node.children.length; i < len; i++) {
-      ctx.strokeStyle = 'red';
-      ctx.lineWidth = 1;
-      const a = node.children[i];
-      ctx.strokeRect(Math.round(a[0]), Math.round(a[1]), Math.round(a[2] - a[0]), Math.round(a[3] - a[1]));
-    }
+    node.children.forEach((box) => ctx.strokeRect(box.minX, box.minY, box.maxX - box.minX, box.maxY - box.minY));
   } else {
-    for (var i = 0, len = node.children.length; i < len; i++) {
-      renderCollisions(ctx, node.children[i]);
-    }
+    node.children.forEach((child) => renderCollisions(ctx, child));
   }
 }
 
