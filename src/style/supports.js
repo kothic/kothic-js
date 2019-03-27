@@ -116,8 +116,7 @@ module.exports = [
         "type": "number"
       }, {
         "action": "icon-image",
-        "type": "uri",
-        "required": true
+        "type": "uri"
       }, {
         "action": "icon-width",
         "type": "number"

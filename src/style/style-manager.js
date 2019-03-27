@@ -39,9 +39,10 @@ function createRenders(featureType, actions) {
       'major-z-index': render.priority
     };
 
-    render.actions.forEach((actionDef) => {
-      if (actionDef.action in actions || 'default' in actionDef) {
-        renderActions[actionDef.action] = actions[actionDef.action] || actionDef['default'];
+    render.actions.forEach((spec) => {
+      const value = extractActionValue(spec, actions);
+      if (typeof(value) !== 'undefined' && value != null) {
+        renderActions[spec.action] = value;
       }
     });
 
@@ -50,6 +51,32 @@ function createRenders(featureType, actions) {
 
   return renders;
 }
+
+function extractActionValue(spec, actions) {
+  if (!(spec.action in actions)) {
+    return typeof(spec.default) !== 'undefined' ? spec.default : null;
+  }
+
+  var value = actions[spec.action];
+  switch (spec.type) {
+    case 'number':
+      value = parseFloat(value);
+      break;
+    case 'boolean':
+      value = value === 'true' ? true : !!value;
+      break;
+    case 'string':
+    value = value === '' ? null : value;
+      break;
+    case 'color':
+    case 'uri':
+    default:
+      break;
+  }
+  return [value, spec.default].find((x) => x !== null && typeof(x) !== 'undefined');
+}
+
+
 
 StyleManager.prototype.createFeatureRenders = function(feature, kothicId, zoom) {
   const featureActions = this.mapcss.apply(feature.properties, zoom, feature.geometry.type);

@@ -1,3 +1,7 @@
+canvas {
+  color: darkgreen;
+}
+
 line[ele] {
   set ele1000 = eval(num(tag("ele")) % 1000);
   set ele100 = eval(num(tag("ele")) % 100);
