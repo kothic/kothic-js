@@ -7,7 +7,7 @@ function renderIcon(ctx, feature, nextFeature, context) {
   const gallery = context.gallery;
 
   //TODO: Refactor, calculate representative point only once
-  const point = geom.getReprPoint(feature, projectPointFunction);
+  const point = geom.getReprPoint(feature.geometry, projectPointFunction);
   if (!point) {
     return;
   }

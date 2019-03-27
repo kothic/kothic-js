@@ -25,3 +25,18 @@ line[ele][ele100 = 0] {
 line[ele][ele1000 = 0] {
   width: 3;
 }
+
+
+line[natural=ridge],
+line[natural=arete] {
+  width: 3;
+  color: black;
+  casing-width: 3px;
+  casing-color: gray;
+}
+
+
+node[natural=peak] {
+  text: eval(any(tag("name"), tag("ele")));
+  text-color: blue;
+}

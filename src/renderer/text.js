@@ -12,10 +12,10 @@ function renderText(ctx, feature, nextFeature, context) {
 
   const text = String(actions.text).trim();
 
-  const hasHalo = 'text-halo-radius' in actions;
+  const hasHalo = 'text-halo-radius' in actions && parseInt(actions['text-halo-radius']) > 0;
 
   style.applyStyle(ctx, {
-    lineWidth: actions['text-halo-radius'] || 0,
+    lineWidth: actions['text-halo-radius'],
     font: style.composeFontDeclaration(actions['font-family'], actions['font-size'], actions),
     fillStyle: actions['text-color'] || '#000000',
     strokeStyle: actions['text-halo-color'] || '#ffffff',
@@ -31,10 +31,9 @@ function renderText(ctx, feature, nextFeature, context) {
   } else if (actions['text-transform'] === 'capitalize') {
     text = text.replace(/(^|\s)\S/g, function(ch) { return ch.toUpperCase(); });
   }
-
   if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'Point') {
     //TODO: Refactor, calculate representative point only once
-    const point = geom.getReprPoint(feature, projectPointFunction);
+    const point = geom.getReprPoint(feature.geometry, projectPointFunction);
     if (!point) {
        return;
     }
@@ -58,8 +57,7 @@ function renderText(ctx, feature, nextFeature, context) {
     ctx.fillText(text, center[0], center[1]);
 
     const padding = parseFloat(actions['-x-kothic-padding']) || 0;
-    collisionBuffer.addPointWH(point, w, h, padding, feature.kothicId);
-
+    collisionBuffer.addPointWH(point, width, height, padding, feature.kothicId);
   } else if (feature.geometry.type === 'LineString') {
     const points = feature.geometry.coordinates.map(projectPointFunction);
     textOnPath(ctx, points, text, hasHalo, collisionBuffer);

@@ -61,23 +61,23 @@ exports.transformPoints = function (points, ws, hs) {
 };
 
 // get a single point representing geometry feature (e.g. centroid)
-exports.getReprPoint = function (feature, projectPointFunction) {
-  switch (feature.type) {
+exports.getReprPoint = function (geometry, projectPointFunction) {
+  switch (geometry.type) {
   case 'Point':
-    point = feature.coordinates;
+    point = geometry.coordinates;
     break;
   case 'Polygon':
     //TODO: Don't expect we're have this field. We may have plain JSON here,
     // so it's better to check a feature property and calculate polygon centroid here
     // if server doesn't provide representative point
-    point = feature.reprpoint;
+    point = geometry.reprpoint;
     break;
   case 'LineString':
     // Use center of line here
     // TODO: This approach is pretty rough: we need to check not only single point,
     // for label placing, but any point on the line
-    var len = exports.getPolyLength(feature.coordinates);
-    var point = exports.getAngleAndCoordsAtLength(feature.coordinates, len / 2, 0);
+    var len = exports.getPolyLength(geometry.coordinates);
+    var point = exports.getAngleAndCoordsAtLength(geometry.coordinates, len / 2, 0);
     point = [point[1], point[2]];
     break;
   case 'GeometryCollection':
@@ -87,7 +87,7 @@ exports.getReprPoint = function (feature, projectPointFunction) {
     //TODO: Disassemble multi point
     return;
   case 'MultiPolygon':
-    point = feature.reprpoint;
+    point = geometry.reprpoint;
     break;
   case 'MultiLineString':
     //TODO: Disassemble geometry collection
