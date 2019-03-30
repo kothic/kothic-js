@@ -55,11 +55,14 @@ describe("Style Manager", () => {
           'width': '1',
           'casing-width': '1',
           'casing-color': 'red',
-          'text': 'Hooray'
+          'text': 'Hooray',
+          'text-allow-overlap': "true"
         },
         'overlay_1': {
           'width': '5',
           'casing-width': '2',
+          'text': '',
+          'text-allow-overlap': "false",
           'z-index': '1000'
         },
         'overlay_2': {
@@ -68,22 +71,57 @@ describe("Style Manager", () => {
           'z-index': '2000'
         }
       })};
-      const sm = new StyleManager(mapcss);
+      const sm = new StyleManager(mapcss, {groupFeaturesByActions: false});
 
       const features = [{
         geometry: {type: 'LineString'},
       }];
 
       const layers = sm.createLayers(features, 10);
-      expect(layers).to.have.property('length', 7);
+      expect(layers).to.have.property('length', 8);
 
       expect(layers[0]).to.containSubset({render: 'casing', zIndex: 0});
       expect(layers[1]).to.containSubset({render: 'line', zIndex: 0});
       expect(layers[2]).to.containSubset({render: 'text', zIndex: 0});
       expect(layers[3]).to.containSubset({render: 'casing', zIndex: 1000});
       expect(layers[4]).to.containSubset({render: 'line', zIndex: 1000});
-      expect(layers[5]).to.containSubset({render: 'casing', zIndex: 2000});
-      expect(layers[6]).to.containSubset({render: 'line', zIndex: 2000});
+      expect(layers[5]).to.containSubset({render: 'text', zIndex: 1000});
+      expect(layers[6]).to.containSubset({render: 'casing', zIndex: 2000});
+      expect(layers[7]).to.containSubset({render: 'line', zIndex: 2000});
+    });
+
+    it("Sort features by actions", () => {
+      var i = 1;
+      const mapcss = { apply: (tags, zoom, featureType) => {
+        console.log(featureType)
+        if (featureType == 'Polygon') {
+          return {
+            'default': {
+              'width': '1',
+            }
+          }
+        } else {
+          return {
+            'default': {
+              'width': '2',
+            }
+          }
+        }
+      }};
+      const sm = new StyleManager(mapcss, {groupFeaturesByActions: true});
+      const features = [{
+        geometry: {type: 'LineString'},
+      }, {
+        geometry: {type: 'Polygon'},
+      }, {
+        geometry: {type: 'LineString'},
+      }
+      ];
+
+      const layers = sm.createLayers(features, 10);
+      expect(layers[0].features[0].actions.width).to.be.equal(1)
+      expect(layers[0].features[1].actions.width).to.be.equal(2)
+      expect(layers[0].features[2].actions.width).to.be.equal(2)
     });
   });
 });

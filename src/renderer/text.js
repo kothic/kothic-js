@@ -36,7 +36,7 @@ function renderText(ctx, feature, nextFeature, context) {
     //TODO: Refactor, calculate representative point only once
     const point = geom.getReprPoint(feature, projectPointFunction);
     if (!point) {
-       return;
+      return;
     }
 
     const textWidth = ctx.measureText(text).width;

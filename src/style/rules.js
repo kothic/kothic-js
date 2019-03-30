@@ -4,12 +4,17 @@ const matchers = require("./matchers");
 const evalProcessor = require("./eval");
 
 /**
- ** Extract all mentioned tags in MapCSS rules.
+ ** Extract all tags, referenced in MapCSS rules.
+ **
  ** @param rules {array} — list of MapCSS rules from AST
  ** @param locales {array} — list of supported locales
+ ** @return {Object} ­tags — map of tags
+ **   key — tag name
+ **   value — 'k' if tag value is not used
+ **           'kv' if tag value is used
  **/
 function listKnownTags(rules, locales=[]) {
-  var tags = {};
+  const tags = {};
   rules.forEach((rule) => {
     rule.selectors.forEach((selector) => {
       matchers.appendKnownTags(tags, selector.attributes);
@@ -18,17 +23,44 @@ function listKnownTags(rules, locales=[]) {
     rule.actions.forEach((action) => {
       const value = action.v;
 
-      if (action.action === 'kv' && action.k === 'text' && value.type === "string") {
-        //Support 'text: "tagname";' syntax sugar statement
-        tags[value.v] = 'kv';
-      } else if (value.type === "eval") {
-        //Support tag() function in eval
-        evalProcessor.appendKnownTags(tags, value.v, locales);
+      if (action.action === 'kv' && action.k === 'text') {
+        if (value.type === "string") {
+          //Support 'text: "tagname";' syntax sugar statement
+          tags[value.v] = 'kv';
+        } else if (value.type === "eval") {
+          //Support tag() function in eval
+          evalProcessor.appendKnownTags(tags, value.v, locales);
+        }
       }
     });
   });
 
   return tags;
+}
+
+/**
+ ** Extract all images, referenced in MapCSS rules.
+ ** @param rules {array} — list of MapCSS rules from AST
+ ** @return {array} — unique list of images
+ **/
+function listKnownImages(rules) {
+  const images = {};
+
+  const imageActions = ['image', 'shield-image', 'icon-image', 'fill-image'];
+
+  rules.forEach((rule) => {
+    rule.actions.forEach((action) => {
+      const value = action.v;
+
+      if (action.action === 'kv' && imageActions.includes(action.k)) {
+        if (value.type === "string") {
+          images[value.v.trim()] = true;
+        }
+      }
+    });
+  });
+
+  return Object.keys(images);
 }
 
 /**
@@ -158,5 +190,6 @@ function formatCssColor(color) {
 
 module.exports = {
   listKnownTags: listKnownTags,
+  listKnownImages: listKnownImages,
   apply: apply,
 }

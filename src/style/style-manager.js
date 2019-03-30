@@ -3,9 +3,9 @@
 const supports = require("./supports");
 
 /**
- ** Available options:
- ** groupFeaturesByActions {boolean} fort features by performed actions.
- **     This optimization significately improves performance in browser Canvas implementations but slows down node-canvas
+ ** @param options {Object}
+ ** @param options.groupFeaturesByActions {boolean} sort features by performed actions.
+ **     This optimization significately improves performance in Chrome canvas implementation, but slows down node-canvas
  **/
 function StyleManager(mapcss, options) {
   this.mapcss = mapcss;
@@ -26,27 +26,27 @@ function checkActions(actions, requiredActions) {
 function createRenders(featureType, actions) {
   const renders = {};
 
-  supports.forEach((render) => {
-    if (!render.featureTypes.includes(featureType)) {
+  supports.forEach((renderSpec) => {
+    if (!renderSpec.featureTypes.includes(featureType)) {
       return;
     }
 
-    if (!checkActions(actions, render.requiredActions)) {
+    if (!checkActions(actions, renderSpec.requiredActions)) {
       return;
     }
 
     const renderActions = {
-      'major-z-index': render.priority
+      'major-z-index': renderSpec.priority
     };
 
-    render.actions.forEach((spec) => {
+    renderSpec.actions.forEach((spec) => {
       const value = extractActionValue(spec, actions);
       if (typeof(value) !== 'undefined' && value != null) {
         renderActions[spec.action] = value;
       }
     });
 
-    renders[render.name] = renderActions;
+    renders[renderSpec.name] = renderActions;
   });
 
   return renders;
@@ -59,19 +59,19 @@ function extractActionValue(spec, actions) {
 
   var value = actions[spec.action];
   switch (spec.type) {
-    case 'number':
-      value = parseFloat(value);
-      break;
-    case 'boolean':
-      value = value === 'true' ? true : !!value;
-      break;
-    case 'string':
+  case 'number':
+    value = parseFloat(value);
+    break;
+  case 'boolean':
+    value = value === 'true' ? true : !!value;
+    break;
+  case 'string':
     value = value === '' ? null : value;
-      break;
-    case 'color':
-    case 'uri':
-    default:
-      break;
+    break;
+  case 'color':
+  case 'uri':
+  default:
+    break;
   }
   return [value, spec.default].find((x) => x !== null && typeof(x) !== 'undefined');
 }
@@ -176,11 +176,11 @@ StyleManager.prototype.createLayers = function(features, zoom) {
       }
 
       result.push({
-          render: render,
-          zIndex: parseInt(zIndex),
-          majorZIndex: parseInt(majorZIndex),
-          objectZIndex: layerName,
-          features: features
+        render: render,
+        zIndex: parseInt(zIndex),
+        majorZIndex: parseInt(majorZIndex),
+        objectZIndex: layerName,
+        features: features
       });
     });
 
