@@ -34,7 +34,7 @@ function renderText(ctx, feature, nextFeature, context) {
 
   if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'Point') {
     //TODO: Refactor, calculate representative point only once
-    const point = geom.getReprPoint(feature, projectPointFunction);
+    const point = geom.getReprPoint(feature.geometry, projectPointFunction);
     if (!point) {
       return;
     }
@@ -58,7 +58,7 @@ function renderText(ctx, feature, nextFeature, context) {
     ctx.fillText(text, center[0], center[1]);
 
     const padding = parseFloat(actions['-x-kothic-padding']) || 0;
-    collisionBuffer.addPointWH(point, w, h, padding, feature.kothicId);
+    collisionBuffer.addPointWH(point, width, height, padding, feature.kothicId);
 
   } else if (feature.geometry.type === 'LineString') {
     const points = feature.geometry.coordinates.map(projectPointFunction);

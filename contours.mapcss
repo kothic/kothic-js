@@ -25,3 +25,14 @@ line[ele][ele100 = 0] {
 line[ele][ele1000 = 0] {
   width: 3;
 }
+
+node[natural=peak] {
+  icon-image: "triangle-15.png";
+  text: eval(any(tag("name"), tag("ele")));
+  text-color: black;
+  font-size: 20;
+  text-halo-color: rgba(0, 0, 0, 0);
+  text-halo-radius: 5;
+  text-offset: 15;
+
+}

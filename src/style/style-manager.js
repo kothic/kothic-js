@@ -23,6 +23,7 @@ function checkActions(actions, requiredActions) {
   return false;
 }
 
+//TODO Extract to supports.js
 function createRenders(featureType, actions) {
   const renders = {};
 

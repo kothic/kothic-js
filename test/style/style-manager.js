@@ -93,7 +93,6 @@ describe("Style Manager", () => {
     it("Sort features by actions", () => {
       var i = 1;
       const mapcss = { apply: (tags, zoom, featureType) => {
-        console.log(featureType)
         if (featureType == 'Polygon') {
           return {
             'default': {

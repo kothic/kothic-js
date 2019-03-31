@@ -32,6 +32,11 @@ function MapCSS(css, options={}) {
   }
 
   this.knownTags = rules.listKnownTags(ast, this.locales);
+  this.images = rules.listKnownImages(ast);
+}
+
+MapCSS.prototype.listImageReferences = function() {
+  return this.images;
 }
 
 MapCSS.prototype.createCacheKey = function(tags, zoom, featureType) {

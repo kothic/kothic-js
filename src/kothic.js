@@ -6,8 +6,9 @@
 
 'use strict';
 
-var StyleManager = require("./style/style-manager");
-var Renderer = require("./renderer/renderer");
+const StyleManager = require("./style/style-manager");
+const Gallery = require("./style/gallery")
+const Renderer = require("./renderer/renderer");
 
 /**
  ** Available options:
@@ -15,15 +16,23 @@ var Renderer = require("./renderer/renderer");
  ** debug {boolean} — render debug information
  ** browserOptimizations {boolean} — enable set of optimizations for HTML5 Canvas implementation
  **/
-function Kothic(styler, options) {
+function Kothic(mapcss, options) {
   this.setOptions(options);
 
-  this.styleManager = new StyleManager(styler, {groupFeaturesByActions: this.browserOptimizations});
-  this.renderer = new Renderer({
-    groupFeaturesByActions: this.browserOptimizations,
-    debug: this.debug,
-    getFrame: this.getFrame
-  });
+  this.styleManager = new StyleManager(mapcss, {groupFeaturesByActions: this.browserOptimizations});
+
+  const images = mapcss.listImageReferences();
+  const gallery = new Gallery(options.gallery || {});
+
+  if (images.length > 0) {
+    this.rendererPromise = gallery.preloadImages(images).then(() => {
+       return new Renderer(gallery, {
+        groupFeaturesByActions: this.browserOptimizations,
+        debug: this.debug,
+        getFrame: this.getFrame
+      });
+    }, (err) => console.error(err));
+  }
 }
 
 Kothic.prototype.setOptions = function(options) {
@@ -110,7 +119,9 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
 
   console.timeEnd('styles');
 
-  this.renderer.render(layers, ctx, width, height, project, callback);
+  this.rendererPromise.then((renderer) => {
+    renderer.render(layers, ctx, width, height, project, callback);
+  })
 };
 
 module.exports = Kothic;

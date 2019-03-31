@@ -18,12 +18,16 @@ var kothic = new Kothic(mapcss, {
   //Synchronous mode for testing reasons
   getFrame: (callback) => callback(),
   browserOptimizations: false,
+  gallery: {
+    localImagesDirectory: '../../sandbox/maki/png'
+  },
   debug: true
 });
 
 console.time("Loading GeoJSON");
-const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N52E085.json'));
-geojson.bbox = [85, 52, 85.5, 52.5];
+//const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N52E085.json'));
+const geojson = JSON.parse(fs.readFileSync('peaks.geojson'));
+geojson.bbox = [85, 52, 86, 53];
 console.timeEnd("Loading GeoJSON");
 
 console.time("Rendering")

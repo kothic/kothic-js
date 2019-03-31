@@ -6,7 +6,7 @@ var geom = require('../utils/geom');
 
 module.exports = {
   render: function (ctx, feature, collides, ws, hs) {
-    var style = feature.style, reprPoint = geom.getReprPoint(feature),
+    var style = feature.style, reprPoint = geom.getReprPoint(feature.geometry),
       point, img, len = 0, found = false, i, sgn;
 
     if (!reprPoint) {
