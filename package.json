@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "benchmark": "^2.1.4",
-    "canvas": "^2.3.1",
+    "canvas": "^2.4.1",
     "nearley": "^2.16.0",
     "rbush": "^2.0.1"
   }

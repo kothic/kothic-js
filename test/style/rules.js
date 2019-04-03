@@ -24,7 +24,7 @@ describe("Rules", () => {
     });
 
     it("text tag", () => {
-      const ast = mapcss.parse("way {text: ele;}");
+      const ast = mapcss.parse("way {text: ele; color: red;}");
       expect(rules.listKnownTags(ast)).to.have.property('ele', 'kv')
     });
 
@@ -33,6 +33,10 @@ describe("Rules", () => {
       expect(rules.listKnownTags(ast)).to.have.property('ele', 'kv')
     });
 
+    it("text: unexpected", () => {
+      const ast = mapcss.parse("way {text: #fff;}");
+      expect(rules.listKnownTags(ast)).to.be.empty
+    });
     it("localize() in eval", () => {
       const ast = mapcss.parse('way {text: eval(localize("name"));}');
       const tags = rules.listKnownTags(ast, ['en', 'de']);
@@ -44,6 +48,31 @@ describe("Rules", () => {
     it("no actions with tags access", () => {
       const ast = mapcss.parse('way {color: red;}');
       expect(rules.listKnownTags(ast)).to.be.an('Object').that.is.empty;
+    });
+  });
+
+  describe("Known images", () => {
+    it("empty rules", () => {
+      expect(rules.listKnownImages([])).to.be.empty;
+    });
+
+    it("image tags", () => {
+      const ast = mapcss.parse('line {shield-image: "http://example.org/img/shield.png"; image: "http://example.org/img/line.png"; icon-image: "http://example.org/img/icon.png"; fill-image: "http://example.org/img/texture.png";}');
+      const images = rules.listKnownImages(ast);
+      expect(images).to.include('http://example.org/img/icon.png')
+      expect(images).to.include('http://example.org/img/line.png')
+      expect(images).to.include('http://example.org/img/shield.png')
+      expect(images).to.include('http://example.org/img/texture.png')
+    });
+
+    it("image: unexpected", () => {
+      const ast = mapcss.parse("way {image: #fff;}");
+      expect(rules.listKnownImages(ast)).to.be.empty
+    });
+
+    it("exit;", () => {
+      const ast = mapcss.parse("way {exit;}");
+      expect(rules.listKnownImages(ast)).to.be.empty
     });
   });
 

@@ -19,11 +19,12 @@ const renders = {
   shield: shield.render
 }
 
-function Renderer(options) {
+function Renderer(gallery, options) {
   this.groupFeaturesByActions = options.groupFeaturesByActions || false;
   this.debug = options.debug || false;
   this.projectPointFunction = options.projectPointFunction;
   this.getFrame = options.getFrame;
+  this.gallery = gallery;
 }
 
 Renderer.prototype.renderBackground = function(layers, ctx, width, height, zoom) {
@@ -58,7 +59,7 @@ Renderer.prototype.render = function(layers, ctx, tileWidth, tileHeight, project
 
   const context = {
     collisionBuffer: collisionBuffer,
-    gallery: {getImage: () => {throw new "Implement gallery"}},
+    gallery: this.gallery,
     tileWidth: tileWidth,
     tileHeight: tileHeight,
     projectPointFunction: projectPointFunction,

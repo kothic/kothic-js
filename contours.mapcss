@@ -26,7 +26,6 @@ line[ele][ele1000 = 0] {
   width: 3;
 }
 
-
 line[natural=ridge],
 line[natural=arete] {
   width: 3;
@@ -37,6 +36,21 @@ line[natural=arete] {
 
 
 node[natural=peak] {
+  icon-image: "triangle-24.png";
   text: eval(any(tag("name"), tag("ele")));
-  text-color: blue;
+  text-color: black;
+  font-size: 10;
+  text-halo-color: rgba(0, 0, 0, 0);
+  text-halo-radius: 5;
+  text-offset: 15;
+}
+
+node[mountain_pass=yes] {
+  icon-image: "cross-24.png";
+  text: eval(join(tag("name"), tag("rtsa_scale")));
+  text-color: black;
+  font-size: 10;
+  text-halo-color: rgba(0, 0, 0, 0);
+  text-halo-radius: 5;
+  text-offset: 15;
 }

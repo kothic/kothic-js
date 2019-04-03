@@ -12,14 +12,14 @@ function renderIcon(ctx, feature, nextFeature, context) {
     return;
   }
 
+  const actions = feature.actions;
+
   const image = gallery.getImage(actions['icon-image']);
   if (!image) {
     return;
   }
 
   var w = image.width, h = image.height;
-
-  const actions = feature.actions;
 
   //Zoom image according to values, specified in MapCSS
   if (actions['icon-width'] || actions['icon-height']) {
@@ -41,10 +41,20 @@ function renderIcon(ctx, feature, nextFeature, context) {
     }
   }
 
-  ctx.drawImage(image,
-    Math.floor(point[0] - w / 2),
-    Math.floor(point[1] - h / 2),
-    w, h);
+
+  const x = Math.floor(point[0] - w / 2);
+  const y = Math.floor(point[1] - h / 2);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.strokeStyle = 'black'
+  ctx.lineWidth = 1
+  ctx.ellipse(point[0], point[1], w / 2, h / 2, 0, 0, 2*Math.PI);
+  //ctx.rect(x, y, w, h);
+  ctx.clip("evenodd");
+  //ctx.stroke()
+  ctx.drawImage(image, x, y, w, h);
+  ctx.restore();
 
   const padding = parseFloat(actions['-x-kothic-padding']) || 0;
   collisionBuffer.addPointWH(point, w, h, padding, feature.kothicId);

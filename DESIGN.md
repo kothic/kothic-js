@@ -1,8 +1,12 @@
 == Design notes
 
 KothicJS use GeoJSON[1] as an internal data model.
-bbox property is required
-Number of external dependencies is as minimal as possible
+geojson.bbox property is required
+
+* As minimum external dependencies as possible
+* Reentrancy in mind. User may setup renderer once and use it multiple times
+* No-clutter approach. If some feature requires some pre-processing, it should be implemented outside the KothicJS core.
+* Bulletproof 
 
 == Layers rendering order
 TODO: Describe how the layers are sorted for rendering
