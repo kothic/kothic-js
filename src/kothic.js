@@ -24,15 +24,13 @@ function Kothic(mapcss, options) {
   const images = mapcss.listImageReferences();
   const gallery = new Gallery(options.gallery || {});
 
-  if (images.length > 0) {
-    this.rendererPromise = gallery.preloadImages(images).then(() => {
-       return new Renderer(gallery, {
-        groupFeaturesByActions: this.browserOptimizations,
-        debug: this.debug,
-        getFrame: this.getFrame
-      });
-    }, (err) => console.error(err));
-  }
+  this.rendererPromise = gallery.preloadImages(images).then(() => {
+     return new Renderer(gallery, {
+      groupFeaturesByActions: this.browserOptimizations,
+      debug: this.debug,
+      getFrame: this.getFrame
+    });
+  }, (err) => console.error(err));
 }
 
 Kothic.prototype.setOptions = function(options) {
@@ -96,6 +94,10 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
 
   //TODO: move to options node-canvas specific setting
   ctx.globalCompositeOperation = 'copy'
+
+  ctx.fillStyle = '#eee';
+  ctx.fillRect(0, 0, width, height);
+
   // ctx.scale(devicePixelRatio, devicePixelRatio);
 
   // var granularity = data.granularity,

@@ -139,11 +139,10 @@ function renderText(ctx, segment, glyphs) {
   for (var i = 0; i < glyphs.length; i++) {
     const glyph = glyphs[i];
 
-    var reserved = 0;
-    const point = segment.points[index];
-    const angle = segment.angles[index];
+		const startPointIndex = index;
     const offsetX = offset;
 
+		var reserved = 0;
     while (reserved < glyph.width) {
       const required = glyph.width - reserved;
       if (parts[index] > offset + required) {
@@ -158,8 +157,22 @@ function renderText(ctx, segment, glyphs) {
       offset = 0;
     }
 
+		//console.log(segment.points.length, startPointIndex, index);
+		const angle = adjustAngle(segment.points[startPointIndex], segment.angles[startPointIndex], segment.points[index], segment.angles[index], offsetX, 0);
+		const point = segment.points[startPointIndex];
     drawGlyph(ctx, offsetX, 0, glyph, point, angle);
   }
+}
+
+function adjustAngle(pointStart, angleStart, pointNext, angleNext, offsetX, offsetY) {
+	if (pointStart === pointNext) {
+		return angleStart;
+	}
+
+	const x = pointNext[0] + offsetX * Math.cos(angleNext) + offsetY * Math.sin(angleNext);
+	const y = pointNext[1] + offsetY * Math.sin(angleNext) + offsetY * Math.cos(angleNext);
+
+	return Math.atan2(y - pointStart[1], x - pointStart[0]);
 }
 
 function render(ctx, points, text, debug=false) {

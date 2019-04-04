@@ -36,7 +36,6 @@ line[natural=arete] {
 
 
 node[natural=peak] {
-  icon-image: "triangle-24.png";
   text: eval(any(tag("name"), tag("ele")));
   text-color: black;
   font-size: 10;
@@ -46,7 +45,6 @@ node[natural=peak] {
 }
 
 node[mountain_pass=yes] {
-  icon-image: "cross-24.png";
   text: eval(join(tag("name"), tag("rtsa_scale")));
   text-color: black;
   font-size: 10;

@@ -5,7 +5,7 @@ const MapCSS = require("./src/style/mapcss");
 
 const { createCanvas, loadImage } = require('canvas')
 
-const canvas = createCanvas(5000, 5000)
+const canvas = createCanvas(2000, 2000)
 
 const css = fs.readFileSync("./contours.mapcss").toString();
 
@@ -26,8 +26,9 @@ var kothic = new Kothic(mapcss, {
 
 console.time("Loading GeoJSON");
 //const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N50E086.json'));
-const geojson = JSON.parse(fs.readFileSync('ridges.geojson'));
-geojson.bbox = [86, 50, 87, 51];
+const geojson = JSON.parse(fs.readFileSync('../../sandbox/relief/contours-json/N52E085.json'));
+//const geojson = JSON.parse(fs.readFileSync('ridges.geojson'));
+geojson.bbox = [85, 52, 85.1, 52.1];
 console.timeEnd("Loading GeoJSON");
 
 console.time("Rendering")

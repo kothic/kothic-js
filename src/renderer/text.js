@@ -2,7 +2,8 @@
 
 var geom = require('../utils/geom');
 var style = require('../utils/style');
-var textOnPath = require("./textonpath").textOnPath;
+//var textOnPath = require("./textonpath").textOnPath;
+const textOnPath = require("./curvedtext").render
 
 function renderText(ctx, feature, nextFeature, context) {
   const collisionBuffer = context.collisionBuffer;
