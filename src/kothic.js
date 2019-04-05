@@ -109,7 +109,7 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
   function project(point) {
     return [
       (point[0] - bbox[0]) * hscale,
-      (point[1] - bbox[1]) * vscale
+      height - ((point[1] - bbox[1]) * vscale)
     ];
   }
 
