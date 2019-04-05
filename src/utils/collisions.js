@@ -29,6 +29,11 @@ CollisionBuffer.prototype.addPoints = function (params) {
   this.buffer.load(points);
 }
 
+CollisionBuffer.prototype.check = function(box) {
+  const result = this.buffer.search(box);
+  return result.length == 0;
+}
+
 CollisionBuffer.prototype.checkPointWH = function (point, width, height, id) {
   const box = getBoxFromPoint(point, width, height, 0);
 

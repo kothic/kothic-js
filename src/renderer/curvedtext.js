@@ -97,13 +97,17 @@ function calculateOffset(parts, offset) {
   throw new Error("Sanity check: path is shorter than an offset");
 }
 
-function drawGlyph(ctx, offsetX, offsetY, glyph, point, angle) {
-  ctx.translate(point[0], point[1]);
-  ctx.rotate(angle);
-  //ctx.strokeText(glyph.glyph, offsetX, offsetY);
-  ctx.fillText(glyph.glyph, offsetX, offsetY);
-  ctx.rotate(-angle);
-  ctx.translate(-point[0], -point[1]);
+function drawGlyph(ctx, glyph, hasHalo=false) {
+  ctx.translate(glyph.position[0], glyph.position[1]);
+  ctx.rotate(glyph.angle);
+	if (hasHalo) {
+  	ctx.strokeText(glyph.glyph, glyph.offset[0], glyph.offset[1]);
+	} else {
+		ctx.fillText(glyph.glyph, glyph.offset[0], glyph.offset[1]);
+	}
+
+  ctx.rotate(-glyph.angle);
+  ctx.translate(-glyph.position[0], -glyph.position[1]);
 }
 
 function renderSegments(ctx, segments) {
@@ -121,61 +125,86 @@ function renderSegments(ctx, segments) {
   ctx.restore();
 }
 
-function renderText(ctx, segment, glyphs) {
+function calculateGlyphsPositions(segment, glyphs) {
   const textWidth = glyphs.reduce((acc, glyph) => acc + glyph.width, 0);
 
   //Reverse segment to avoid text, flipped upside down
   if (segment.quadrant == '2,4') {
-    segment.angles = segment.angles.map((angle) => Math.PI - angle);
+    segment.angles = segment.angles.map((angle) => angle - Math.PI);
     segment.partsLength.reverse();
     segment.points.reverse();
+		segment.quadrant = '1,3'
   }
 
+	//Align text to the middle of current segment
   const startOffset = (segment.length - textWidth) / 2;
 
-  const parts = segment.partsLength;
-
-  var [index, offset] = calculateOffset(parts, startOffset);
+	// Get point index and offset from that point of the starting position
+	// 'index' is an index of current segment partsLength
+	// 'offset' is an offset from the beggining of the part
+  var [index, offset] = calculateOffset(segment.partsLength, startOffset);
   for (var i = 0; i < glyphs.length; i++) {
     const glyph = glyphs[i];
 
 		const startPointIndex = index;
     const offsetX = offset;
 
+		//Iterate by points until space for current glyph was reserved
 		var reserved = 0;
     while (reserved < glyph.width) {
-      const required = glyph.width - reserved;
-      if (parts[index] > offset + required) {
-        offset += required;
-        reserved += required;
+      const requiredSpace = glyph.width - reserved;
+			//Current part is longer than required space
+      if (segment.partsLength[index] > offset + requiredSpace) {
+        offset += requiredSpace;
+        reserved += requiredSpace;
         break;
       }
-      //TODO: Adjust angle
-      const prevReminder = parts[index] - offset;
-      reserved += prevReminder;
+
+			//Current part is shorter than required space. Reserve the whole part
+			//and increment index
+      reserved += segment.partsLength[index] - offset;
       index += 1;
       offset = 0;
     }
 
-		//console.log(segment.points.length, startPointIndex, index);
-		const angle = adjustAngle(segment.points[startPointIndex], segment.angles[startPointIndex], segment.points[index], segment.angles[index], offsetX, 0);
-		const point = segment.points[startPointIndex];
-    drawGlyph(ctx, offsetX, 0, glyph, point, angle);
+		// Text glyph may cover multiple segment parts, so a glyph angle should
+		// be averaged between start ans end position
+		const angle = adjustAngle(segment.points[startPointIndex], segment.angles[startPointIndex], segment.points[index], segment.angles[index], offset, 0);
+
+		glyph.position = segment.points[startPointIndex];
+		glyph.angle = angle;
+		glyph.offset = [offsetX, 0];
   }
+
+	return glyphs;
 }
 
 function adjustAngle(pointStart, angleStart, pointNext, angleNext, offsetX, offsetY) {
+	//If glyph can be fitted to a single segment part, no adjustment is needed
 	if (pointStart === pointNext) {
 		return angleStart;
 	}
 
-	const x = pointNext[0] + offsetX * Math.cos(angleNext) + offsetY * Math.sin(angleNext);
-	const y = pointNext[1] + offsetY * Math.sin(angleNext) + offsetY * Math.cos(angleNext);
+	//Draw a line from start point to end point of a glyph
+	const x = pointNext[0] + offsetX * Math.sin(angleNext) + offsetY * Math.sin(angleNext);
+	const y = pointNext[1] + offsetX * Math.cos(angleNext) + offsetY * Math.cos(angleNext);
 
+	//return angle of this line
 	return Math.atan2(y - pointStart[1], x - pointStart[0]);
 }
 
-function render(ctx, points, text, debug=false) {
+function checkCollisions(segment, collisions) {
+	const box = segment.points.reduce((acc, point) => ({
+			minX: Math.min(acc.minX, point[0]),
+			minY: Math.min(acc.minY, point[1]),
+			maxX: Math.max(acc.maxX, point[0]),
+			maxY: Math.max(acc.maxX, point[1])
+		}), {minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity});
+
+		return collisions.check(box);
+}
+
+function render(ctx, points, text, hasHalo, collisions, debug=false) {
   const glyphs = text.split("")
       .map((l) => {
         const metrics = ctx.measureText(l);
@@ -195,13 +224,28 @@ function render(ctx, points, text, debug=false) {
     renderSegments(ctx, segments);
   }
 
-  segments = segments.filter((seg) => seg.length > textWidth);
   //TODO: Merge first and last segments if possible
+
+  segments = segments.filter((seg) => seg.length > textWidth);
+
+	segments = segments.filter((seg) => checkCollisions(seg, collisions))
+
 
   //TODO Choose best segments
 
   //Render text
-  segments.forEach((seg) => renderText(ctx, seg, glyphs));
+  segments.forEach((seg) => {
+		const positions = calculateGlyphsPositions(seg, glyphs);
+
+		if (hasHalo) {
+			positions.forEach((glyph) => {
+				drawGlyph(ctx, glyph, true);
+			});
+		}
+		positions.forEach((glyph) => {
+			drawGlyph(ctx, glyph, false);
+		});
+	});
 }
 
 module.exports.render = render;
