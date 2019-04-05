@@ -43,23 +43,6 @@ exports.checkSameBoundary = function(p, q, tile_width, tile_height) {
   return (bp & exports.isOnTileBoundary(q, tile_width, tile_height));
 }
 
-
-// Project point from tile coordinate system to screen coordinate system
-//TODO: call it projectToScreen
-exports.transformPoint = function (point, ws, hs) {
-  return [ws * point[0], hs * point[1]];
-};
-
-// scale multiple points
-// Project multiple points from tile coordinate system to screen coordinate system
-exports.transformPoints = function (points, ws, hs) {
-  var transformed = [], i, len;
-  for (i = 0, len = points.length; i < len; i++) {
-    transformed.push(exports.transformPoint(points[i], ws, hs));
-  }
-  return transformed;
-};
-
 // get a single point representing geometry feature (e.g. centroid)
 exports.getReprPoint = function (geometry, projectPointFunction) {
   switch (geometry.type) {

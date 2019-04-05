@@ -1,32 +1,32 @@
 var path = require('./path');
-var setStyles = require('../utils/style').applyStyle;
+var style = require('../utils/style');
 var getFontString = require('../utils/style').composeFontDeclaration;
 var MapCSS = require('../style/mapcss');
 var geom = require('../utils/geom');
 
 module.exports = {
-  render: function (ctx, feature, collides, ws, hs) {
-    var style = feature.style, reprPoint = geom.getReprPoint(feature.geometry),
-      point, img, len = 0, found = false, i, sgn;
+  render: function (ctx, feature, nextFeature, context) {
+    const collisionBuffer = context.collisionBuffer;
+    const projectPointFunction = context.projectPointFunction;
+    const gallery = context.gallery;
 
-    if (!reprPoint) {
+    const actions = feature.actions;
+
+    const point = geom.getReprPoint(feature.geometry, projectPointFunction);
+    if (!point) {
       return;
     }
 
-    point = geom.transformPoint(reprPoint, ws, hs);
+    var img, len = 0, found = false, i, sgn;
 
-    if (style["shield-image"]) {
-      img = MapCSS.getImage(style["shield-image"]);
-
-      if (!img) {
-        return;
-      }
+    if (actions["shield-image"]) {
+      img = gallery.getImage(actions["shield-image"]);
     }
 
-    setStyles(ctx, {
-      font: getFontString(style["shield-font-family"] || style["font-family"], style["shield-font-size"] || style["font-size"], style),
-      fillStyle: style["shield-text-color"] || "#000000",
-      globalAlpha: style["shield-text-opacity"] || style['opacity'] || 1,
+    style.applyStyle(ctx, {
+      font: style.composeFontDeclaration(actions["shield-font-family"] || actions["font-family"], actions["shield-font-size"] || actions["font-size"], actions),
+      fillStyle: actions["shield-text-color"],
+      globalAlpha: actions["shield-text-opacity"] || actions['opacity'],
       textAlign: 'center',
       textBaseline: 'middle'
     });
@@ -45,7 +45,7 @@ module.exports = {
       }
 
       for (i = 0, sgn = 1; i < len / 2; i += Math.max(len / 30, collisionHeight / ws), sgn *= -1) {
-        reprPoint = geom.getAngleAndCoordsAtLength(feature.coordinates, len / 2 + sgn * i, 0);
+        var reprPoint = geom.getAngleAndCoordsAtLength(feature.coordinates, len / 2 + sgn * i, 0);
         if (!reprPoint) {
           break;
         }
@@ -71,7 +71,7 @@ module.exports = {
     }
 
     if (style["shield-casing-width"]) {
-      setStyles(ctx, {
+      style.applyStyle(ctx, {
         fillStyle: style["shield-casing-color"] || "#000000",
         globalAlpha: style["shield-casing-opacity"] || style['opacity'] || 1
       });
@@ -83,7 +83,7 @@ module.exports = {
     }
 
     if (style["shield-frame-width"]) {
-      setStyles(ctx, {
+      style.applyStyle(ctx, {
         fillStyle: style["shield-frame-color"] || "#000000",
         globalAlpha: style["shield-frame-opacity"] || style['opacity'] || 1
       });
@@ -94,7 +94,7 @@ module.exports = {
     }
 
     if (style["shield-color"]) {
-      setStyles(ctx, {
+      style.applyStyle(ctx, {
         fillStyle: style["shield-color"] || "#000000",
         globalAlpha: style["shield-opacity"] || style['opacity'] || 1
       });
