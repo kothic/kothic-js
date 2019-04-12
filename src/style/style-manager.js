@@ -54,6 +54,7 @@ function createRenders(featureType, actions) {
 }
 
 function extractActionValue(spec, actions) {
+  //TODO: Override values by priority. e.g. fill-opacity <- opacity <- default
   if (!(spec.action in actions)) {
     return typeof(spec.default) !== 'undefined' ? spec.default : null;
   }

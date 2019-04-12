@@ -1,11 +1,7 @@
 'use strict';
-var geom = require('../utils/geom');
+const geom = require('../utils/geom');
 
-function renderIcon(ctx, feature, nextFeature, context) {
-  const collisionBuffer = context.collisionBuffer;
-  const projectPointFunction = context.projectPointFunction;
-  const gallery = context.gallery;
-
+function renderIcon(ctx, feature, nextFeature, {projectPointFunction, collisionBuffer, gallery}) {
   //TODO: Refactor, calculate representative point only once
   const point = geom.getReprPoint(feature.geometry, projectPointFunction);
   if (!point) {
@@ -47,8 +43,8 @@ function renderIcon(ctx, feature, nextFeature, context) {
 
   ctx.save();
   ctx.beginPath();
-  ctx.strokeStyle = 'black'
-  ctx.lineWidth = 1
+  //ctx.strokeStyle = 'black'
+  //ctx.lineWidth = 1
   ctx.ellipse(point[0], point[1], w / 2, h / 2, 0, 0, 2*Math.PI);
   //ctx.rect(x, y, w, h);
   ctx.clip("evenodd");
@@ -56,7 +52,7 @@ function renderIcon(ctx, feature, nextFeature, context) {
   ctx.drawImage(image, x, y, w, h);
   ctx.restore();
 
-  const padding = parseFloat(actions['-x-kothic-padding']) || 0;
+  const padding = parseFloat(actions['-x-kothic-padding']);
   collisionBuffer.addPointWH(point, w, h, padding, feature.kothicId);
 }
 

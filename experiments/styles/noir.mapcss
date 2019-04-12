@@ -1,0 +1,51 @@
+line[highway=trunk],
+line[highway=primary],
+line[highway=secondary],
+line[highway=tertiary],
+line[highway=trunk_link],
+line[highway=primary_link],
+line[highway=secondary_link],
+line[highway=tertiary_link] {
+  width: 3;
+  casing-width: 1;
+  color: gray;
+  casing-color: #000;
+}
+
+line[highway=residential],
+line[highway=unclassified] {
+  width: 1;
+  color: gray;
+}
+
+area[natural=water],
+area[waterway] {
+  fill-color: #005;
+}
+
+area[natural=wood],
+area[natural=scrub],
+area[leisure=park] {
+  fill-color: #070;
+  fill-opacity: 0.5;
+}
+
+area[landuse=residential] {
+  fill-color: #777;
+  fill-opacity: 0.5;
+}
+
+area[landuse=industrial] {
+  fill-color: #cac0c0;
+  fill-opacity: 0.5;
+}
+
+area[landuse=allotments] {
+  fill-color: #c0cdc0;
+  fill-opacity: 0.5;
+}
+
+area[building] {
+  fill-color: #333;
+  z-index: 100;
+}

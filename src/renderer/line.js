@@ -1,13 +1,11 @@
+//'use strict';
 const path = require('./path');
 const contextUtils = require('../utils/style');
 
+//TODO: Refactor to class
 module.exports = {
   pathOpened: false,
-  renderCasing: function (ctx, feature, nextFeature, context) {
-    const projectPointFunction = context.projectPointFunction;
-    const tileWidth = context.tileWidth;
-    const tileHeight = context.tileHeight;
-
+  renderCasing: function (ctx, feature, nextFeature, {projectPointFunction, tileWidth, tileHeight, groupFeaturesByActions}) {
     const actions = feature.actions;
     const nextActions = nextFeature && nextFeature.actions;
 
@@ -21,7 +19,7 @@ module.exports = {
 
     path(ctx, feature.geometry, dashes, false, projectPointFunction, tileWidth, tileHeight);
 
-    if (context.groupFeaturesByActions &&
+    if (groupFeaturesByActions &&
         nextFeature &&
         nextFeature.key === feature.key) {
       return;
@@ -41,12 +39,7 @@ module.exports = {
     this.pathOpened = false;
   },
 
-  render: function (ctx, feature, nextFeature, context) {
-    const projectPointFunction = context.projectPointFunction;
-    const tileWidth = context.tileWidth;
-    const tileHeight = context.tileHeight;
-    const gallery = context.gallery;
-
+  render: function (ctx, feature, nextFeature, {projectPointFunction, tileWidth, tileHeight, groupFeaturesByActions, gallery}) {
     const actions = feature.actions;
     const nextActions = nextFeature && nextFeature.actions;
 
@@ -57,7 +50,7 @@ module.exports = {
 
     path(ctx, feature.geometry, actions['dashes'], false, projectPointFunction, tileWidth, tileHeight);
 
-    if (context.groupFeaturesByActions &&
+    if (groupFeaturesByActions &&
         nextFeature &&
         nextFeature.key === feature.key) {
       return;

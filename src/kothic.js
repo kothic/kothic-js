@@ -95,9 +95,6 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
   //TODO: move to options node-canvas specific setting
   ctx.globalCompositeOperation = 'copy'
 
-  ctx.fillStyle = '#eee';
-  ctx.fillRect(0, 0, width, height);
-
   // ctx.scale(devicePixelRatio, devicePixelRatio);
 
   // var granularity = data.granularity,
@@ -123,7 +120,7 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
 
   this.rendererPromise.then((renderer) => {
     renderer.render(layers, ctx, width, height, project, callback);
-  })
+  }).catch((err) => console.error(err))
 };
 
 module.exports = Kothic;

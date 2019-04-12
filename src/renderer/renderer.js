@@ -28,6 +28,9 @@ function Renderer(gallery, options) {
 }
 
 Renderer.prototype.renderBackground = function(layers, ctx, width, height, zoom) {
+  ctx.fillStyle = '#ddd';
+  ctx.fillRect(0, 0, width, height);
+
   //TODO: StyleManager should create background as a layer instead of messing with styles manually
   // var style = this.styleManager.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
   //

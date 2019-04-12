@@ -1,30 +1,28 @@
 'use strict';
 
-var geom = require('../utils/geom');
-var style = require('../utils/style');
+const geom = require('../utils/geom');
+const contextUtils = require('../utils/style');
 //var textOnPath = require("./textonpath").textOnPath;
 const textOnPath = require("./curvedtext").render
 
-function renderText(ctx, feature, nextFeature, context) {
-  const collisionBuffer = context.collisionBuffer;
-  const projectPointFunction = context.projectPointFunction;
-
+function renderText(ctx, feature, nextFeature, {projectPointFunction, collisionBuffer}) {
   const actions = feature.actions;
-
-  const text = String(actions.text).trim();
 
   const hasHalo = 'text-halo-radius' in actions && parseInt(actions['text-halo-radius']) > 0;
 
-  style.applyStyle(ctx, {
+  const style = {
     lineWidth: actions['text-halo-radius'],
-    font: style.composeFontDeclaration(actions['font-family'], actions['font-size'], actions),
-    fillStyle: actions['text-color'] || '#000000',
-    strokeStyle: actions['text-halo-color'] || '#ffffff',
-    globalAlpha: actions['text-opacity'] || actions['opacity'] || 1,
+    font: contextUtils.composeFontDeclaration(actions['font-family'], actions['font-size'], actions),
+    fillStyle: actions['text-color'],
+    strokeStyle: actions['text-halo-color'],
+    globalAlpha: actions['text-opacity'] || actions['opacity'],
     textAlign: 'center',
     textBaseline: 'middle'
-  });
+  };
 
+  contextUtils.applyStyle(ctx, style);
+
+  var text = String(actions.text).trim();
   if (actions['text-transform'] === 'uppercase') {
     text = text.toUpperCase();
   } else if (actions['text-transform'] === 'lowercase') {
@@ -32,6 +30,7 @@ function renderText(ctx, feature, nextFeature, context) {
   } else if (actions['text-transform'] === 'capitalize') {
     text = text.replace(/(^|\s)\S/g, function(ch) { return ch.toUpperCase(); });
   }
+
   if (feature.geometry.type === 'Polygon' || feature.geometry.type === 'Point') {
     //TODO: Refactor, calculate representative point only once
     const point = geom.getReprPoint(feature.geometry, projectPointFunction);
@@ -43,9 +42,9 @@ function renderText(ctx, feature, nextFeature, context) {
     const letterWidth = textWidth / text.length;
     const width = textWidth;
     const height = letterWidth * 2.5;
-    const offset = actions['text-offset'] || 0;
+    const offsetY = actions['text-offset'];
 
-    const center = [point[0], point[1] + offset];
+    const center = [point[0], point[1] + offsetY];
     if (!actions['text-allow-overlap']) {
       if (collisionBuffer.checkPointWH(center, width, height, feature.kothicId)) {
         return;
@@ -57,7 +56,7 @@ function renderText(ctx, feature, nextFeature, context) {
     }
     ctx.fillText(text, center[0], center[1]);
 
-    const padding = parseFloat(actions['-x-kothic-padding']) || 0;
+    const padding = parseFloat(actions['-x-kothic-padding']);
     collisionBuffer.addPointWH(point, width, height, padding, feature.kothicId);
   } else if (feature.geometry.type === 'LineString') {
     const points = feature.geometry.coordinates.map(projectPointFunction);

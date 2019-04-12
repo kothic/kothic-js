@@ -1,3 +1,5 @@
+'use strict';
+
 const geom = require('../utils/geom');
 
 const simplify = require("../utils/simplify.js");

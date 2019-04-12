@@ -1,4 +1,6 @@
-var geom = require('../utils/geom');
+'use strict';
+
+const geom = require('../utils/geom');
 
 /**
  ** Render features on Canvas
@@ -64,7 +66,7 @@ module.exports = function(ctx, geometry, dashes, fill, projectPointFunction, til
   } else if (type === "MultiLineString") {
     //TODO: Those constants MUST be configured un upper design level
     var pad = 50, // how many pixels to draw out of the tile to avoid path edges when lines crosses tile borders
-      skip = 2; // do not draw line segments shorter than this
+      skip = 0;//2; // do not draw line segments shorter than this
 
     //Iterate by lines in MultiLineString
     for (i = 0; i < len; i++) {
