@@ -6,16 +6,20 @@
     "chai-subset": "^1.6.0",
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
-    "rewire": "^4.0.1"
+    "rewire": "^4.0.1",
+    "webpack-cli": "^3.3.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha -u bdd --recursive",
-    "test-cov": "./node_modules/nyc/bin/nyc.js --reporter=lcov --reporter=text --reporter=html ./node_modules/.bin/mocha -u bdd --recursive"
+    "test-cov": "./node_modules/nyc/bin/nyc.js --reporter=lcov --reporter=text --reporter=html ./node_modules/.bin/mocha -u bdd --recursive",
+    "browserify": "./node_modules/browserify/bin/cmd.js kothic-browser.js --debug >debug/kothic.js"
   },
   "dependencies": {
     "benchmark": "^2.1.4",
+    "browserify": "^16.2.3",
     "canvas": "^2.4.1",
     "nearley": "^2.16.0",
-    "rbush": "^2.0.1"
+    "rbush": "^2.0.1",
+    "webpack": "^4.29.6"
   }
 }

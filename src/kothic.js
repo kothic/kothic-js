@@ -93,7 +93,7 @@ Kothic.prototype.render = function (canvas, geojson, zoom, callback) {
   var ctx = canvas.getContext('2d');
 
   //TODO: move to options node-canvas specific setting
-  ctx.globalCompositeOperation = 'copy'
+  //ctx.globalCompositeOperation = 'copy'
 
   // ctx.scale(devicePixelRatio, devicePixelRatio);
 

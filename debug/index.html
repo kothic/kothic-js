@@ -3,152 +3,142 @@
 <head>
 	<title>Kothic debug page</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.css" />
-
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
-    <!-- jQuery. It's not required for Kothic, but still useful for this example -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+  <!-- jQuery. It's not required for Kothic, but still useful for this example -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 
 	<!-- Leaflet -->
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
 
 	<!-- Include Kothic renderer sources -->
-	<script src="kothic-include.js"></script>
+	<script src="kothic.js"></script>
 
 	<!-- Include Kothic leaflet layer -->
-	<script src="../dist/kothic-leaflet.js"></script>
-
-	<!-- osm.org  style (Generated from MapCSS and Mapnik style) -->
-	<script src="styles/mapnik.js"></script>
-
-	<script src="styles/osmosnimki.js"></script>
-
-	<!-- surface overlay style (Generated from MapCSS) -->
-	<script src="styles/surface.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="css/debug.css">
+	<script src="kothic-leaflet.js"></script>
+<style>
+	#map {
+		height: 100%;
+		width: 100%;
+	}
+	body, html {
+		height: 100%;
+	}
+</style>
 </head>
 <body>
 	<div id="map"></div>
-	<div id="debug">
-		<p>OpenStreetMap data rendered on the browser using <a href="http://github.com/kothic/kothic-js">Kothic JS</a></p>
-		<select id="renderer">
-			<option value="osmosnimki" selected="selected">Osmosnimki (Kothic-JS)</option>
-			<option value="mapnik">OSM (Kothic-JS)</option>
-			<option value="tiles">Osmosnimki (Mapnik)</option>
-		</select>
-		<input type="checkbox" id="overlay">Surface overlay</input>
-		<div id="trace">Rendering...</div>
-	</div>
+
 	<script type="text/javascript">
-        var tilesUrl = 'http://osmosnimki.ru/vtile/{z}/{x}/{y}.js';
+  var tilesUrl = 'http://localhost:8080/basemap/{z}/{x}/{y}.json';
 
-		var mapnik = new L.TileLayer('http://{s}.tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
-			attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
-			maxZoom: 22
-		});
+	var kothic = new L.TileLayer.Kothic(tilesUrl, {
+  	minZoom: 12
+  });
 
-		var kothic = new L.TileLayer.Kothic(tilesUrl, {
-            minZoom: 8,
-            styles: ['osmosnimki']
-        });
+	var map = new L.Map('map', {
+		center: new L.LatLng(54, 83),
+		zoom: 16,
+		fadeAnimation: false
+	});
 
-		var map = new L.Map('map', {
-			center: new L.LatLng(53.9, 27.55), // Minsk
-			zoom: 12,
-			fadeAnimation: false
-		});
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+	})
+	.addTo(map);
 
-		kothic.on('load', function() {
-			var messages = kothic.getDebugMessages(),
-				len = messages.length;
+	kothic.addTo(map);
 
-			showMessages(messages.slice(Math.max(len - 4, 0), len));
-		});
+	// kothic.on('load', function() {
+	// 	// var messages = kothic.getDebugMessages(),
+	// 	// len = messages.length;
+	// 	//
+	// 	// showMessages(messages.slice(Math.max(len - 4, 0), len));
+	// });
 
-		function showMessages(messages) {
-			$('#trace').empty();
-			$(messages).each(function(index, msg) {
-				$('<div>', {
-					'class': 'tileIndex',
-					text: msg.x + ":" + msg.y + ":" + msg.zoom
-				}).appendTo($('#trace'));
+		// function showMessages(messages) {
+		// 	$('#trace').empty();
+		// 	$(messages).each(function(index, msg) {
+		// 		$('<div>', {
+		// 			'class': 'tileIndex',
+		// 			text: msg.x + ":" + msg.y + ":" + msg.zoom
+		// 		}).appendTo($('#trace'));
+		//
+		// 		var stats = $('<table>', {
+		// 			style: 'display: none'
+		// 		}).appendTo($('#trace'));
+		//         for (var k in msg.stats) {
+		//             if (!msg.stats.hasOwnProperty(k)) {
+		//                 continue;
+		//             }
+		//
+		// 			$("<tr>").append($("<td>", {
+		// 				'text': msg.stats[k]
+		// 			})).append($("<td>", {
+		// 				'text': k
+		// 			})).appendTo(stats);
+		//         }
+		//
+		// 		var log = $('<table>').appendTo($('#trace')),
+		// 			t0 = msg.events[0].timestamp,
+		// 			t1 = msg.events[msg.events.length - 1].timestamp,
+		// 			total = t1 - t0;
+		//         for (var i = 1; i < msg.events.length; i++) {
+		//
+		// 			$("<tr>").append($("<td>", {
+		// 				'class': 'time',
+		// 				text: (msg.events[i].timestamp - t0) + " ms"
+		// 			})).append($("<td>", {
+		// 				text: msg.events[i].message
+		// 			})).appendTo(log);
+		//
+		// 			t0 = msg.events[i].timestamp;
+		//         }
+		//
+		//         log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
+		// 	});
+		//
+		// }
 
-				var stats = $('<table>', {
-					style: 'display: none'
-				}).appendTo($('#trace'));
-		        for (var k in msg.stats) {
-		            if (!msg.stats.hasOwnProperty(k)) {
-		                continue;
-		            }
-
-					$("<tr>").append($("<td>", {
-						'text': msg.stats[k]
-					})).append($("<td>", {
-						'text': k
-					})).appendTo(stats);
-		        }
-
-				var log = $('<table>').appendTo($('#trace')),
-					t0 = msg.events[0].timestamp,
-					t1 = msg.events[msg.events.length - 1].timestamp,
-					total = t1 - t0;
-		        for (var i = 1; i < msg.events.length; i++) {
-
-					$("<tr>").append($("<td>", {
-						'class': 'time',
-						text: (msg.events[i].timestamp - t0) + " ms"
-					})).append($("<td>", {
-						text: msg.events[i].message
-					})).appendTo(log);
-
-					t0 = msg.events[i].timestamp;
-		        }
-
-		        log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
-			});
-
-		}
-
-		var count = 0;
-		MapCSS.onImagesLoad = function() {
-			count += 1;
-			if (count >= 2) {
-				map.addLayer(kothic);
-			}
-		};
-
-		MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
-		MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
-
-		$("#renderer").change(function () {
-			switch($("#renderer").val()) {
-				case 'osmosnimki':
-					map.removeLayer(mapnik);
-					kothic.enableStyle('osmosnimki');
-					kothic.disableStyle('mapnik');
-					break;
-				case 'mapnik':
-					map.removeLayer(mapnik);
-					kothic.enableStyle('mapnik');
-					kothic.disableStyle('osmosnimki');
-					break;
-				case 'tiles':
-					//kothic.disableStyle('mapnik');
-					//kothic.disableStyle('osmosnimki');
-					map.addLayer(mapnik);
-					break;
-			}
-		});
-        $("#overlay").change(function () {
-			if ($("#overlay").attr('checked')) {
-				kothic.enableStyle('surface');
-			} else {
-                kothic.disableStyle('surface');
-            }
-        });
-
+		// var count = 0;
+		// MapCSS.onImagesLoad = function() {
+		// 	count += 1;
+		// 	if (count >= 2) {
+		// 		map.addLayer(kothic);
+		// 	}
+		// };
+		//
+		// MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
+		// MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
+		//
+		// $("#renderer").change(function () {
+		// 	switch($("#renderer").val()) {
+		// 		case 'osmosnimki':
+		// 			map.removeLayer(mapnik);
+		// 			kothic.enableStyle('osmosnimki');
+		// 			kothic.disableStyle('mapnik');
+		// 			break;
+		// 		case 'mapnik':
+		// 			map.removeLayer(mapnik);
+		// 			kothic.enableStyle('mapnik');
+		// 			kothic.disableStyle('osmosnimki');
+		// 			break;
+		// 		case 'tiles':
+		// 			//kothic.disableStyle('mapnik');
+		// 			//kothic.disableStyle('osmosnimki');
+		// 			map.addLayer(mapnik);
+		// 			break;
+		// 	}
+		// });
+    //     $("#overlay").change(function () {
+		// 	if ($("#overlay").attr('checked')) {
+		// 		kothic.enableStyle('surface');
+		// 	} else {
+    //             kothic.disableStyle('surface');
+    //         }
+    //     });
+		//
 	</script>
 </body>
 </html>

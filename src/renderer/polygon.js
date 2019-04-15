@@ -22,7 +22,6 @@ module.exports = {
     }
 
     if ('fill-color' in actions) {
-      console.log(actions['opacity']);
       // first pass fills with solid color
       let style = {
         fillStyle: actions["fill-color"],

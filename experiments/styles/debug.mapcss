@@ -1,0 +1,15 @@
+line[!boundary] {
+  width: 1;
+  color: red;
+}
+
+line[boundary=administrative] {
+  width: 1;
+  color: blue;
+  dashes: 30,30;
+}
+
+area[!boundary] {
+  fill-color: #f00;
+  fill-opacity: 0.1;
+}

@@ -9,14 +9,13 @@ module.exports = {
     const actions = feature.actions;
     const nextActions = nextFeature && nextFeature.actions;
 
-    if (!this.pathOpened) {
-      this.pathOpened = true;
+   if (!this.pathOpened) {
+     this.pathOpened = true;
       ctx.beginPath();
-    }
+   }
 
     //TODO: Is MapCSS spec really allows a fallback from "casing-dashes" to "dashes"?
     const dashes = actions['casing-dashes'] || actions['dashes'];
-
     path(ctx, feature.geometry, dashes, false, projectPointFunction, tileWidth, tileHeight);
 
     if (groupFeaturesByActions &&
@@ -42,10 +41,9 @@ module.exports = {
   render: function (ctx, feature, nextFeature, {projectPointFunction, tileWidth, tileHeight, groupFeaturesByActions, gallery}) {
     const actions = feature.actions;
     const nextActions = nextFeature && nextFeature.actions;
-
     if (!this.pathOpened) {
       this.pathOpened = true;
-      ctx.beginPath();
+       ctx.beginPath();
     }
 
     path(ctx, feature.geometry, actions['dashes'], false, projectPointFunction, tileWidth, tileHeight);
