@@ -22,7 +22,7 @@ describe("MapCSS", () => {
 
   describe("Cache", () => {
     it("value insensitive", () => {
-      const m = new MapCSS("way[ford] { color: red; }", new Gallery(), {cache: {}});
+      const m = new MapCSS("way[ford] { color: red; }", {cache: {}});
       expect(m.knownTags).to.have.property('ford', 'k');
 
       expect(m.createCacheKey({ford: 'yes', depth: 0.5}, 10, 'LineString')).to.be.equal('10:LineString:ford');
@@ -32,7 +32,7 @@ describe("MapCSS", () => {
     });
 
     it("value sensitive", () => {
-      const m = new MapCSS("way[ford=yes] { color: red; }", new Gallery(), {cache: {}});
+      const m = new MapCSS("way[ford=yes] { color: red; }", {cache: {}});
       expect(m.knownTags).to.have.property('ford', 'kv');
 
       expect(m.createCacheKey({ford: 'yes', depth: 0.5}, 10, 'LineString')).to.be.equal('10:LineString:ford=yes');
@@ -40,8 +40,8 @@ describe("MapCSS", () => {
   });
 
   describe("Locales", () => {
-    it("localization support enables", () => {
-      const m = new MapCSS('node {text: eval(localize("name"));}', new Gallery(), {locales: ['en', 'de']});
+    it("localization support", () => {
+      const m = new MapCSS('node {text: eval(localize("name"));}', {locales: ['en', 'de']});
 
       const tags = {'name': '北京', 'name:en': 'Beijing', 'name:de': 'Peking'}
       expect(m.apply(tags, 10, 'Point')).to.have.deep.property('default', {text: 'Beijing'});
@@ -49,17 +49,15 @@ describe("MapCSS", () => {
   });
 
   describe("Images", () => {
-    it("should call preloadImages on Gallery", () => {
+    it("should ", () => {
       Gallery.prototype.preloadImages = function (images) {
         this.images = images
       };
 
-      const gallery = new Gallery();
 
-      const m = new MapCSS('node {icon-image: "peak.png";}', gallery);
+      const m = new MapCSS('node {icon-image: "peak.png";}');
 
-      m.apply({}, 10, 'Point')
-      expect(gallery.images).to.include('peak.png');
+      expect(m.listImageReferences()).to.have.members(['peak.png']);
     });
   });
 

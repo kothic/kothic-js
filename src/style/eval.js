@@ -187,7 +187,6 @@ function evalFunc(func, args, tags, actions, locales) {
     if (args.length != 1) {
       throw new Error("localize() function allows only one argument");
     }
-
     for (var i = 0; i < locales.length; i++) {
       const tag = args[0] + ':' + locales[i];
       if (tag in tags) {
@@ -205,6 +204,9 @@ function evalFunc(func, args, tags, actions, locales) {
 }
 
 function evalExpr(expr, tags={}, actions={}, locales=[]) {
+  if (!expr) {
+    return null;
+  }
   switch (expr.type) {
   case "binary_op":
     return evalBinaryOp(evalExpr(expr.left, tags, actions, locales), expr.op, evalExpr(expr.right, tags, actions, locales));

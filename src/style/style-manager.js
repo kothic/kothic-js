@@ -64,6 +64,9 @@ function extractActionValue(spec, actions) {
   case 'number':
     value = parseFloat(value);
     break;
+  case 'dashes':
+    value = value.split(",").map(parseFloat);
+    break;
   case 'boolean':
     value = value === 'true' ? true : !!value;
     break;

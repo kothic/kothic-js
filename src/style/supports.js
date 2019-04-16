@@ -45,7 +45,7 @@ module.exports = [
         "type": "color"
       }, {
         "action": "casing-dashes",
-        "type": "string"
+        "type": "dashes"
       }, {
         "action": "casing-opacity",
         "default": 1,
@@ -91,7 +91,7 @@ module.exports = [
         "default": "rgb(0, 0, 0)"
       }, {
         "action": "dashes",
-        "type": "string"
+        "type": "dashes"
       }, {
         "action": "opacity",
         "type": "number",

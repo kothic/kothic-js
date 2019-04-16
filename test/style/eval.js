@@ -23,6 +23,10 @@ describe("Eval", () => {
     it("Unknown function", () => {
       expect(() => evaluate.evalExpr({'type': 'function', func: 'unkNown', args: []})).to.throw(Error, /Unexpected function in eval.*unkNown/);
     });
+
+    it("Empty eval()", () => {
+      expect(evaluate.evalExpr(null)).to.be.null;
+    });
   });
   describe("Special functions", () => {
     it("More than one argument of tag() function", () => {

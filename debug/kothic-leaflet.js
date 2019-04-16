@@ -20,9 +20,9 @@ L.TileLayer.Kothic = L.TileLayer.extend({
         this._scripts = {};
         this._debugMessages = [];
 
-        var css = "way[!boundary] {width: 1;color: red;} way[boundary] {width: 1;color: blue;dashes: 5,5;}"
+        //var css = "way[!boundary] {width: 1;color: red;} way[boundary] {width: 1;color: blue;dashes: 5,5;}"
 
-        var mapcss = new window.MapCSS(css, {
+        var mapcss = new window.MapCSS(options.css, {
           cache: {},
         });
 

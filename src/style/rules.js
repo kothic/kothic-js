@@ -117,7 +117,6 @@ function applyRule(rule, tags, classes, zoom, featureType, locales) {
       const props = unwindActions(actions, tags, properties, locales, classes);
 
       result[layer] = Object.assign(properties, props);
-      //result[layer] = properties;
 
       if ('exit' in properties) {
         break;
@@ -136,23 +135,19 @@ function unwindActions(actions, tags, properties, locales, classes) {
 
     switch (action.action) {
     case 'kv':
-      //TODO: set proper value type and popogate default values
       if (action.k === 'text') {
-        var value;
-        if (action.v.type === 'string' && action.v.v in tags) {
-          value = tags[action.v.v];
+        if (action.v.type === 'string') {
+          if (action.v.v in tags) {
+            result[action.k] = tags[action.v.v];
+          } else {
+            result[action.k] = '';
+          }
         } else {
-          value = unwindValue(action.v, tags, properties, locales);
-        }
-
-        if (value) {
-          result[action.k] = value;
+          result[action.k] = unwindValue(action.v, tags, properties, locales);
         }
       } else {
         const value = unwindValue(action.v, tags, properties, locales);
-        if (typeof(value) !== 'undefined') {
-          result[action.k] = value;
-        }
+        result[action.k] = value;
       }
       break;
     case 'set_class':

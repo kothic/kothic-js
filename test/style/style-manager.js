@@ -55,6 +55,7 @@ describe("Style Manager", () => {
           'width': '1',
           'casing-width': '1',
           'casing-color': 'red',
+          'casing-dashes': '3,3',
           'text': 'Hooray',
           'text-allow-overlap': "true"
         },

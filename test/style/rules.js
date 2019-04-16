@@ -126,6 +126,11 @@ describe("Rules", () => {
       const res = rules.apply(expr('node {text: "name";}'), {}, [], 10, 'Point', []);
       expect(res).to.have.deep.property('default', {text: ''});
     });
+
+    it("Missing value", () => {
+      const res = rules.apply(expr('node {width: eval();}'), {}, [], 10, 'Point', []);
+      expect(res).to.have.deep.property('default', {width: null});
+    });
   });
 
   describe("Set statements", () => {
