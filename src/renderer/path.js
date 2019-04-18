@@ -14,14 +14,15 @@ function drawRing(points, ctx, tileWidth, tileHeight, drawOnTileEdges) {
 
   ctx.moveTo(points[0][0], points[0][1]);
 
-  const padding = 50;
-  const skip = 1;
+  //TODO: Those constants MUST be configured un upper design level
+  const padding = 50; // how many pixels to draw out of the tile to avoid path edges when lines crosses tile borders
+  const skip = 1; // do not draw line segments shorter than this
 
   for (let j = 1, pointsLen = points.length; j < pointsLen; j++) {
     const point = points[j];
     //const prevPoint = points[j - 1]
 
-    //TODO: Make padding as option to let user prepare data with padding
+    //TODO: Make padding an option to let user prepare data with padding
     // continue path off the tile by some amount to fix path edges between tiles
     if ((j === 0 || j === pointsLen - 1) && geom.isOnTileBoundary(point, tileWidth, tileHeight)) {
       let k = j;
@@ -63,9 +64,6 @@ function drawRing(points, ctx, tileWidth, tileHeight, drawOnTileEdges) {
 module.exports = function(ctx, geometry, dashes, drawOnTileEdges, projectPointFunction, tileWidth, tileHeight) {
   var type = geometry.type,
     coords = geometry.coordinates;
-  //TODO: Those constants MUST be configured un upper design level
-  var pad = 50, // how many pixels to draw out of the tile to avoid path edges when lines crosses tile borders
-    skip = 0;//2; // do not draw line segments shorter than this
 
   //Convert single feature to a mult-type to make rendering easier
   if (type === "Polygon") {
@@ -87,9 +85,6 @@ module.exports = function(ctx, geometry, dashes, drawOnTileEdges, projectPointFu
     for (let i = 0, polygonsLength = coords.length; i < polygonsLength; i++) {
       //Iterate by Rings of the Polygon
       for (let j = 0, ringsLength = coords[i].length; j < ringsLength; j++) {
-        if (!coords[i][j]) {
-          console.log(geometry, i, j);
-        }
         const points = coords[i][j].map(projectPointFunction);
 
         drawRing(points, ctx, tileWidth, tileHeight, drawOnTileEdges);
