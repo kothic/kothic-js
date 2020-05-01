@@ -8,6 +8,11 @@ var Kothic = {
 
     render: function (canvas, data, zoom, options) {
 
+        if(!MapCSS.imagesLoaded) {
+            MapCSS.renderQueue.push(Kothic.render.bind(this, canvas, data, zoom, options));
+            return;
+        }
+
         if (typeof canvas === 'string') {
             canvas = document.getElementById(canvas);
         }
