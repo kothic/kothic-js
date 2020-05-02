@@ -258,8 +258,8 @@ var MapCSS = {
      * images was loaded
      */
     _onImagesLoad: function (style) {
-        if (MapCSS.styles[style].external_images_loaded &&
-                MapCSS.styles[style].sprite_loaded) {
+        if (MapCSS.styles[style].external_images_loaded /* &&
+                MapCSS.styles[style].sprite_loaded */) {
             MapCSS.onImagesLoad();
         }
     },
