@@ -1,5 +1,5 @@
 /*
- (c) 2013, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko
+ (c) 2013 - 2019, Darafei Praliaskouski, Vladimir Agafonkin, Maksim Gurtovenko, Stephan Brandt
  Kothic JS is a full-featured JavaScript map rendering engine using HTML5 Canvas.
  http://github.com/kothic/kothic-js
 */

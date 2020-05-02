@@ -49,3 +49,5 @@ Kothic JS is licensed under a BSD license, and we'll be glad to accept your cont
  * Darafei Praliaskouski ([@Komzpa](https://github.com/Komzpa))
  * Vladimir Agafonkin ([@mourner](https://github.com/mourner), creator of [Leaflet](http://leafletjs.com))
  * Maksim Gurtovenko ([@Miroff](https://github.com/Miroff))
+
+ * Leaflet 1.x compatibility, Stephan Brandt ([@braandl](https://github.com/braandl))

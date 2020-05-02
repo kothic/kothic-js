@@ -3,15 +3,15 @@
 <head>
 	<title>Kothic debug page</title>
 
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.css" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
 
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
     <!-- jQuery. It's not required for Kothic, but still useful for this example -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
 
 	<!-- Leaflet -->
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.js"></script>
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
 
 	<!-- Include Kothic renderer sources -->
 	<script src="kothic-include.js"></script>
@@ -42,113 +42,116 @@
 		<div id="trace">Rendering...</div>
 	</div>
 	<script type="text/javascript">
-        var tilesUrl = 'http://osmosnimki.ru/vtile/{z}/{x}/{y}.js';
+        $( document ).ready(function() {
 
-		var mapnik = new L.TileLayer('http://{s}.tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png', {
-			attribution: "Map data &copy; 2011 OpenStreetMap contributors, Imagery by <a href='http://osmosnimki.ru'>osmosnimki.ru</a>",
-			maxZoom: 22
-		});
+			var tilesUrl = 'test-tile.json?&x={x}&y={y}&z={z}';
+            var mapnik = new L.TileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+                attribution: "Map data &copy; 2019 OpenStreetMap contributors, Imagery by <a href='maps.wikimedia.org'>maps.wikimedia.orgu</a>",
+                maxZoom: 22
+            });
 
-		var kothic = new L.TileLayer.Kothic(tilesUrl, {
-            minZoom: 8,
-            styles: ['osmosnimki']
-        });
+            var kothic = new L.TileLayer.Kothic(tilesUrl, {
+                minZoom: 8,
+                styles: ['osmosnimki']
+            });
 
-		var map = new L.Map('map', {
-			center: new L.LatLng(53.9, 27.55), // Minsk
-			zoom: 12,
-			fadeAnimation: false
-		});
+            var map = new L.Map('map', {
+                center: new L.LatLng(53.8973689, 27.5416993), // Minsk
+                zoom: 12,
+                fadeAnimation: false
+            });
 
-		kothic.on('load', function() {
-			var messages = kothic.getDebugMessages(),
-				len = messages.length;
+            map.addLayer(mapnik);
 
-			showMessages(messages.slice(Math.max(len - 4, 0), len));
-		});
+            kothic.on('load', function () {
+                var messages = kothic.getDebugMessages(),
+                    len = messages.length;
 
-		function showMessages(messages) {
-			$('#trace').empty();
-			$(messages).each(function(index, msg) {
-				$('<div>', {
-					'class': 'tileIndex',
-					text: msg.x + ":" + msg.y + ":" + msg.zoom
-				}).appendTo($('#trace'));
+                showMessages(messages.slice(Math.max(len - 4, 0), len));
+            });
 
-				var stats = $('<table>', {
-					style: 'display: none'
-				}).appendTo($('#trace'));
-		        for (var k in msg.stats) {
-		            if (!msg.stats.hasOwnProperty(k)) {
-		                continue;
-		            }
+            function showMessages(messages) {
+                $('#trace').empty();
+                $(messages).each(function (index, msg) {
+                    $('<div>', {
+                        'class': 'tileIndex',
+                        text: msg.x + ":" + msg.y + ":" + msg.zoom
+                    }).appendTo($('#trace'));
 
-					$("<tr>").append($("<td>", {
-						'text': msg.stats[k]
-					})).append($("<td>", {
-						'text': k
-					})).appendTo(stats);
-		        }
+                    var stats = $('<table>', {
+                        style: 'display: none'
+                    }).appendTo($('#trace'));
+                    for (var k in msg.stats) {
+                        if (!msg.stats.hasOwnProperty(k)) {
+                            continue;
+                        }
 
-				var log = $('<table>').appendTo($('#trace')),
-					t0 = msg.events[0].timestamp,
-					t1 = msg.events[msg.events.length - 1].timestamp,
-					total = t1 - t0;
-		        for (var i = 1; i < msg.events.length; i++) {
+                        $("<tr>").append($("<td>", {
+                            'text': msg.stats[k]
+                        })).append($("<td>", {
+                            'text': k
+                        })).appendTo(stats);
+                    }
 
-					$("<tr>").append($("<td>", {
-						'class': 'time',
-						text: (msg.events[i].timestamp - t0) + " ms"
-					})).append($("<td>", {
-						text: msg.events[i].message
-					})).appendTo(log);
+                    var log = $('<table>').appendTo($('#trace')),
+                        t0 = msg.events[0].timestamp,
+                        t1 = msg.events[msg.events.length - 1].timestamp,
+                        total = t1 - t0;
+                    for (var i = 1; i < msg.events.length; i++) {
 
-					t0 = msg.events[i].timestamp;
-		        }
+                        $("<tr>").append($("<td>", {
+                            'class': 'time',
+                            text: (msg.events[i].timestamp - t0) + " ms"
+                        })).append($("<td>", {
+                            text: msg.events[i].message
+                        })).appendTo(log);
 
-		        log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
-			});
+                        t0 = msg.events[i].timestamp;
+                    }
 
-		}
+                    log.append('<tr><th>' + total + 'ms</th><td>total</td></tr>');
+                });
 
-		var count = 0;
-		MapCSS.onImagesLoad = function() {
-			count += 1;
-			if (count >= 2) {
-				map.addLayer(kothic);
-			}
-		};
-
-		MapCSS.preloadSpriteImage("osmosnimki", "http://osmosnimki.ru/leaf/icons/osmosnimki.png");
-		MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
-
-		$("#renderer").change(function () {
-			switch($("#renderer").val()) {
-				case 'osmosnimki':
-					map.removeLayer(mapnik);
-					kothic.enableStyle('osmosnimki');
-					kothic.disableStyle('mapnik');
-					break;
-				case 'mapnik':
-					map.removeLayer(mapnik);
-					kothic.enableStyle('mapnik');
-					kothic.disableStyle('osmosnimki');
-					break;
-				case 'tiles':
-					//kothic.disableStyle('mapnik');
-					//kothic.disableStyle('osmosnimki');
-					map.addLayer(mapnik);
-					break;
-			}
-		});
-        $("#overlay").change(function () {
-			if ($("#overlay").attr('checked')) {
-				kothic.enableStyle('surface');
-			} else {
-                kothic.disableStyle('surface');
             }
-        });
 
+            var count = 0;
+            MapCSS.onImagesLoad = function () {
+                count += 1;
+                if (count >= 2) {
+                    map.addLayer(kothic);
+                }
+            };
+
+            MapCSS.preloadSpriteImage("osmosnimki", "styles/osmosnimki.png");
+            MapCSS.preloadSpriteImage("mapnik", "styles/mapnik.png");
+
+            document.getElementById("renderer").addEventListener("change", function () {
+                switch ($("#renderer").val()) {
+                    case 'osmosnimki':
+                        map.removeLayer(mapnik);
+                        kothic.enableStyle('osmosnimki');
+                        kothic.disableStyle('mapnik');
+                        break;
+                    case 'mapnik':
+                        map.removeLayer(mapnik);
+                        kothic.enableStyle('mapnik');
+                        kothic.disableStyle('osmosnimki');
+                        break;
+                    case 'tiles':
+                        //kothic.disableStyle('mapnik');
+                        //kothic.disableStyle('osmosnimki');
+                        map.addLayer(mapnik);
+                        break;
+                }
+            });
+			document.getElementById("overlay").addEventListener("change", function () {
+                if (document.getElementById("overlay").checked) {
+                    kothic.enableStyle('surface');
+                } else {
+                    kothic.disableStyle('surface');
+                }
+            });
+        });
 	</script>
 </body>
 </html>
