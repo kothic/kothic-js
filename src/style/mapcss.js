@@ -8,11 +8,18 @@ var MapCSS = {
     value_tags: [],
     cache: {},
     debug: {hit: 0, miss: 0},
+    renderQueue: [],
+    imagesLoaded: false,
 
     onError: function () {
     },
 
     onImagesLoad: function () {
+        MapCSS.imagesLoaded = true;
+        MapCSS.renderQueue.forEach(function(renderCall) {
+            renderCall();
+        });
+        MapCSS.renderQueue = [];
     },
 
     /**
