@@ -222,7 +222,7 @@ var MapCSS = {
 
     loadStyle: function (style, restyle, sprite_images, external_images, presence_tags, value_tags) {
         var i;
-        sprite_images = sprite_images || [];
+        sprite_images = sprite_images || {};
         external_images = external_images || [];
 
         if (presence_tags) {
@@ -246,7 +246,7 @@ var MapCSS = {
             images: sprite_images,
             external_images: external_images,
             textures: {},
-            sprite_loaded: !sprite_images,
+            sprite_loaded: Object.keys(sprite_images).length === 0,
             external_images_loaded: !external_images.length
         };
 
@@ -258,8 +258,8 @@ var MapCSS = {
      * images was loaded
      */
     _onImagesLoad: function (style) {
-        if (MapCSS.styles[style].external_images_loaded /* &&
-                MapCSS.styles[style].sprite_loaded */) {
+        if (MapCSS.styles[style].external_images_loaded &&
+                MapCSS.styles[style].sprite_loaded) {
             MapCSS.onImagesLoad();
         }
     },
