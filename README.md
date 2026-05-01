@@ -3,6 +3,17 @@ It was initially developed as a JavaScript port of [Kothic](http://wiki.openstre
 
 Check out the demo: http://kothic.org/
 
+### Maintenance status
+
+Kothic JS is a legacy runtime and compatibility target for existing Canvas
+rendering integrations. The maintained MapCSS-to-Kothic JS converter now lives
+in [`kothic/kothic`](https://github.com/kothic/kothic) and emits
+`MapCSS.loadStyle(...)` style modules for this runtime.
+
+Large new features should come as fresh source-level pull requests with a
+working demo or focused tests. Old feature requests and stale demo reports may
+be closed as historical unless someone is actively maintaining that path.
+
 ### Features
 
  * Rendering [OpenStreetMap](http://openstreetmap.org) data visually on par with [Mapnik](http://mapnik.org)
