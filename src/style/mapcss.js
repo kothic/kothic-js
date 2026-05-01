@@ -142,8 +142,9 @@ var MapCSS = {
         } else {
             var tagString = "";
 
-            for (var i = 1; i < arguments.length; i++)
+            for (var i = 1; i < arguments.length; i++) {
                 tagString = tagString.concat(arguments[0]).concat(arguments[i]);
+            }
 
             return tagString.substr(arguments[0].length);
         }
@@ -154,21 +155,25 @@ var MapCSS = {
     },
 
     e_get: function(arr, index) {
-        if (Object.prototype.toString.call(arr) !== '[object Array]')
+        if (Object.prototype.toString.call(arr) !== '[object Array]') {
             return "";
+        }
 
-        if (!/^[0-9]+$/.test(index) || index >= arr.length())
+        if (!/^[0-9]+$/.test(index) || index >= arr.length()) {
             return "";
+        }
 
         return arr[index];
     },
 
     e_set: function(arr, index, text) {
-        if (Object.prototype.toString.call(arr) !== '[object Array]')
+        if (Object.prototype.toString.call(arr) !== '[object Array]') {
             return [];
+        }
 
-        if (!/^[0-9]+$/.test(index))
+        if (!/^[0-9]+$/.test(index)) {
             return [];
+        }
 
         arr[index] = text;
 
@@ -176,8 +181,9 @@ var MapCSS = {
     },
 
     e_count: function(arr) {
-        if (Object.prototype.toString.call(arr) !== '[object Array]')
+        if (Object.prototype.toString.call(arr) !== '[object Array]') {
             return 0;
+        }
 
         return arr.length();
     },
@@ -187,8 +193,9 @@ var MapCSS = {
     },
 
     e_append: function(lst, v) {
-        if (Object.prototype.toString.call(lst) !== '[object Array]')
+        if (Object.prototype.toString.call(lst) !== '[object Array]') {
             return [];
+        }
 
         lst.push(v);
 
@@ -196,15 +203,17 @@ var MapCSS = {
     },
 
     e_contains: function(lst, v) {
-        if (Object.prototype.toString.call(lst) !== '[object Array]')
+        if (Object.prototype.toString.call(lst) !== '[object Array]') {
             return false;
+        }
 
         return (lst.indexOf(v) >= 0);
     },
 
     e_sort: function(lst) {
-        if (Object.prototype.toString.call(lst) !== '[object Array]')
+        if (Object.prototype.toString.call(lst) !== '[object Array]') {
             return [];
+        }
 
         lst.sort();
 
@@ -212,8 +221,9 @@ var MapCSS = {
     },
 
     e_reverse: function(lst) {
-        if (Object.prototype.toString.call(lst) !== '[object Array]')
+        if (Object.prototype.toString.call(lst) !== '[object Array]') {
             return [];
+        }
 
         lst.reverse();
 

@@ -153,8 +153,9 @@ var Kothic = {
 
         for (i = 0; i < layerIds.length; i++) {
             queue = layersToRender[layerIds[i]];
-            if (!queue)
+            if (!queue) {
                 continue;
+            }
 
             if (queue.polygons) {
                 for (j = 0, len = queue.polygons.length; j < len; j++) {

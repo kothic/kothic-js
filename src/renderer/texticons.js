@@ -55,12 +55,15 @@ Kothic.texticons = {
                 textBaseline: 'middle'
             });
 
-            if (style['text-transform'] === 'uppercase')
+            if (style['text-transform'] === 'uppercase') {
                 text = text.toUpperCase();
-            else if (style['text-transform'] === 'lowercase')
+            }
+            else if (style['text-transform'] === 'lowercase') {
                 text = text.toLowerCase();
-            else if (style['text-transform'] === 'capitalize')
+            }
+            else if (style['text-transform'] === 'capitalize') {
                 text = text.replace(/(^|\s)\S/g, function(ch) { return ch.toUpperCase(); });
+            }
 
             if (feature.type === 'Polygon' || feature.type === 'Point') {
                 var textWidth = ctx.measureText(text).width,

@@ -4,14 +4,19 @@ Kothic.path = (function () {
     // returns bitmask of affected tile boundaries
     function isTileBoundary(p, size) {
         var r = 0;
-        if (p[0] === 0)
+        /*jslint bitwise: true */
+        if (p[0] === 0) {
             r |= 1;
-        else if (p[0] === size)
+        }
+        else if (p[0] === size) {
             r |= 2;
-        if (p[1] === 0)
+        }
+        if (p[1] === 0) {
             r |= 4;
-        else if (p[1] === size)
+        }
+        else if (p[1] === size) {
             r |= 8;
+        }
         return r;
     }
 
@@ -26,9 +31,10 @@ Kothic.path = (function () {
      */
     function checkSameBoundary(p, q, size) {
         var bp = isTileBoundary(p, size);
-        if (!bp)
+        if (!bp) {
             return 0;
-
+        }
+        /*jslint bitwise: true */
         return (bp & isTileBoundary(q, size));
     }
 
@@ -64,10 +70,12 @@ Kothic.path = (function () {
 
                         if (j === 0) {
                             ctx.moveTo(screenPoint[0], screenPoint[1]);
-                            if (dashes)
+                            if (dashes) {
                                 ctx.setLineDash(dashes);
-                            else
+                            }
+                            else {
                                 ctx.setLineDash([]);
+                            }
                         } else if (!fill && checkSameBoundary(point, prevPoint, granularity)) {
                             ctx.moveTo(screenPoint[0], screenPoint[1]);
                         } else {
@@ -93,8 +101,9 @@ Kothic.path = (function () {
                         k = j;
                         do {
                             k = j ? k - 1 : k + 1;
-                            if (k < 0 || k >= pointsLen)
+                            if (k < 0 || k >= pointsLen) {
                                 break;
+                            }
                             prevPoint = points[k];
 
                             dx = point[0] - prevPoint[0];
@@ -105,8 +114,9 @@ Kothic.path = (function () {
                         // all points are so close to each other that it doesn't make sense to
                         // draw the line beyond the tile border, simply skip the entire line from
                         // here
-                        if (k < 0 || k >= pointsLen)
+                        if (k < 0 || k >= pointsLen) {
                             break;
+                        }
 
                         point[0] = point[0] + pad * dx / dist;
                         point[1] = point[1] + pad * dy / dist;
@@ -115,10 +125,12 @@ Kothic.path = (function () {
 
                     if (j === 0) {
                         ctx.moveTo(screenPoint[0], screenPoint[1]);
-                        if (dashes)
+                        if (dashes) {
                             ctx.setLineDash(dashes);
-                        else
+                        }
+                        else {
                             ctx.setLineDash([]);
+                        }
                     } else {
                         ctx.lineTo(screenPoint[0], screenPoint[1]);
                     }
