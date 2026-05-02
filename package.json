@@ -5,10 +5,14 @@
     "grunt": "^1.0.4",
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-uglify": "^4.0.1"
+    "grunt-contrib-uglify": "^4.0.1",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.59.1",
+    "pngjs": "^7.0.0"
   },
   "scripts": {
     "prepublish": "grunt",
-    "test": "grunt && node tests/clickable-layer-test.js"
+    "pretest": "playwright install chromium",
+    "test": "grunt && node tests/clickable-layer-test.js && node tests/render-pixelmatch-test.js"
   }
 }

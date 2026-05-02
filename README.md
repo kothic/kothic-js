@@ -33,6 +33,21 @@ grunt
 
 Minified Kothic source will be generated in the `dist` folder.
 
+Run the local checks with:
+
+```
+npm test
+```
+
+The test suite builds Kothic, runs the Leaflet clickable-layer smoke test, and
+compares a browser-rendered canvas fixture with a checked-in PNG baseline using
+`pixelmatch`. The `pretest` step installs the Playwright Chromium binary when it
+is missing. To intentionally refresh the render baseline, run:
+
+```
+UPDATE_RENDER_FIXTURES=1 node tests/render-pixelmatch-test.js
+```
+
 ### Basic usage
 
 Include `kothic.js` from the `dist` folder on your page. Now you can call:
