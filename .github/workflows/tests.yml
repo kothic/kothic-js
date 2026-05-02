@@ -19,4 +19,15 @@ jobs:
 
       - run: npm install
 
+      - run: npx playwright install --with-deps chromium
+
       - run: npm test
+        env:
+          RENDER_TEST_OUTPUT_DIR: render-test-output
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: render-test-output
+          path: render-test-output
+          if-no-files-found: ignore
