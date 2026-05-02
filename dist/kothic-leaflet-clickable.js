@@ -10,7 +10,9 @@ L.TileLayer.Kothic.Clickable = L.TileLayer.Kothic.extend({
 
     onAdd: function(map) {
         this._clickHandler = L.Util.bind(this._onclick, this);
+        this._tileUnloadHandler = L.Util.bind(this._onTileUnload, this);
         map.on('click', this._clickHandler);
+        this.on('tileunload', this._tileUnloadHandler);
         L.GridLayer.prototype.onAdd.call(this, map);
     },
 
@@ -18,6 +20,10 @@ L.TileLayer.Kothic.Clickable = L.TileLayer.Kothic.extend({
         if (this._clickHandler) {
             map.off('click', this._clickHandler);
             delete this._clickHandler;
+        }
+        if (this._tileUnloadHandler) {
+            this.off('tileunload', this._tileUnloadHandler);
+            delete this._tileUnloadHandler;
         }
         this._data = {};
         L.GridLayer.prototype.onRemove.call(this, map);
@@ -76,6 +82,13 @@ L.TileLayer.Kothic.Clickable = L.TileLayer.Kothic.extend({
                 feature: nearestFeature
             });
         }
+    },
+
+    _onTileUnload: function(e) {
+        var coords = e.coords,
+            key = [coords.z - this.options.zoomOffset, coords.x, coords.y].join('/');
+
+        delete this._data[key];
     },
 
     _onKothicDataResponse: function(data, zoom, x, y, done) {

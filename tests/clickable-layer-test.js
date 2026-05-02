@@ -68,6 +68,15 @@ function createContext() {
 
     context.window = context;
     context.L.GridLayer.prototype = {
+        on: function(name, handler) {
+            this._layerHandlers = this._layerHandlers || {};
+            this._layerHandlers[name] = handler;
+        },
+        off: function(name, handler) {
+            this._removedLayerHandlers = this._removedLayerHandlers || {};
+            this._removedLayerHandlers[name] = handler;
+            delete this._layerHandlers[name];
+        },
         onAdd: function(map) {
             this._map = map;
         },
@@ -135,11 +144,14 @@ function runTests() {
             x: 2 * 256 + 25,
             y: 3 * 256 + 51
         }),
-        clickHandler;
+        clickHandler,
+        tileUnloadHandler;
 
     layer.onAdd(map);
     assert.strictEqual(typeof map.handlers.click, 'function');
     clickHandler = map.handlers.click;
+    assert.strictEqual(typeof layer._layerHandlers.tileunload, 'function');
+    tileUnloadHandler = layer._layerHandlers.tileunload;
 
     assert.doesNotThrow(function() {
         map.handlers.click({
@@ -181,10 +193,34 @@ function runTests() {
         lat: 819,
         lng: 537
     });
+    assert.strictEqual(layer._data['13/2/3'].features.length, 2);
+
+    layer._layerHandlers.tileunload({
+        coords: {
+            z: 13,
+            x: 2,
+            y: 3
+        }
+    });
+    assert.strictEqual(layer._data['13/2/3'], undefined);
+
+    layer._canvases['13/2/3'] = {};
+    layer._onKothicDataResponse({
+        granularity: 10000,
+        features: [
+            {
+                id: 'near',
+                type: 'Point',
+                coordinates: [976.5625, 8007.8125]
+            }
+        ]
+    }, 13, 2, 3, function done() {});
 
     layer.onRemove(map);
     assert.strictEqual(map.handlers.click, undefined);
     assert.strictEqual(map.removedHandlers.click, clickHandler);
+    assert.strictEqual(layer._layerHandlers.tileunload, undefined);
+    assert.strictEqual(layer._removedLayerHandlers.tileunload, tileUnloadHandler);
     assert.deepStrictEqual(Object.keys(layer._data), []);
 }
 
