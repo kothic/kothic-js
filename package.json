@@ -8,6 +8,7 @@
     "grunt-contrib-uglify": "^4.0.1"
   },
   "scripts": {
-    "prepublish": "grunt"
+    "prepublish": "grunt",
+    "test": "grunt && node tests/clickable-layer-test.js"
   }
 }

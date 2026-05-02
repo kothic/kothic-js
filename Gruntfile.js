@@ -41,7 +41,7 @@ module.exports = function (grunt) {
                 browser: true
             },
             all: {
-                src: ['Gruntfile.js', 'src/**/*.js', 'dist/kothic-leaflet.js', '!src/utils/rbush.js']
+                src: ['Gruntfile.js', 'src/**/*.js', 'dist/kothic-leaflet*.js', '!src/utils/rbush.js']
             }
         },
 
