@@ -15,16 +15,18 @@
 	<canvas id="map" width="1024" height="1024"></canvas>
 
 	<script type="text/javascript">
+        var onImagesLoad = MapCSS.onImagesLoad;
 
         invertYAxe(tile_data);
 
         MapCSS.onImagesLoad = function () {
+            onImagesLoad();
             Kothic.render('map', tile_data, tile_zoom, {
                 styles: ['osmosnimki']
             });
         };
 
-        MapCSS.preloadSpriteImage("osmosnimki", "http://toolserver.org/~osm/kothic/osmosnimki.png");
+        MapCSS.preloadSpriteImage("osmosnimki", "styles/osmosnimki.png");
 
         function invertYAxe(data) {
             var type, coordinates, tileSize = data.granularity, i, j, k, l, feature;
