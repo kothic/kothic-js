@@ -1,18 +1,25 @@
 
 Kothic.line = {
 
+    hasRenderableDashes: function(dashes) {
+        return Kothic.path.normalizeDashes(dashes).length > 0;
+    },
+
     renderCasing: function (ctx, feature, nextFeature, ws, hs, granularity) {
         var style = feature.style,
-            nextStyle = nextFeature && nextFeature.style;
+            nextStyle = nextFeature && nextFeature.style,
+            casingDashes = style["casing-dashes"] || style.dashes;
 
         if (!this.pathOpened) {
             this.pathOpened = true;
             ctx.beginPath();
         }
 
-        Kothic.path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
+        Kothic.path(ctx, feature, casingDashes, false, ws, hs, granularity);
 
         if (nextFeature &&
+                !this.hasRenderableDashes(casingDashes) &&
+                !this.hasRenderableDashes(nextStyle["casing-dashes"] || nextStyle.dashes) &&
                 nextStyle.width === style.width &&
                 nextStyle['casing-width'] === style['casing-width'] &&
                 nextStyle['casing-color'] === style['casing-color'] &&
@@ -45,6 +52,8 @@ Kothic.line = {
         Kothic.path(ctx, feature, style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
+                !this.hasRenderableDashes(style.dashes) &&
+                !this.hasRenderableDashes(nextStyle.dashes) &&
                 nextStyle.width === style.width &&
                 nextStyle.color === style.color &&
                 nextStyle.image === style.image &&
