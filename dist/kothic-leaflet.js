@@ -37,6 +37,7 @@ L.TileLayer.Kothic = L.GridLayer.extend({
             done(error, canvas);
         }
 
+        data = Kothic.normalizeData(data);
         this._invertYAxe(data);
 
         var styles = this.options.styles;

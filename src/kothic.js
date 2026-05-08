@@ -17,6 +17,8 @@ var Kothic = {
             canvas = document.getElementById(canvas);
         }
 
+        data = Kothic.normalizeData(data);
+
         var styles = (options && options.styles) || [];
 
         MapCSS.locales = (options && options.locales) || [];
@@ -71,6 +73,88 @@ var Kothic = {
                 //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
             });
         });
+    },
+
+    normalizeData: function(data) {
+        var normalizedData, i, len, normalizedFeature;
+
+        if (!data || data.type !== 'FeatureCollection') {
+            return data;
+        }
+
+        normalizedData = {
+            features: []
+        };
+
+        for (i in data) {
+            if (data.hasOwnProperty(i) && i !== 'type' && i !== 'features') {
+                normalizedData[i] = data[i];
+            }
+        }
+
+        for (i = 0, len = data.features.length; i < len; i++) {
+            normalizedFeature = Kothic.normalizeFeature(data.features[i]);
+
+            if (normalizedFeature) {
+                normalizedData.features.push(normalizedFeature);
+            }
+        }
+
+        return normalizedData;
+    },
+
+    normalizeFeature: function(feature) {
+        var normalizedFeature, key, geometry;
+
+        if (!feature || feature.type !== 'Feature') {
+            return feature;
+        }
+
+        geometry = feature.geometry;
+
+        if (!geometry) {
+            return null;
+        }
+
+        normalizedFeature = {
+            type: geometry.type,
+            coordinates: Kothic.cloneCoordinates(geometry.coordinates),
+            properties: feature.properties || {}
+        };
+
+        if (feature.hasOwnProperty('id')) {
+            normalizedFeature['id'] = feature.id;
+        }
+
+        for (key in feature) {
+            if (
+                feature.hasOwnProperty(key) &&
+                key !== 'type' &&
+                key !== 'geometry' &&
+                key !== 'properties' &&
+                key !== 'id'
+            ) {
+                normalizedFeature[key] = Kothic.cloneCoordinates(feature[key]);
+            }
+        }
+
+        return normalizedFeature;
+    },
+
+    cloneCoordinates: function(coordinates) {
+        var i, len, cloned;
+
+        if (!Array.isArray(coordinates)) {
+            return coordinates;
+        }
+
+        cloned = [];
+
+        for (i = 0, len = coordinates.length; i < len; i++) {
+            cloned.push(Kothic.cloneCoordinates(coordinates[i]));
+        }
+
+        return cloned;
     },
 
     _renderCollisions: function (ctx, node) {
