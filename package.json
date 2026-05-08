@@ -17,7 +17,7 @@
     "build": "grunt",
     "lint": "eslint Gruntfile.js src tests debug/kothic-include.js",
     "prepack": "npm run build",
-    "test": "npm run lint && npm run typecheck && npm run build && node --test tests/clickable-layer-test.js tests/path-dashes-test.js tests/render-pixelmatch-test.js",
+    "test": "npm run lint && npm run typecheck && npm run build && node --test tests/clickable-layer-test.js tests/mapcss-metric-test.js tests/path-dashes-test.js tests/render-pixelmatch-test.js",
     "typecheck": "tsc --noEmit",
     "test:install-browsers": "playwright install chromium"
   }
