@@ -134,6 +134,41 @@ function createMap(pixel) {
     };
 }
 
+function createDebugCanvas() {
+    var calls = [],
+        ctx = {
+            save: function() {
+                calls.push(['save']);
+            },
+            restore: function() {
+                calls.push(['restore']);
+            },
+            fillRect: function(x, y, width, height) {
+                calls.push(['fillRect', x, y, width, height]);
+            },
+            fillText: function(text, x, y) {
+                calls.push(['fillText', text, x, y]);
+            }
+        };
+
+    return {
+        width: 256,
+        height: 256,
+        calls: calls,
+        getContext: function() {
+            return ctx;
+        }
+    };
+}
+
+function getFilledTexts(canvas) {
+    return canvas.calls.filter(function(call) {
+        return call[0] === 'fillText';
+    }).map(function(call) {
+        return call[1];
+    });
+}
+
 function runTests() {
     var context = createContext(),
         Layer = context.L.TileLayer.Kothic.Clickable,
@@ -227,4 +262,69 @@ function runTests() {
 
 test('clickable Leaflet layer finds nearby point features and cleans up handlers', function() {
     runTests();
+});
+
+function runDebugTileTests() {
+    var context = createContext(),
+        Layer = context.L.TileLayer.Kothic,
+        layer = new Layer('/tiles/{z}/{x}/{y}.json', {
+            debugTiles: true,
+            styles: []
+        }),
+        canvas = createDebugCanvas(),
+        doneArgs = [],
+        texts;
+
+    layer._loadJSON = function(url, zoom, x, y, done) {
+        assert.strictEqual(url, '/tiles/13/2/3.json');
+        assert.strictEqual(zoom, 13);
+        assert.strictEqual(x, 2);
+        assert.strictEqual(y, 3);
+        assert.strictEqual(typeof done, 'function');
+    };
+    layer.drawTile(canvas, {
+        x: 2,
+        y: 3
+    }, 13, function done(error, tile) {
+        doneArgs = [error, tile];
+    });
+
+    assert.strictEqual(layer.getDebugMessages()[0].status, 'loading');
+    assert.strictEqual(layer.getDebugMessages()[0].url, '/tiles/13/2/3.json');
+    texts = getFilledTexts(canvas);
+    assert(texts.indexOf('Kothic 13/2/3') >= 0);
+    assert(texts.indexOf('loading') >= 0);
+
+    context.window.onKothicDataResponse({
+        granularity: 10000,
+        features: []
+    }, 13, 2, 3, function done(error, tile) {
+        doneArgs = [error, tile];
+    });
+
+    assert.strictEqual(doneArgs[0], undefined);
+    assert.strictEqual(doneArgs[1], canvas);
+    assert.strictEqual(layer.getDebugMessages()[1].status, 'data loaded');
+    assert.strictEqual(layer.getDebugMessages()[2].status, 'rendered');
+    texts = getFilledTexts(canvas);
+    assert(texts.indexOf('0 features') >= 0);
+    assert.strictEqual(layer._canvases['13/2/3'], undefined);
+
+    canvas = createDebugCanvas();
+    layer._canvases['13/4/5'] = canvas;
+    context.window.onKothicDataError('/tiles/13/4/5.json', 13, 4, 5, 404, function done(error, tile) {
+        doneArgs = [error, tile];
+    });
+
+    assert.strictEqual(doneArgs[0].message, 'Kothic tile data request failed: 404 /tiles/13/4/5.json');
+    assert.strictEqual(doneArgs[1], canvas);
+    assert.strictEqual(layer.getDebugMessages()[3].status, 'data error 404');
+    texts = getFilledTexts(canvas);
+    assert(texts.indexOf('Kothic 13/4/5') >= 0);
+    assert(texts.indexOf('data error 404') >= 0);
+    assert.strictEqual(layer._canvases['13/4/5'], undefined);
+}
+
+test('debug Leaflet layer reports tile status and failures', function() {
+    runDebugTileTests();
 });
