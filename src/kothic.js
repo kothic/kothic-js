@@ -6,6 +6,31 @@
 
 var Kothic = {
 
+    _isPixelLength: function (value) {
+        return /^\d+(?:\.\d+)?px$/.test(value || '');
+    },
+
+    _getCanvasRenderDimension: function (canvas, dimension) {
+        var styleValue = canvas.style[dimension],
+            pixelMatch = /^(\d+(?:\.\d+)?)px$/.exec(styleValue || ''),
+            clientDimension = dimension === 'width' ? 'clientWidth' : 'clientHeight',
+            cacheDimension = dimension === 'width' ? '_kothicCssWidth' : '_kothicCssHeight';
+
+        if (pixelMatch) {
+            return parseFloat(pixelMatch[1]);
+        }
+
+        if (canvas[clientDimension]) {
+            return canvas[clientDimension];
+        }
+
+        if (styleValue && canvas[cacheDimension]) {
+            return canvas[cacheDimension];
+        }
+
+        return canvas[dimension];
+    },
+
     render: function (canvas, data, zoom, options) {
 
         if(!MapCSS.imagesLoaded) {
@@ -23,15 +48,21 @@ var Kothic = {
 
         var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
 
-        var width = canvas.width,
-            height = canvas.height;
+        var width = Kothic._getCanvasRenderDimension(canvas, 'width'),
+            height = Kothic._getCanvasRenderDimension(canvas, 'height');
 
         if (devicePixelRatio !== 1) {
-            canvas.style.width = width + 'px';
-            canvas.style.height = height + 'px';
-            canvas.width = canvas.width * devicePixelRatio;
-            canvas.height = canvas.height * devicePixelRatio;
+            if (!canvas.style.width || Kothic._isPixelLength(canvas.style.width)) {
+                canvas.style.width = width + 'px';
+            }
+            if (!canvas.style.height || Kothic._isPixelLength(canvas.style.height)) {
+                canvas.style.height = height + 'px';
+            }
+            canvas.width = width * devicePixelRatio;
+            canvas.height = height * devicePixelRatio;
         }
+        canvas._kothicCssWidth = width;
+        canvas._kothicCssHeight = height;
 
         var ctx = canvas.getContext('2d');
         ctx.scale(devicePixelRatio, devicePixelRatio);
