@@ -93,23 +93,24 @@ L.TileLayer.Kothic.Clickable = L.TileLayer.Kothic.extend({
 
     _onKothicDataResponse: function(data, zoom, x, y, done) {
         var key = [zoom, x, y].join('/'),
+            normalizedData = Kothic.normalizeData(data),
             stored = {
-                granularity: data.granularity,
+                granularity: normalizedData.granularity,
                 features: []
             },
             i;
 
         if (!this._canvases[key]) {
-            L.TileLayer.Kothic.prototype._onKothicDataResponse.call(this, data, zoom, x, y, done);
+            L.TileLayer.Kothic.prototype._onKothicDataResponse.call(this, normalizedData, zoom, x, y, done);
             return;
         }
 
-        L.TileLayer.Kothic.prototype._onKothicDataResponse.call(this, data, zoom, x, y, done);
+        L.TileLayer.Kothic.prototype._onKothicDataResponse.call(this, normalizedData, zoom, x, y, done);
 
         if (!this._data[key]) {
-            for (i = 0; i < data.features.length; i++) {
-                if (data.features[i].type === 'Point') {
-                    stored.features.push(data.features[i]);
+            for (i = 0; i < normalizedData.features.length; i++) {
+                if (normalizedData.features[i].type === 'Point') {
+                    stored.features.push(normalizedData.features[i]);
                 }
             }
             this._data[key] = stored;
