@@ -34,6 +34,38 @@ function createContext() {
                 invalidateCache: function() {}
             },
             Kothic: {
+                normalizeData: function(data) {
+                    var normalizedData, normalizedFeature;
+
+                    if (!data || data.type !== 'FeatureCollection') {
+                        return data;
+                    }
+
+                    normalizedData = {
+                        granularity: data.granularity,
+                        features: []
+                    };
+
+                    data.features.forEach(function(feature) {
+                        if (!feature.geometry) {
+                            return;
+                        }
+
+                        normalizedFeature = {
+                            type: feature.geometry.type,
+                            coordinates: JSON.parse(JSON.stringify(feature.geometry.coordinates)),
+                            properties: feature.properties || {}
+                        };
+
+                        if (feature.id) {
+                            normalizedFeature['id'] = feature.id;
+                        }
+
+                        normalizedData.features.push(normalizedFeature);
+                    });
+
+                    return normalizedData;
+                },
                 render: function(canvas, data, zoom, options) {
                     if (options && options.onRenderComplete) {
                         options.onRenderComplete();
@@ -207,12 +239,17 @@ function runTests() {
 
     layer._canvases['13/2/3'] = {};
     layer._onKothicDataResponse({
+        type: 'FeatureCollection',
         granularity: 10000,
         features: [
             {
+                type: 'Feature',
                 id: 'near',
-                type: 'Point',
-                coordinates: [976.5625, 8007.8125]
+                properties: {},
+                geometry: {
+                    type: 'Point',
+                    coordinates: [976.5625, 8007.8125]
+                }
             }
         ]
     }, 13, 2, 3, function done() {});
