@@ -62,7 +62,7 @@ Kothic.textOnPath = (function () {
                 pathLen = Kothic.geom.getPolyLength(points);
 
         if (pathLen < textWidth) {
-            return;  // if label won't fit - don't try to
+            return false;  // if label won't fit - don't try to
         }
 
         var avgLetterWidth = getWidth(ctx, 'a');
@@ -166,7 +166,7 @@ Kothic.textOnPath = (function () {
             }
 
             if (solution >= 2) {
-                return;
+                return false;
             }
 
             if (positions.length > 0) {
@@ -185,5 +185,7 @@ Kothic.textOnPath = (function () {
             renderText(ctx, axy);
             addCollision(collisions, ctx, axy[4], axy, avgLetterWidth);
         }
+
+        return true;
     };
 }());

@@ -4,7 +4,7 @@ Kothic.texticons = {
     render: function (ctx, feature, collides, ws, hs, renderText, renderIcon) {
         var style = feature.style, img, point, w, h;
 
-        if (renderIcon || (renderText && feature.type !== 'LineString')) {
+        if (renderIcon || (renderText && feature.type !== 'LineString' && feature.type !== 'MultiLineString')) {
             var reprPoint = Kothic.geom.getReprPoint(feature);
             if (!reprPoint) {
                 return;
@@ -89,6 +89,15 @@ Kothic.texticons = {
 
                 var points = Kothic.geom.transformPoints(feature.coordinates, ws, hs);
                 Kothic.textOnPath(ctx, points, text, halo, collides);
+            } else if (feature.type === 'MultiLineString') {
+                var i, linesLen;
+
+                for (i = 0, linesLen = feature.coordinates.length; i < linesLen; i++) {
+                    points = Kothic.geom.transformPoints(feature.coordinates[i], ws, hs);
+                    if (Kothic.textOnPath(ctx, points, text, halo, collides)) {
+                        break;
+                    }
+                }
             }
         }
 
