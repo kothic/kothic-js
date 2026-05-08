@@ -59,12 +59,12 @@ Kothic.render(
 	zoom, // zoom level
 	{
 		onRenderComplete: callback, // (optional) callback to call when rendering is done
-    	styles: ['osmosnimki-maps', 'surface'], // (optional) only specified styles will be rendered, if any
-    	locales: ['be', 'ru', 'en'] // (optional) map languages, see below
+		styles: ['osmosnimki-maps', 'surface'], // (optional) only specified styles will be rendered, if any
+		locales: ['be', 'ru', 'en'] // (optional) map languages, see below
 	});
 ```
 
-`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used.
+`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of preference. If `locales` is not set, Kothic-JS uses browser language preferences from `navigator.languages` or the older single-language browser fields. If object doesn't have localized name, *name* tag will be used.
 
 ### Contributing to Kothic JS
 
