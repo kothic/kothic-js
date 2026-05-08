@@ -13,6 +13,8 @@ Kothic.line = {
         Kothic.path(ctx, feature, style["casing-dashes"] || style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
+                !(style["casing-dashes"] || style.dashes) &&
+                !(nextStyle["casing-dashes"] || nextStyle.dashes) &&
                 nextStyle.width === style.width &&
                 nextStyle['casing-width'] === style['casing-width'] &&
                 nextStyle['casing-color'] === style['casing-color'] &&
@@ -45,6 +47,8 @@ Kothic.line = {
         Kothic.path(ctx, feature, style.dashes, false, ws, hs, granularity);
 
         if (nextFeature &&
+                !style.dashes &&
+                !nextStyle.dashes &&
                 nextStyle.width === style.width &&
                 nextStyle.color === style.color &&
                 nextStyle.image === style.image &&
