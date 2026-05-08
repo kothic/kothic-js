@@ -34,6 +34,58 @@ function createContext() {
                 invalidateCache: function() {}
             },
             Kothic: {
+                normalizeData: function(data) {
+                    var normalizedData;
+
+                    if (!data || data.type !== 'FeatureCollection') {
+                        return data;
+                    }
+
+                    normalizedData = {
+                        granularity: data.granularity,
+                        features: []
+                    };
+
+                    data.features.forEach(function(feature) {
+                        normalizedData.features = normalizedData.features.concat(
+                            this.normalizeFeature(feature)
+                        );
+                    }, this);
+
+                    return normalizedData;
+                },
+                normalizeFeature: function(feature) {
+                    var normalizedFeatures;
+
+                    if (!feature.geometry) {
+                        return [];
+                    }
+
+                    if (feature.geometry.type === 'GeometryCollection') {
+                        normalizedFeatures = [];
+                        feature.geometry.geometries.forEach(function(geometry) {
+                            normalizedFeatures = normalizedFeatures.concat(this.normalizeFeature({
+                                type: 'Feature',
+                                id: feature.id,
+                                properties: feature.properties,
+                                geometry: geometry
+                            }));
+                        }, this);
+                        return normalizedFeatures;
+                    }
+
+                    return [{
+                        type: feature.geometry.type,
+                        coordinates: JSON.parse(JSON.stringify(feature.geometry.coordinates)),
+                        properties: feature.properties || {},
+                        id: feature.id
+                    }].map(function(normalizedFeature) {
+                        if (!normalizedFeature.id) {
+                            delete normalizedFeature.id;
+                        }
+                        return normalizedFeature;
+                    });
+                },
                 render: function(canvas, data, zoom, options) {
                     if (options && options.onRenderComplete) {
                         options.onRenderComplete();
@@ -207,15 +259,43 @@ function runTests() {
 
     layer._canvases['13/2/3'] = {};
     layer._onKothicDataResponse({
+        type: 'FeatureCollection',
         granularity: 10000,
         features: [
             {
-                id: 'near',
-                type: 'Point',
-                coordinates: [976.5625, 8007.8125]
+                type: 'Feature',
+                id: 'mixed',
+                properties: {},
+                geometry: {
+                    type: 'GeometryCollection',
+                    geometries: [
+                        {
+                            type: 'LineString',
+                            coordinates: [[0, 0], [1, 1]]
+                        },
+                        {
+                            type: 'Point',
+                            coordinates: [976.5625, 8007.8125]
+                        }
+                    ]
+                }
             }
         ]
     }, 13, 2, 3, function done() {});
+
+    map.handlers.click({
+        latlng: {}
+    });
+
+    assert.strictEqual(context.events.length, 2);
+    assert.strictEqual(context.events[1].name, 'featureclick');
+    assert.strictEqual(context.events[1].payload.feature.id, 'mixed');
+    assert.strictEqual(context.events[1].payload.feature.type, 'Point');
+    assert.deepStrictEqual(context.events[1].payload.feature.coordinates, [976.5625, 1992.1875]);
+    assert.deepStrictEqual(context.events[1].payload.latlng, {
+        lat: 819,
+        lng: 537
+    });
 
     layer.onRemove(map);
     assert.strictEqual(map.handlers.click, undefined);

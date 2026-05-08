@@ -17,6 +17,8 @@ var Kothic = {
             canvas = document.getElementById(canvas);
         }
 
+        data = Kothic.normalizeData(data);
+
         var styles = (options && options.styles) || [];
 
         MapCSS.locales = (options && options.locales) || [];
@@ -71,6 +73,122 @@ var Kothic = {
                 //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
             });
         });
+    },
+
+    normalizeData: function(data) {
+        var normalizedData, i, j, len, normalizedFeature;
+
+        if (!data || data.type !== 'FeatureCollection') {
+            return data;
+        }
+
+        normalizedData = {
+            features: []
+        };
+
+        for (i in data) {
+            if (data.hasOwnProperty(i) && i !== 'type' && i !== 'features') {
+                normalizedData[i] = data[i];
+            }
+        }
+
+        for (i = 0, len = data.features.length; i < len; i++) {
+            normalizedFeature = Kothic.normalizeFeature(data.features[i]);
+
+            if (Array.isArray(normalizedFeature)) {
+                for (j = 0; j < normalizedFeature.length; j++) {
+                    normalizedData.features.push(normalizedFeature[j]);
+                }
+            } else if (normalizedFeature) {
+                normalizedData.features.push(normalizedFeature);
+            }
+        }
+
+        return normalizedData;
+    },
+
+    normalizeFeature: function(feature) {
+        var normalizedFeature, geometry, i, j, normalizedGeometry, normalizedGeometries;
+
+        if (!feature || feature.type !== 'Feature') {
+            return feature;
+        }
+
+        geometry = feature.geometry;
+
+        if (!geometry) {
+            return null;
+        }
+
+        if (geometry.type === 'GeometryCollection') {
+            normalizedGeometries = [];
+
+            for (i = 0; i < geometry.geometries.length; i++) {
+                normalizedGeometry = Kothic.normalizeFeature({
+                    type: 'Feature',
+                    properties: feature.properties,
+                    geometry: geometry.geometries[i]
+                });
+
+                if (Array.isArray(normalizedGeometry)) {
+                    for (j = 0; j < normalizedGeometry.length; j++) {
+                        Kothic.copyFeatureMetadata(feature, normalizedGeometry[j]);
+                        normalizedGeometries.push(normalizedGeometry[j]);
+                    }
+                } else if (normalizedGeometry) {
+                    Kothic.copyFeatureMetadata(feature, normalizedGeometry);
+                    normalizedGeometries.push(normalizedGeometry);
+                }
+            }
+
+            return normalizedGeometries;
+        }
+
+        normalizedFeature = {
+            type: geometry.type,
+            coordinates: Kothic.cloneCoordinates(geometry.coordinates),
+            properties: feature.properties || {}
+        };
+
+        Kothic.copyFeatureMetadata(feature, normalizedFeature);
+
+        return normalizedFeature;
+    },
+
+    copyFeatureMetadata: function(feature, normalizedFeature) {
+        var key;
+
+        if (feature.hasOwnProperty('id')) {
+            normalizedFeature['id'] = feature.id;
+        }
+
+        for (key in feature) {
+            if (
+                feature.hasOwnProperty(key) &&
+                key !== 'type' &&
+                key !== 'geometry' &&
+                key !== 'properties' &&
+                key !== 'id'
+            ) {
+                normalizedFeature[key] = Kothic.cloneCoordinates(feature[key]);
+            }
+        }
+    },
+
+    cloneCoordinates: function(coordinates) {
+        var i, len, cloned;
+
+        if (!Array.isArray(coordinates)) {
+            return coordinates;
+        }
+
+        cloned = [];
+
+        for (i = 0, len = coordinates.length; i < len; i++) {
+            cloned.push(Kothic.cloneCoordinates(coordinates[i]));
+        }
+
+        return cloned;
     },
 
     _renderCollisions: function (ctx, node) {
