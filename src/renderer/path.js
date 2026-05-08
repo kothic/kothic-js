@@ -38,6 +38,23 @@ Kothic.path = (function () {
         return (bp & isTileBoundary(q, size));
     }
 
+    function normalizeDashes(dashes) {
+        var i, value;
+
+        if (!dashes || !dashes.length) {
+            return [];
+        }
+
+        for (i = 0; i < dashes.length; i++) {
+            value = parseFloat(dashes[i]);
+            if (!isFinite(value) || value <= 0) {
+                return [];
+            }
+        }
+
+        return dashes;
+    }
+
     return function (ctx, feature, dashes, fill, ws, hs, granularity) {
         var type = feature.type,
             coords = feature.coordinates;
@@ -70,12 +87,7 @@ Kothic.path = (function () {
 
                         if (j === 0) {
                             ctx.moveTo(screenPoint[0], screenPoint[1]);
-                            if (dashes) {
-                                ctx.setLineDash(dashes);
-                            }
-                            else {
-                                ctx.setLineDash([]);
-                            }
+                            ctx.setLineDash(normalizeDashes(dashes));
                         } else if (!fill && checkSameBoundary(point, prevPoint, granularity)) {
                             ctx.moveTo(screenPoint[0], screenPoint[1]);
                         } else {
@@ -125,12 +137,7 @@ Kothic.path = (function () {
 
                     if (j === 0) {
                         ctx.moveTo(screenPoint[0], screenPoint[1]);
-                        if (dashes) {
-                            ctx.setLineDash(dashes);
-                        }
-                        else {
-                            ctx.setLineDash([]);
-                        }
+                        ctx.setLineDash(normalizeDashes(dashes));
                     } else {
                         ctx.lineTo(screenPoint[0], screenPoint[1]);
                     }
