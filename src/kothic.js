@@ -42,6 +42,8 @@ var Kothic = {
 
         console.time('styles');
 
+        MapCSS.setMetricContext(data, zoom, width);
+
         // setup layer styles
         var layers = Kothic.style.populateLayers(data.features, zoom, styles),
             layerIds = Kothic.getLayerIds(layers);

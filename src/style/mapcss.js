@@ -8,6 +8,7 @@ var MapCSS = {
     value_tags: [],
     cache: {},
     debug: {hit: 0, miss: 0},
+    metricContext: null,
     renderQueue: [],
     imagesLoaded: false,
 
@@ -86,6 +87,30 @@ var MapCSS = {
         return Math.sqrt(arg);
     },
 
+    setMetricContext: function(data, zoom, tileSize) {
+        var bbox = data && data.bbox,
+            centerLat,
+            metersPerPixel;
+
+        if (bbox && bbox.length >= 4 && tileSize) {
+            centerLat = (bbox[1] + bbox[3]) / 2;
+            metersPerPixel = Math.abs(bbox[2] - bbox[0]) * 111319.49079327357 *
+                    Math.cos(centerLat * Math.PI / 180) / tileSize;
+        } else if (typeof zoom === 'number' && tileSize) {
+            centerLat = 0;
+            metersPerPixel = 40075016.68557849 / (tileSize * Math.pow(2, zoom));
+        }
+
+        if (metersPerPixel && isFinite(metersPerPixel)) {
+            this.metricContext = {
+                metersPerPixel: metersPerPixel,
+                cacheKey: metersPerPixel.toPrecision(12)
+            };
+        } else {
+            this.metricContext = null;
+        }
+    },
+
     e_boolean: function (arg, if_exp, else_exp) {
         if (typeof(if_exp) === 'undefined') {
             if_exp = 'true';
@@ -103,21 +128,52 @@ var MapCSS = {
     },
 
     e_metric: function (arg) {
-        if (/\d\s*mm$/.test(arg)) {
-            return 1000 * parseInt(arg, 10);
-        } else if (/\d\s*cm$/.test(arg)) {
-            return 100 * parseInt(arg, 10);
-        } else if (/\d\s*dm$/.test(arg)) {
-            return 10 * parseInt(arg, 10);
-        } else if (/\d\s*km$/.test(arg)) {
-            return 0.001 * parseInt(arg, 10);
-        } else if (/\d\s*in$/.test(arg)) {
-            return 0.0254 * parseInt(arg, 10);
-        } else if (/\d\s*ft$/.test(arg)) {
-            return 0.3048 * parseInt(arg, 10);
-        } else {
+        var parsed = /^(-?\d+(?:\.\d+)?)\s*(mm|cm|dm|m|km|in|ft)?$/.exec(String(arg)),
+            value,
+            unit,
+            meters;
+
+        if (!parsed) {
             return parseInt(arg, 10);
         }
+
+        value = parseFloat(parsed[1]);
+        unit = parsed[2] || '';
+
+        if (!this.metricContext || !unit) {
+            if (unit === 'mm') {
+                return 1000 * value;
+            } else if (unit === 'cm') {
+                return 100 * value;
+            } else if (unit === 'dm') {
+                return 10 * value;
+            } else if (unit === 'km') {
+                return 0.001 * value;
+            } else if (unit === 'in') {
+                return 0.0254 * value;
+            } else if (unit === 'ft') {
+                return 0.3048 * value;
+            }
+            return value;
+        }
+
+        if (unit === 'mm') {
+            meters = value / 1000;
+        } else if (unit === 'cm') {
+            meters = value / 100;
+        } else if (unit === 'dm') {
+            meters = value / 10;
+        } else if (unit === 'km') {
+            meters = value * 1000;
+        } else if (unit === 'in') {
+            meters = value * 0.0254;
+        } else if (unit === 'ft') {
+            meters = value * 0.3048;
+        } else {
+            meters = value;
+        }
+
+        return meters / this.metricContext.metersPerPixel;
     },
 
     e_zmetric: function (arg) {
@@ -367,7 +423,7 @@ var MapCSS = {
             }
         }
 
-        return [zoom, type, selector, keys.join(':')].join(':');
+        return [zoom, type, selector, this.metricContext && this.metricContext.cacheKey, keys.join(':')].join(':');
     },
 
     restyle: function (styleNames, tags, zoom, type, selector) {
