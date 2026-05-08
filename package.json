@@ -2,17 +2,23 @@
   "name": "kothic-js",
   "version": "0.3.0",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.2",
     "grunt": "^1.0.4",
-    "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "^4.0.1",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.59.1",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "typescript": "^5.9.3"
   },
   "scripts": {
-    "prepublish": "grunt",
-    "pretest": "playwright install chromium",
-    "test": "grunt && node tests/clickable-layer-test.js && node tests/render-pixelmatch-test.js"
+    "build": "grunt",
+    "lint": "eslint Gruntfile.js src tests debug/kothic-include.js",
+    "prepack": "npm run build",
+    "test": "npm run lint && npm run typecheck && npm run build && node --test tests/clickable-layer-test.js tests/render-pixelmatch-test.js",
+    "typecheck": "tsc --noEmit",
+    "test:install-browsers": "playwright install chromium"
   }
 }

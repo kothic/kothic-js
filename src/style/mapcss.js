@@ -11,7 +11,8 @@ var MapCSS = {
     renderQueue: [],
     imagesLoaded: false,
 
-    onError: function () {
+    onError: function (error) {
+        void error;
     },
 
     onImagesLoad: function () {
@@ -159,7 +160,7 @@ var MapCSS = {
             return "";
         }
 
-        if (!/^[0-9]+$/.test(index) || index >= arr.length()) {
+        if (!/^[0-9]+$/.test(index) || index >= arr.length) {
             return "";
         }
 
@@ -185,7 +186,7 @@ var MapCSS = {
             return 0;
         }
 
-        return arr.length();
+        return arr.length;
     },
 
     e_list: function() {

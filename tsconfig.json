@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["dom", "es2022"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "es2022",
+    "types": ["node"]
+  },
+  "include": [
+    "Gruntfile.js",
+    "debug/kothic-include.js",
+    "src/**/*.js",
+    "tests/**/*.js",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/utils/rbush.js"
+  ]
+}

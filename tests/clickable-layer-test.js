@@ -1,13 +1,14 @@
-/* eslint-env node */
 'use strict';
 
 var assert = require('assert'),
     fs = require('fs'),
+    test = require('node:test'),
     vm = require('vm');
 
 function extend(props) {
     var Parent = this;
 
+    /** @this {any} */
     function Child() {
         if (this.initialize) {
             this.initialize.apply(this, arguments);
@@ -90,7 +91,7 @@ function createContext() {
             });
         }
     };
-    context.L.GridLayer.extend = extend;
+    /** @type {any} */ (context.L.GridLayer).extend = extend;
     context.events = events;
 
     vm.createContext(context);
@@ -224,4 +225,6 @@ function runTests() {
     assert.deepStrictEqual(Object.keys(layer._data), []);
 }
 
-runTests();
+test('clickable Leaflet layer finds nearby point features and cleans up handlers', function() {
+    runTests();
+});

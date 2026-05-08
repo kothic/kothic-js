@@ -103,7 +103,7 @@ var Kothic = {
     },
 
     _renderBackground: function (ctx, width, height, zoom, styles) {
-        var style = MapCSS.restyle(styles, {}, {}, zoom, 'canvas', 'canvas');
+        var style = MapCSS.restyle(styles, {}, zoom, 'canvas', 'canvas');
 
         var fillRect = function () {
             ctx.fillRect(-1, -1, width + 1, height + 1);

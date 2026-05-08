@@ -1,10 +1,9 @@
-/* eslint-env node */
-
 var fs = require('fs');
 var http = require('http');
 var os = require('os');
 var path = require('path');
 var assert = require('assert');
+var test = require('node:test');
 var {URL} = require('url');
 var {PNG} = require('pngjs');
 var {chromium} = require('playwright');
@@ -115,8 +114,11 @@ function startStaticServer() {
 
     return new Promise(function (resolve) {
         server.listen(0, '127.0.0.1', function () {
+            var address = server.address();
+
+            assert(address && typeof address !== 'string');
             resolve({
-                url: 'http://127.0.0.1:' + server.address().port,
+                url: 'http://127.0.0.1:' + address.port,
                 close: function () {
                     return new Promise(function (closeResolve) {
                         server.close(closeResolve);
@@ -237,7 +239,7 @@ function compareWithExpected(actual, pixelmatch) {
     }
 }
 
-(async function () {
+test('render fixture matches the expected image', async function () {
     var pixelmatch = (await import('pixelmatch')).default;
     var actual = await renderFixture();
 
@@ -256,8 +258,4 @@ function compareWithExpected(actual, pixelmatch) {
     }
 
     compareWithExpected(actual, pixelmatch);
-    console.log('Render pixelmatch test passed');
-}()).catch(function (error) {
-    console.error(error.stack || error.message);
-    process.exit(1);
 });
