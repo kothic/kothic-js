@@ -23,14 +23,14 @@ var Kothic = {
 
         var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
 
-        var width = canvas.width,
-            height = canvas.height;
+        var width = parseFloat(canvas.style.width) || canvas.width,
+            height = parseFloat(canvas.style.height) || canvas.height;
 
         if (devicePixelRatio !== 1) {
             canvas.style.width = width + 'px';
             canvas.style.height = height + 'px';
-            canvas.width = canvas.width * devicePixelRatio;
-            canvas.height = canvas.height * devicePixelRatio;
+            canvas.width = width * devicePixelRatio;
+            canvas.height = height * devicePixelRatio;
         }
 
         var ctx = canvas.getContext('2d');
