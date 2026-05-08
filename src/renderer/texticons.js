@@ -66,21 +66,45 @@ Kothic.texticons = {
             }
 
             if (feature.type === 'Polygon' || feature.type === 'Point') {
-                var textWidth = ctx.measureText(text).width,
-                        letterWidth = textWidth / text.length,
-                        collisionWidth = textWidth,
-                        collisionHeight = letterWidth * 2.5,
-                        offset = style['text-offset'] || 0;
+                var maxWidth = parseFloat(style['max-width']) || 0,
+                        lines = Kothic.texticons.wrapText(ctx, text, maxWidth),
+                        fontSize = parseFloat(style['font-size']) || 9,
+                        lineHeight = fontSize * 1.2,
+                        textWidths = [],
+                        textWidth = 0,
+                        collisionWidth,
+                        collisionHeight,
+                        offset = style['text-offset'] || 0,
+                        textY,
+                        i;
+
+                for (i = 0; i < lines.length; i++) {
+                    textWidths[i] = ctx.measureText(lines[i]).width;
+                    textWidth = Math.max(textWidth, textWidths[i]);
+                }
+
+                collisionWidth = textWidth;
+                collisionHeight = lineHeight * lines.length;
 
                 if ((style['text-allow-overlap'] !== 'true') &&
                         collides.checkPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, feature.kothicId)) {
                     return;
                 }
 
-                if (halo) {
-                    ctx.strokeText(text, point[0], point[1] + offset);
+                textY = point[1] + offset - lineHeight * (lines.length - 1) / 2;
+
+                for (i = 0; i < lines.length; i++) {
+                    if (halo) {
+                        ctx.strokeText(lines[i], point[0], textY);
+                    }
+                    ctx.fillText(lines[i], point[0], textY);
+
+                    if (style['text-decoration'] === 'underline') {
+                        ctx.fillRect(point[0] - textWidths[i] / 2, textY + fontSize / 2, textWidths[i], Math.max(1, fontSize / 12));
+                    }
+
+                    textY += lineHeight;
                 }
-                ctx.fillText(text, point[0], point[1] + offset);
 
                 var padding = style['-x-kot-min-distance'] || 20;
                 collides.addPointWH([point[0], point[1] + offset], collisionWidth, collisionHeight, padding, feature.kothicId);
@@ -100,5 +124,32 @@ Kothic.texticons = {
             var padding2 = parseFloat(style['-x-kot-min-distance']) || 0;
             collides.addPointWH(point, w, h, padding2, feature.kothicId);
         }
+    },
+
+    wrapText: function(ctx, text, maxWidth) {
+        var words, lines = [], line = '', nextLine, i;
+
+        if (!maxWidth || ctx.measureText(text).width <= maxWidth) {
+            return [text];
+        }
+
+        words = text.split(/\s+/);
+
+        for (i = 0; i < words.length; i++) {
+            nextLine = line ? line + ' ' + words[i] : words[i];
+
+            if (line && ctx.measureText(nextLine).width > maxWidth) {
+                lines.push(line);
+                line = words[i];
+            } else {
+                line = nextLine;
+            }
+        }
+
+        if (line) {
+            lines.push(line);
+        }
+
+        return lines;
     }
 };
