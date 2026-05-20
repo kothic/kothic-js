@@ -38,12 +38,15 @@ var Kothic = {
 
         var granularity = data.granularity,
             ws = width / granularity, hs = height / granularity,
-            collisionBuffer = new Kothic.CollisionBuffer(height, width);
+            collisionBuffer = new Kothic.CollisionBuffer(height, width),
+            metricContext = MapCSS.createMetricContext(data, zoom, width);
 
         console.time('styles');
 
         // setup layer styles
-        var layers = Kothic.style.populateLayers(data.features, zoom, styles),
+        var layers = MapCSS.withMetricContext(metricContext, function() {
+                return Kothic.style.populateLayers(data.features, zoom, styles);
+            }),
             layerIds = Kothic.getLayerIds(layers);
 
         // render the map
@@ -52,23 +55,27 @@ var Kothic = {
         console.timeEnd('styles');
 
         Kothic.getFrame(function () {
-            console.time('geometry');
+            MapCSS.withMetricContext(metricContext, function() {
+                console.time('geometry');
 
-            Kothic._renderBackground(ctx, width, height, zoom, styles);
-            Kothic._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
+                Kothic._renderBackground(ctx, width, height, zoom, styles);
+                Kothic._renderGeometryFeatures(layerIds, layers, ctx, ws, hs, granularity);
 
-            if (options && options.onRenderComplete) {
-                options.onRenderComplete();
-            }
+                if (options && options.onRenderComplete) {
+                    options.onRenderComplete();
+                }
 
-            console.timeEnd('geometry');
+                console.timeEnd('geometry');
 
-            Kothic.getFrame(function () {
-                console.time('text/icons');
-                Kothic._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
-                console.timeEnd('text/icons');
+                Kothic.getFrame(function () {
+                    MapCSS.withMetricContext(metricContext, function() {
+                        console.time('text/icons');
+                        Kothic._renderTextAndIcons(layerIds, layers, ctx, ws, hs, collisionBuffer);
+                        console.timeEnd('text/icons');
 
-                //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
+                        //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
+                    });
+                });
             });
         });
     },
