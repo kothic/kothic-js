@@ -100,6 +100,19 @@ function runTests() {
     assert.strictEqual(canvas.style.width, '256px');
     assert.strictEqual(canvas.style.height, '256px');
 
+    // Caller resizes the canvas attributes between renders: the new size wins.
+    canvas.width = 300;
+    canvas.height = 200;
+    renderOnce(context, canvas);
+    assert.strictEqual(canvas.width, 600);
+    assert.strictEqual(canvas.height, 400);
+    assert.strictEqual(canvas.style.width, '300px');
+    assert.strictEqual(canvas.style.height, '200px');
+
+    renderOnce(context, canvas);
+    assert.strictEqual(canvas.width, 600);
+    assert.strictEqual(canvas.height, 400);
+
     canvas = createFluidCanvas();
     renderOnce(context, canvas);
     assert.strictEqual(canvas.width, 640);

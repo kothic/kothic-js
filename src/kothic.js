@@ -14,7 +14,17 @@ var Kothic = {
         var styleValue = canvas.style[dimension],
             pixelMatch = /^(\d+(?:\.\d+)?)px$/.exec(styleValue || ''),
             clientDimension = dimension === 'width' ? 'clientWidth' : 'clientHeight',
-            cacheDimension = dimension === 'width' ? '_kothicCssWidth' : '_kothicCssHeight';
+            cacheDimension = dimension === 'width' ? '_kothicCssWidth' : '_kothicCssHeight',
+            writtenStyle = dimension === 'width' ? '_kothicStyleWidth' : '_kothicStyleHeight',
+            backingDimension = dimension === 'width' ? '_kothicBackingWidth' : '_kothicBackingHeight';
+
+        // A px inline style that Kothic itself wrote on a previous render is not
+        // caller input. If the caller has since changed canvas.width/height,
+        // the attribute is the source of truth for the new logical size.
+        if (pixelMatch && canvas[writtenStyle] === styleValue &&
+                canvas[backingDimension] !== undefined && canvas[dimension] !== canvas[backingDimension]) {
+            return canvas[dimension];
+        }
 
         if (pixelMatch) {
             return parseFloat(pixelMatch[1]);
@@ -54,13 +64,17 @@ var Kothic = {
         if (devicePixelRatio !== 1) {
             if (!canvas.style.width || Kothic._isPixelLength(canvas.style.width)) {
                 canvas.style.width = width + 'px';
+                canvas._kothicStyleWidth = canvas.style.width;
             }
             if (!canvas.style.height || Kothic._isPixelLength(canvas.style.height)) {
                 canvas.style.height = height + 'px';
+                canvas._kothicStyleHeight = canvas.style.height;
             }
             canvas.width = width * devicePixelRatio;
             canvas.height = height * devicePixelRatio;
         }
+        canvas._kothicBackingWidth = canvas.width;
+        canvas._kothicBackingHeight = canvas.height;
         canvas._kothicCssWidth = width;
         canvas._kothicCssHeight = height;
 
