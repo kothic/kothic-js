@@ -6,6 +6,41 @@
 
 var Kothic = {
 
+    _isPixelLength: function (value) {
+        return /^\d+(?:\.\d+)?px$/.test(value || '');
+    },
+
+    _getCanvasRenderDimension: function (canvas, dimension) {
+        var styleValue = canvas.style[dimension],
+            pixelMatch = /^(\d+(?:\.\d+)?)px$/.exec(styleValue || ''),
+            clientDimension = dimension === 'width' ? 'clientWidth' : 'clientHeight',
+            cacheDimension = dimension === 'width' ? '_kothicCssWidth' : '_kothicCssHeight',
+            writtenStyle = dimension === 'width' ? '_kothicStyleWidth' : '_kothicStyleHeight',
+            backingDimension = dimension === 'width' ? '_kothicBackingWidth' : '_kothicBackingHeight';
+
+        // A px inline style that Kothic itself wrote on a previous render is not
+        // caller input. If the caller has since changed canvas.width/height,
+        // the attribute is the source of truth for the new logical size.
+        if (pixelMatch && canvas[writtenStyle] === styleValue &&
+                canvas[backingDimension] !== undefined && canvas[dimension] !== canvas[backingDimension]) {
+            return canvas[dimension];
+        }
+
+        if (pixelMatch) {
+            return parseFloat(pixelMatch[1]);
+        }
+
+        if (canvas[clientDimension]) {
+            return canvas[clientDimension];
+        }
+
+        if (styleValue && canvas[cacheDimension]) {
+            return canvas[cacheDimension];
+        }
+
+        return canvas[dimension];
+    },
+
     render: function (canvas, data, zoom, options) {
 
         if(!MapCSS.imagesLoaded) {
@@ -23,15 +58,25 @@ var Kothic = {
 
         var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
 
-        var width = canvas.width,
-            height = canvas.height;
+        var width = Kothic._getCanvasRenderDimension(canvas, 'width'),
+            height = Kothic._getCanvasRenderDimension(canvas, 'height');
 
         if (devicePixelRatio !== 1) {
-            canvas.style.width = width + 'px';
-            canvas.style.height = height + 'px';
-            canvas.width = canvas.width * devicePixelRatio;
-            canvas.height = canvas.height * devicePixelRatio;
+            if (!canvas.style.width || Kothic._isPixelLength(canvas.style.width)) {
+                canvas.style.width = width + 'px';
+                canvas._kothicStyleWidth = canvas.style.width;
+            }
+            if (!canvas.style.height || Kothic._isPixelLength(canvas.style.height)) {
+                canvas.style.height = height + 'px';
+                canvas._kothicStyleHeight = canvas.style.height;
+            }
+            canvas.width = width * devicePixelRatio;
+            canvas.height = height * devicePixelRatio;
         }
+        canvas._kothicBackingWidth = canvas.width;
+        canvas._kothicBackingHeight = canvas.height;
+        canvas._kothicCssWidth = width;
+        canvas._kothicCssHeight = height;
 
         var ctx = canvas.getContext('2d');
         ctx.scale(devicePixelRatio, devicePixelRatio);
