@@ -27,7 +27,9 @@ L.TileLayer.Kothic = L.GridLayer.extend({
         var error;
         var key = [zoom, x, y].join('/'),
             canvas = this._canvases[key],
-            zoomOffset = this.options.zoomOffset;
+            zoomOffset = this.options.zoomOffset,
+            normalizedData,
+            prop;
 
         if (!canvas) {
             return;
@@ -37,7 +39,19 @@ L.TileLayer.Kothic = L.GridLayer.extend({
             done(error, canvas);
         }
 
-        data = Kothic.normalizeData(data);
+        normalizedData = Kothic.normalizeData(data);
+        if (normalizedData !== data && data) {
+            for (prop in data) {
+                if (data.hasOwnProperty(prop)) {
+                    delete data[prop];
+                }
+            }
+            for (prop in normalizedData) {
+                if (normalizedData.hasOwnProperty(prop)) {
+                    data[prop] = normalizedData[prop];
+                }
+            }
+        }
         this._invertYAxe(data);
 
         var styles = this.options.styles;

@@ -308,3 +308,37 @@ function runTests() {
 test('clickable Leaflet layer finds nearby point features and cleans up handlers', function() {
     runTests();
 });
+
+test('Leaflet normalizes data before dispatching to subclasses', function() {
+    var context = createContext(),
+        Parent = context.L.TileLayer.Kothic,
+        Child = Parent.extend({
+            _onKothicDataResponse: function(data, zoom, x, y, done) {
+                Parent.prototype._onKothicDataResponse.call(this, data, zoom, x, y, done);
+                this.dataAfterParent = data;
+            }
+        }),
+        layer = new Child('/{z}/{x}/{y}.json', {
+            tileSize: 256,
+            zoomOffset: 0
+        });
+
+    layer._canvases['13/2/3'] = {};
+    context.onKothicDataResponse({
+        type: 'FeatureCollection',
+        granularity: 10000,
+        features: [{
+            type: 'Feature',
+            id: 'point',
+            properties: {},
+            geometry: {
+                type: 'Point',
+                coordinates: [10, 20]
+            }
+        }]
+    }, 13, 2, 3, function done() {});
+
+    assert.strictEqual(layer.dataAfterParent.type, undefined);
+    assert.strictEqual(layer.dataAfterParent.features[0].type, 'Point');
+    assert.deepStrictEqual(layer.dataAfterParent.features[0].coordinates, [10, 9980]);
+});
