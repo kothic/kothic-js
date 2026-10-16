@@ -179,46 +179,169 @@ var Kothic = {
 
     _renderTextAndIcons: function (layerIds, layers, ctx, ws, hs, collisionBuffer) {
         //TODO: Move to the features detector
-        var j, style, i,
+        var j, style, i, recorder, renderQueue,
             passes = [];
 
         for (i = 0; i < layerIds.length; i++) {
             var features = layers[layerIds[i]],
                 featuresLen = features.length;
 
-            // render icons without text
+            renderQueue = [];
             for (j = featuresLen - 1; j >= 0; j--) {
                 style = features[j].style;
-                if (style.hasOwnProperty('icon-image') && !style.text) {
-                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, false, true);
-                }
-            }
 
-            // render text on features without icons
-            for (j = featuresLen - 1; j >= 0; j--) {
-                style = features[j].style;
-                if (!style.hasOwnProperty('icon-image') && style.text) {
-                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, false);
-                }
-            }
-
-            // for features with both icon and text, render both or neither
-            for (j = featuresLen - 1; j >= 0; j--) {
-                style = features[j].style;
-                if (style.hasOwnProperty('icon-image') && style.text) {
-                    Kothic.texticons.render(ctx, features[j], collisionBuffer, ws, hs, true, true);
-                }
-            }
-
-            // render shields with text
-            for (j = featuresLen - 1; j >= 0; j--) {
-                style = features[j].style;
                 if (style['shield-text']) {
-                    Kothic.shields.render(ctx, features[j], collisionBuffer, ws, hs);
+                    recorder = Kothic._recordCanvasCommands(ctx);
+                    Kothic.shields.render(recorder.ctx, features[j], collisionBuffer, ws, hs);
+                    if (recorder.length()) {
+                        renderQueue.push(recorder);
+                    }
                 }
+
+                if (style.hasOwnProperty('icon-image') || style.text) {
+                    recorder = Kothic._recordCanvasCommands(ctx);
+                    Kothic.texticons.render(
+                        recorder.ctx,
+                        features[j],
+                        collisionBuffer,
+                        ws,
+                        hs,
+                        Boolean(style.text),
+                        style.hasOwnProperty('icon-image')
+                    );
+                    if (recorder.length()) {
+                        renderQueue.push(recorder);
+                    }
+                }
+            }
+
+            for (j = renderQueue.length - 1; j >= 0; j--) {
+                renderQueue[j].replay();
             }
         }
 
         return passes;
+    },
+
+    _recordCanvasCommands: function(ctx) {
+        var commands = [],
+            recorder = {},
+            pending = {},
+            initial = {},
+            stateStack = [],
+            methods = [
+                'drawImage',
+                'fillRect',
+                'fillText',
+                'rotate',
+                'strokeText',
+                'translate'
+            ],
+            properties = [
+                'fillStyle',
+                'font',
+                'globalAlpha',
+                'lineWidth',
+                'strokeStyle',
+                'textAlign',
+                'textBaseline'
+            ],
+            i;
+
+        properties.forEach(function(property) {
+            initial[property] = ctx[property];
+        });
+
+        function withPendingStyles(callback) {
+            var originals = {},
+                property;
+
+            for (property in pending) {
+                if (pending.hasOwnProperty(property)) {
+                    originals[property] = ctx[property];
+                    ctx[property] = pending[property];
+                }
+            }
+
+            try {
+                return callback();
+            } finally {
+                for (property in originals) {
+                    if (originals.hasOwnProperty(property)) {
+                        ctx[property] = originals[property];
+                    }
+                }
+            }
+        }
+
+        recorder.measureText = function(text) {
+            return withPendingStyles(function() {
+                return ctx.measureText(text);
+            });
+        };
+
+        recorder.save = function() {
+            var saved = {},
+                property;
+
+            for (property in pending) {
+                if (pending.hasOwnProperty(property)) {
+                    saved[property] = pending[property];
+                }
+            }
+            stateStack.push(saved);
+
+            commands.push(function() {
+                ctx.save();
+            });
+        };
+
+        recorder.restore = function() {
+            pending = stateStack.pop() || {};
+
+            commands.push(function() {
+                ctx.restore();
+            });
+        };
+
+        methods.forEach(function(method) {
+            recorder[method] = function() {
+                var args = Array.prototype.slice.call(arguments);
+                commands.push(function() {
+                    ctx[method].apply(ctx, args);
+                });
+            };
+        });
+
+        properties.forEach(function(property) {
+            Object.defineProperty(recorder, property, {
+                get: function() {
+                    return pending.hasOwnProperty(property) ? pending[property] : ctx[property];
+                },
+                set: function(value) {
+                    pending[property] = value;
+                    commands.push(function() {
+                        ctx[property] = value;
+                    });
+                }
+            });
+        });
+
+        return {
+            ctx: recorder,
+            length: function() {
+                return commands.length;
+            },
+            replay: function() {
+                ctx.save();
+                properties.forEach(function(property) {
+                    ctx[property] = initial[property];
+                });
+                for (i = 0; i < commands.length; i++) {
+                    commands[i]();
+                }
+                ctx.restore();
+            }
+        };
     }
 };
