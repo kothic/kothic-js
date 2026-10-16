@@ -96,6 +96,8 @@ function runTests() {
 
     recorder.ctx.font = '24px sans-serif';
     assert.strictEqual(recorder.ctx.measureText('wide').width, 96);
+    recorder.ctx.font = '12px sans-serif';
+    assert.strictEqual(recorder.ctx.measureText('wide').width, 48);
     assert.strictEqual(ctx.font, '10px sans-serif');
     recorder.replay();
     assert.strictEqual(ctx.font, '10px sans-serif');
