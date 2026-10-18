@@ -17,7 +17,7 @@ be closed as historical unless someone is actively maintaining that path.
 ### Features
 
  * Rendering [OpenStreetMap](http://openstreetmap.org) data visually on par with [Mapnik](http://mapnik.org)
- * [MapCSS](http://wiki.openstreetmap.org/wiki/MapCSS/0.2) support (see [How to Prepare a Map Style](https://github.com/kothic/kothic-js/wiki/How-to-prepare-map-style))
+ * [MapCSS](http://wiki.openstreetmap.org/wiki/MapCSS/0.2) support (see [How to Prepare a Map Style](https://github.com/kothic/kothic-js/wiki/How-to-prepare-map-style) and [Supported MapCSS Features](docs/mapcss-support.md))
  * rendering from lightweight GeoJSON-like tiles (see [Tiles Format](https://github.com/kothic/kothic-js/wiki/Tiles-format))
  * easy integration with [Leaflet](http://leaflet.cloudmade.com) (interactive maps library)
 
@@ -64,7 +64,7 @@ Kothic.render(
 	});
 ```
 
-`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used.
+`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of presence. If object doesn't have localized name, *name* tag will be used.
 
 ### Contributing to Kothic JS
 
