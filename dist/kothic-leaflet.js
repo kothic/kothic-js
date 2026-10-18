@@ -43,7 +43,7 @@ L.TileLayer.Kothic = L.GridLayer.extend({
 
         Kothic.render(canvas, data, zoom + zoomOffset, {
             styles: styles,
-            locales: ['be', 'ru', 'en'],
+            locales: this.options.locales,
             onRenderComplete: onRenderComplete
         });
 
