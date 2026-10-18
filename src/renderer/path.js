@@ -71,7 +71,7 @@ Kothic.path = (function () {
             points,
             len = coords.length,
             len2, pointsLen,
-            prevPoint, point, screenPoint,
+            prevPoint, point, drawPoint, screenPoint,
             dx, dy, dist;
 
         if (type === "MultiPolygon") {
@@ -107,6 +107,7 @@ Kothic.path = (function () {
 
                 for (j = 0; j < pointsLen; j++) {
                     point = points[j];
+                    drawPoint = point;
 
                     // continue path off the tile by some amount to fix path edges between tiles
                     if ((j === 0 || j === pointsLen - 1) && isTileBoundary(point, granularity)) {
@@ -130,10 +131,12 @@ Kothic.path = (function () {
                             break;
                         }
 
-                        point[0] = point[0] + pad * dx / dist;
-                        point[1] = point[1] + pad * dy / dist;
+                        drawPoint = [
+                            point[0] + pad * dx / dist,
+                            point[1] + pad * dy / dist
+                        ];
                     }
-                    screenPoint = Kothic.geom.transformPoint(point, ws, hs);
+                    screenPoint = Kothic.geom.transformPoint(drawPoint, ws, hs);
 
                     if (j === 0) {
                         ctx.moveTo(screenPoint[0], screenPoint[1]);
