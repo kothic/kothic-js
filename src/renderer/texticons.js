@@ -2,9 +2,10 @@
 Kothic.texticons = {
 
     render: function (ctx, feature, collides, ws, hs, renderText, renderIcon) {
-        var style = feature.style, img, point, w, h;
+        var style = feature.style, img, point, w, h,
+            centeredText = style['text-position'] === 'center';
 
-        if (renderIcon || (renderText && feature.type !== 'LineString')) {
+        if (renderIcon || (renderText && (feature.type !== 'LineString' || centeredText))) {
             var reprPoint = Kothic.geom.getReprPoint(feature);
             if (!reprPoint) {
                 return;
@@ -65,7 +66,7 @@ Kothic.texticons = {
                 text = text.replace(/(^|\s)\S/g, function(ch) { return ch.toUpperCase(); });
             }
 
-            if (feature.type === 'Polygon' || feature.type === 'Point') {
+            if (feature.type === 'Polygon' || feature.type === 'Point' || centeredText) {
                 var textWidth = ctx.measureText(text).width,
                         letterWidth = textWidth / text.length,
                         collisionWidth = textWidth,
