@@ -10,6 +10,7 @@ L.TileLayer.Kothic = L.GridLayer.extend({
                      ' Rendering by <a href="http://github.com/kothic/kothic-js">Kothic JS</a>',
         async: true,
         buffered: false,
+        debugTiles: false,
         styles: MapCSS.availableStyles
     },
 
@@ -21,6 +22,7 @@ L.TileLayer.Kothic = L.GridLayer.extend({
         this._debugMessages = [];
 
         window.onKothicDataResponse = L.Util.bind(this._onKothicDataResponse, this);
+        window.onKothicDataError = L.Util.bind(this._onKothicDataError, this);
     },
 
     _onKothicDataResponse: function(data, zoom, x, y, done) {
@@ -33,7 +35,22 @@ L.TileLayer.Kothic = L.GridLayer.extend({
             return;
         }
 
+        this._debugTile(canvas, {
+            status: 'data loaded',
+            zoom: zoom,
+            x: x,
+            y: y,
+            features: data.features.length
+        });
+
         function onRenderComplete() {
+            this._debugTile(canvas, {
+                status: 'rendered',
+                zoom: zoom,
+                x: x,
+                y: y,
+                features: data.features.length
+            });
             done(error, canvas);
         }
 
@@ -44,10 +61,30 @@ L.TileLayer.Kothic = L.GridLayer.extend({
         Kothic.render(canvas, data, zoom + zoomOffset, {
             styles: styles,
             locales: ['be', 'ru', 'en'],
-            onRenderComplete: onRenderComplete
+            onRenderComplete: L.Util.bind(onRenderComplete, this)
         });
 
         delete this._canvases[key];
+    },
+
+    _onKothicDataError: function(url, zoom, x, y, status, done) {
+        var key = [zoom, x, y].join('/'),
+            canvas = this._canvases[key],
+            error = new Error('Kothic tile data request failed: ' + status + ' ' + url);
+
+        if (!canvas) {
+            return;
+        }
+
+        this._debugTile(canvas, {
+            status: 'data error ' + status,
+            zoom: zoom,
+            x: x,
+            y: y,
+            url: url
+        });
+        delete this._canvases[key];
+        done(error, canvas);
     },
 
     getDebugMessages: function() {
@@ -93,7 +130,57 @@ L.TileLayer.Kothic = L.GridLayer.extend({
                     replace('{y}',tilePoint.y).
                     replace('{z}',rzoom);
         this._canvases[key] = canvas;
+        this._debugTile(canvas, {
+            status: 'loading',
+            zoom: rzoom,
+            x: tilePoint.x,
+            y: tilePoint.y,
+            url: url
+        });
         this._loadJSON(url, rzoom, tilePoint.x, tilePoint.y, done);
+    },
+
+    _debugTile: function(canvas, info) {
+        if (!this.options.debugTiles) {
+            return;
+        }
+
+        this._debugMessages.push(info);
+        this._drawTileDebugOverlay(canvas, info);
+    },
+
+    _drawTileDebugOverlay: function(canvas, info) {
+        var ctx = canvas.getContext && canvas.getContext('2d'),
+            tileId = [info.zoom, info.x, info.y].join('/'),
+            lines = [
+                'Kothic ' + tileId,
+                info.status
+            ],
+            i;
+
+        if (!ctx) {
+            return;
+        }
+
+        if (info.features !== undefined) {
+            lines.push(info.features + ' features');
+        }
+        if (info.url) {
+            lines.push(info.url);
+        }
+
+        ctx.save();
+        ctx.globalAlpha = 0.78;
+        ctx.fillStyle = '#222';
+        ctx.fillRect(4, 4, canvas.width - 8, 18 + lines.length * 14);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = '#fff';
+        ctx.font = '12px sans-serif';
+        ctx.textBaseline = 'top';
+        for (i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], 10, 10 + i * 14);
+        }
+        ctx.restore();
     },
 
     enableStyle: function(name) {
@@ -165,6 +252,7 @@ L.TileLayer.Kothic = L.GridLayer.extend({
                     window.onKothicDataResponse(JSON.parse(xhr.responseText), zoom, x, y, done);
                 } else {
                     console.debug("failed:", url, xhr.status);
+                    window.onKothicDataError(url, zoom, x, y, xhr.status, done);
                 }
             }
         };

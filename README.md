@@ -66,6 +66,17 @@ Kothic.render(
 
 `locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used.
 
+### Leaflet tile debugging
+
+`L.TileLayer.Kothic` accepts a `debugTiles: true` option. When enabled, each
+tile canvas gets a semi-transparent overlay with the tile `z/x/y`, data URL,
+load status, and rendered feature count. This is useful when a map shows a mix
+of rendered and gray tiles and you need to see whether the JSON tile failed to
+load or rendering completed.
+
+The same events are available from `layer.getDebugMessages()` for tests or
+custom debug panels.
+
 ### Contributing to Kothic JS
 
 Kothic JS is licensed under a BSD license, and we'll be glad to accept your contributions!
