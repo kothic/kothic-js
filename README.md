@@ -64,7 +64,7 @@ Kothic.render(
 	});
 ```
 
-`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of persence.  If object doesn't have localized name, *name* tag will be used.
+`locales` Kothic-JS supports map localization based on name:*lang* tags. Renderer will check all mentioned languages in order of preference. If an English locale is requested and object doesn't have localized name, Cyrillic *name* will be transliterated; otherwise *name* tag will be used.
 
 ### Contributing to Kothic JS
 
