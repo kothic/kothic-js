@@ -55,7 +55,7 @@ Kothic.path = (function () {
         return dashes;
     }
 
-    return function (ctx, feature, dashes, fill, ws, hs, granularity) {
+    function renderPath(ctx, feature, dashes, fill, ws, hs, granularity) {
         var type = feature.type,
             coords = feature.coordinates;
 
@@ -144,5 +144,9 @@ Kothic.path = (function () {
                 }
             }
         }
-    };
+    }
+
+    renderPath.normalizeDashes = normalizeDashes;
+
+    return renderPath;
 }());
