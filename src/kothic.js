@@ -19,7 +19,7 @@ var Kothic = {
 
         var styles = (options && options.styles) || [];
 
-        MapCSS.locales = (options && options.locales) || [];
+        MapCSS.locales = (options && options.locales) || Kothic.getDefaultLocales();
 
         var devicePixelRatio = Math.max(window.devicePixelRatio || 1, 2);
 
@@ -71,6 +71,47 @@ var Kothic = {
                 //Kothic._renderCollisions(ctx, collisionBuffer.buffer.data);
             });
         });
+    },
+
+    getDefaultLocales: function() {
+        var nav, source, locales = [], seen = {}, i, locale, baseLocale;
+
+        if (typeof window !== 'undefined') {
+            nav = window.navigator;
+        }
+
+        if (!nav) {
+            return [];
+        }
+
+        source = nav.languages || [
+            nav.language ||
+            nav['userLanguage'] ||
+            nav['browserLanguage'] ||
+            nav['systemLanguage']
+        ];
+
+        for (i = 0; i < source.length; i++) {
+            locale = source[i];
+
+            if (!locale) {
+                continue;
+            }
+
+            locale = String(locale).replace('_', '-');
+            if (!seen[locale]) {
+                seen[locale] = true;
+                locales.push(locale);
+            }
+
+            baseLocale = locale.split('-')[0].toLowerCase();
+            if (baseLocale && !seen[baseLocale]) {
+                seen[baseLocale] = true;
+                locales.push(baseLocale);
+            }
+        }
+
+        return locales;
     },
 
     _renderCollisions: function (ctx, node) {
